@@ -4,6 +4,7 @@ import { useSnackbar } from "d2-ui-components";
 import { Id } from "d2-api";
 import { useAppContext } from "../../contexts/app-context";
 import { makeStyles } from "@material-ui/styles";
+import { ExampleModel } from "../../models/Example";
 
 interface ExampleProps {
     name: string;
@@ -21,18 +22,10 @@ const Example: React.FunctionComponent<ExampleProps> = props => {
     const snackbar = useSnackbar();
     const classes = useStyles();
     const { api } = useAppContext();
+    const model = React.useMemo(() => new ExampleModel(api), []);
 
     React.useEffect(() => {
-        async function set() {
-            const { objects: dataSets } = await api.models.dataSets
-                .get({
-                    fields: { id: true, categoryCombo: { name: true } },
-                    pageSize: 5,
-                })
-                .getData();
-            setDataSets(dataSets);
-        }
-        set();
+        model.getDataSets().then(setDataSets);
     }, [api]);
 
     return (
