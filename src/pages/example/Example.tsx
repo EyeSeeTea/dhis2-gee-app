@@ -2,7 +2,7 @@ import React, { useState, useContext, useEffect } from "react";
 import i18n from "../../locales";
 import { useSnackbar } from "d2-ui-components";
 import { Id } from "d2-api";
-import { ApiContext } from "../../contexts/api-context";
+import { ApiContext, useAppContext } from "../../contexts/api-context";
 import { makeStyles } from "@material-ui/styles";
 
 interface ExampleProps {
@@ -19,15 +19,19 @@ export default function Example(props: ExampleProps) {
     const [dataSets, setDataSets] = useState<DataSet[]>([]);
     const snackbar = useSnackbar();
     const classes = useStyles();
-    const api = useContext(ApiContext);
+    const { api } = useAppContext();
 
     useEffect(() => {
-        function set() {
-            const { cancel, response } = api.models.dataSets.get({ pageSize: 5 });
-            response.then(response_ => setDataSets(response_.data.objects));
-            return cancel;
+        async function set() {
+            const { objects: dataSets } = await api.models.dataSets
+                .get({
+                    fields: { id: true, categoryCombo: { name: true } },
+                    pageSize: 5,
+                })
+                .getData();
+            setDataSets(dataSets);
         }
-        return set();
+        set();
     }, []);
 
     return (

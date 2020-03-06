@@ -8,7 +8,7 @@ import _ from "lodash";
 import i18n from "@dhis2/d2-i18n";
 import { init } from "d2";
 import { SnackbarProvider } from "d2-ui-components";
-import D2Api from "d2-api";
+import { D2ApiDefault } from "d2-api";
 
 import "./App.css";
 import { muiTheme } from "./themes/dhis2.theme";
@@ -47,7 +47,7 @@ const App = () => {
                 credentials: "same-origin",
             }).then(res => res.json());
             const d2 = await init({ baseUrl: baseUrl + "/api" });
-            const api = new D2Api({ baseUrl });
+            const api = new D2ApiDefault({ baseUrl });
             Object.assign({ d2, api });
 
             setD2(d2);
@@ -82,7 +82,7 @@ const App = () => {
                         <HeaderBar appName={"Skeleton app"} />
 
                         <div id="app" className="content">
-                            <ApiContext.Provider value={api}>
+                            <ApiContext.Provider value={{ d2, api }}>
                                 <Root />
                             </ApiContext.Provider>
                         </div>
