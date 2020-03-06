@@ -1,6 +1,7 @@
 import React from "react";
 import axios from "axios";
 import ReactDOM from "react-dom";
+//@ts-ignore
 import { Provider } from "@dhis2/app-runtime";
 
 import App from "./components/app/App";
@@ -24,14 +25,15 @@ async function main() {
     };
     try {
         ReactDOM.render(
-            <Provider config={config}>
-                <App />
-            </Provider>,
+            React.createElement(Provider, { config }, React.createElement(App, {})),
             document.getElementById("root")
         );
     } catch (err) {
         console.error(err);
-        ReactDOM.render(<div>{err.toString()}</div>, document.getElementById("root"));
+        ReactDOM.render(
+            React.createElement("div", {}, err.toString),
+            document.getElementById("root")
+        );
     }
 }
 

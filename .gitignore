@@ -36,4 +36,4 @@ cypress/videos/
 .idea/*
 
 # Custom
-.bak
+bak

@@ -12,6 +12,7 @@ import {
 import { fade } from "material-ui/utils/colorManipulator";
 import Spacing from "material-ui/styles/spacing";
 import getMuiTheme from "material-ui/styles/getMuiTheme";
+import { MuiTheme } from "material-ui/styles";
 
 const theme = {
     spacing: Spacing,
@@ -31,13 +32,13 @@ const theme = {
     },
 };
 
-function createAppTheme(style) {
+function createAppTheme(style: MuiTheme) {
     return {
         sideBar: {
             backgroundColor: "#F3F3F3",
             backgroundColorItem: "transparent",
-            backgroundColorItemActive: style.palette.accent2Color,
-            textColor: style.palette.textColor,
+            backgroundColorItemActive: style.palette?.accent2Color,
+            textColor: style.palette?.textColor,
             textColorActive: "#276696",
             borderStyle: "1px solid #e1e1e1",
         },
@@ -46,11 +47,11 @@ function createAppTheme(style) {
             maxWidth: 900,
         },
         formFields: {
-            secondaryColor: style.palette.accent4Color,
+            secondaryColor: style.palette?.accent3Color,
         },
         tabs: {
             backgroundColor: "#E4E4E4",
-            inkBarColor: style.palette.accent1Color,
+            inkBarColor: style.palette?.accent1Color,
             textColor: "#666666",
         },
     };

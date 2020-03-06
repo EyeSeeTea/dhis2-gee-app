@@ -75,11 +75,11 @@ export const palette = {
 };
 
 export const muiTheme = createMuiTheme({
-    colors,
+    // colors,
     palette,
     typography: {
         fontFamily: "Roboto, Helvetica, Arial, sans-serif",
-        useNextVariants: true,
+        // useNextVariants: true,
     },
     overrides: {
         MuiDivider: {

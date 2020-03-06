@@ -1,10 +1,11 @@
 import React from "react";
 import i18n from "../../locales";
-import { useSnackbar } from "d2-ui-components";
+import { useSnackbar, MultiSelector, OrgUnitsSelector } from "d2-ui-components";
 import { Id } from "d2-api";
 import { useAppContext } from "../../contexts/app-context";
 import { makeStyles } from "@material-ui/styles";
 import { ExampleModel } from "../../models/Example";
+import D2ApiCurrentUser from "d2-api/api/current-user";
 
 interface ExampleProps {
     name: string;
@@ -19,9 +20,10 @@ const Example: React.FunctionComponent<ExampleProps> = props => {
     const { name } = props;
     const [counter, setCounter] = React.useState(0);
     const [dataSets, setDataSets] = React.useState<DataSet[]>([]);
+    const [orgUnitPaths, setOrgUnitPaths] = React.useState<DataSet[]>([]);
     const snackbar = useSnackbar();
     const classes = useStyles();
-    const { api } = useAppContext();
+    const { d2, api, currentUser } = useAppContext();
     const model = React.useMemo(() => new ExampleModel(api), []);
 
     React.useEffect(() => {
@@ -52,6 +54,24 @@ const Example: React.FunctionComponent<ExampleProps> = props => {
                     {i18n.t("Click to show feedback")}
                 </button>
             </div>
+
+            <OrgUnitsSelector
+                api={api}
+                onChange={setOrgUnitPaths}
+                selected={orgUnitPaths}
+                rootIds={currentUser.getOrgUnits().map(ou => ou.id)}
+                fullWidth={false}
+            />
+
+            <MultiSelector
+                d2={d2}
+                searchFilterLabel={true}
+                ordered={false}
+                height={300}
+                onChange={console.log}
+                options={[{ text: "Option1", value: "v1" }, { text: "Option2", value: "v2" }]}
+                selected={["v1"]}
+            />
         </div>
     );
 };
