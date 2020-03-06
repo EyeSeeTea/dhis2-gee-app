@@ -34,3 +34,6 @@ cypress/videos/
 
 # IntelliJ
 .idea/*
+
+# Custom
+.bak
