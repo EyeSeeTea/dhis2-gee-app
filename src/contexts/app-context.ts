@@ -1,18 +1,19 @@
 import React, { useContext } from "react";
 import { D2Api } from "d2-api";
+import { Config } from "../models/Config";
+import { User } from "../models/User";
 
 export interface AppContext {
     api: D2Api;
     d2: object;
-    // TODO: Add config / currentUser
-    // config: Config;
-    // currentUser: User;
+    config: Config;
+    currentUser: User;
 }
 
-export const ApiContext = React.createContext<AppContext | null>(null);
+export const AppContext = React.createContext<AppContext | null>(null);
 
 export function useAppContext() {
-    const context = useContext(ApiContext);
+    const context = useContext(AppContext);
     if (context) {
         return context;
     } else {

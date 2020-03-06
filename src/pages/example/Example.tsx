@@ -1,8 +1,8 @@
-import React, { useState, useContext, useEffect } from "react";
+import React from "react";
 import i18n from "../../locales";
 import { useSnackbar } from "d2-ui-components";
 import { Id } from "d2-api";
-import { ApiContext, useAppContext } from "../../contexts/api-context";
+import { useAppContext } from "../../contexts/app-context";
 import { makeStyles } from "@material-ui/styles";
 
 interface ExampleProps {
@@ -14,14 +14,15 @@ interface DataSet {
     id: Id;
 }
 
-export default function Example(props: ExampleProps) {
-    const [counter, setCounter] = useState(0);
-    const [dataSets, setDataSets] = useState<DataSet[]>([]);
+const Example: React.FunctionComponent<ExampleProps> = props => {
+    const { name } = props;
+    const [counter, setCounter] = React.useState(0);
+    const [dataSets, setDataSets] = React.useState<DataSet[]>([]);
     const snackbar = useSnackbar();
     const classes = useStyles();
     const { api } = useAppContext();
 
-    useEffect(() => {
+    React.useEffect(() => {
         async function set() {
             const { objects: dataSets } = await api.models.dataSets
                 .get({
@@ -32,11 +33,11 @@ export default function Example(props: ExampleProps) {
             setDataSets(dataSets);
         }
         set();
-    }, []);
+    }, [api]);
 
     return (
         <div>
-            <h2 className={classes.title}>Hello {props.name}!</h2>
+            <h2 className={classes.title}>Hello {name}!</h2>
 
             <div>
                 <p>
@@ -60,10 +61,12 @@ export default function Example(props: ExampleProps) {
             </div>
         </div>
     );
-}
+};
 
 const useStyles = makeStyles({
     title: {
         color: "blue",
     },
 });
+
+export default React.memo(Example);

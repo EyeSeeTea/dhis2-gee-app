@@ -2,28 +2,50 @@ import React from "react";
 import { render, fireEvent, waitForDomChange } from "@testing-library/react";
 import { SnackbarProvider } from "d2-ui-components";
 import "@testing-library/jest-dom/extend-expect";
-import MockAdapter from "axios-mock-adapter";
+import { getMockApi } from "d2-api";
 
 import Example from "../Example";
-import D2Api from "d2-api";
-import { ApiContext } from "../../../contexts/api-context";
+import { AppContext } from "../../../contexts/app-context";
+import { User } from "../../../models/User";
+import { Config } from "../../../models/Config";
 
-/*
-const api = new D2Api();
+const { api, mock } = getMockApi();
+
+// TODO: Abstract
+
+const currentUser = new User(api, {
+    id: "xE7jOejl9FI",
+    displayName: "John Traore",
+    username: "admin",
+    organisationUnits: [
+        {
+            level: 1,
+            id: "ImspTQPwCqd",
+            path: "/ImspTQPwCqd",
+        },
+    ],
+    userRoles: [],
+});
+
+const config = new Config(api, {
+    base: {},
+    categoryCombos: [],
+});
+
+const d2 = {};
 
 function getComponent({ name = "Some Name" } = {}) {
     return render(
-        <ApiContext.Provider value={api}>
+        <AppContext.Provider value={{ d2, api, currentUser, config }}>
             <SnackbarProvider>
                 <Example name={name} />
             </SnackbarProvider>
-        </ApiContext.Provider>
+        </AppContext.Provider>
     );
 }
 
 describe("Example", () => {
     beforeEach(() => {
-        const mock = new MockAdapter(api.connection);
         mock.onGet("/dataSets", { params: { pageSize: 5 } }).reply(200, {
             pager: {
                 page: 1,
@@ -60,4 +82,3 @@ describe("Example", () => {
         expect(component.queryByText("Some info")).toBeInTheDocument();
     });
 });
-*/
