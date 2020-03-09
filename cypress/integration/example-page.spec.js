@@ -1,9 +1,9 @@
 /// <reference types='Cypress' />
 
-context("Landing page", () => {
+context("Example page", () => {
     before(() => {
         cy.login("admin");
-        cy.loadPage();
+        cy.visit("#/for");
     });
 
     it("has page title", () => {
