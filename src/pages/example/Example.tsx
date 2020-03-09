@@ -5,7 +5,6 @@ import { Id } from "d2-api";
 import { useAppContext } from "../../contexts/app-context";
 import { makeStyles } from "@material-ui/styles";
 import { ExampleModel } from "../../models/Example";
-import D2ApiCurrentUser from "d2-api/api/current-user";
 
 interface ExampleProps {
     name: string;
@@ -69,7 +68,10 @@ const Example: React.FunctionComponent<ExampleProps> = props => {
                 ordered={false}
                 height={300}
                 onChange={console.log}
-                options={[{ text: "Option1", value: "v1" }, { text: "Option2", value: "v2" }]}
+                options={[
+                    { text: "Option1", value: "v1" },
+                    { text: "Option2", value: "v2" },
+                ]}
                 selected={["v1"]}
             />
         </div>

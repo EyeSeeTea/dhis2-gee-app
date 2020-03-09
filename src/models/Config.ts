@@ -25,7 +25,7 @@ const metadataParams = {
 export type Metadata = MetadataPick<typeof metadataParams>;
 
 export class Config {
-    constructor(private api: D2Api, private data: ConfigData) {}
+    constructor(private api: D2Api, public data: ConfigData) {}
 
     public get<Key extends keyof ConfigData>(key: Key): ConfigData[Key] {
         return this.data[key];

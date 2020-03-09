@@ -1,6 +1,5 @@
 import React from "react";
 import logo from "./logo-eyeseetea.png";
-import PropTypes from "prop-types";
 
 interface ShareProps {
     visible: boolean;

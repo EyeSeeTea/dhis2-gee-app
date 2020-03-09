@@ -7,9 +7,7 @@ import OldMuiThemeProvider from "material-ui/styles/MuiThemeProvider";
 //@ts-ignore
 import { useDataQuery, useConfig } from "@dhis2/app-runtime";
 import _ from "lodash";
-//@ts-ignore
 import i18n from "@dhis2/d2-i18n";
-//@ts-ignore
 import { init } from "d2";
 import { SnackbarProvider } from "d2-ui-components";
 import { D2ApiDefault } from "d2-api";
