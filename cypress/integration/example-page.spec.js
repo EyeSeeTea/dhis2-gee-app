@@ -2,7 +2,7 @@
 
 context("Example page", () => {
     before(() => {
-        cy.login("admin");
+        cy.login("who");
         cy.visit("#/for");
     });
 

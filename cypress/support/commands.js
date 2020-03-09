@@ -44,14 +44,11 @@ Cypress.Commands.add("login", (username, _password = null) => {
 
     const password = _password || dhis2Auth[username];
 
-    cy.log("Login", { username });
+    cy.log("Login", { username, password });
     cy.request({
         method: "GET",
         url: `${externalUrl}/api/me`,
-        auth: {
-            user: username,
-            pass: password,
-        },
+        auth: { user: username, pass: password },
         log: true,
     });
 });

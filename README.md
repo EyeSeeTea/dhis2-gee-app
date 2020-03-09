@@ -46,6 +46,10 @@ $ yarn cy:e2e:open
 
 For this to work in Travis CI, you will have to create an environment variable CYPRESS_DHIS2_AUTH (Settings -> Environment Variables) with the password used in your testing DHIS2 instance.
 
+Travis project: https://travis-ci.org/EyeSeeTea/dhis2-gee-app/builds
+
+Cypress Dashboard: https://dashboard.cypress.io/projects/49be3z
+
 ## Build app ZIP
 
 ```
@@ -76,7 +80,7 @@ $ yarn localize
 
 ### App context
 
-`src/contexts/app-context.ts` hold some general App context so typical infrastructure objects (`api`, `d2`, `currentUser`...) are readily available. Add your own objects if necessary.
+File `src/contexts/app-context.ts` holds some general App context so typical infrastructure objects (`api`, `d2`, `currentUser`...) are readily available. Add your own objects if necessary.
 
 ```
 import { useAppContext } from "./path/to/contexts/app-context";
