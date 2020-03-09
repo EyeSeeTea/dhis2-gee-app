@@ -22,6 +22,7 @@ const Example: React.FunctionComponent<ExampleProps> = props => {
     const [counter, setCounter] = React.useState(0);
     const [dataSets, setDataSets] = React.useState<DataSet[]>([]);
     const [orgUnitPaths, setOrgUnitPaths] = React.useState<DataSet[]>([]);
+    const [selected, setSelected] = React.useState(["v1"]);
     const snackbar = useSnackbar();
     const classes = useStyles();
     const model = React.useMemo(() => new ExampleModel(api), [api]);
@@ -50,7 +51,7 @@ const Example: React.FunctionComponent<ExampleProps> = props => {
             <div>
                 <p>Example of d2-ui-components snackbar usage:</p>
 
-                <button onClick={() => snackbar.info("Some info")}>
+                <button onClick={() => snackbar.error("Some info")}>
                     {i18n.t("Click to show feedback")}
                 </button>
             </div>
@@ -70,12 +71,12 @@ const Example: React.FunctionComponent<ExampleProps> = props => {
                         searchFilterLabel={true}
                         ordered={false}
                         height={300}
-                        onChange={console.log}
+                        onChange={setSelected}
                         options={[
                             { text: "Option1", value: "v1" },
                             { text: "Option2", value: "v2" },
                         ]}
-                        selected={["v1"]}
+                        selected={selected}
                     />
                 </div>
             )}
