@@ -1,5 +1,5 @@
 {
-    "appKey": "dhis2-app-skeleton",
+    "appKey": "dhis2-gee-app",
     "appearance": {
         "showShareButton": true
     },
@@ -8,7 +8,7 @@
         "createIssue": true,
         "sendToDhis2UserGroups": ["Administrators"],
         "issues": {
-            "repository": "tokland/feedback-test",
+            "repository": "EyeSeeTea/dhis2-gee-app-blessed",
             "title": "[User feedback] {title}",
             "body": "## dhis2\n\nUsername: {username}\n\n{body}"
         },
