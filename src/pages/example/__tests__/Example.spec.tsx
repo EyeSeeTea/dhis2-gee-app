@@ -39,7 +39,7 @@ function getComponent({ name = "Some Name" } = {}): RenderResult {
     return render(
         <AppContext.Provider value={{ d2, api, currentUser, config }}>
             <SnackbarProvider>
-                <Example name={name} />
+                <Example name={name} showExtraComponents={false} />
             </SnackbarProvider>
         </AppContext.Provider>
     );

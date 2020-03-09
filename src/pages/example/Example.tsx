@@ -8,6 +8,7 @@ import { ExampleModel } from "../../models/Example";
 
 interface ExampleProps {
     name: string;
+    showExtraComponents?: boolean;
 }
 
 // We need explicit casting until d2-api supports type inteference from the options argument
@@ -16,7 +17,7 @@ interface DataSet {
 }
 
 const Example: React.FunctionComponent<ExampleProps> = props => {
-    const { name } = props;
+    const { name, showExtraComponents = true } = props;
     const [counter, setCounter] = React.useState(0);
     const [dataSets, setDataSets] = React.useState<DataSet[]>([]);
     const [orgUnitPaths, setOrgUnitPaths] = React.useState<DataSet[]>([]);
@@ -54,26 +55,30 @@ const Example: React.FunctionComponent<ExampleProps> = props => {
                 </button>
             </div>
 
-            <OrgUnitsSelector
-                api={api}
-                onChange={setOrgUnitPaths}
-                selected={orgUnitPaths}
-                rootIds={currentUser.getOrgUnits().map(ou => ou.id)}
-                fullWidth={false}
-            />
+            {showExtraComponents && (
+                <div>
+                    <OrgUnitsSelector
+                        api={api}
+                        onChange={setOrgUnitPaths}
+                        selected={orgUnitPaths}
+                        rootIds={currentUser.getOrgUnits().map(ou => ou.id)}
+                        fullWidth={false}
+                    />
 
-            <MultiSelector
-                d2={d2}
-                searchFilterLabel={true}
-                ordered={false}
-                height={300}
-                onChange={console.log}
-                options={[
-                    { text: "Option1", value: "v1" },
-                    { text: "Option2", value: "v2" },
-                ]}
-                selected={["v1"]}
-            />
+                    <MultiSelector
+                        d2={d2}
+                        searchFilterLabel={true}
+                        ordered={false}
+                        height={300}
+                        onChange={console.log}
+                        options={[
+                            { text: "Option1", value: "v1" },
+                            { text: "Option2", value: "v2" },
+                        ]}
+                        selected={["v1"]}
+                    />
+                </div>
+            )}
         </div>
     );
 };
