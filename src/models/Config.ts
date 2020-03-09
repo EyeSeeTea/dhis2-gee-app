@@ -6,16 +6,17 @@ const baseConfig = {
 
 export type BaseConfig = typeof baseConfig;
 
-interface ConfigData {
+export interface ConfigData {
     base: BaseConfig;
     categoryCombos: CategoryCombo[];
 }
 
-interface CategoryCombo {
+export interface CategoryCombo {
     id: string;
     code: string;
 }
 
+// Example, get all categoryCombos[id,code]
 const metadataParams = {
     categoryCombos: {
         fields: { id: true, code: true },
@@ -25,7 +26,11 @@ const metadataParams = {
 export type Metadata = MetadataPick<typeof metadataParams>;
 
 export class Config {
-    constructor(private api: D2Api, public data: ConfigData) {}
+    public data: ConfigData;
+
+    constructor(private api: D2Api, data: ConfigData) {
+        this.data = data;
+    }
 
     public get<Key extends keyof ConfigData>(key: Key): ConfigData[Key] {
         return this.data[key];
