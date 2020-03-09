@@ -12,7 +12,7 @@ import { act } from "react-dom/test-utils";
 
 const { api, mock } = getMockApi();
 
-// TODO: Abstract
+// TODO: Move currentUser / config  / d2 to a separate file to reuse
 
 const currentUser = new User(api, {
     id: "xE7jOejl9FI",

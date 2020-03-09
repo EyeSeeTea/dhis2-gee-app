@@ -18,17 +18,17 @@ interface DataSet {
 
 const Example: React.FunctionComponent<ExampleProps> = props => {
     const { name, showExtraComponents = true } = props;
+    const { d2, api, currentUser } = useAppContext();
     const [counter, setCounter] = React.useState(0);
     const [dataSets, setDataSets] = React.useState<DataSet[]>([]);
     const [orgUnitPaths, setOrgUnitPaths] = React.useState<DataSet[]>([]);
     const snackbar = useSnackbar();
     const classes = useStyles();
-    const { d2, api, currentUser } = useAppContext();
-    const model = React.useMemo(() => new ExampleModel(api), []);
+    const model = React.useMemo(() => new ExampleModel(api), [api]);
 
     React.useEffect(() => {
         model.getDataSets().then(setDataSets);
-    }, [api]);
+    }, [api, model]);
 
     return (
         <div>
