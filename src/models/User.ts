@@ -25,7 +25,7 @@ export class User {
         feedbackRole: "Feedback",
     };
 
-    constructor(private api: D2Api, private data: UserData) {}
+    constructor(private data: UserData) {}
 
     getOrgUnits(): OrganisationUnit[] {
         return this.data.organisationUnits;
@@ -55,6 +55,6 @@ export class User {
             ...currentUser.userCredentials,
         };
 
-        return new User(api, data);
+        return new User(data);
     }
 }

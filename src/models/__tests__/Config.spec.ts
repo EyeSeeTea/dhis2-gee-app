@@ -1,7 +1,7 @@
 import { Config } from "../Config";
-import { getMockApi } from "d2-api";
+import { getTestContext } from "../../utils/tests";
 
-const { api, mock } = getMockApi();
+const { api, mock } = getTestContext();
 let config: Config;
 
 describe("Config", () => {

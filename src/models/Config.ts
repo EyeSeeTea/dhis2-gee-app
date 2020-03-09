@@ -28,7 +28,7 @@ export type Metadata = MetadataPick<typeof metadataParams>;
 export class Config {
     public data: ConfigData;
 
-    constructor(private api: D2Api, data: ConfigData) {
+    constructor(data: ConfigData) {
         this.data = data;
     }
 
@@ -44,6 +44,6 @@ export class Config {
             categoryCombos: metadata.categoryCombos,
         };
 
-        return new Config(api, data);
+        return new Config(data);
     }
 }
