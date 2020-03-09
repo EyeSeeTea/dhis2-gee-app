@@ -52,10 +52,37 @@ For this to work in Travis CI, you will have to create an environment variable C
 $ yarn build-webapp
 ```
 
-## i18n
+## Some development tips
+
+### Structure
+
+-   `i18n/`: Contains literal translations (gettext format)
+-   `public/`: Main app folder with a `index.html`, exposes the APP, contains the feedback-tool
+-   `src/pages`: Main React components.
+-   `src/components`: Reusable React components.
+-   `src/models`: Models that hold all the logic of the app (pages/components only should contain view logic).
+-   `src/types`: `.d.ts` file definitions for modules without Typescript definitions.
+-   `src/utils`: Misc utilities.
+-   `src/locales`: Auto-generated, don't change nor add to version control.
+-   `cypress/integration/`: Contains the integration Cypress tests.
+
+### i18n
 
 ```
 $ yarn update-po
 # ... add/edit translations in i18n/*.po files ...
 $ yarn localize
+```
+
+### App context
+
+`src/contexts/app-context.ts` hold some general App context so typical infrastructure objects (`api`, `d2`, `currentUser`...) are readily available. Add your own objects if necessary.
+
+```
+import { useAppContext } from "./path/to/contexts/app-context";
+
+const SomeComponent: React.FunctionComponent = () => {
+    const { d2, api, currentUser } = useAppContext();
+    ...
+}
 ```
