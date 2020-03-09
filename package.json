@@ -54,7 +54,7 @@
         "manifest": "d2-manifest package.json build/manifest.webapp",
         "cy:verify": "cypress verify",
         "cy:e2e:open": "CYPRESS_E2E=true cypress open",
-        "cy:e2e:run": "CYPRESS_E2E=true cypress run --browser chrome"
+        "cy:e2e:run": "CYPRESS_E2E=true cypress run"
     },
     "husky": {
         "hooks": {
