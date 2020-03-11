@@ -6,10 +6,6 @@ context("Example page", () => {
         cy.visit("#/for");
     });
 
-    it("has page title", () => {
-        cy.title().should("equal", "GEE App");
-    });
-
     it("increments counter when button clicked", () => {
         cy.contains("+1").click();
         cy.contains("Value=1");

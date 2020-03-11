@@ -1,6 +1,6 @@
 {
-    "short_name": "DHIS2 GEE App",
-    "name": "DHIS2 GEE App",
+    "short_name": "DHIS2 Skeleton App",
+    "name": "DHIS2 Skeleton App",
     "icons": [{
         "src": "favicon.ico",
         "sizes": "64x64 32x32 24x24 16x16",
