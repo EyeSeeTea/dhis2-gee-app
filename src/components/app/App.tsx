@@ -114,7 +114,7 @@ const App = () => {
             <MuiThemeProvider theme={muiTheme}>
                 <OldMuiThemeProvider muiTheme={muiThemeLegacy}>
                     <SnackbarProvider>
-                        <HeaderBar appName={"Project Monitoring"} />
+                        <HeaderBar appName={"Google Earth Engine Connector"} />
 
                         <div id="app" className="content">
                             <AppContext.Provider value={appContext}>
