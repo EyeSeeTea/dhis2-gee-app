@@ -2,6 +2,7 @@ import React from "react";
 import { useHistory } from "react-router-dom";
 import { MenuCardProps } from "./landing/MenuCard";
 import { Landing } from "./Landing";
+import i18n from "../../locales";
 
 const LandingPage: React.FC = () => {
     const history = useHistory();
@@ -13,30 +14,24 @@ const LandingPage: React.FC = () => {
         children: MenuCardProps[];
     }[] = [
         {
-            title: "Section",
+            title: i18n.t("Import"),
             key: "main",
             children: [
                 {
-                    name: "With List",
-                    description: "This entry has only a list action.",
-                    listAction: () => history.push("/for/John"),
-                },
-                {
-                    name: "List/add",
-                    description: "This action has list and add icons",
-                    addAction: () => history.push("/for"),
-                    listAction: () => history.push("/for/Mary"),
-                },
+                    name: i18n.t("Import"),
+                    description: i18n.t("List and manage a new import."),
+                    listAction: () => history.push("/import"),
+                }                
             ],
         },
         {
-            title: "Configuration",
+            title: i18n.t("Configuration"),
             key: "configuration",
             children: [
                 {
                     name: "Stub configuration",
                     description: "Configuration",
-                    listAction: () => history.push("/for/Configuration"),
+                    listAction: () => history.push("/app/Configuration"),
                 },
             ],
         },
