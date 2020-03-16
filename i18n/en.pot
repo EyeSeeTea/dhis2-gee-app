@@ -5,8 +5,8 @@ msgstr ""
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1)\n"
-"POT-Creation-Date: 2020-03-09T08:28:53.161Z\n"
-"PO-Revision-Date: 2020-03-09T08:28:53.161Z\n"
+"POT-Creation-Date: 2020-03-16T06:02:32.330Z\n"
+"PO-Revision-Date: 2020-03-16T06:02:32.330Z\n"
 
 msgid "Help"
 msgstr ""
@@ -15,6 +15,54 @@ msgid "Back"
 msgstr ""
 
 msgid "Click to show feedback"
+msgstr ""
+
+msgid "Name"
+msgstr ""
+
+msgid "Code"
+msgstr ""
+
+msgid "Data set"
+msgstr ""
+
+msgid "Data element"
+msgstr ""
+
+msgid "G.E.E Dataset"
+msgstr ""
+
+msgid "G.E.E Attribute"
+msgstr ""
+
+msgid "Period aggregation"
+msgstr ""
+
+msgid "Id"
+msgstr ""
+
+msgid "Created"
+msgstr ""
+
+msgid "Details"
+msgstr ""
+
+msgid "Import maintenance"
+msgstr ""
+
+msgid "Search"
+msgstr ""
+
+msgid "New mapping"
+msgstr ""
+
+msgid "Import"
+msgstr ""
+
+msgid "List and manage a new import."
+msgstr ""
+
+msgid "Configuration"
 msgstr ""
 
 msgid "Add"

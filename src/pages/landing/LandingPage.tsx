@@ -29,8 +29,8 @@ const LandingPage: React.FC = () => {
             key: "configuration",
             children: [
                 {
-                    name: "Stub configuration",
-                    description: "Configuration",
+                    name: i18n.t("Configuration"),
+                    description: i18n.t("Configuration"),
                     listAction: () => history.push("/app/Configuration"),
                 },
             ],
