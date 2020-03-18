@@ -39,3 +39,6 @@ addons:
     apt:
         packages:
             - libgconf-2-4
+notifications:
+    slack:
+        secure: eyeseetea:ftMfk0oeXVhQVbdks9mZVunc
