@@ -21,7 +21,7 @@ const LandingPage: React.FC = () => {
                     name: i18n.t("Import"),
                     description: i18n.t("List and manage a new import."),
                     listAction: () => history.push("/import"),
-                }                
+                },
             ],
         },
         {

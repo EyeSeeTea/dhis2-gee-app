@@ -1,7 +1,6 @@
 import React from "react";
 import i18n from "../../locales";
-import { useSnackbar, ObjectsTable, TableColumn, TableAction } from "d2-ui-components";
-import { Id } from "d2-api";
+import { useSnackbar } from "d2-ui-components";
 import { useAppContext } from "../../contexts/app-context";
 import { makeStyles } from "@material-ui/styles";
 import { ImportDetailModel } from "../../models/ImportDetail";
@@ -10,8 +9,8 @@ import { useHistory } from "react-router";
 import { History } from "history";
 import MappingsList from "../mappings/MappingsList";
 import { Button } from "@material-ui/core";
-import GetAppIcon from '@material-ui/icons/GetApp';
-import ImportExportIcon from '@material-ui/icons/ImportExport';
+import GetAppIcon from "@material-ui/icons/GetApp";
+import ImportExportIcon from "@material-ui/icons/ImportExport";
 
 function goTo(history: History, url: string) {
     history.push(url);
@@ -25,52 +24,31 @@ const ImportDetail: React.FunctionComponent<ImportDetailProps> = props => {
     const { prefix } = props;
     const history = useHistory();
     const { d2, api, currentUser } = useAppContext();
-    const snackbar = useSnackbar();
     const classes = useStyles();
     const model = React.useMemo(() => new ImportDetailModel(api), [api]);
 
     return (
         <React.Fragment>
-            <PageHeader 
-                title={i18n.t("Import")} 
-                onBackClick={() => goTo(history, "/")} />
-            <Button
-                className={classes.button}
-                variant="contained"
-            >
+            <PageHeader title={i18n.t("Import")} onBackClick={() => goTo(history, "/")} />
+            <Button className={classes.button} variant="contained">
                 {i18n.t("Edit Organisation Units")}
             </Button>
-            <Button
-                className={classes.button}
-                variant="contained"
-            >
+            <Button className={classes.button} variant="contained">
                 {i18n.t("Edit Period")}
             </Button>
-            <Button
-                className={classes.newImportButton}
-                variant="contained"
-            >
-                {i18n.t("Import to DHIS2 ")} 
+            <Button className={classes.newImportButton} variant="contained">
+                {i18n.t("Import to DHIS2 ")}
                 <ImportExportIcon />
             </Button>
-            <Button
-                className={classes.newImportButton}
-                variant="contained"
-            >
+            <Button className={classes.newImportButton} variant="contained">
                 {i18n.t("Download JSON ")}
                 <GetAppIcon />
             </Button>
-            <MappingsList header="Mappings list"/>
-            <Button
-                className={classes.button}
-                variant="contained"
-            >
+            <MappingsList header="Mappings list" />
+            <Button className={classes.button} variant="contained">
                 {i18n.t("Select mapping")}
             </Button>
-            <Button
-                className={classes.button}
-                variant="contained"
-            >
+            <Button className={classes.button} variant="contained">
                 {i18n.t("Add mapping")}
             </Button>
         </React.Fragment>
@@ -82,9 +60,9 @@ const useStyles = makeStyles({
         color: "blue",
     },
     button: { marginLeft: 10, marginRight: 10 },
-    floatLeft: { float: 'right'},
+    floatLeft: { float: "right" },
     newImportButton: {
-        float: 'right',
+        float: "right",
         margin: 10,
         backgroundColor: "#2b98f0",
         color: "white",

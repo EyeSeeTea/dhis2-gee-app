@@ -13,7 +13,7 @@ module.exports = {
     rules: {
         "no-console": "off",
         "@typescript-eslint/explicit-function-return-type": ["off"],
-        "@typescript-eslint/no-unused-vars": ["error", { argsIgnorePattern: "^_" }],
+        "@typescript-eslint/no-unused-vars": "off",
         "react/prop-types": "off",
         "no-unused-expressions": "off",
         "no-useless-concat": "off",

@@ -1,16 +1,9 @@
-import _ from "lodash";
 import { Id, D2Api } from "d2-api";
 import moment, { Moment } from "moment";
-import axios, { AxiosBasicCredentials } from "axios";
-import Cryptr from "cryptr";
 import i18n from "@dhis2/d2-i18n";
 import { Config } from "./Config";
 import { TableSorting, TablePagination } from "d2-ui-components";
 import { Filter } from "d2-api/api/common";
-//TODO import MappingList, { FiltersForList, MappingForList } from "./MappingForList";
-//import generateUid from "d2/uid";
-
-type Omit<T, K extends keyof T> = Pick<T, Exclude<keyof T, K>>;
 
 export interface MappingData {
     id: Id;
@@ -22,18 +15,6 @@ export interface MappingData {
     geeBand: string;
     created: Moment | undefined;
 }
-
-const defaultMappingData = {
-    id: undefined,
-    name: "",
-    code: "",
-    dataSet: "",
-    dataElement: "",
-    geeImage: "",
-    geeBand: "",
-    periodAgg: "",
-    created: undefined,
-};
 
 export type MappingField = keyof MappingData;
 
@@ -69,15 +50,15 @@ class Mapping {
         this.data = {
             ...rawData,
         };
-        defineGetters(this.data, this)
+        defineGetters(this.data, this);
     }
 
     static async getList(
         api: D2Api,
         config: Config,
-        filters: Filter,
-        sorting: TableSorting<Mapping>,
-        pagination: { page: number; pageSize: number }
+        filters?: Filter,
+        sorting?: TableSorting<Mapping>,
+        pagination?: { page: number; pageSize: number }
     ): Promise<{ objects: Mapping[]; pager: Partial<TablePagination> }> {
         const rows: Mapping[] = [
             new Mapping(api, config, {
