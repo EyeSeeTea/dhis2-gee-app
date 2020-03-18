@@ -5,8 +5,8 @@ msgstr ""
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1)\n"
-"POT-Creation-Date: 2020-03-18T11:52:31.130Z\n"
-"PO-Revision-Date: 2020-03-18T11:52:31.130Z\n"
+"POT-Creation-Date: 2020-03-18T20:48:09.074Z\n"
+"PO-Revision-Date: 2020-03-18T20:48:09.074Z\n"
 
 msgid "Help"
 msgstr ""
@@ -44,6 +44,24 @@ msgstr ""
 msgid "Import"
 msgstr ""
 
+msgid "Edit Organisation Units"
+msgstr ""
+
+msgid "Edit Period"
+msgstr ""
+
+msgid "Import to DHIS2 "
+msgstr ""
+
+msgid "Download JSON "
+msgstr ""
+
+msgid "Select mapping"
+msgstr ""
+
+msgid "Add mapping"
+msgstr ""
+
 msgid "List and manage a new import."
 msgstr ""
 
@@ -68,5 +86,5 @@ msgstr ""
 msgid "Details"
 msgstr ""
 
-msgid "Search by name or code"
+msgid "Edit"
 msgstr ""

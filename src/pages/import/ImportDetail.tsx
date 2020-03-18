@@ -22,6 +22,7 @@ interface ImportDetailProps {
 
 const ImportDetail: React.FunctionComponent<ImportDetailProps> = props => {
     const { prefix } = props;
+    console.log(prefix);
     const history = useHistory();
     const { d2, api, currentUser } = useAppContext();
     const classes = useStyles();
@@ -44,7 +45,7 @@ const ImportDetail: React.FunctionComponent<ImportDetailProps> = props => {
                 {i18n.t("Download JSON ")}
                 <GetAppIcon />
             </Button>
-            <MappingsList header="Mappings list" />
+            <MappingsList header={"Selected mappings"} />
             <Button className={classes.button} variant="contained">
                 {i18n.t("Select mapping")}
             </Button>

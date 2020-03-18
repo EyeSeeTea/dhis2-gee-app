@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import {
     MouseActionsMapping,
     TableColumn,
@@ -6,6 +6,7 @@ import {
     TableSorting,
     TablePagination,
     ObjectsTable,
+    TableState,
 } from "d2-ui-components";
 import { D2Api } from "d2-api";
 import { Config } from "../../models/Config";
@@ -13,6 +14,9 @@ import Mapping from "../../models/Mapping";
 import i18n from "../../locales";
 import { useAppContext } from "../../contexts/app-context";
 import { Filter } from "d2-api/api/common";
+import { makeStyles } from "@material-ui/styles";
+import { Theme, createStyles } from "@material-ui/core";
+import { User } from "../../models/User";
 
 type ContextualAction = "details" | "edit";
 
@@ -27,7 +31,7 @@ const mouseActionsMapping: MouseActionsMapping = {
     right: { type: "contextual" },
 };
 
-function getComponentConfig(api: D2Api, config: Config) {
+function getComponentConfig(api: D2Api, config: Config, currentUser: User) {
     const initialPagination = {
         page: 1,
         pageSize: 5,
@@ -75,19 +79,19 @@ type MappingTableSorting = TableSorting<Mapping>;
 const MappingsList: React.FC<MappingsListProps> = props => {
     const { api, config, currentUser } = useAppContext();
     const componentConfig = React.useMemo(() => {
-        return getComponentConfig(api, config);
-    }, [api, config]);
+        return getComponentConfig(api, config, currentUser);
+    }, [api, config, currentUser]);
+    const classes = useStyles();
     const [rows, setRows] = useState<Mapping[] | undefined>(undefined);
     const [pagination, setPagination] = useState(componentConfig.initialPagination);
     const [sorting, setSorting] = useState<MappingTableSorting>(componentConfig.initialSorting);
-    const [search, setSearch] = useState("");
-    const [filter, setFilter] = useState<Filter>({});
-    const [isLoading, setLoading] = useState(true);
+    const [filter] = useState<Filter>({});
+    const [, setLoading] = useState(true);
     const [objectsTableKey, objectsTableKeySet] = useState(() => new Date().getTime());
 
     useEffect(() => {
         getMappings(sorting, { page: 1 });
-    });
+    }, [filter]);
 
     async function getMappings(
         sorting: TableSorting<Mapping>,
@@ -116,11 +120,22 @@ const MappingsList: React.FC<MappingsListProps> = props => {
                     onActionButtonClick={() => console.log("New mapping")}
                     mouseActionsMapping={mouseActionsMapping}
                     rows={rows}
-                    filterComponents={props.header && <p>{props.header}</p>}
+                    filterComponents={
+                        props.header && <div className={classes.tableHeader}>{props.header}:</div>
+                    }
                 />
             )}
         </div>
     );
 };
+
+const useStyles = makeStyles((theme: Theme) =>
+    createStyles({
+        tableHeader: {
+            ...theme.typography.button,
+            padding: theme.spacing(1),
+        },
+    })
+);
 
 export default React.memo(MappingsList);
