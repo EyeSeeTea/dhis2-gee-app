@@ -32,7 +32,8 @@ export class User {
     }
 
     canReportFeedback(): boolean {
-        return _(this.data.userRoles).some(userRole => userRole.name === this.config.feedbackRole);
+        return true;
+        //return _(this.data.userRoles).some(userRole => userRole.name === this.config.feedbackRole);
     }
 
     static async getCurrent(api: D2Api): Promise<User> {
