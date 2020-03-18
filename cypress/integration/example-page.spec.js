@@ -7,7 +7,7 @@ context("Example page", () => {
     });
 
     it("has page title", () => {
-        cy.title().should("equal", "React App");
+        cy.title().should("equal", "GEE App");
     });
 
     it("increments counter when button clicked", () => {
