@@ -5,8 +5,8 @@ msgstr ""
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1)\n"
-"POT-Creation-Date: 2020-03-16T06:02:32.330Z\n"
-"PO-Revision-Date: 2020-03-16T06:02:32.330Z\n"
+"POT-Creation-Date: 2020-03-18T11:52:31.130Z\n"
+"PO-Revision-Date: 2020-03-18T11:52:31.130Z\n"
 
 msgid "Help"
 msgstr ""
@@ -14,7 +14,7 @@ msgstr ""
 msgid "Back"
 msgstr ""
 
-msgid "Click to show feedback"
+msgid "Id"
 msgstr ""
 
 msgid "Name"
@@ -23,10 +23,10 @@ msgstr ""
 msgid "Code"
 msgstr ""
 
-msgid "Data set"
+msgid "Instance Dataset"
 msgstr ""
 
-msgid "Data element"
+msgid "Instance DataElement"
 msgstr ""
 
 msgid "G.E.E Dataset"
@@ -35,25 +35,10 @@ msgstr ""
 msgid "G.E.E Attribute"
 msgstr ""
 
-msgid "Period aggregation"
+msgid "Created at"
 msgstr ""
 
-msgid "Id"
-msgstr ""
-
-msgid "Created"
-msgstr ""
-
-msgid "Details"
-msgstr ""
-
-msgid "Import maintenance"
-msgstr ""
-
-msgid "Search"
-msgstr ""
-
-msgid "New mapping"
+msgid "Click to show feedback"
 msgstr ""
 
 msgid "Import"
@@ -69,4 +54,19 @@ msgid "Add"
 msgstr ""
 
 msgid "List"
+msgstr ""
+
+msgid "Data set"
+msgstr ""
+
+msgid "Data element"
+msgstr ""
+
+msgid "Created"
+msgstr ""
+
+msgid "Details"
+msgstr ""
+
+msgid "Search by name or code"
 msgstr ""

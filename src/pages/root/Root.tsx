@@ -3,6 +3,7 @@ import { Route, Switch, HashRouter } from "react-router-dom";
 import Example from "../example/Example";
 import ImportDetail from "../import/ImportDetail";
 import LandingPage from "../landing/LandingPage";
+import MappingsList from "../mappings/MappingsList";
 
 const Root = () => {
     return (
@@ -16,13 +17,25 @@ const Root = () => {
                 <Route path="/for" render={() => <Example name="Stranger" />} />
                 */}
                 <Route
-                    path="import/:prefix"
+                    path="/mappings/:mapping_id"
+                    render={({ match } ) => <MappingsList />}
+                />
+                <Route 
+                    path="/mappings" 
+                    render={() => <MappingsList />} 
+                />
+                <Route
+                    path="/imports/:prefix"
                     render={({ match } ) => <ImportDetail prefix={match.params.prefix} />}
                 />
-                <Route path="/import" render={() => <ImportDetail prefix="default" />} />
+                <Route 
+                    path="/imports" 
+                    render={() => <ImportDetail prefix="default" />} 
+                />
+                
 
                 {/* Default route */}
-                <Route render={() => <LandingPage />} />
+                <Route render={() => <ImportDetail prefix={"default"} />} />
             </Switch>
         </HashRouter>
     );
