@@ -1,18 +1,15 @@
-import React from "react";
+import React, { useCallback } from "react";
 import i18n from "../../locales";
 import { useAppContext } from "../../contexts/app-context";
 import { makeStyles } from "@material-ui/styles";
 import PageHeader from "../../components/page-header/PageHeader";
-import { useHistory } from "react-router";
-import { History } from "history";
 import MappingsList from "../mappings/MappingsList";
 import { Button } from "@material-ui/core";
 import GetAppIcon from "@material-ui/icons/GetApp";
 import ImportExportIcon from "@material-ui/icons/ImportExport";
-
-function goTo(history: History, url: string) {
-    history.push(url);
-}
+import { ImportDetailModel } from "../../models/ImportDetail";
+import OUDialog from "../../components/dialogs/OrganisationUnitDialog";
+import DatePickerDialog from "../../components/dialogs/PeriodSelectorDialog";
 
 interface ImportDetailProps {
     prefix: string;
@@ -20,19 +17,46 @@ interface ImportDetailProps {
 
 const ImportDetail: React.FunctionComponent<ImportDetailProps> = props => {
     const { prefix } = props;
-    console.log(prefix);
-    const history = useHistory();
-    const { api } = useAppContext();
-    console.log(api.baseUrl);
+    const { api, config } = useAppContext();
     const classes = useStyles();
+    const [selectedMappings, setSelectedMappings] = React.useState<string[]>([]);
+    const [showOUDialog, setOUDialog] = React.useState<boolean>(false);
+    const [showDatePickerDialog, setDatePickerDialog] = React.useState<boolean>(false);
+
+    const model = React.useMemo(() => new ImportDetailModel(api, config, prefix), [
+        api,
+        config,
+        prefix,
+    ]);
+
+    React.useEffect(() => {
+        model.getImportData().then(setSelectedMappings);
+    }, [api, model]);
+
+    const closeDialog = useCallback(() => {
+        setOUDialog(false);
+        setDatePickerDialog(false);
+    }, []);
 
     return (
         <React.Fragment>
-            <PageHeader title={i18n.t("Import")} onBackClick={() => goTo(history, "/")} />
-            <Button className={classes.button} variant="contained">
+            {showOUDialog && <OUDialog importPrefix={prefix} onClose={closeDialog} />}
+            {showDatePickerDialog && (
+                <DatePickerDialog importPrefix={prefix} onClose={closeDialog} />
+            )}
+            <PageHeader title={i18n.t("Import")} />
+            <Button
+                className={classes.button}
+                variant="contained"
+                onClick={() => setOUDialog(true)}
+            >
                 {i18n.t("Edit Organisation Units")}
             </Button>
-            <Button className={classes.button} variant="contained">
+            <Button
+                className={classes.button}
+                variant="contained"
+                onClick={() => setDatePickerDialog(true)}
+            >
                 {i18n.t("Edit Period")}
             </Button>
             <Button className={classes.newImportButton} variant="contained">
@@ -43,7 +67,7 @@ const ImportDetail: React.FunctionComponent<ImportDetailProps> = props => {
                 {i18n.t("Download JSON ")}
                 <GetAppIcon />
             </Button>
-            <MappingsList header={"Selected mappings"} />
+            <MappingsList header={"Selected mappings"} selectedMappings={selectedMappings} />
         </React.Fragment>
     );
 };

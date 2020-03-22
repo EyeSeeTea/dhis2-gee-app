@@ -6,6 +6,9 @@ const baseConfig = {
         namespace: "dhis2-gee-app",
         keys: {
             mappings: "mappings",
+            imports: {
+                suffix: "@import",
+            },
         },
     },
 };

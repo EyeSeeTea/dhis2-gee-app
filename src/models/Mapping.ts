@@ -1,6 +1,6 @@
 import { Id, D2Api } from "d2-api";
 import { Moment } from "moment";
-import i18n from "@dhis2/d2-i18n";
+import i18n from "../locales";
 import { TableSorting, TablePagination } from "d2-ui-components";
 import { Filter } from "d2-api/api/common";
 import { Config } from "./Config";
@@ -9,7 +9,6 @@ import { getDataStore } from "../utils/dhis2";
 export interface MappingData {
     id: Id;
     name: string;
-    code: string;
     dataSet: string;
     geeImage: string;
     created: Moment | undefined;
@@ -33,7 +32,6 @@ class Mapping {
     static fieldNames: Record<MappingField, string> = {
         id: i18n.t("Id"),
         name: i18n.t("Name"),
-        code: i18n.t("Code"),
         dataSet: i18n.t("Instance Dataset"),
         geeImage: i18n.t("G.E.E Dataset"),
         created: i18n.t("Created at"),

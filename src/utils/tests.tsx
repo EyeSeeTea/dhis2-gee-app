@@ -30,6 +30,9 @@ export function getTestConfig() {
             dataStore: {
                 namespace: "dhis2-gee-app",
                 keys: {
+                    imports: {
+                        suffix: "#import",
+                    },
                     mappings: "mappings",
                 },
             },

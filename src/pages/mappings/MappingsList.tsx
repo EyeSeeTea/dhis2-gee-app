@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useMemo } from "react";
 import {
     MouseActionsMapping,
     TableColumn,
@@ -7,22 +7,19 @@ import {
     TablePagination,
     ObjectsTable,
 } from "d2-ui-components";
-import { D2Api } from "d2-api";
-import { Config } from "../../models/Config";
 import Mapping from "../../models/Mapping";
 import i18n from "../../locales";
 import { useAppContext } from "../../contexts/app-context";
 import { Filter } from "d2-api/api/common";
 import { makeStyles } from "@material-ui/styles";
 import { Theme, createStyles } from "@material-ui/core";
-import { User } from "../../models/User";
+import { useGoTo } from "../../router";
 
 type ContextualAction = "details" | "edit";
 
 interface MappingsListProps {
     header?: string;
-    import?: string;
-    mappingId?: string;
+    selectedMappings?: string[];
 }
 
 const mouseActionsMapping: MouseActionsMapping = {
@@ -30,7 +27,7 @@ const mouseActionsMapping: MouseActionsMapping = {
     right: { type: "contextual" },
 };
 
-function getComponentConfig(api: D2Api, config: Config, currentUser: User) {
+function getComponentConfig() {
     const initialPagination = {
         page: 1,
         pageSize: 15,
@@ -40,7 +37,6 @@ function getComponentConfig(api: D2Api, config: Config, currentUser: User) {
     const initialSorting = { field: "name" as const, order: "asc" as const };
     const columns: TableColumn<Mapping>[] = [
         { name: "name" as const, text: i18n.t("Name"), sortable: true },
-        { name: "code" as const, text: i18n.t("Code"), sortable: true },
         { name: "dataSet" as const, text: i18n.t("Data set"), sortable: true },
         { name: "geeImage" as const, text: i18n.t("G.E.E Dataset"), sortable: true },
     ];
@@ -74,19 +70,28 @@ function getComponentConfig(api: D2Api, config: Config, currentUser: User) {
 type MappingTableSorting = TableSorting<Mapping>;
 
 const MappingsList: React.FC<MappingsListProps> = props => {
-    const { api, config, currentUser } = useAppContext();
+    const { api, config } = useAppContext();
+    const goTo = useGoTo();
+    const { header, selectedMappings } = props;
     const componentConfig = React.useMemo(() => {
-        return getComponentConfig(api, config, currentUser);
-    }, [api, config, currentUser]);
+        return getComponentConfig();
+    }, []);
     const classes = useStyles();
     const [rows, setRows] = useState<Mapping[] | undefined>(undefined);
     const [pagination, setPagination] = useState(componentConfig.initialPagination);
     const [sorting, setSorting] = useState<MappingTableSorting>(componentConfig.initialSorting);
     const [filter] = useState<Filter>({});
+
     console.log(filter);
 
     const [, setLoading] = useState(true);
     const [objectsTableKey] = useState(() => new Date().getTime());
+
+    const selection = useMemo(() => {
+        return rows
+            ?.filter(mapping => selectedMappings?.includes(mapping.id))
+            .map(mapping => ({ id: mapping.id }));
+    }, [rows, selectedMappings]);
 
     useEffect(() => {
         getMappings(sorting, { page: 1 });
@@ -99,6 +104,7 @@ const MappingsList: React.FC<MappingsListProps> = props => {
         //Filters to retrieve mappings from the data store.
         const filters = {};
         const listPagination = { ...pagination, ...paginationOptions };
+        console.log("Mappings");
 
         setLoading(true);
         const res = await Mapping.getList(api, config, filters, sorting, listPagination);
@@ -113,17 +119,18 @@ const MappingsList: React.FC<MappingsListProps> = props => {
             {rows && (
                 <ObjectsTable<Mapping>
                     key={objectsTableKey}
+                    selection={selection}
                     searchBoxLabel={i18n.t("Search by name or code")}
                     forceSelectionColumn={true}
                     pagination={pagination}
                     details={componentConfig.details}
                     columns={componentConfig.columns}
                     actions={componentConfig.actions}
-                    onActionButtonClick={() => console.log("New mapping")}
+                    onActionButtonClick={() => goTo("mappings.new")}
                     mouseActionsMapping={mouseActionsMapping}
                     rows={rows}
                     filterComponents={
-                        props.header && <div className={classes.tableHeader}>{props.header}:</div>
+                        header && <div className={classes.tableHeader}>{header}:</div>
                     }
                 />
             )}
