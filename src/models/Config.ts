@@ -2,6 +2,12 @@ import { D2Api, MetadataPick } from "d2-api";
 
 const baseConfig = {
     // Add here static configuration
+    dataStore: {
+        namespace: "dhis2-gee-app",
+        keys: {
+            mappings: "mappings",
+        },
+    },
 };
 
 export type BaseConfig = typeof baseConfig;

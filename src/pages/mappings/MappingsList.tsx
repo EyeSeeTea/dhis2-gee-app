@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from "react";
+import React, { useState, useEffect } from "react";
 import {
     MouseActionsMapping,
     TableColumn,
@@ -6,7 +6,6 @@ import {
     TableSorting,
     TablePagination,
     ObjectsTable,
-    TableState,
 } from "d2-ui-components";
 import { D2Api } from "d2-api";
 import { Config } from "../../models/Config";
@@ -34,8 +33,8 @@ const mouseActionsMapping: MouseActionsMapping = {
 function getComponentConfig(api: D2Api, config: Config, currentUser: User) {
     const initialPagination = {
         page: 1,
-        pageSize: 5,
-        pageSizeOptions: [5, 10, 20],
+        pageSize: 15,
+        pageSizeOptions: [10, 15, 30],
     };
 
     const initialSorting = { field: "name" as const, order: "asc" as const };
@@ -43,9 +42,7 @@ function getComponentConfig(api: D2Api, config: Config, currentUser: User) {
         { name: "name" as const, text: i18n.t("Name"), sortable: true },
         { name: "code" as const, text: i18n.t("Code"), sortable: true },
         { name: "dataSet" as const, text: i18n.t("Data set"), sortable: true },
-        { name: "dataElement" as const, text: i18n.t("Data element"), sortable: true },
         { name: "geeImage" as const, text: i18n.t("G.E.E Dataset"), sortable: true },
-        { name: "geeBand" as const, text: i18n.t("G.E.E Attribute"), sortable: true },
     ];
 
     const details = [
@@ -86,23 +83,26 @@ const MappingsList: React.FC<MappingsListProps> = props => {
     const [pagination, setPagination] = useState(componentConfig.initialPagination);
     const [sorting, setSorting] = useState<MappingTableSorting>(componentConfig.initialSorting);
     const [filter] = useState<Filter>({});
+    console.log(filter);
+
     const [, setLoading] = useState(true);
-    const [objectsTableKey, objectsTableKeySet] = useState(() => new Date().getTime());
+    const [objectsTableKey] = useState(() => new Date().getTime());
 
     useEffect(() => {
         getMappings(sorting, { page: 1 });
-    }, [filter]);
+    }, [sorting]);
 
     async function getMappings(
         sorting: TableSorting<Mapping>,
         paginationOptions: Partial<TablePagination>
     ) {
+        //Filters to retrieve mappings from the data store.
         const filters = {};
         const listPagination = { ...pagination, ...paginationOptions };
 
         setLoading(true);
         const res = await Mapping.getList(api, config, filters, sorting, listPagination);
-        setRows(res.objects);
+        setRows(res.mappings);
         setPagination({ ...listPagination, ...res.pager });
         setSorting(sorting);
         setLoading(false);
@@ -113,6 +113,8 @@ const MappingsList: React.FC<MappingsListProps> = props => {
             {rows && (
                 <ObjectsTable<Mapping>
                     key={objectsTableKey}
+                    searchBoxLabel={i18n.t("Search by name or code")}
+                    forceSelectionColumn={true}
                     pagination={pagination}
                     details={componentConfig.details}
                     columns={componentConfig.columns}

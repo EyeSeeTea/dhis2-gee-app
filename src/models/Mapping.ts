@@ -1,18 +1,17 @@
 import { Id, D2Api } from "d2-api";
-import moment, { Moment } from "moment";
+import { Moment } from "moment";
 import i18n from "@dhis2/d2-i18n";
-import { Config } from "./Config";
 import { TableSorting, TablePagination } from "d2-ui-components";
 import { Filter } from "d2-api/api/common";
+import { Config } from "./Config";
+import { getDataStore } from "../utils/dhis2";
 
 export interface MappingData {
     id: Id;
     name: string;
     code: string;
     dataSet: string;
-    dataElement: string;
     geeImage: string;
-    geeBand: string;
     created: Moment | undefined;
 }
 
@@ -36,9 +35,7 @@ class Mapping {
         name: i18n.t("Name"),
         code: i18n.t("Code"),
         dataSet: i18n.t("Instance Dataset"),
-        dataElement: i18n.t("Instance DataElement"),
         geeImage: i18n.t("G.E.E Dataset"),
-        geeBand: i18n.t("G.E.E Attribute"),
         created: i18n.t("Created at"),
     };
 
@@ -46,7 +43,7 @@ class Mapping {
         return this.fieldNames[field];
     }
 
-    constructor(public api: D2Api, public config: Config, rawData: MappingData) {
+    constructor(rawData: MappingData) {
         this.data = {
             ...rawData,
         };
@@ -56,24 +53,15 @@ class Mapping {
     static async getList(
         api: D2Api,
         config: Config,
-        filters?: Filter,
-        sorting?: TableSorting<Mapping>,
-        pagination?: { page: number; pageSize: number }
-    ): Promise<{ objects: Mapping[]; pager: Partial<TablePagination> }> {
-        const rows: Mapping[] = [
-            new Mapping(api, config, {
-                id: "Mapping1",
-                name: "Mapping1",
-                code: "Mapping1",
-                dataSet: "DS1",
-                dataElement: "DE1",
-                geeImage: "GEE",
-                geeBand: "GEE",
-                created: moment(),
-            }),
-        ];
-
-        return { objects: rows, pager: {} };
+        filters: Filter,
+        sorting: TableSorting<Mapping>,
+        pagination: { page: number; pageSize: number }
+    ): Promise<{ mappings: Mapping[] | undefined; pager: Partial<TablePagination> }> {
+        const dataStore = getDataStore(api, config);
+        const mappings_key = config.data.base.dataStore.keys.mappings;
+        const dsMappings = await dataStore.get<Mapping[] | undefined>(mappings_key).getData();
+        console.log(dsMappings);
+        return { mappings: dsMappings, pager: {} };
     }
 }
 

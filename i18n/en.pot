@@ -5,8 +5,8 @@ msgstr ""
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1)\n"
-"POT-Creation-Date: 2020-03-18T20:48:09.074Z\n"
-"PO-Revision-Date: 2020-03-18T20:48:09.074Z\n"
+"POT-Creation-Date: 2020-03-22T18:05:12.582Z\n"
+"PO-Revision-Date: 2020-03-22T18:05:12.582Z\n"
 
 msgid "Help"
 msgstr ""
@@ -26,13 +26,7 @@ msgstr ""
 msgid "Instance Dataset"
 msgstr ""
 
-msgid "Instance DataElement"
-msgstr ""
-
 msgid "G.E.E Dataset"
-msgstr ""
-
-msgid "G.E.E Attribute"
 msgstr ""
 
 msgid "Created at"
@@ -77,9 +71,6 @@ msgstr ""
 msgid "Data set"
 msgstr ""
 
-msgid "Data element"
-msgstr ""
-
 msgid "Created"
 msgstr ""
 
@@ -87,4 +78,7 @@ msgid "Details"
 msgstr ""
 
 msgid "Edit"
+msgstr ""
+
+msgid "Search by name or code"
 msgstr ""
