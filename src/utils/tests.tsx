@@ -31,13 +31,12 @@ export function getTestConfig() {
                 namespace: "dhis2-gee-app",
                 keys: {
                     imports: {
-                        suffix: "#import",
+                        suffix: "@import",
                     },
                     mappings: "mappings",
                 },
             },
         },
-        categoryCombos: [],
     });
 }
 

@@ -17,7 +17,6 @@ export type BaseConfig = typeof baseConfig;
 
 export interface ConfigData {
     base: BaseConfig;
-    categoryCombos: CategoryCombo[];
 }
 
 export interface CategoryCombo {
@@ -25,12 +24,7 @@ export interface CategoryCombo {
     code: string;
 }
 
-// Example, get all categoryCombos[id,code]
-const metadataParams = {
-    categoryCombos: {
-        fields: { id: true, code: true },
-    },
-} as const;
+const metadataParams = {} as const;
 
 export type Metadata = MetadataPick<typeof metadataParams>;
 
@@ -46,11 +40,8 @@ export class Config {
     }
 
     static async build(api: D2Api): Promise<Config> {
-        const metadata = await api.metadata.get(metadataParams).getData();
-
         const data: ConfigData = {
             base: baseConfig,
-            categoryCombos: metadata.categoryCombos,
         };
 
         return new Config(data);

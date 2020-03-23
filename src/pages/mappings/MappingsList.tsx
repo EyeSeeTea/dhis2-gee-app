@@ -20,6 +20,7 @@ type ContextualAction = "details" | "edit";
 interface MappingsListProps {
     header?: string;
     selectedMappings?: string[];
+    onSelectionChange: (selectedMappings: string[]) => void;
 }
 
 const mouseActionsMapping: MouseActionsMapping = {
@@ -72,7 +73,7 @@ type MappingTableSorting = TableSorting<Mapping>;
 const MappingsList: React.FC<MappingsListProps> = props => {
     const { api, config } = useAppContext();
     const goTo = useGoTo();
-    const { header, selectedMappings } = props;
+    const { header, selectedMappings, onSelectionChange } = props;
     const componentConfig = React.useMemo(() => {
         return getComponentConfig();
     }, []);
@@ -86,7 +87,7 @@ const MappingsList: React.FC<MappingsListProps> = props => {
 
     const [, setLoading] = useState(true);
     const [objectsTableKey] = useState(() => new Date().getTime());
-
+    console.log({ selectedMappings });
     const selection = useMemo(() => {
         return rows
             ?.filter(mapping => selectedMappings?.includes(mapping.id))
@@ -121,6 +122,7 @@ const MappingsList: React.FC<MappingsListProps> = props => {
                     key={objectsTableKey}
                     selection={selection}
                     searchBoxLabel={i18n.t("Search by name or code")}
+                    onChange={state => onSelectionChange(state.selection.map(m => m.id))}
                     forceSelectionColumn={true}
                     pagination={pagination}
                     details={componentConfig.details}

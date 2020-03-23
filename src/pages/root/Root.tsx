@@ -1,7 +1,7 @@
 import React from "react";
 import { Route, Switch, HashRouter } from "react-router-dom";
 import ImportDetail from "../import/ImportDetail";
-import MappingsWizardPage from "../mappings/edit-mappings/MappingsWizard"
+import MappingsWizardPage from "../mappings/edit-mappings/MappingsWizard";
 
 const Root = () => {
     return (

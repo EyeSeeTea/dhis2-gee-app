@@ -7,7 +7,7 @@ import MappingsList from "../mappings/MappingsList";
 import { Button } from "@material-ui/core";
 import GetAppIcon from "@material-ui/icons/GetApp";
 import ImportExportIcon from "@material-ui/icons/ImportExport";
-import { ImportDetailModel } from "../../models/ImportDetail";
+import { DataImport } from "../../models/Import";
 import OUDialog from "../../components/dialogs/OrganisationUnitDialog";
 import DatePickerDialog from "../../components/dialogs/PeriodSelectorDialog";
 
@@ -23,20 +23,35 @@ const ImportDetail: React.FunctionComponent<ImportDetailProps> = props => {
     const [showOUDialog, setOUDialog] = React.useState<boolean>(false);
     const [showDatePickerDialog, setDatePickerDialog] = React.useState<boolean>(false);
 
-    const model = React.useMemo(() => new ImportDetailModel(api, config, prefix), [
+    /*const model = React.useMemo(() => new ImportDetailModel(api, config, prefix), [
         api,
         config,
         prefix,
-    ]);
+    ]);*/
 
     React.useEffect(() => {
-        model.getImportData().then(setSelectedMappings);
-    }, [api, model]);
+        DataImport.getImportData(api, config, prefix).then(imp => {
+            setSelectedMappings(imp ? imp.data.selectedMappings : []);
+        });
+    }, [api, config, prefix]);
 
     const closeDialog = useCallback(() => {
         setOUDialog(false);
         setDatePickerDialog(false);
     }, []);
+
+    const onSelectedMappingsChange = useCallback(
+        (newSelectedMappings: string[]) => {
+            console.log({ newSelectedMappings });
+            setSelectedMappings(newSelectedMappings);
+            DataImport.getImportData(api, config, prefix).then(imp => {
+                imp
+                    ? imp.setSelectedMappings(newSelectedMappings).save()
+                    : console.log("No import found");
+            });
+        },
+        [api, config, prefix]
+    );
 
     return (
         <React.Fragment>
@@ -67,7 +82,11 @@ const ImportDetail: React.FunctionComponent<ImportDetailProps> = props => {
                 {i18n.t("Download JSON ")}
                 <GetAppIcon />
             </Button>
-            <MappingsList header={"Selected mappings"} selectedMappings={selectedMappings} />
+            <MappingsList
+                header={"Selected mappings"}
+                selectedMappings={selectedMappings}
+                onSelectionChange={onSelectedMappingsChange}
+            />
         </React.Fragment>
     );
 };
