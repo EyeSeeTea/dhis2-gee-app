@@ -9,7 +9,9 @@ import GetAppIcon from "@material-ui/icons/GetApp";
 import ImportExportIcon from "@material-ui/icons/ImportExport";
 import { DataImport } from "../../models/Import";
 import OUDialog from "../../components/dialogs/OrganisationUnitDialog";
-import DatePickerDialog from "../../components/dialogs/PeriodSelectorDialog";
+import PeriodSelectorDialog, {
+    PeriodInformation,
+} from "../../components/dialogs/PeriodSelectorDialog";
 
 interface ImportDetailProps {
     prefix: string;
@@ -21,25 +23,21 @@ const ImportDetail: React.FunctionComponent<ImportDetailProps> = props => {
     const classes = useStyles();
     const [selectedMappings, setSelectedMappings] = React.useState<string[]>([]);
     const [selectedOUs, setSelectedOUs] = React.useState<string[]>([]);
+    const [periodInformation, setPeriodInformation] = React.useState<PeriodInformation>({ id: "" });
     const [showOUDialog, setOUDialog] = React.useState<boolean>(false);
-    const [showDatePickerDialog, setDatePickerDialog] = React.useState<boolean>(false);
-
-    /*const model = React.useMemo(() => new ImportDetailModel(api, config, prefix), [
-        api,
-        config,
-        prefix,
-    ]);*/
+    const [showPeriodDialog, setPeriodDialog] = React.useState<boolean>(false);
 
     React.useEffect(() => {
         DataImport.getImportData(api, config, prefix).then(imp => {
             setSelectedMappings(imp ? imp.data.selectedMappings : []);
             setSelectedOUs(imp ? imp.data.selectedOUs : []);
+            setPeriodInformation(imp ? imp.data.periodInformation : { id: "" });
         });
     }, [api, config, prefix]);
 
     const closeDialog = useCallback(() => {
         setOUDialog(false);
-        setDatePickerDialog(false);
+        setPeriodDialog(false);
     }, []);
 
     const onSelectedMappingsChange = useCallback(
@@ -66,17 +64,32 @@ const ImportDetail: React.FunctionComponent<ImportDetailProps> = props => {
         [api, config, prefix]
     );
 
+    const onPeriodSelectionSave = useCallback(
+        (newPeriod: PeriodInformation) => {
+            setPeriodInformation(newPeriod);
+            DataImport.getImportData(api, config, prefix).then(imp => {
+                imp ? imp.setPeriodInformation(newPeriod).save() : console.log("No import found");
+            });
+            setPeriodDialog(false);
+        },
+        [api, config, prefix]
+    );
+
     return (
         <React.Fragment>
             {showOUDialog && (
                 <OUDialog
                     selectedOUs={selectedOUs}
-                    onClose={closeDialog}
+                    onCancel={closeDialog}
                     onSave={onSelectedOUsSave}
                 />
             )}
-            {showDatePickerDialog && (
-                <DatePickerDialog importPrefix={prefix} onClose={closeDialog} />
+            {showPeriodDialog && (
+                <PeriodSelectorDialog
+                    periodInformation={periodInformation}
+                    onCancel={closeDialog}
+                    onSave={onPeriodSelectionSave}
+                />
             )}
             <PageHeader title={i18n.t("Import")} />
             <Button
@@ -89,7 +102,7 @@ const ImportDetail: React.FunctionComponent<ImportDetailProps> = props => {
             <Button
                 className={classes.button}
                 variant="contained"
-                onClick={() => setDatePickerDialog(true)}
+                onClick={() => setPeriodDialog(true)}
             >
                 {i18n.t("Edit Period")}
             </Button>

@@ -6,12 +6,12 @@ import i18n from "../../locales";
 
 interface OUDialogProps {
     selectedOUs: string[];
-    onClose(): void;
+    onCancel(): void;
     onSave: (newSelectedOUs: string[]) => void;
 }
 
 const OUDialog: React.FC<OUDialogProps> = props => {
-    const { selectedOUs, onClose, onSave } = props;
+    const { selectedOUs, onCancel, onSave } = props;
     const { api } = useAppContext();
     const [selectedOrgs, setSelectedOrgs] = React.useState<string[]>(selectedOUs);
 
@@ -26,7 +26,7 @@ const OUDialog: React.FC<OUDialogProps> = props => {
             <ConfirmationDialog
                 isOpen={true}
                 title={i18n.t("Select organisation unit")}
-                onCancel={onClose}
+                onCancel={onCancel}
                 onSave={() => onSave(selectedOrgs)}
                 saveText={i18n.t("Save")}
                 maxWidth={"lg"}

@@ -3,6 +3,7 @@ import DataStore from "d2-api/api/dataStore";
 import { getDataStore } from "../utils/dhis2";
 import { Config } from "./Config";
 import i18n from "../locales";
+import { PeriodInformation } from "../components/dialogs/PeriodSelectorDialog";
 
 export interface DataImportData {
     name: string | undefined;
@@ -10,6 +11,7 @@ export interface DataImportData {
     id: string | undefined;
     selectedMappings: string[];
     selectedOUs: string[];
+    periodInformation: PeriodInformation;
 }
 
 const defaultImportData = {
@@ -18,6 +20,7 @@ const defaultImportData = {
     description: "Default import. Unique default for all the instance",
     selectedMappings: [],
     selectedOUs: [],
+    periodInformation: { id: "" },
 };
 
 export type ImportField = keyof DataImportData;
@@ -32,6 +35,7 @@ export class DataImport {
         description: i18n.t("Description"),
         selectedMappings: i18n.t("Selected mappings"),
         selectedOUs: i18n.t("Selected organisation units"),
+        periodInformation: i18n.t("Selected query period"),
     };
 
     static getFieldName(field: ImportField): string {
@@ -68,6 +72,12 @@ export class DataImport {
         const newData = { ...this.data, selectedOUs: selectedOUs };
         return new DataImport(this.api, this.config, this.importPrefix, newData);
     }
+
+    public setPeriodInformation(newPeriodInformation: PeriodInformation) {
+        const newData = { ...this.data, periodInformation: newPeriodInformation };
+        return new DataImport(this.api, this.config, this.importPrefix, newData);
+    }
+
     public async save() {
         await this.dataStore.save(this.importKey, this.data);
     }

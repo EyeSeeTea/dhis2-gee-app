@@ -5,8 +5,8 @@ msgstr ""
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1)\n"
-"POT-Creation-Date: 2020-03-24T12:01:32.479Z\n"
-"PO-Revision-Date: 2020-03-24T12:01:32.479Z\n"
+"POT-Creation-Date: 2020-03-25T09:37:37.494Z\n"
+"PO-Revision-Date: 2020-03-25T09:37:37.494Z\n"
 
 msgid "Select organisation unit"
 msgstr ""
@@ -14,7 +14,58 @@ msgstr ""
 msgid "Save"
 msgstr ""
 
+msgid "Fixed period"
+msgstr ""
+
+msgid "Today"
+msgstr ""
+
+msgid "Yesterday"
+msgstr ""
+
+msgid "Last 7 days"
+msgstr ""
+
+msgid "Last 14 days"
+msgstr ""
+
+msgid "This week"
+msgstr ""
+
+msgid "Last week"
+msgstr ""
+
+msgid "This month"
+msgstr ""
+
+msgid "Last month"
+msgstr ""
+
+msgid "This quarter"
+msgstr ""
+
+msgid "Last quarter"
+msgstr ""
+
+msgid "This year"
+msgstr ""
+
+msgid "Last year"
+msgstr ""
+
 msgid "Select period interval"
+msgstr ""
+
+msgid "Period"
+msgstr ""
+
+msgid "Start date"
+msgstr ""
+
+msgid "End date"
+msgstr ""
+
+msgid "<No value>"
 msgstr ""
 
 msgid "Help"
@@ -50,6 +101,9 @@ msgid "Selected mappings"
 msgstr ""
 
 msgid "Selected organisation units"
+msgstr ""
+
+msgid "Selected query perido"
 msgstr ""
 
 msgid "Instance Dataset"
