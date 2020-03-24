@@ -57,9 +57,8 @@ class Mapping {
     ): Promise<{ mappings: Mapping[] | undefined; pager: Partial<TablePagination> }> {
         const dataStore = getDataStore(api, config);
         const mappingsKey = config.data.base.dataStore.keys.mappings;
-        const dsMappings = await dataStore.get<Mapping[] | undefined>(mappingsKey).getData();
-        console.log(dsMappings);
-        return { mappings: dsMappings, pager: {} };
+        const mappings = await dataStore.get<Mapping[] | undefined>(mappingsKey).getData();
+        return { mappings: mappings ? mappings : [], pager: {} };
     }
 }
 

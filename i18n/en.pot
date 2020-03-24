@@ -5,8 +5,8 @@ msgstr ""
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1)\n"
-"POT-Creation-Date: 2020-03-22T23:26:31.215Z\n"
-"PO-Revision-Date: 2020-03-22T23:26:31.215Z\n"
+"POT-Creation-Date: 2020-03-24T12:01:32.479Z\n"
+"PO-Revision-Date: 2020-03-24T12:01:32.479Z\n"
 
 msgid "Select organisation unit"
 msgstr ""
@@ -47,6 +47,9 @@ msgid "Description"
 msgstr ""
 
 msgid "Selected mappings"
+msgstr ""
+
+msgid "Selected organisation units"
 msgstr ""
 
 msgid "Instance Dataset"

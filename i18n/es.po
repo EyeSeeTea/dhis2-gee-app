@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: i18next-conv\n"
-"POT-Creation-Date: 2020-03-22T23:26:31.215Z\n"
+"POT-Creation-Date: 2020-03-24T12:01:32.479Z\n"
 "PO-Revision-Date: 2018-10-25T09:02:35.143Z\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -47,6 +47,9 @@ msgid "Description"
 msgstr ""
 
 msgid "Selected mappings"
+msgstr ""
+
+msgid "Selected organisation units"
 msgstr ""
 
 msgid "Instance Dataset"

@@ -3,14 +3,17 @@ import { OrgUnitsSelector, ConfirmationDialog } from "d2-ui-components";
 import { useAppContext } from "../../contexts/app-context";
 import { DialogContent } from "@material-ui/core";
 import i18n from "../../locales";
+
 interface OUDialogProps {
-    importPrefix: string;
+    selectedOUs: string[];
     onClose(): void;
+    onSave: (newSelectedOUs: string[]) => void;
 }
 
 const OUDialog: React.FC<OUDialogProps> = props => {
-    const { onClose } = props;
+    const { selectedOUs, onClose, onSave } = props;
     const { api } = useAppContext();
+    const [selectedOrgs, setSelectedOrgs] = React.useState<string[]>(selectedOUs);
 
     const controls = {
         filterByLevel: true,
@@ -23,12 +26,11 @@ const OUDialog: React.FC<OUDialogProps> = props => {
             <ConfirmationDialog
                 isOpen={true}
                 title={i18n.t("Select organisation unit")}
-                onSave={() => console.log("Save")}
                 onCancel={onClose}
+                onSave={() => onSave(selectedOrgs)}
                 saveText={i18n.t("Save")}
                 maxWidth={"lg"}
                 fullWidth={true}
-                disableSave={true}
             >
                 <DialogContent>
                     <OrgUnitsSelector
@@ -36,6 +38,8 @@ const OUDialog: React.FC<OUDialogProps> = props => {
                         typeInput="radio"
                         fullWidth={true}
                         controls={controls}
+                        onChange={setSelectedOrgs}
+                        selected={selectedOUs ? selectedOrgs : []}
                     />
                 </DialogContent>
             </ConfirmationDialog>

@@ -20,6 +20,7 @@ const ImportDetail: React.FunctionComponent<ImportDetailProps> = props => {
     const { api, config } = useAppContext();
     const classes = useStyles();
     const [selectedMappings, setSelectedMappings] = React.useState<string[]>([]);
+    const [selectedOUs, setSelectedOUs] = React.useState<string[]>([]);
     const [showOUDialog, setOUDialog] = React.useState<boolean>(false);
     const [showDatePickerDialog, setDatePickerDialog] = React.useState<boolean>(false);
 
@@ -32,6 +33,7 @@ const ImportDetail: React.FunctionComponent<ImportDetailProps> = props => {
     React.useEffect(() => {
         DataImport.getImportData(api, config, prefix).then(imp => {
             setSelectedMappings(imp ? imp.data.selectedMappings : []);
+            setSelectedOUs(imp ? imp.data.selectedOUs : []);
         });
     }, [api, config, prefix]);
 
@@ -42,7 +44,6 @@ const ImportDetail: React.FunctionComponent<ImportDetailProps> = props => {
 
     const onSelectedMappingsChange = useCallback(
         (newSelectedMappings: string[]) => {
-            console.log({ newSelectedMappings });
             setSelectedMappings(newSelectedMappings);
             DataImport.getImportData(api, config, prefix).then(imp => {
                 imp
@@ -53,9 +54,27 @@ const ImportDetail: React.FunctionComponent<ImportDetailProps> = props => {
         [api, config, prefix]
     );
 
+    const onSelectedOUsSave = useCallback(
+        (newSelectedOUs: string[]) => {
+            console.log({ newSelectedOUs });
+            setSelectedOUs(newSelectedOUs);
+            DataImport.getImportData(api, config, prefix).then(imp => {
+                imp ? imp.setSelectedOUs(newSelectedOUs).save() : console.log("No import found");
+            });
+            setOUDialog(false);
+        },
+        [api, config, prefix]
+    );
+
     return (
         <React.Fragment>
-            {showOUDialog && <OUDialog importPrefix={prefix} onClose={closeDialog} />}
+            {showOUDialog && (
+                <OUDialog
+                    selectedOUs={selectedOUs}
+                    onClose={closeDialog}
+                    onSave={onSelectedOUsSave}
+                />
+            )}
             {showDatePickerDialog && (
                 <DatePickerDialog importPrefix={prefix} onClose={closeDialog} />
             )}

@@ -10,7 +10,6 @@ import {
 import Mapping from "../../models/Mapping";
 import i18n from "../../locales";
 import { useAppContext } from "../../contexts/app-context";
-import { Filter } from "d2-api/api/common";
 import { makeStyles } from "@material-ui/styles";
 import { Theme, createStyles } from "@material-ui/core";
 import { useGoTo } from "../../router";
@@ -77,17 +76,14 @@ const MappingsList: React.FC<MappingsListProps> = props => {
     const componentConfig = React.useMemo(() => {
         return getComponentConfig();
     }, []);
+
     const classes = useStyles();
     const [rows, setRows] = useState<Mapping[] | undefined>(undefined);
     const [pagination, setPagination] = useState(componentConfig.initialPagination);
     const [sorting, setSorting] = useState<MappingTableSorting>(componentConfig.initialSorting);
-    const [filter] = useState<Filter>({});
-
-    console.log(filter);
-
     const [, setLoading] = useState(true);
     const [objectsTableKey] = useState(() => new Date().getTime());
-    console.log({ selectedMappings });
+
     const selection = useMemo(() => {
         return rows
             ?.filter(mapping => selectedMappings?.includes(mapping.id))
@@ -96,6 +92,7 @@ const MappingsList: React.FC<MappingsListProps> = props => {
 
     useEffect(() => {
         getMappings(sorting, { page: 1 });
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [sorting]);
 
     async function getMappings(
@@ -105,7 +102,6 @@ const MappingsList: React.FC<MappingsListProps> = props => {
         //Filters to retrieve mappings from the data store.
         const filters = {};
         const listPagination = { ...pagination, ...paginationOptions };
-        console.log("Mappings");
 
         setLoading(true);
         const res = await Mapping.getList(api, config, filters, sorting, listPagination);
