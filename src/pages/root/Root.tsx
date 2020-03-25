@@ -1,7 +1,7 @@
 import React from "react";
 import { Route, Switch, HashRouter } from "react-router-dom";
 import ImportDetail from "../import/ImportDetail";
-import MappingsWizardPage from "../mappings/edit-mappings/MappingsWizard";
+import MappingCreationPage from "../mappings/edit-mappings/MappingCreationPage";
 
 const Root = () => {
     return (
@@ -20,7 +20,7 @@ const Root = () => {
                     render={({ match }) => <MappingsList mappingId={match.params.mapping_id} />}
                 />
                 */}
-                <Route path="/mappings/new" render={() => <MappingsWizardPage />} />
+                <Route path="/mappings/new" render={() => <MappingCreationPage action={"new"} />} />
                 <Route
                     path="/imports/:prefix"
                     render={({ match }) => <ImportDetail prefix={match.params.prefix} />}

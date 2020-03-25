@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: i18next-conv\n"
-"POT-Creation-Date: 2020-03-25T09:37:37.494Z\n"
+"POT-Creation-Date: 2020-03-25T10:03:59.232Z\n"
 "PO-Revision-Date: 2018-10-25T09:02:35.143Z\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -103,7 +103,7 @@ msgstr ""
 msgid "Selected organisation units"
 msgstr ""
 
-msgid "Selected query perido"
+msgid "Selected query period"
 msgstr ""
 
 msgid "Instance Dataset"
@@ -166,5 +166,17 @@ msgstr ""
 msgid "Summary and save"
 msgstr ""
 
+msgid "New mapping"
+msgstr ""
+
 msgid "Edit mapping"
+msgstr ""
+
+msgid "Cancel mapping creation"
+msgstr ""
+
+msgid "Cancel mapping edition"
+msgstr ""
+
+msgid "Ok"
 msgstr ""

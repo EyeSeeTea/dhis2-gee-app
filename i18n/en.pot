@@ -5,8 +5,8 @@ msgstr ""
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1)\n"
-"POT-Creation-Date: 2020-03-25T09:37:37.494Z\n"
-"PO-Revision-Date: 2020-03-25T09:37:37.494Z\n"
+"POT-Creation-Date: 2020-03-25T10:03:59.232Z\n"
+"PO-Revision-Date: 2020-03-25T10:03:59.232Z\n"
 
 msgid "Select organisation unit"
 msgstr ""
@@ -103,7 +103,7 @@ msgstr ""
 msgid "Selected organisation units"
 msgstr ""
 
-msgid "Selected query perido"
+msgid "Selected query period"
 msgstr ""
 
 msgid "Instance Dataset"
@@ -166,5 +166,17 @@ msgstr ""
 msgid "Summary and save"
 msgstr ""
 
+msgid "New mapping"
+msgstr ""
+
 msgid "Edit mapping"
+msgstr ""
+
+msgid "Cancel mapping creation"
+msgstr ""
+
+msgid "Cancel mapping edition"
+msgstr ""
+
+msgid "Ok"
 msgstr ""

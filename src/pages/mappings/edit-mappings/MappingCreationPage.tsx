@@ -1,11 +1,13 @@
 import React from "react";
 import PageHeader from "../../../components/page-header/PageHeader";
-import ExitWizardButton from "../../../components/wizard/ExitWizardButton";
 import i18n from "../../../locales";
 import { useGoTo } from "../../../router";
+import { ConfirmationDialog } from "d2-ui-components";
 
-export interface StepProps {}
-
+interface SyncRulesCreationParams {
+    id?: string;
+    action: "edit" | "new";
+}
 /*
 const initialSteps = [
     {
@@ -25,25 +27,27 @@ const initialSteps = [
 ];
 */
 
-const MappingWizardPage: React.FC = props => {
+const MappingCreation: React.FC<SyncRulesCreationParams> = props => {
     const goTo = useGoTo();
+    const { id, action } = props;
+    const isEdit = action === "edit" && !!id;
+
+    const title = !isEdit ? i18n.t("New mapping") : i18n.t("Edit mapping");
+
+    const cancel = !isEdit ? i18n.t("Cancel mapping creation") : i18n.t("Cancel mapping edition");
+
     return (
         <React.Fragment>
-            <ExitWizardButton
+            <ConfirmationDialog
                 isOpen={false}
-                onConfirm={() => console.log("onConfirm")}
-                onCancel={() => console.log("onCancel")}
+                title={cancel}
+                onSave={() => console.log("save")}
+                onCancel={() => console.log("cancel")}
+                saveText={i18n.t("Ok")}
             />
-            <PageHeader title={i18n.t("Edit mapping")} onBackClick={() => goTo("imports")} />
-            {/*
-        <Wizard
-            steps={initialSteps}
-            useSnackFeedback={true}
-            initialStepKey={"general-info"}
-        />
-        )}*/}
+            <PageHeader title={title} onBackClick={() => goTo("imports")} />
         </React.Fragment>
     );
 };
 
-export default React.memo(MappingWizardPage);
+export default React.memo(MappingCreation);
