@@ -5,8 +5,8 @@ msgstr ""
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1)\n"
-"POT-Creation-Date: 2020-03-25T18:12:02.598Z\n"
-"PO-Revision-Date: 2020-03-25T18:12:02.598Z\n"
+"POT-Creation-Date: 2020-03-25T19:16:30.766Z\n"
+"PO-Revision-Date: 2020-03-25T19:16:30.766Z\n"
 
 msgid "<No value>"
 msgstr ""
@@ -72,15 +72,6 @@ msgid "Cancel mapping edition"
 msgstr ""
 
 msgid "Ok"
-msgstr ""
-
-msgid "CHIRPS - DAILY"
-msgstr ""
-
-msgid "ERA5 - DAILY"
-msgstr ""
-
-msgid "DAYMET V3"
 msgstr ""
 
 msgid "Field {{field}} cannot be blank"
