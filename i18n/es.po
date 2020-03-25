@@ -1,17 +1,44 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: i18next-conv\n"
-"POT-Creation-Date: 2020-03-09T08:28:53.161Z\n"
+"POT-Creation-Date: 2020-03-25T13:01:39.096Z\n"
 "PO-Revision-Date: 2018-10-25T09:02:35.143Z\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1)\n"
 
+msgid "General info"
+msgstr ""
+
+msgid "Variables mapping"
+msgstr ""
+
+msgid "Field cannot be blank"
+msgstr ""
+
 msgid "Help"
 msgstr ""
 
 msgid "Back"
+msgstr ""
+
+msgid "Id"
+msgstr ""
+
+msgid "Name"
+msgstr ""
+
+msgid "Description"
+msgstr ""
+
+msgid "Instance Dataset"
+msgstr ""
+
+msgid "G.E.E Dataset"
+msgstr ""
+
+msgid "Created at"
 msgstr ""
 
 msgid "Click to show feedback"
@@ -21,4 +48,40 @@ msgid "Add"
 msgstr ""
 
 msgid "List"
+msgstr ""
+
+msgid "Summary and save"
+msgstr ""
+
+msgid "New mapping"
+msgstr ""
+
+msgid "Edit mapping"
+msgstr ""
+
+msgid "Cancel mapping creation"
+msgstr ""
+
+msgid "Cancel mapping edition"
+msgstr ""
+
+msgid "Ok"
+msgstr ""
+
+msgid "Field {{field}} cannot be blank"
+msgstr ""
+
+msgid "This URL and username combination already exists"
+msgstr ""
+
+msgid "You need to select at least one {{element}}"
+msgstr ""
+
+msgid "Cron expression {{expression}} must be valid"
+msgstr ""
+
+msgid "To enable a rule you need to enter a valid {{expression}}"
+msgstr ""
+
+msgid "Start and end dates are not a valid period"
 msgstr ""
