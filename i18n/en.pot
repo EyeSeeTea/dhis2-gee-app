@@ -5,13 +5,28 @@ msgstr ""
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1)\n"
-"POT-Creation-Date: 2020-03-25T13:01:39.096Z\n"
-"PO-Revision-Date: 2020-03-25T13:01:39.096Z\n"
+"POT-Creation-Date: 2020-03-25T18:12:02.598Z\n"
+"PO-Revision-Date: 2020-03-25T18:12:02.598Z\n"
+
+msgid "<No value>"
+msgstr ""
 
 msgid "General info"
 msgstr ""
 
-msgid "Variables mapping"
+msgid "Google Earth Engine variables mapping"
+msgstr ""
+
+msgid "Summary and save"
+msgstr ""
+
+msgid "Name"
+msgstr ""
+
+msgid "Description"
+msgstr ""
+
+msgid "<Google Earth Image>"
 msgstr ""
 
 msgid "Field cannot be blank"
@@ -24,12 +39,6 @@ msgid "Back"
 msgstr ""
 
 msgid "Id"
-msgstr ""
-
-msgid "Name"
-msgstr ""
-
-msgid "Description"
 msgstr ""
 
 msgid "Instance Dataset"
@@ -50,9 +59,6 @@ msgstr ""
 msgid "List"
 msgstr ""
 
-msgid "Summary and save"
-msgstr ""
-
 msgid "New mapping"
 msgstr ""
 
@@ -68,6 +74,15 @@ msgstr ""
 msgid "Ok"
 msgstr ""
 
+msgid "CHIRPS - DAILY"
+msgstr ""
+
+msgid "ERA5 - DAILY"
+msgstr ""
+
+msgid "DAYMET V3"
+msgstr ""
+
 msgid "Field {{field}} cannot be blank"
 msgstr ""
 
@@ -75,12 +90,6 @@ msgid "This URL and username combination already exists"
 msgstr ""
 
 msgid "You need to select at least one {{element}}"
-msgstr ""
-
-msgid "Cron expression {{expression}} must be valid"
-msgstr ""
-
-msgid "To enable a rule you need to enter a valid {{expression}}"
 msgstr ""
 
 msgid "Start and end dates are not a valid period"

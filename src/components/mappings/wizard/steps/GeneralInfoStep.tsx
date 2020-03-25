@@ -7,10 +7,11 @@ import i18n from "../../../../locales";
 import { MappingData } from "../../../../models/Mapping";
 
 /* eslint-disable @typescript-eslint/no-var-requires */
-const { TextField } = require("@dhis2/d2-ui-core");
+const { TextField, DropDown } = require("@dhis2/d2-ui-core");
 const { FormBuilder, Validators } = require("@dhis2/d2-ui-forms");
 
 type StringField = "name" | "description";
+type DropdownField = "geeImage";
 
 class GeneralInfoStep extends React.Component<StepProps> {
     onUpdateField = <K extends keyof MappingData>(fieldName: K, newValue: MappingData[K]) => {
@@ -19,13 +20,27 @@ class GeneralInfoStep extends React.Component<StepProps> {
         onChange(newMapping);
     };
     render() {
-        const { mapping } = this.props;
+        const { config, mapping } = this.props;
         const fields = [
             getTextField("name", mapping.name, {
                 validators: [validators.presence],
+                props: {
+                    label: i18n.t("Name"),
+                },
             }),
             getTextField("description", mapping.description, {
-                props: { multiLine: true },
+                props: { multiLine: true, label: i18n.t("Description") },
+            }),
+            getDropdownField("geeImage", mapping.geeImage, {
+                validators: [validators.presence],
+                props: {
+                    emptyLabel: i18n.t("<Google Earth Image>"),
+                    menuItems: _(config.data.base.googleDatasets)
+                        .mapValues((value, key) => ({ ...value, id: key }))
+                        .values()
+                        .value(),
+                    style: { marginTop: 20 },
+                },
             }),
         ];
         return (
@@ -61,6 +76,23 @@ function getTextField(
             style: { width: "33%" },
             changeEvent: "onBlur",
             "data-field": name,
+            ...(props || {}),
+        },
+        validators: validators || [],
+    };
+}
+
+function getDropdownField(
+    name: DropdownField,
+    value: string,
+    { validators, props }: { validators?: Validator<string>[]; props?: _.Dictionary<any> } = {}
+) {
+    console.log(name, "-", value);
+    return {
+        name,
+        value,
+        component: DropDown,
+        props: {
             ...(props || {}),
         },
         validators: validators || [],

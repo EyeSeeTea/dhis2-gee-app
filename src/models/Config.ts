@@ -2,6 +2,10 @@ import { D2Api, MetadataPick } from "d2-api";
 
 const baseConfig = {
     // Add here static configuration
+    gee: {
+        serviceAccount: "test-63@foo-dhis2-gee-app.iam.gserviceaccount.com",
+        privateKeyFile: "foo-dhis2-gee-app-09be93975aeb.json",
+    },
     dataStore: {
         namespace: "dhis2-gee-app",
         keys: {
@@ -9,6 +13,25 @@ const baseConfig = {
             imports: {
                 suffix: "@import",
             },
+        },
+    },
+    googleDatasets: {
+        chirpsDaily: {
+            displayName: "CHIRPS - DAILY",
+            pointer: "UCSB-CHG/CHIRPS/DAILY",
+            doc:
+                "https://developers.google.com/earth-engine/datasets/catalog/UCSB-CHG_CHIRPS_DAILY",
+        },
+        era5Daily: {
+            displayName: "ERA5 - DAILY",
+            pointer: "ECMWF/ERA5/DAILY",
+            doc:
+                "https://developers.google.com/earth-engine/datasets/catalog/UCSB-CHG_CHIRPS_DAILY",
+        },
+        daymetV3: {
+            displayName: "DAYMET V3",
+            pointer: "NASA/ORNL/DAYMET_V3",
+            doc: "https://developers.google.com/earth-engine/datasets/catalog/NASA_ORNL_DAYMET_V3",
         },
     },
 };
@@ -40,6 +63,7 @@ export class Config {
     }
 
     static async build(api: D2Api): Promise<Config> {
+        console.log({ api });
         const data: ConfigData = {
             base: baseConfig,
         };

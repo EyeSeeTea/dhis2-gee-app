@@ -1,8 +1,7 @@
 import { Id, D2Api } from "d2-api";
 import _ from "lodash";
 import i18n from "../locales";
-import { TableSorting, TablePagination } from "d2-ui-components";
-import { Filter } from "d2-api/api/common";
+import { TablePagination } from "d2-ui-components";
 import { Config } from "./Config";
 import { getDataStore } from "../utils/dhis2";
 import { Validation } from "../types/validations";
@@ -74,10 +73,7 @@ class Mapping {
     }
     static async getList(
         api: D2Api,
-        config: Config,
-        filters: Filter,
-        sorting: TableSorting<Mapping>,
-        pagination: { page: number; pageSize: number }
+        config: Config
     ): Promise<{ mappings: Mapping[] | undefined; pager: Partial<TablePagination> }> {
         const dataStore = getDataStore(api, config);
         const mappingsKey = config.data.base.dataStore.keys.mappings;
@@ -94,8 +90,16 @@ class Mapping {
             name: _.compact([
                 !this.name.trim()
                     ? {
-                          key: "cannot_be_blank",
-                          namespace: { field: "name" },
+                          key: "cannotBeBlank",
+                          namespace: { field: Mapping.getFieldName("name") },
+                      }
+                    : null,
+            ]),
+            geeImage: _.compact([
+                !this.geeImage.trim()
+                    ? {
+                          key: "cannotBeEmpty",
+                          namespace: { element: Mapping.getFieldName("geeImage") },
                       }
                     : null,
             ]),

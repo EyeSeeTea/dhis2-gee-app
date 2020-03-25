@@ -17,6 +17,7 @@ interface MappingWizardProps {
 
 export interface StepProps {
     api: D2Api;
+    config: Config;
     mapping: Mapping;
     onChange(newMapping: Mapping): void;
 }
@@ -31,12 +32,13 @@ interface Props {
 
 const MappingWizard: React.FC<MappingWizardProps> = props => {
     const location = useLocation();
-    const { api } = useAppContext();
+    const { api, config } = useAppContext();
     const { mapping, onChange } = props;
     const steps = stepList.map(step => ({
         ...step,
         props: {
             api,
+            config,
             mapping,
             onChange,
         },

@@ -7,7 +7,7 @@ export const stepList = [
         key: "general-info",
         label: i18n.t("General info"),
         component: GeneralInfoStep,
-        validationKeys: ["name"],
+        validationKeys: ["name", "geeImage"],
     },
     {
         key: "de-mappings",
