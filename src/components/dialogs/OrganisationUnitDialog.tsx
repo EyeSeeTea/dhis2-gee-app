@@ -35,7 +35,7 @@ const OUDialog: React.FC<OUDialogProps> = props => {
                 <DialogContent>
                     <OrgUnitsSelector
                         api={api}
-                        typeInput="radio"
+                        typeInput="checkbox"
                         fullWidth={true}
                         controls={controls}
                         onChange={setSelectedOrgs}
