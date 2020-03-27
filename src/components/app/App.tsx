@@ -154,36 +154,10 @@ const App = () => {
     }
 };
 
-/*
-function testGee1() {
-    const data = getGeeData(ee, {
-        geometry: {
-            type: "point",
-            coordinates: [-2.557301, 6.695236],
-        },
-        interval: {
-            type: "daily",
-            start: moment("2018-08-23"),
-            end: moment("2018-09-02"),
-        },
-        id: "ECMWF/ERA5/DAILY",
-        bands: ["total_precipitation", "mean_2m_air_temperature"],
-    });
-    const dataValues = getDataValues({
-        orgUnitId: "PzO3UvH7za0",
-        geeData: data,
-        mapping: {
-            total_precipitation: "uWYGA1xiwuZ",
-            mean_2m_air_temperature: "RSJpUZqMoxC",
-        },
-    });
-    console.log(dataValues);
-}
-*/
-
 async function testGee2(api: D2Api) {
+    // const credentials = await api.get<Credentials>("/tokens/google").getData();
+    // Workaround until we have a dhis-google-auth.json
     const tokenUrl = "https://play.dhis2.org/2.33dev/api/tokens/google";
-    //const tokenUrl = "http://localhost:8030/api/tokens/google";
     const auth = { username: "admin", password: "district" };
     const credentials = (await Axios.get(tokenUrl, { auth })).data;
 
@@ -198,9 +172,7 @@ async function testGee2(api: D2Api) {
             // eslint-disable-next-line @typescript-eslint/camelcase
             mean_2m_air_temperature: "RSJpUZqMoxC",
         },
-        orgUnit: {
-            id: "IyO9ICB0WIn", // Sampaman CHPS:POINT -> featureType/coordinates
-        },
+        orgUnits: [{ id: "IyO9ICB0WIn" }, { id: "xloTsC6lk5Q" }],
         interval: {
             type: "daily",
             start: moment("2018-08-23"),
