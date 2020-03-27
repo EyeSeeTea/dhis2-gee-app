@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import moment from "moment";
 //@ts-ignore
 import { HeaderBar } from "@dhis2/ui-widgets";
 import { MuiThemeProvider } from "@material-ui/core/styles";
@@ -10,7 +11,7 @@ import _ from "lodash";
 import i18n from "@dhis2/d2-i18n";
 import { init } from "d2";
 import { SnackbarProvider } from "d2-ui-components";
-import { D2ApiDefault } from "d2-api";
+import { D2ApiDefault, D2Api } from "d2-api";
 
 import "./App.css";
 import { muiTheme } from "./themes/dhis2.theme";
@@ -21,6 +22,11 @@ import { AppContext } from "../../contexts/app-context";
 import { Config } from "../../models/Config";
 import { User } from "../../models/User";
 import { LinearProgress } from "@material-ui/core";
+// @ts-ignore
+import gee from "@google/earthengine";
+import { GeeDhis2 } from "../../models/GeeDhis2";
+import Axios from "axios";
+import { EarthEngine } from "../../models/EarthEngine";
 
 type D2 = object;
 
@@ -82,7 +88,25 @@ const App = () => {
             configI18n(data.userSettings);
             const appContext: AppContext = { d2, api, config, currentUser };
             setAppContext(appContext);
-            Object.assign(window, { app: appContext });
+            Object.assign(window, { app: appContext, ee: gee });
+
+            /*
+            const result = getGeeData(ee, {
+                id: "UCSB-CHG/CHIRPS/DAILY",
+                bands: ["precipitation"],
+                geometry: {
+                    type: "point",
+                    coordinates: [-12.9487, 9.0131],
+                },
+                period: {
+                    type: "daily" as const,
+                    start: moment("2018-08-23"),
+                    end: moment("2018-09-02"),
+                },
+            });
+            console.log({ result });
+            */
+            testGee2(api);
 
             setShowShareButton(_(appConfig).get("appearance.showShareButton") || false);
             if (currentUser.canReportFeedback()) {
@@ -129,6 +153,65 @@ const App = () => {
         );
     }
 };
+
+/*
+function testGee1() {
+    const data = getGeeData(ee, {
+        geometry: {
+            type: "point",
+            coordinates: [-2.557301, 6.695236],
+        },
+        interval: {
+            type: "daily",
+            start: moment("2018-08-23"),
+            end: moment("2018-09-02"),
+        },
+        id: "ECMWF/ERA5/DAILY",
+        bands: ["total_precipitation", "mean_2m_air_temperature"],
+    });
+    const dataValues = getDataValues({
+        orgUnitId: "PzO3UvH7za0",
+        geeData: data,
+        mapping: {
+            total_precipitation: "uWYGA1xiwuZ",
+            mean_2m_air_temperature: "RSJpUZqMoxC",
+        },
+    });
+    console.log(dataValues);
+}
+*/
+
+async function testGee2(api: D2Api) {
+    const tokenUrl = "https://play.dhis2.org/2.33dev/api/tokens/google";
+    //const tokenUrl = "http://localhost:8030/api/tokens/google";
+    const auth = { username: "admin", password: "district" };
+    const credentials = (await Axios.get(tokenUrl, { auth })).data;
+
+    const ee = await EarthEngine.init(gee, credentials);
+    const geeDhis2 = GeeDhis2.init(api, ee);
+
+    const dataValueSet = await geeDhis2.getDataValueSet({
+        geeDataSetId: "ECMWF/ERA5/DAILY",
+        mapping: {
+            // eslint-disable-next-line @typescript-eslint/camelcase
+            total_precipitation: "uWYGA1xiwuZ",
+            // eslint-disable-next-line @typescript-eslint/camelcase
+            mean_2m_air_temperature: "RSJpUZqMoxC",
+        },
+        orgUnit: {
+            id: "IyO9ICB0WIn", // Sampaman CHPS:POINT -> featureType/coordinates
+        },
+        interval: {
+            type: "daily",
+            start: moment("2018-08-23"),
+            end: moment("2018-08-25"), // Last day is not included
+        },
+    });
+    console.log(dataValueSet);
+
+    const res = await geeDhis2.postDataValueSet(dataValueSet);
+    console.log(res);
+}
 
 interface AppConfig {
     appKey: string;
