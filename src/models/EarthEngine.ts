@@ -1,7 +1,14 @@
 import _ from "lodash";
 import moment, { Moment } from "moment";
+import ee from "@google/earthengine";
+import {
+    GeometryPoint,
+    GeometryPolygon,
+    ImageCollection,
+    InfoDataRowBase,
+    InfoData,
+} from "@google/earthengine";
 
-export type GoogleEarthEngine = any;
 export type DataSetId = string;
 export type Band = string;
 export type Coordinates = [number, number];
@@ -35,14 +42,11 @@ export interface Credentials {
     expires_in: number;
 }
 
-type GeeGeometry = any;
-type GeeImageCollection = any;
+type GeeGeometry = GeometryPoint | GeometryPolygon;
 
 export class EarthEngine {
-    constructor(public gee: GoogleEarthEngine) {}
-
-    static async init(gee: GoogleEarthEngine, credentials: Credentials) {
-        gee.data.setAuthToken(
+    static async init(credentials: Credentials) {
+        ee.data.setAuthToken(
             credentials.client_id,
             "Bearer",
             credentials.access_token,
@@ -51,22 +55,24 @@ export class EarthEngine {
             null,
             false
         );
+
         await new Promise((resolve, reject) => {
-            gee.initialize(null, null, resolve, reject);
+            ee.initialize(null, null, resolve, reject);
         });
 
-        return new EarthEngine(gee);
+        return new EarthEngine();
     }
 
     async getData(options: GetDataOptions): Promise<GeeData> {
-        const { gee } = this;
         const { id, bands, geometry, interval, scale = 30 } = options;
 
-        const imageCollection = new gee.ImageCollection(id);
+        const imageCollection = new ee.ImageCollection(id);
         const startDate = getDayString(interval.start);
         const endDate = getDayString(interval.end); // last day is not included
-        const engineGeometry = getGeometry(gee, geometry);
+        const engineGeometry = getGeometry(geometry);
+
         console.log("ee.getImageCollection", { id, bands, startDate, endDate, geometry, scale });
+
         const rows = await getInfo(
             imageCollection
                 .select(bands)
@@ -85,6 +91,7 @@ export class EarthEngine {
             .drop(1)
             .map(row => getGeeItemFromApiRow(bands, row))
             .value();
+
         console.log({ rows, items });
 
         return items;
@@ -95,26 +102,25 @@ function getDayString(date: Moment): string {
     return date.format("YYYY-MM-DD");
 }
 
-function getGeometry(gee: GoogleEarthEngine, geometry: Geometry): GeeGeometry {
+function getGeometry(geometry: Geometry): GeeGeometry {
     switch (geometry.type) {
         case "point":
-            return gee.Geometry.Point(geometry.coordinates);
+            return ee.Geometry.Point(geometry.coordinates);
         case "multi-polygon":
-            return gee.Geometry.MultiPolygon(geometry.polygonCoordinates);
+            return ee.Geometry.MultiPolygon(geometry.polygonCoordinates);
     }
 }
 
 function getGeeItemFromApiRow(bands: Band[], row: any[]): DataItem {
-    const [periodId, lon, lat, time] = _.take(row, 4) as [string, number, number, number];
+    const [periodId, lon, lat, time] = _.take(row, 4) as InfoDataRowBase;
     const valuesForBands = _.drop(row, 4) as number[];
     const values: Record<Band, number> = _.fromPairs(_.zip(bands, valuesForBands));
     const date = moment(time);
-    const item: DataItem = { periodId, date, lat, lon, values };
-    return item;
+    return { periodId, date, lat, lon, values };
 }
 
-async function getInfo(imageCollection: GeeImageCollection): Promise<Array<any[]>> {
-    return new Promise(resolve => {
-        imageCollection.getInfo(resolve);
+async function getInfo(imageCollection: ImageCollection) {
+    return new Promise<InfoData>(resolve => {
+        imageCollection.getInfo(data => resolve(data));
     });
 }

@@ -13,8 +13,10 @@ declare module "@google/earthengine" {
         select(bands: string[]): this;
         filterDate(startDate: string, endDater: string): this;
         getRegion(geometry: GeometryInstance, scale: number): this;
-        getInfo(onSuccess: Maybe<(data: Array<any[]>) => void>): this;
+        getInfo(onSuccess: (data: InfoData) => void): void;
     }
+
+    declare type InfoData = Array<any[]>;
 
     declare type Coordinates = [number, number];
 
@@ -38,6 +40,8 @@ declare module "@google/earthengine" {
     declare type GeometryPoint = object;
     declare type GeometryPolygon = object;
     type GeometryInstance = GeometryPoint | GeometryPolygon;
+
+    declare type InfoDataRowBase = [string, number, number, number];
 
     export var Geometry: Geometry;
 }

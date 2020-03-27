@@ -22,11 +22,10 @@ import { AppContext } from "../../contexts/app-context";
 import { Config } from "../../models/Config";
 import { User } from "../../models/User";
 import { LinearProgress } from "@material-ui/core";
-// @ts-ignore
-import gee from "@google/earthengine";
 import { GeeDhis2 } from "../../models/GeeDhis2";
 import Axios from "axios";
 import { EarthEngine } from "../../models/EarthEngine";
+import ee from "@google/earthengine";
 
 type D2 = object;
 
@@ -88,25 +87,10 @@ const App = () => {
             configI18n(data.userSettings);
             const appContext: AppContext = { d2, api, config, currentUser };
             setAppContext(appContext);
-            Object.assign(window, { app: appContext, ee: gee });
+            // Google Earth Engine must be defined globally in window (as var 'ee') to work
+            Object.assign(window, { app: appContext, ee });
 
-            /*
-            const result = getGeeData(ee, {
-                id: "UCSB-CHG/CHIRPS/DAILY",
-                bands: ["precipitation"],
-                geometry: {
-                    type: "point",
-                    coordinates: [-12.9487, 9.0131],
-                },
-                period: {
-                    type: "daily" as const,
-                    start: moment("2018-08-23"),
-                    end: moment("2018-09-02"),
-                },
-            });
-            console.log({ result });
-            */
-            testGee2(api);
+            testGee(api);
 
             setShowShareButton(_(appConfig).get("appearance.showShareButton") || false);
             if (currentUser.canReportFeedback()) {
@@ -154,15 +138,16 @@ const App = () => {
     }
 };
 
-async function testGee2(api: D2Api) {
+async function testGee(api: D2Api) {
     // const credentials = await api.get<Credentials>("/tokens/google").getData();
-    // Workaround until we have a dhis-google-auth.json
+
+    // Workaround until we have a working dhis-google-auth.json
     const tokenUrl = "https://play.dhis2.org/2.33dev/api/tokens/google";
     const auth = { username: "admin", password: "district" };
     const credentials = (await Axios.get(tokenUrl, { auth })).data;
 
-    const ee = await EarthEngine.init(gee, credentials);
-    const geeDhis2 = GeeDhis2.init(api, ee);
+    const earthEngine = await EarthEngine.init(credentials);
+    const geeDhis2 = GeeDhis2.init(api, earthEngine);
 
     const dataValueSet = await geeDhis2.getDataValueSet({
         geeDataSetId: "ECMWF/ERA5/DAILY",
