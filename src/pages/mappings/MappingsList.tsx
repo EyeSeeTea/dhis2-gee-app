@@ -1,4 +1,5 @@
-import React, { useState, useEffect, useMemo } from "react";
+import React, { useState, useEffect, useMemo, useCallback } from "react";
+import _ from "lodash";
 import {
     MouseActionsMapping,
     TableColumn,
@@ -6,15 +7,18 @@ import {
     TableSorting,
     TablePagination,
     ObjectsTable,
+    ConfirmationDialog,
+    useSnackbar,
 } from "d2-ui-components";
 import Mapping from "../../models/Mapping";
 import i18n from "../../locales";
 import { useAppContext } from "../../contexts/app-context";
 import { makeStyles } from "@material-ui/styles";
-import { Theme, createStyles } from "@material-ui/core";
-import { useGoTo } from "../../router";
+import { Theme, createStyles, LinearProgress, Icon } from "@material-ui/core";
+import { useGoTo, GoTo } from "../../router";
+import { withSnackbarOnError } from "../../utils/error";
 
-type ContextualAction = "details" | "edit";
+type ContextualAction = "details" | "edit" | "delete";
 
 interface MappingsListProps {
     header?: string;
@@ -27,7 +31,10 @@ const mouseActionsMapping: MouseActionsMapping = {
     right: { type: "contextual" },
 };
 
-function getComponentConfig() {
+function getComponentConfig(
+    goTo: GoTo,
+    setMappingIdsToDelete: (state: React.SetStateAction<string[] | undefined>) => void
+) {
     const initialPagination = {
         page: 1,
         pageSize: 15,
@@ -51,6 +58,7 @@ function getComponentConfig() {
         details: {
             name: "details",
             text: i18n.t("Details"),
+            icon: <Icon>details</Icon>,
             multiple: false,
             primary: true,
         },
@@ -58,11 +66,20 @@ function getComponentConfig() {
             name: "edit",
             text: i18n.t("Edit"),
             multiple: false,
+            icon: <Icon>edit</Icon>,
             primary: true,
+            onClick: (ids: string[]) => onFirst(ids, id => goTo("mappings.edit", { id })),
+        },
+        delete: {
+            name: "delete",
+            text: i18n.t("Delete"),
+            icon: <Icon>delete</Icon>,
+            multiple: true,
+            primary: true,
+            onClick: setMappingIdsToDelete,
         },
     };
-
-    const actions = [allActions.details, allActions.edit];
+    const actions = [allActions.details, allActions.edit, allActions.delete];
 
     return { columns, initialSorting, details, actions, initialPagination };
 }
@@ -72,16 +89,19 @@ type MappingTableSorting = TableSorting<Mapping>;
 const MappingsList: React.FC<MappingsListProps> = props => {
     const { api, config } = useAppContext();
     const goTo = useGoTo();
+    const snackbar = useSnackbar();
     const { header, selectedMappings, onSelectionChange } = props;
+    const [mappingIdsToDelete, setMappingIdsToDelete] = useState<string[] | undefined>(undefined);
     const componentConfig = React.useMemo(() => {
-        return getComponentConfig();
-    }, []);
+        return getComponentConfig(goTo, setMappingIdsToDelete);
+    }, [setMappingIdsToDelete]);
 
     const classes = useStyles();
     const [rows, setRows] = useState<Mapping[] | undefined>(undefined);
     const [pagination, setPagination] = useState(componentConfig.initialPagination);
     const [sorting, setSorting] = useState<MappingTableSorting>(componentConfig.initialSorting);
     const [, setLoading] = useState(true);
+    const [isDeleting, setDeleting] = useState(false);
     const [objectsTableKey] = useState(() => new Date().getTime());
 
     const selection = useMemo(() => {
@@ -104,15 +124,55 @@ const MappingsList: React.FC<MappingsListProps> = props => {
         const listPagination = { ...pagination, ...paginationOptions };
 
         setLoading(true);
-        const res = await Mapping.getList(api, config, filters, sorting, listPagination);
+        const res = await Mapping.getList(api, config);
         setRows(res.mappings);
         setPagination({ ...listPagination, ...res.pager });
         setSorting(sorting);
         setLoading(false);
     }
 
+    const deleteMappings = React.useCallback(() => {
+        setDeleting(true);
+        withSnackbarOnError(
+            snackbar,
+            async () => {
+                await Mapping.delete(api, config, mappingIdsToDelete ?? []);
+                snackbar.success(
+                    i18n.t("{{n}} mappings deleted", { n: mappingIdsToDelete?.length })
+                );
+            },
+            {
+                onFinally: () => {
+                    setMappingIdsToDelete(undefined);
+                    getMappings(sorting, { page: 1 });
+                },
+            }
+        );
+    }, [mappingIdsToDelete]);
+
+    const closeDeleteDialog = useCallback(() => {
+        setMappingIdsToDelete(undefined);
+    }, []);
+
     return (
         <div>
+            {mappingIdsToDelete && (
+                <ConfirmationDialog
+                    isOpen={true}
+                    onSave={deleteMappings}
+                    onCancel={isDeleting ? undefined : closeDeleteDialog}
+                    title={i18n.t("Delete project")}
+                    description={i18n.t(
+                        "This operation will delete {{n}} mappings. This operation cannot be undone. Are you sure you want to proceed?",
+                        { n: mappingIdsToDelete.length }
+                    )}
+                    saveText={isDeleting ? i18n.t("Deleting...") : i18n.t("Proceed")}
+                    disableSave={isDeleting}
+                    cancelText={i18n.t("Cancel")}
+                >
+                    {isDeleting && <LinearProgress />}
+                </ConfirmationDialog>
+            )}
             {rows && (
                 <ObjectsTable<Mapping>
                     key={objectsTableKey}
@@ -144,5 +204,10 @@ const useStyles = makeStyles((theme: Theme) =>
         },
     })
 );
+
+function onFirst<T>(objs: T[], fn: (obj: T) => void): void {
+    const obj = _.first(objs);
+    if (obj) fn(obj);
+}
 
 export default React.memo(MappingsList);
