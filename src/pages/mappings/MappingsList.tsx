@@ -94,7 +94,7 @@ const MappingsList: React.FC<MappingsListProps> = props => {
     const [mappingIdsToDelete, setMappingIdsToDelete] = useState<string[] | undefined>(undefined);
     const componentConfig = React.useMemo(() => {
         return getComponentConfig(goTo, setMappingIdsToDelete);
-    }, [setMappingIdsToDelete]);
+    }, [goTo, setMappingIdsToDelete]);
 
     const classes = useStyles();
     const [rows, setRows] = useState<Mapping[] | undefined>(undefined);
@@ -120,7 +120,6 @@ const MappingsList: React.FC<MappingsListProps> = props => {
         paginationOptions: Partial<TablePagination>
     ) {
         //Filters to retrieve mappings from the data store.
-        const filters = {};
         const listPagination = { ...pagination, ...paginationOptions };
 
         setLoading(true);
@@ -148,7 +147,8 @@ const MappingsList: React.FC<MappingsListProps> = props => {
                 },
             }
         );
-    }, [mappingIdsToDelete]);
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [api, config, snackbar, sorting, mappingIdsToDelete]);
 
     const closeDeleteDialog = useCallback(() => {
         setMappingIdsToDelete(undefined);
@@ -163,7 +163,7 @@ const MappingsList: React.FC<MappingsListProps> = props => {
                     onCancel={isDeleting ? undefined : closeDeleteDialog}
                     title={i18n.t("Delete project")}
                     description={i18n.t(
-                        "This operation will delete {{n}} mappings. This operation cannot be undone. Are you sure you want to proceed?",
+                        "This operation will delete ({{n}}) mappings. This operation cannot be undone. Are you sure you want to proceed?",
                         { n: mappingIdsToDelete.length }
                     )}
                     saveText={isDeleting ? i18n.t("Deleting...") : i18n.t("Proceed")}
