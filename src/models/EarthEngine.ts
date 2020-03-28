@@ -10,7 +10,6 @@ import {
 } from "@google/earthengine";
 
 export type DataSetId = string;
-export type Band = string;
 export type Coordinates = [number, number];
 export type Interval = { type: "daily"; start: Moment; end: Moment };
 
@@ -18,7 +17,7 @@ export type Geometry =
     | { type: "point"; coordinates: Coordinates }
     | { type: "multi-polygon"; polygonCoordinates: Coordinates[][][] };
 
-export interface GetDataOptions {
+export interface GetDataOptions<Band> {
     id: DataSetId;
     bands: Band[];
     geometry: Geometry;
@@ -26,15 +25,16 @@ export interface GetDataOptions {
     scale?: number;
 }
 
-export type DataItem = {
+export type DataItem<Band> = {
     periodId: string;
     date: Moment;
     lat: number;
     lon: number;
-    values: Record<Band, number>;
+    band: Band;
+    value: number;
 };
 
-export type GeeData = DataItem[];
+export type GeeData<Band> = DataItem<Band>[];
 
 export interface Credentials {
     client_id: string;
@@ -63,14 +63,13 @@ export class EarthEngine {
         return new EarthEngine();
     }
 
-    async getData(options: GetDataOptions): Promise<GeeData> {
+    async getData<Band extends string>(options: GetDataOptions<Band>): Promise<GeeData<Band>> {
         const { id, bands, geometry, interval, scale = 30 } = options;
 
         const imageCollection = new ee.ImageCollection(id);
         const startDate = getDayString(interval.start);
         const endDate = getDayString(interval.end); // last day is not included
         const engineGeometry = getGeometry(geometry);
-
         console.log("ee.getImageCollection", { id, bands, startDate, endDate, geometry, scale });
 
         const rows = await getInfo(
@@ -89,11 +88,10 @@ export class EarthEngine {
 
         const items = _(rows)
             .drop(1)
-            .map(row => getGeeItemFromApiRow(bands, row))
+            .flatMap(row => getGeeItemsFromApiRow(bands, row))
             .value();
 
         console.log({ rows, items });
-
         return items;
     }
 }
@@ -111,15 +109,20 @@ function getGeometry(geometry: Geometry): GeeGeometry {
     }
 }
 
-function getGeeItemFromApiRow(bands: Band[], row: any[]): DataItem {
+function getGeeItemsFromApiRow<Band>(bands: Band[], row: any[]): DataItem<Band>[] {
     const [periodId, lon, lat, time] = _.take(row, 4) as InfoDataRowBase;
-    const valuesForBands = _.drop(row, 4) as number[];
-    const values: Record<Band, number> = _.fromPairs(_.zip(bands, valuesForBands));
+    const values = _.drop(row, 4) as number[];
     const date = moment(time);
-    return { periodId, date, lat, lon, values };
+    const baseItem = { periodId, date, lat, lon };
+
+    return _(bands)
+        .zip(values)
+        .map(([band, value]) => (!band || _.isNil(value) ? null : { ...baseItem, band, value }))
+        .compact()
+        .value();
 }
 
-async function getInfo(imageCollection: ImageCollection) {
+async function getInfo(imageCollection: ImageCollection): Promise<InfoData> {
     return new Promise<InfoData>(resolve => {
         imageCollection.getInfo(data => resolve(data));
     });

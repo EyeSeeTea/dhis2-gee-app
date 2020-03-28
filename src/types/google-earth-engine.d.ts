@@ -16,6 +16,7 @@ declare module "@google/earthengine" {
         getInfo(onSuccess: (data: InfoData) => void): void;
     }
 
+    // [periodId, lon, lat, time, ...number]
     declare type InfoData = Array<any[]>;
 
     declare type Coordinates = [number, number];
@@ -41,6 +42,7 @@ declare module "@google/earthengine" {
     declare type GeometryPolygon = object;
     type GeometryInstance = GeometryPoint | GeometryPolygon;
 
+    // [periodId, lon, lat, time]
     declare type InfoDataRowBase = [string, number, number, number];
 
     export var Geometry: Geometry;

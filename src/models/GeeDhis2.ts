@@ -1,6 +1,6 @@
 import _ from "lodash";
 import { D2Api, Id, DataValueSetsPostResponse } from "d2-api";
-import { DataSetId, Band, GeeData, GetDataOptions, DataItem } from "./EarthEngine";
+import { DataSetId, GeeData, GetDataOptions, DataItem } from "./EarthEngine";
 import { EarthEngine, Interval, Geometry } from "./EarthEngine";
 
 export interface OrgUnit {
@@ -25,7 +25,7 @@ export interface DataValueSet {
     dataValues: DataValue[];
 }
 
-export interface GetDataValueSetOptions {
+export interface GetDataValueSetOptions<Band extends string> {
     geeDataSetId: DataSetId;
     mapping: Record<Band, DataElementId>;
     orgUnits: OrgUnit[];
@@ -33,9 +33,9 @@ export interface GetDataValueSetOptions {
     scale?: number;
 }
 
-export interface GetDataValuesOptions {
+export interface GetDataValuesOptions<Band extends string> {
     orgUnitId: string;
-    geeData: GeeData;
+    geeData: GeeData<Band>;
     mapping: Record<Band, DataElementId>;
 }
 
@@ -77,7 +77,9 @@ export class GeeDhis2 {
         return _.fromPairs(pairs);
     }
 
-    async getDataValueSet(options: GetDataValueSetOptions): Promise<DataValueSet> {
+    async getDataValueSet<Band extends string>(
+        options: GetDataValueSetOptions<Band>
+    ): Promise<DataValueSet> {
         const { ee } = this;
         const { geeDataSetId, orgUnits, mapping, interval, scale } = options;
         const geometries = await this.getGeometries(orgUnits);
@@ -86,44 +88,42 @@ export class GeeDhis2 {
         const dataValuesList = await promiseMap(_.toPairs(geometries), async ([ouId, geometry]) => {
             if (!geometry) return [];
 
-            const imageCollectionOptions: GetDataOptions = {
+            const options: GetDataOptions<Band> = {
                 id: geeDataSetId,
-                bands: _.keys(mapping),
+                bands: _.keys(mapping) as Band[],
                 geometry,
                 interval,
                 scale,
             };
 
-            const geeData = await ee.getData(imageCollectionOptions);
+            const geeData = await ee.getData(options);
             return this.getDataValues({ orgUnitId: ouId, geeData, mapping });
         });
 
         return { dataValues: _.flatten(dataValuesList) };
     }
 
-    getDataValues(options: GetDataValuesOptions): DataValue[] {
+    getDataValues<Band extends string>(options: GetDataValuesOptions<Band>): DataValue[] {
         const { orgUnitId, geeData, mapping } = options;
 
-        function getDataValue(item: DataItem, dataElementId: DataElementId, band: Band) {
-            const value = get(item.values, band);
-            if (!value) {
-                return null;
-            } else {
-                return {
-                    dataElement: dataElementId,
-                    value: value.toFixed(2),
-                    orgUnit: orgUnitId,
-                    period: item.date.format("YYYYMMDD"),
-                };
+        function getDataValue(item: DataItem<Band>) {
+            const { date, band, value } = item;
+            const dataElementId = get(mapping, band);
+
+            if (!dataElementId) {
+                console.error(`Band not found in mapping: ${band}`);
+                return;
             }
+
+            return {
+                dataElement: dataElementId,
+                value: value.toFixed(2),
+                orgUnit: orgUnitId,
+                period: date.format("YYYYMMDD"),
+            };
         }
 
-        return _.flatMap(geeData, item =>
-            _(mapping)
-                .map((dataElementId, band) => getDataValue(item, dataElementId, band))
-                .compact()
-                .value()
-        );
+        return _(geeData).map(getDataValue).compact().value();
     }
 
     async postDataValueSet(dataValueSet: DataValueSet): Promise<DataValueSetsPostResponse> {
@@ -131,7 +131,7 @@ export class GeeDhis2 {
     }
 }
 
-function get<T>(obj: Record<string, T>, key: string): T | undefined {
+function get<K extends keyof T, T>(obj: T, key: K): T[K] | undefined {
     return obj[key];
 }
 
