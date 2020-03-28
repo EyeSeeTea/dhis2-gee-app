@@ -13,6 +13,7 @@ import { getValidationMessages } from "../../../utils/validations";
 interface MappingWizardProps {
     mapping?: Mapping;
     onChange(newMapping: Mapping): void;
+    onCancel(): void;
 }
 
 export interface StepProps {
@@ -20,6 +21,7 @@ export interface StepProps {
     config: Config;
     mapping: Mapping;
     onChange(newMapping: Mapping): void;
+    onCancel(): void;
 }
 
 interface Props {
@@ -33,7 +35,7 @@ interface Props {
 const MappingWizard: React.FC<MappingWizardProps> = props => {
     const location = useLocation();
     const { api, config } = useAppContext();
-    const { mapping, onChange } = props;
+    const { mapping, onChange, onCancel } = props;
     const steps = stepList.map(step => ({
         ...step,
         props: {
@@ -41,6 +43,7 @@ const MappingWizard: React.FC<MappingWizardProps> = props => {
             config,
             mapping,
             onChange,
+            onCancel,
         },
     }));
 

@@ -16,7 +16,11 @@ type DropdownField = "geeImage";
 class GeneralInfoStep extends React.Component<StepProps> {
     onUpdateField = <K extends keyof MappingData>(fieldName: K, newValue: MappingData[K]) => {
         const { mapping, onChange } = this.props;
-        const newMapping = mapping.set(fieldName, newValue as MappingData[K]);
+        let newMapping = mapping.set(fieldName, newValue as MappingData[K]);
+
+        if (fieldName === "geeImage") {
+            newMapping = newMapping.set("attributeMappingDictionary", {});
+        }
         onChange(newMapping);
     };
     render() {

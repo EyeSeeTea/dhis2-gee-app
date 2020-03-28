@@ -1,22 +1,24 @@
 import { D2Api } from "d2-api";
 import _ from "lodash";
 import i18n from "../locales";
-import { TablePagination } from "d2-ui-components";
 import { Config } from "./Config";
 import { getDataStore } from "../utils/dhis2";
 import { Validation } from "../types/validations";
-import { MappingData } from "./Mapping";
+import { AttributeMappingDictionary } from "./Mapping";
+import DataElement from "./DataElement";
 
-export interface AttributeMappingData {
-    geeImage: string;
-    name: string;
+export interface AttributeMappingSummary {
+    dataElementName?: string;
+    dataElementId?: string;
+}
+
+export interface AttributeMappingData extends AttributeMappingSummary {
+    id: string;
+    geeBand: string;
     comment: string;
-    dataElement: {
-        id: string;
-        code: string;
-        name: string;
-    };
-    created: Date;
+    dataElementId?: string;
+    dataElementCode?: string;
+    dataElementName?: string;
 }
 
 export type AttributeMappingField = keyof AttributeMappingData;
@@ -35,11 +37,12 @@ class AttributeMapping {
     data: AttributeMappingData;
 
     static fieldNames: Record<AttributeMappingField, string> = {
-        name: i18n.t("Name"),
+        id: i18n.t("Id"),
         comment: i18n.t("Comment"),
-        geeImage: i18n.t("G.E.E Dataset"),
-        dataElement: i18n.t("Data element"),
-        created: i18n.t("Created at"),
+        geeBand: i18n.t("Google Attribute"),
+        dataElementId: i18n.t("Data element id"),
+        dataElementCode: i18n.t("Data element code"),
+        dataElementName: i18n.t("Data element name"),
     };
 
     static getFieldName(field: AttributeMappingField): string {
@@ -66,26 +69,28 @@ class AttributeMapping {
 
     public static create() {
         return new AttributeMapping({
-            name: "",
+            id: "",
             comment: "",
-            geeImage: "",
-            dataElement: {
-                id: "",
-                code: "",
-                name: "",
-            },
-            created: new Date(),
+            geeBand: "",
+            dataElementId: "",
+            dataElementCode: "",
+            dataElementName: "",
         });
     }
-    static async getList(
-        api: D2Api,
-        config: Config
-    ): Promise<{ mappings: AttributeMapping[] | undefined; pager: Partial<TablePagination> }> {
-        //TODO: Retrieve proper attribute mappings from Datastore.
-        const dataStore = getDataStore(api, config);
-        const mappingsKey = config.data.base.dataStore.keys.mappings;
-        const mappings = await dataStore.get<AttributeMapping[] | undefined>(mappingsKey).getData();
-        return { mappings: mappings ? mappings : [], pager: {} };
+    public static getList(
+        availableBands: string[],
+        mappingDictionary: AttributeMappingDictionary
+    ): { attributeMappings: AttributeMapping[] } {
+        const attributeMappings: AttributeMapping[] = availableBands.map(
+            band =>
+                mappingDictionary[band] ??
+                new AttributeMapping({
+                    id: band,
+                    geeBand: band,
+                    comment: "",
+                })
+        );
+        return { attributeMappings: attributeMappings };
     }
 
     public set<K extends keyof AttributeMappingData>(
@@ -97,25 +102,23 @@ class AttributeMapping {
 
     public async validate(): Promise<Validation> {
         return _.pickBy({
-            name: _.compact([
-                !this.name.trim()
-                    ? {
-                          key: "cannotBeBlank",
-                          namespace: { field: AttributeMapping.getFieldName("name") },
-                      }
-                    : null,
-            ]),
             geeImage: _.compact([
-                !this.geeImage.trim()
+                !this.geeBand.trim()
                     ? {
                           key: "cannotBeEmpty",
-                          namespace: { element: AttributeMapping.getFieldName("geeImage") },
+                          namespace: { element: AttributeMapping.getFieldName("geeBand") },
                       }
                     : null,
             ]),
         });
     }
+
+    public setDataElement(dataElement: DataElement) {
+        return this.set("dataElementId", dataElement.id)
+            .set("dataElementName", dataElement.name)
+            .set("dataElementCode", dataElement.code);
+    }
 }
-interface AttributeMapping extends MappingData {}
+interface AttributeMapping extends AttributeMappingData {}
 
 export default AttributeMapping;

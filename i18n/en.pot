@@ -5,10 +5,67 @@ msgstr ""
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1)\n"
-"POT-Creation-Date: 2020-03-25T19:16:30.766Z\n"
-"PO-Revision-Date: 2020-03-25T19:16:30.766Z\n"
+"POT-Creation-Date: 2020-03-28T19:44:25.228Z\n"
+"PO-Revision-Date: 2020-03-28T19:44:25.228Z\n"
+
+msgid "Mapping for attribute {{attr}}"
+msgstr ""
+
+msgid "Cancel"
+msgstr ""
+
+msgid "Disable mapping"
+msgstr ""
+
+msgid "Are you sure you want to disable mapping for {{total}} attributes?"
+msgstr ""
+
+msgid "Please select at least one item to disable mapping"
+msgstr ""
+
+msgid "Google Attribute"
+msgstr ""
+
+msgid "Mapped Id"
+msgstr ""
+
+msgid "Set mapping"
+msgstr ""
+
+msgid "Mapped Name"
+msgstr ""
+
+msgid "Mapped Code"
+msgstr ""
+
+msgid "Ok"
+msgstr ""
+
+msgid "Search by name / code"
+msgstr ""
+
+msgid "Name"
+msgstr ""
+
+msgid "Code"
+msgstr ""
+
+msgid "Select"
+msgstr ""
 
 msgid "<No value>"
+msgstr ""
+
+msgid "Cancel mapping?"
+msgstr ""
+
+msgid "All your changes will be lost. Are you sure you want to proceed?"
+msgstr ""
+
+msgid "Yes"
+msgstr ""
+
+msgid "No"
 msgstr ""
 
 msgid "General info"
@@ -20,9 +77,6 @@ msgstr ""
 msgid "Summary and save"
 msgstr ""
 
-msgid "Name"
-msgstr ""
-
 msgid "Description"
 msgstr ""
 
@@ -30,6 +84,9 @@ msgid "<Google Earth Image>"
 msgstr ""
 
 msgid "Field cannot be blank"
+msgstr ""
+
+msgid "Save"
 msgstr ""
 
 msgid "Help"
@@ -41,6 +98,18 @@ msgstr ""
 msgid "Id"
 msgstr ""
 
+msgid "Comment"
+msgstr ""
+
+msgid "Data element id"
+msgstr ""
+
+msgid "Data element code"
+msgstr ""
+
+msgid "Data element name"
+msgstr ""
+
 msgid "Instance Dataset"
 msgstr ""
 
@@ -48,6 +117,9 @@ msgid "G.E.E Dataset"
 msgstr ""
 
 msgid "Created at"
+msgstr ""
+
+msgid "Attribute mappings"
 msgstr ""
 
 msgid "Click to show feedback"
@@ -69,9 +141,6 @@ msgid "Cancel mapping creation"
 msgstr ""
 
 msgid "Cancel mapping edition"
-msgstr ""
-
-msgid "Ok"
 msgstr ""
 
 msgid "Field {{field}} cannot be blank"

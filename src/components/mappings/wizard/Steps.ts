@@ -1,6 +1,7 @@
 import i18n from "../../../locales";
 import GeneralInfoStep from "./steps/GeneralInfoStep";
 import VariablesMappingStep from "./steps/VariablesMappingStep";
+import SummaryStep from "./steps/SummaryStep";
 
 export const stepList = [
     {
@@ -18,7 +19,7 @@ export const stepList = [
     {
         key: "summary-save",
         label: i18n.t("Summary and save"),
-        component: VariablesMappingStep,
+        component: SummaryStep,
         validationKeys: [],
     },
 ];

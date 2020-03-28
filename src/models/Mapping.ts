@@ -5,6 +5,12 @@ import { TablePagination } from "d2-ui-components";
 import { Config } from "./Config";
 import { getDataStore } from "../utils/dhis2";
 import { Validation } from "../types/validations";
+import AttributeMapping from "./AttributeMapping";
+import { generateUid } from "d2/uid";
+
+export interface AttributeMappingDictionary {
+    [geeBand: string]: AttributeMapping;
+}
 
 export interface MappingData {
     id: Id;
@@ -13,6 +19,7 @@ export interface MappingData {
     dataSet: string;
     geeImage: string;
     created: Date;
+    attributeMappingDictionary: AttributeMappingDictionary;
 }
 
 export type MappingField = keyof MappingData;
@@ -37,6 +44,7 @@ class Mapping {
         dataSet: i18n.t("Instance Dataset"),
         geeImage: i18n.t("G.E.E Dataset"),
         created: i18n.t("Created at"),
+        attributeMappingDictionary: i18n.t("Attribute mappings"),
     };
 
     static getFieldName(field: MappingField): string {
@@ -63,11 +71,12 @@ class Mapping {
 
     public static create() {
         return new Mapping({
-            id: "",
+            id: generateUid(),
             name: "",
             description: "",
             dataSet: "",
             geeImage: "",
+            attributeMappingDictionary: {},
             created: new Date(),
         });
     }
@@ -77,8 +86,8 @@ class Mapping {
     ): Promise<{ mappings: Mapping[] | undefined; pager: Partial<TablePagination> }> {
         const dataStore = getDataStore(api, config);
         const mappingsKey = config.data.base.dataStore.keys.mappings;
-        const mappings = await dataStore.get<Mapping[] | undefined>(mappingsKey).getData();
-        return { mappings: mappings ? mappings : [], pager: {} };
+        const mappingsById = await dataStore.get<Mapping[] | undefined>(mappingsKey).getData();
+        return { mappings: mappingsById ? mappingsById.map(m => m) : [], pager: {} };
     }
 
     public set<K extends keyof MappingData>(field: K, value: MappingData[K]): Mapping {
@@ -104,6 +113,13 @@ class Mapping {
                     : null,
             ]),
         });
+    }
+
+    public async save(api: D2Api, config: Config) {
+        const dataStore = getDataStore(api, config);
+        const mappingsKey = config.data.base.dataStore.keys.mappings;
+        const mappingsById = await dataStore.get<Mapping[] | undefined>(mappingsKey).getData();
+        return await dataStore.save(mappingsKey, { ...mappingsById, [this.id]: this });
     }
 }
 
