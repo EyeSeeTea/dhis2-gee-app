@@ -9,9 +9,11 @@ import { Config } from "../../../models/Config";
 import { useAppContext } from "../../../contexts/app-context";
 import { stepList } from "./Steps";
 import { getValidationMessages } from "../../../utils/validations";
+import DataSet from "../../../models/DataSet";
 
 interface MappingWizardProps {
     mapping?: Mapping;
+    dataSets: DataSet[];
     onChange(newMapping: Mapping): void;
     onCancel(): void;
 }
@@ -20,6 +22,7 @@ export interface StepProps {
     api: D2Api;
     config: Config;
     mapping: Mapping;
+    dataSets: DataSet[];
     onChange(newMapping: Mapping): void;
     onCancel(): void;
 }
@@ -35,13 +38,15 @@ interface Props {
 const MappingWizard: React.FC<MappingWizardProps> = props => {
     const location = useLocation();
     const { api, config } = useAppContext();
-    const { mapping, onChange, onCancel } = props;
+    const { mapping, onChange, onCancel, dataSets } = props;
+
     const steps = stepList.map(step => ({
         ...step,
         props: {
             api,
             config,
             mapping,
+            dataSets,
             onChange,
             onCancel,
         },

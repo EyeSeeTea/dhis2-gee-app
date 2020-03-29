@@ -45,7 +45,6 @@ export interface AttributeMappingTableProps {
     mapping: Mapping;
     onChange(newMapping: Mapping): void;
     availableBands: string[];
-    geeImage: string;
 }
 
 export default function AttributeMappingTable({
@@ -53,7 +52,6 @@ export default function AttributeMappingTable({
     mapping,
     onChange,
     availableBands,
-    geeImage,
 }: AttributeMappingTableProps) {
     const classes = useStyles();
     const snackbar = useSnackbar();
@@ -71,11 +69,11 @@ export default function AttributeMappingTable({
     const openMappingDialog = useCallback(
         (geeBands: string[]) => {
             setNewMappingConfig({
-                dataset: "",
+                dataset: mapping.dataSetId,
                 attributeMapping: _.find(rows, ["id", geeBands[0]]),
             });
         },
-        [rows]
+        [rows, mapping]
     );
 
     const deleteMapping = useCallback(
@@ -137,9 +135,9 @@ export default function AttributeMappingTable({
                 name: "dataElementId",
                 text: i18n.t("Mapped Id"),
                 sortable: false,
+                /*eslint-disable*/
                 getValue: (row: AttributeMapping) => {
                     const value = row.dataElementId ?? "-";
-
                     return (
                         <span>
                             <Typography variant={"inherit"} gutterBottom>
@@ -148,7 +146,7 @@ export default function AttributeMappingTable({
                             <Tooltip title={i18n.t("Set mapping")} placement="top">
                                 <IconButton
                                     className={classes.iconButton}
-                                    onClick={event => {
+                                    onClick={() => {
                                         openMappingDialog([row.id]);
                                     }}
                                 >
@@ -165,7 +163,6 @@ export default function AttributeMappingTable({
                 sortable: false,
                 getValue: (row: AttributeMapping) => {
                     const value = row.dataElementName ?? "-";
-
                     return (
                         <span>
                             <Typography variant={"inherit"} gutterBottom>

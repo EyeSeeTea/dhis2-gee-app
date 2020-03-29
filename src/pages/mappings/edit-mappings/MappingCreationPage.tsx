@@ -7,6 +7,7 @@ import MappingWizard from "../../../components/mappings/wizard/MappingWizard";
 import Mapping from "../../../models/Mapping";
 import { useAppContext } from "../../../contexts/app-context";
 import ExitWizardButton from "../../../components/mappings/wizard/ExitWizardButton";
+import DataSet from "../../../models/DataSet";
 
 interface SyncRulesCreationParams {
     id?: string;
@@ -24,8 +25,15 @@ const MappingCreation: React.FC<SyncRulesCreationParams> = props => {
 
     const [mapping, updateMapping] = useState(Mapping.create());
     const [dialogOpen, setDialogOpen] = useState(false);
+    const [dataSets, updateDataSets] = useState<undefined | DataSet[]>([]);
+
+    async function getDataSets() {
+        const res = await DataSet.getList(api);
+        updateDataSets(res.dataSets);
+    }
 
     useEffect(() => {
+        getDataSets();
         if (isEdit && !!id) {
             loading.show(true, "Loading mapping");
             Mapping.get(api, config, id).then(m => {
@@ -33,6 +41,7 @@ const MappingCreation: React.FC<SyncRulesCreationParams> = props => {
                 loading.reset();
             });
         }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [api, config, loading, isEdit, id]);
 
     return (
@@ -47,6 +56,7 @@ const MappingCreation: React.FC<SyncRulesCreationParams> = props => {
             <MappingWizard
                 mapping={mapping}
                 onChange={updateMapping}
+                dataSets={dataSets ?? []}
                 onCancel={() => setDialogOpen(true)}
             ></MappingWizard>
         </React.Fragment>

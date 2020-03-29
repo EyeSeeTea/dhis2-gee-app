@@ -37,8 +37,20 @@ const SummaryStep: React.FC<StepProps> = props => {
                         label={Mapping.getFieldName("description")}
                         value={mapping.description}
                     />
-                    <LiEntry label={Mapping.getFieldName("dataSet")} value={mapping.dataSet} />
-                    <LiEntry label={Mapping.getFieldName("geeImage")} value={mapping.geeImage} />
+                    <LiEntry
+                        label={i18n.t("Dataset")}
+                        value={
+                            <span>
+                                {mapping.dataSetName} - ({mapping.dataSetId})
+                            </span>
+                        }
+                    />
+                    <LiEntry
+                        label={Mapping.getFieldName("geeImage")}
+                        value={
+                            _(config.data.base.googleDatasets).get(mapping.geeImage)["displayName"]
+                        }
+                    />
                     <LiEntry
                         label={Mapping.getFieldName("attributeMappingDictionary")}
                         value={

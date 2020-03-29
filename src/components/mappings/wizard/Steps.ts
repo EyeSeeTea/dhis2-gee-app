@@ -8,13 +8,13 @@ export const stepList = [
         key: "general-info",
         label: i18n.t("General info"),
         component: GeneralInfoStep,
-        validationKeys: ["name", "geeImage"],
+        validationKeys: ["name", "geeImage", "dataSet"],
     },
     {
         key: "de-mappings",
         label: i18n.t("Google Earth Engine variables mapping"),
         component: VariablesMappingStep,
-        validationKeys: [],
+        validationKeys: ["attributeMappingDictionary"],
     },
     {
         key: "summary-save",

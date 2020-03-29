@@ -2,7 +2,7 @@ import _ from "lodash";
 import i18n from "@dhis2/d2-i18n";
 
 const translations = {
-    cannotBeBlankc: namespace => i18n.t("Field {{field}} cannot be blank", namespace),
+    cannotBeBlank: namespace => i18n.t("Field {{field}} cannot be blank", namespace),
     urlUsernameComboAlreadyExists: () => i18n.t("This URL and username combination already exists"),
     cannotBeEmpty: namespace => i18n.t("You need to select at least one {{element}}", namespace),
 

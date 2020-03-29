@@ -4,44 +4,60 @@ import { Card, CardContent } from "@material-ui/core";
 
 import { StepProps } from "../MappingWizard";
 import i18n from "../../../../locales";
-import { MappingData } from "../../../../models/Mapping";
+import Mapping, { MappingData } from "../../../../models/Mapping";
 
 /* eslint-disable @typescript-eslint/no-var-requires */
 const { TextField, DropDown } = require("@dhis2/d2-ui-core");
 const { FormBuilder, Validators } = require("@dhis2/d2-ui-forms");
 
 type StringField = "name" | "description";
-type DropdownField = "geeImage";
+type DropdownField = "geeImage" | "dataSetId";
 
 class GeneralInfoStep extends React.Component<StepProps> {
     onUpdateField = <K extends keyof MappingData>(fieldName: K, newValue: MappingData[K]) => {
-        const { mapping, onChange } = this.props;
+        const { mapping, onChange, dataSets } = this.props;
         let newMapping = mapping.set(fieldName, newValue as MappingData[K]);
 
         if (fieldName === "geeImage") {
             newMapping = newMapping.set("attributeMappingDictionary", {});
+        } else if (fieldName === "dataSetId") {
+            newMapping = newMapping.set(
+                "dataSetName",
+                _.find(dataSets, ["id", newValue])?.name ?? "-"
+            );
         }
         onChange(newMapping);
     };
+
     render() {
-        const { config, mapping } = this.props;
+        const { config, mapping, dataSets } = this.props;
         const fields = [
             getTextField("name", mapping.name, {
                 validators: [validators.presence],
                 props: {
-                    label: i18n.t("Name"),
+                    floatingLabelText: Mapping.getFieldName("name") + " (*)",
                 },
             }),
             getTextField("description", mapping.description, {
-                props: { multiLine: true, label: i18n.t("Description") },
+                props: { multiLine: true, floatingLabelText: Mapping.getFieldName("description") },
             }),
             getDropdownField("geeImage", mapping.geeImage, {
                 validators: [validators.presence],
                 props: {
-                    emptyLabel: i18n.t("<Google Earth Image>"),
+                    floatingLabelText: Mapping.getFieldName("geeImage") + " (*)",
                     menuItems: _(config.data.base.googleDatasets)
                         .mapValues((value, key) => ({ ...value, id: key }))
                         .values()
+                        .value(),
+                    style: { marginTop: 20 },
+                },
+            }),
+            getDropdownField("dataSetId", mapping.dataSetId, {
+                validators: [validators.presence],
+                props: {
+                    floatingLabelText: Mapping.getFieldName("dataSetId") + " (*)",
+                    menuItems: _(dataSets)
+                        .map(value => ({ ...value, displayName: value.name }))
                         .value(),
                     style: { marginTop: 20 },
                 },
@@ -91,7 +107,6 @@ function getDropdownField(
     value: string,
     { validators, props }: { validators?: Validator<string>[]; props?: _.Dictionary<any> } = {}
 ) {
-    console.log(name, "-", value);
     return {
         name,
         value,

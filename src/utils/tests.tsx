@@ -7,7 +7,6 @@ import { Config } from "./../models/Config";
 import { User } from "./../models/User";
 import { AppContext } from "../contexts/app-context";
 import { ReactNode } from "react";
-import i18n from "../locales";
 
 export function getTestUser() {
     return new User({

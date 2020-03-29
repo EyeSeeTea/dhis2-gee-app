@@ -46,7 +46,7 @@ const AttributeMappingDialog: React.FC<AttributeMappingDialogProps> = props => {
     ) {
         const listPagination = { ...pagination, ...paginationOptions };
 
-        const res = await DataElement.getList(api, dataset, sorting, listPagination);
+        const res = await DataElement.getList(api, dataset);
         setRows(res.dataElements);
         setPagination({ ...listPagination, ...res.pager });
         setSorting(sorting);

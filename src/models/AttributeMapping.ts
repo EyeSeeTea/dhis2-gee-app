@@ -7,12 +7,7 @@ import { Validation } from "../types/validations";
 import { AttributeMappingDictionary } from "./Mapping";
 import DataElement from "./DataElement";
 
-export interface AttributeMappingSummary {
-    dataElementName?: string;
-    dataElementId?: string;
-}
-
-export interface AttributeMappingData extends AttributeMappingSummary {
+export interface AttributeMappingData {
     id: string;
     geeBand: string;
     comment: string;

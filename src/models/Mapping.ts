@@ -16,7 +16,8 @@ export interface MappingData {
     id: Id;
     name: string;
     description: string;
-    dataSet: string;
+    dataSetId: string;
+    dataSetName: string;
     geeImage: string;
     created: Date;
     attributeMappingDictionary: AttributeMappingDictionary;
@@ -41,7 +42,8 @@ class Mapping {
         id: i18n.t("Id"),
         name: i18n.t("Name"),
         description: i18n.t("Description"),
-        dataSet: i18n.t("Instance Dataset"),
+        dataSetId: i18n.t("Instance Dataset"),
+        dataSetName: i18n.t("Instance DataSet"),
         geeImage: i18n.t("G.E.E Dataset"),
         created: i18n.t("Created at"),
         attributeMappingDictionary: i18n.t("Attribute mappings"),
@@ -74,7 +76,8 @@ class Mapping {
             id: generateUid(),
             name: "",
             description: "",
-            dataSet: "",
+            dataSetId: "",
+            dataSetName: "",
             geeImage: "",
             attributeMappingDictionary: {},
             created: new Date(),
@@ -107,8 +110,26 @@ class Mapping {
             geeImage: _.compact([
                 !this.geeImage.trim()
                     ? {
-                          key: "cannotBeEmpty",
+                          key: "cannotBeBlank",
                           namespace: { element: Mapping.getFieldName("geeImage") },
+                      }
+                    : null,
+            ]),
+            dataSet: _.compact([
+                !this.dataSetId.trim()
+                    ? {
+                          key: "cannotBeBlank",
+                          namespace: { element: Mapping.getFieldName("dataSetId") },
+                      }
+                    : null,
+            ]),
+            attributeMappingDictionary: _.compact([
+                _.isEmpty(this.attributeMappingDictionary)
+                    ? {
+                          key: "cannotBeEmpty",
+                          namespace: {
+                              element: i18n.t("Google Band mapping with Data Element.q"),
+                          },
                       }
                     : null,
             ]),
@@ -119,7 +140,7 @@ class Mapping {
         const dataStore = getDataStore(api, config);
         const mappingsKey = config.data.base.dataStore.keys.mappings;
         const mappingsById = await dataStore.get<Mapping[] | undefined>(mappingsKey).getData();
-        return await dataStore.save(mappingsKey, { ...mappingsById, [this.id]: this });
+        return await dataStore.save(mappingsKey, { ...mappingsById, [this.id]: this.data });
     }
 }
 

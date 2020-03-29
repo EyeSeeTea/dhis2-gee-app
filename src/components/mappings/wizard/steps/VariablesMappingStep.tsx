@@ -19,7 +19,6 @@ class VariablesMappingStep extends React.Component<StepProps> {
                         availableBands={
                             _(config.data.base.googleDatasets).get(mapping.geeImage)["bands"]
                         }
-                        geeImage={mapping.geeImage}
                     />
                 </CardContent>
             </Card>
