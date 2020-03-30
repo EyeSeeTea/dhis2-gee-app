@@ -22,8 +22,8 @@ type ContextualAction = "details" | "edit" | "delete";
 
 interface MappingsListProps {
     header?: string;
-    selectedMappings?: string[];
-    onSelectionChange: (selectedMappings: string[]) => void;
+    selectedMappings?: Mapping[];
+    onSelectionChange: (selectedMappings: Mapping[]) => void;
 }
 
 const mouseActionsMapping: MouseActionsMapping = {
@@ -107,7 +107,7 @@ const MappingsList: React.FC<MappingsListProps> = props => {
     const selection = useMemo(() => {
         console.log({ rows });
         return rows
-            .filter(mapping => selectedMappings?.includes(mapping.id))
+            .filter(mapping => selectedMappings?.map(m => m.id).includes(mapping.id))
             .map(mapping => ({ id: mapping.id }));
     }, [rows, selectedMappings]);
 
@@ -157,6 +157,14 @@ const MappingsList: React.FC<MappingsListProps> = props => {
         setMappingIdsToDelete(undefined);
     }, []);
 
+    const onTableChange = useCallback(
+        (newSelectedMappingsIds: string[]) => {
+            const newSelectedMappings = _.filter(rows, m => newSelectedMappingsIds.includes(m.id));
+            console.log({ newSelectedMappings });
+            onSelectionChange(newSelectedMappings);
+        },
+        [rows]
+    );
     return (
         <div>
             {mappingIdsToDelete && (
@@ -181,7 +189,7 @@ const MappingsList: React.FC<MappingsListProps> = props => {
                     key={objectsTableKey}
                     selection={selection}
                     searchBoxLabel={i18n.t("Search by name or code")}
-                    onChange={state => onSelectionChange(state.selection.map(m => m.id))}
+                    onChange={state => onTableChange(state.selection.map(m => m.id))}
                     forceSelectionColumn={true}
                     pagination={pagination}
                     details={componentConfig.details}

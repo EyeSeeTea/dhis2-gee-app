@@ -90,8 +90,6 @@ const App = () => {
             // Google Earth Engine must be defined globally in window (as var 'ee') to work
             Object.assign(window, { app: appContext, ee });
 
-            testGee(api);
-
             setShowShareButton(_(appConfig).get("appearance.showShareButton") || false);
             if (currentUser.canReportFeedback()) {
                 initFeedbackTool(d2, appConfig);

@@ -1,15 +1,20 @@
 import { D2Api } from "d2-api";
+import moment from "moment";
 import DataStore from "d2-api/api/dataStore";
 import { getDataStore } from "../utils/dhis2";
 import { Config } from "./Config";
 import i18n from "../locales";
 import { PeriodInformation } from "../components/dialogs/PeriodSelectorDialog";
+import { EarthEngine } from "./EarthEngine";
+import { GeeDhis2 } from "./GeeDhis2";
+import Axios from "axios";
+import Mapping from "./Mapping";
 
 export interface DataImportData {
     name: string | undefined;
     description: string | undefined;
     id: string | undefined;
-    selectedMappings: string[];
+    selectedMappings: Mapping[];
     selectedOUs: string[];
     periodInformation: PeriodInformation;
 }
@@ -63,7 +68,7 @@ export class DataImport {
         return new DataImport(api, config, importPrefix, data);
     }
 
-    public setSelectedMappings(selectedMappings: string[]) {
+    public setSelectedMappings(selectedMappings: Mapping[]) {
         const newData = { ...this.data, selectedMappings: selectedMappings };
         return new DataImport(this.api, this.config, this.importPrefix, newData);
     }
@@ -80,5 +85,37 @@ export class DataImport {
 
     public async save() {
         await this.dataStore.save(this.importKey, this.data);
+    }
+
+    public async run() {
+        console.log("object", this.data);
+        // const credentials = await api.get<Credentials>("/tokens/google").getData();
+
+        // Workaround until we have a working dhis-google-auth.json
+        /*const tokenUrl = "https://play.dhis2.org/2.33dev/api/tokens/google";
+        const auth = { username: "admin", password: "district" };
+        const credentials = (await Axios.get(tokenUrl, { auth })).data;
+
+        const earthEngine = await EarthEngine.init(credentials);
+        const geeDhis2 = GeeDhis2.init(this.api, earthEngine);
+        const dataValueSet = await geeDhis2.getDataValueSet({
+            geeDataSetId: "ECMWF/ERA5/DAILY",
+            mapping: {
+                // eslint-disable-next-line @typescript-eslint/camelcase
+                total_precipitation: "uWYGA1xiwuZ",
+                // eslint-disable-next-line @typescript-eslint/camelcase
+                mean_2m_air_temperature: "RSJpUZqMoxC",
+            },
+            orgUnits: [{ id: "IyO9ICB0WIn" }, { id: "xloTsC6lk5Q" }],
+            interval: {
+                type: "daily",
+                start: moment("2018-08-23"),
+                end: moment("2018-08-25"), // Last day is not included
+            },
+        });
+        console.log(dataValueSet);
+
+        const res = await geeDhis2.postDataValueSet(dataValueSet);
+        console.log(res);*/
     }
 }
