@@ -102,7 +102,8 @@ export class DataImport {
             const geeDhis2 = GeeDhis2.init(this.api, earthEngine);
 
             const baseImportConfig: { orgUnits: OrgUnit[]; interval: Interval } = {
-                orgUnits: [{ id: "IyO9ICB0WIn" }, { id: "xloTsC6lk5Q" }],
+                //orgUnits: [{ id: "IyO9ICB0WIn" }, { id: "xloTsC6lk5Q" }],
+                orgUnits: this.data.selectedOUs.map(o => <OrgUnit>{ id: o.split("/").pop() }),
                 interval: {
                     type: "daily",
                     start: moment("2018-08-23"),
