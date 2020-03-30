@@ -97,7 +97,7 @@ const MappingsList: React.FC<MappingsListProps> = props => {
     }, [goTo, setMappingIdsToDelete]);
 
     const classes = useStyles();
-    const [rows, setRows] = useState<Mapping[] | undefined>(undefined);
+    const [rows, setRows] = useState<Mapping[]>([]);
     const [pagination, setPagination] = useState(componentConfig.initialPagination);
     const [sorting, setSorting] = useState<MappingTableSorting>(componentConfig.initialSorting);
     const [, setLoading] = useState(true);
@@ -105,8 +105,9 @@ const MappingsList: React.FC<MappingsListProps> = props => {
     const [objectsTableKey] = useState(() => new Date().getTime());
 
     const selection = useMemo(() => {
+        console.log({ rows });
         return rows
-            ?.filter(mapping => selectedMappings?.includes(mapping.id))
+            .filter(mapping => selectedMappings?.includes(mapping.id))
             .map(mapping => ({ id: mapping.id }));
     }, [rows, selectedMappings]);
 
@@ -124,7 +125,7 @@ const MappingsList: React.FC<MappingsListProps> = props => {
 
         setLoading(true);
         const res = await Mapping.getList(api, config);
-        setRows(res.mappings);
+        setRows(res.mappings ?? []);
         setPagination({ ...listPagination, ...res.pager });
         setSorting(sorting);
         setLoading(false);
