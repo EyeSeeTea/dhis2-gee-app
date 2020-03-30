@@ -1,7 +1,7 @@
 import { Config } from "../Config";
 import { getTestContext } from "../../utils/tests";
 
-const { api, context } = getTestContext();
+const { api } = getTestContext();
 let config: Config;
 
 describe("Config", () => {

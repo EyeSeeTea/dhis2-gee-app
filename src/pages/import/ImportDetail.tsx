@@ -97,14 +97,14 @@ const ImportDetail: React.FunctionComponent<ImportDetailProps> = props => {
                 variant="contained"
                 onClick={() => setOUDialog(true)}
             >
-                {i18n.t("Edit Organisation Units")}
+                {i18n.t("Select Organisation Units")}
             </Button>
             <Button
                 className={classes.button}
                 variant="contained"
                 onClick={() => setPeriodDialog(true)}
             >
-                {i18n.t("Edit Period")}
+                {i18n.t("Select Period")}
             </Button>
             <Button className={classes.newImportButton} variant="contained">
                 {i18n.t("Import to DHIS2 ")}
@@ -115,7 +115,7 @@ const ImportDetail: React.FunctionComponent<ImportDetailProps> = props => {
                 <GetAppIcon />
             </Button>
             <MappingsList
-                header={"Selected mappings"}
+                header={"Select & map datasets"}
                 selectedMappings={selectedMappings}
                 onSelectionChange={onSelectedMappingsChange}
             />
