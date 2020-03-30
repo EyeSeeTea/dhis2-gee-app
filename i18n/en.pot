@@ -5,8 +5,8 @@ msgstr ""
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1)\n"
-"POT-Creation-Date: 2020-03-29T14:32:07.149Z\n"
-"PO-Revision-Date: 2020-03-29T14:32:07.149Z\n"
+"POT-Creation-Date: 2020-03-29T16:57:54.803Z\n"
+"PO-Revision-Date: 2020-03-29T16:57:54.803Z\n"
 
 msgid "Mapping for attribute {{attr}}"
 msgstr ""
@@ -77,13 +77,10 @@ msgstr ""
 msgid "Summary and save"
 msgstr ""
 
-msgid "Description"
-msgstr ""
-
-msgid "<Google Earth Image>"
-msgstr ""
-
 msgid "Field cannot be blank"
+msgstr ""
+
+msgid "Dataset"
 msgstr ""
 
 msgid "Save"
@@ -110,7 +107,13 @@ msgstr ""
 msgid "Data element name"
 msgstr ""
 
+msgid "Description"
+msgstr ""
+
 msgid "Instance Dataset"
+msgstr ""
+
+msgid "Instance DataSet"
 msgstr ""
 
 msgid "G.E.E Dataset"
@@ -120,6 +123,9 @@ msgid "Created at"
 msgstr ""
 
 msgid "Attribute mappings"
+msgstr ""
+
+msgid "Google Band mapping with Data Element.q"
 msgstr ""
 
 msgid "Click to show feedback"

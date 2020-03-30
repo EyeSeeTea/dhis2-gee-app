@@ -140,7 +140,15 @@ class Mapping {
         const dataStore = getDataStore(api, config);
         const mappingsKey = config.data.base.dataStore.keys.mappings;
         const mappingsById = await dataStore.get<Mapping[] | undefined>(mappingsKey).getData();
-        return await dataStore.save(mappingsKey, { ...mappingsById, [this.id]: this.data });
+        return await dataStore.save(mappingsKey, {
+            ...mappingsById,
+            [this.id]: {
+                ...this.data,
+                attributeMappingDictionary: _(this.data.attributeMappingDictionary).mapValues(
+                    am => am.data
+                ),
+            },
+        });
     }
 }
 
