@@ -138,7 +138,9 @@ const MappingsList: React.FC<MappingsListProps> = props => {
             async () => {
                 await Mapping.delete(api, config, mappingIdsToDelete ?? []);
                 snackbar.success(
-                    i18n.t("{{n}} mappings deleted", { n: mappingIdsToDelete?.length })
+                    i18n.t("{{n}} mappings deleted", {
+                        n: mappingIdsToDelete ? mappingIdsToDelete.length : 0,
+                    })
                 );
             },
             {
