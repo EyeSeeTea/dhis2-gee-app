@@ -1,6 +1,5 @@
 import React, { useCallback, useState } from "react";
 import i18n from "../../locales";
-import _ from "lodash";
 import { useAppContext } from "../../contexts/app-context";
 import { makeStyles } from "@material-ui/styles";
 import PageHeader from "../../components/page-header/PageHeader";
@@ -8,14 +7,11 @@ import MappingsList from "../mappings/MappingsList";
 import { Button, LinearProgress } from "@material-ui/core";
 import GetAppIcon from "@material-ui/icons/GetApp";
 import ImportExportIcon from "@material-ui/icons/ImportExport";
-import { DataImport } from "../../models/Import";
+import { DataImport, PeriodInformation } from "../../models/Import";
 import OUDialog from "../../components/dialogs/OrganisationUnitDialog";
-import PeriodSelectorDialog, {
-    PeriodInformation,
-} from "../../components/dialogs/PeriodSelectorDialog";
+import PeriodSelectorDialog from "../../components/dialogs/PeriodSelectorDialog";
 import { ConfirmationDialog, useSnackbar } from "d2-ui-components";
 import Mapping from "../../models/Mapping";
-import { Snackbar } from "material-ui";
 
 interface ImportDetailProps {
     prefix: string;
@@ -86,13 +82,14 @@ const ImportDetail: React.FunctionComponent<ImportDetailProps> = props => {
         setImporting(true);
         DataImport.getImportData(api, config, prefix).then(async imp => {
             const response = await imp.run();
+            console.log({ response });
             setImporting(false);
             setOpenImportDialog(false);
 
             if (response?.success) {
                 snackbar.success(i18n.t("Import successful"));
             } else {
-                snackbar.error(i18n.t(response ? response.message : "Import failed"));
+                snackbar.error(i18n.t("Import failed: ") + response.failures);
             }
         });
     }, [api, config, prefix, snackbar]);

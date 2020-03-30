@@ -5,52 +5,13 @@ msgstr ""
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1)\n"
-"POT-Creation-Date: 2020-03-30T10:01:36.179Z\n"
-"PO-Revision-Date: 2020-03-30T10:01:36.179Z\n"
+"POT-Creation-Date: 2020-03-30T13:49:45.249Z\n"
+"PO-Revision-Date: 2020-03-30T13:49:45.249Z\n"
 
 msgid "Select organisation unit"
 msgstr ""
 
 msgid "Save"
-msgstr ""
-
-msgid "Fixed period"
-msgstr ""
-
-msgid "Today"
-msgstr ""
-
-msgid "Yesterday"
-msgstr ""
-
-msgid "Last 7 days"
-msgstr ""
-
-msgid "Last 14 days"
-msgstr ""
-
-msgid "This week"
-msgstr ""
-
-msgid "Last week"
-msgstr ""
-
-msgid "This month"
-msgstr ""
-
-msgid "Last month"
-msgstr ""
-
-msgid "This quarter"
-msgstr ""
-
-msgid "Last quarter"
-msgstr ""
-
-msgid "This year"
-msgstr ""
-
-msgid "Last year"
 msgstr ""
 
 msgid "Select period interval"
@@ -116,6 +77,9 @@ msgid "Created at"
 msgstr ""
 
 msgid "Click to show feedback"
+msgstr ""
+
+msgid "Import successful"
 msgstr ""
 
 msgid "New import request"
@@ -213,4 +177,43 @@ msgid "Cancel mapping edition"
 msgstr ""
 
 msgid "Ok"
+msgstr ""
+
+msgid "Fixed period"
+msgstr ""
+
+msgid "Today"
+msgstr ""
+
+msgid "Yesterday"
+msgstr ""
+
+msgid "Last 7 days"
+msgstr ""
+
+msgid "Last 14 days"
+msgstr ""
+
+msgid "This week"
+msgstr ""
+
+msgid "Last week"
+msgstr ""
+
+msgid "This month"
+msgstr ""
+
+msgid "Last month"
+msgstr ""
+
+msgid "This quarter"
+msgstr ""
+
+msgid "Last quarter"
+msgstr ""
+
+msgid "This year"
+msgstr ""
+
+msgid "Last year"
 msgstr ""

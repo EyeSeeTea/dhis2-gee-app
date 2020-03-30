@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: i18next-conv\n"
-"POT-Creation-Date: 2020-03-30T10:01:36.179Z\n"
+"POT-Creation-Date: 2020-03-30T13:49:45.249Z\n"
 "PO-Revision-Date: 2018-10-25T09:02:35.143Z\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -12,45 +12,6 @@ msgid "Select organisation unit"
 msgstr ""
 
 msgid "Save"
-msgstr ""
-
-msgid "Fixed period"
-msgstr ""
-
-msgid "Today"
-msgstr ""
-
-msgid "Yesterday"
-msgstr ""
-
-msgid "Last 7 days"
-msgstr ""
-
-msgid "Last 14 days"
-msgstr ""
-
-msgid "This week"
-msgstr ""
-
-msgid "Last week"
-msgstr ""
-
-msgid "This month"
-msgstr ""
-
-msgid "Last month"
-msgstr ""
-
-msgid "This quarter"
-msgstr ""
-
-msgid "Last quarter"
-msgstr ""
-
-msgid "This year"
-msgstr ""
-
-msgid "Last year"
 msgstr ""
 
 msgid "Select period interval"
@@ -117,6 +78,9 @@ msgstr ""
 
 msgid "Click to show feedback"
 msgstr "Pinche para ver feedback"
+
+msgid "Import successful"
+msgstr ""
 
 msgid "New import request"
 msgstr ""
@@ -213,4 +177,43 @@ msgid "Cancel mapping edition"
 msgstr ""
 
 msgid "Ok"
+msgstr ""
+
+msgid "Fixed period"
+msgstr ""
+
+msgid "Today"
+msgstr ""
+
+msgid "Yesterday"
+msgstr ""
+
+msgid "Last 7 days"
+msgstr ""
+
+msgid "Last 14 days"
+msgstr ""
+
+msgid "This week"
+msgstr ""
+
+msgid "Last week"
+msgstr ""
+
+msgid "This month"
+msgstr ""
+
+msgid "Last month"
+msgstr ""
+
+msgid "This quarter"
+msgstr ""
+
+msgid "Last quarter"
+msgstr ""
+
+msgid "This year"
+msgstr ""
+
+msgid "Last year"
 msgstr ""

@@ -163,7 +163,7 @@ const MappingsList: React.FC<MappingsListProps> = props => {
             console.log({ newSelectedMappings });
             onSelectionChange(newSelectedMappings);
         },
-        [rows]
+        [rows, onSelectionChange]
     );
     return (
         <div>
