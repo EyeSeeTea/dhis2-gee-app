@@ -27,7 +27,7 @@ interface MappingsListProps {
 }
 
 const mouseActionsMapping: MouseActionsMapping = {
-    left: { type: "contextual" },
+    left: { type: "action", action: "edit" },
     right: { type: "contextual" },
 };
 

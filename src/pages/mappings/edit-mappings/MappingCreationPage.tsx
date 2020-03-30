@@ -35,10 +35,8 @@ const MappingCreation: React.FC<SyncRulesCreationParams> = props => {
     useEffect(() => {
         getDataSets();
         if (isEdit && !!id) {
-            loading.show(true, "Loading mapping");
             Mapping.get(api, config, id).then(m => {
                 updateMapping(m);
-                loading.reset();
             });
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps

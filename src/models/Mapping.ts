@@ -66,9 +66,11 @@ class Mapping {
 
     public static async get(api: D2Api, config: Config, id = " ") {
         const dataStore = getDataStore(api, config);
-        const data = await dataStore.get<MappingData>(id).getData();
-
-        return this.build(data);
+        const mappingsKey = config.data.base.dataStore.keys.mappings;
+        const mappingsById = await dataStore
+            .get<{ [id: string]: Mapping } | undefined>(mappingsKey)
+            .getData();
+        return this.build(mappingsById ? mappingsById[id] : undefined);
     }
 
     public static create() {
@@ -89,14 +91,15 @@ class Mapping {
     ): Promise<{ mappings: Mapping[] | undefined; pager: Partial<TablePagination> }> {
         const dataStore = getDataStore(api, config);
         const mappingsKey = config.data.base.dataStore.keys.mappings;
-        const mappings = await dataStore.get<Mapping[] | undefined>(mappingsKey).getData();
+        const mappings = await dataStore
+            .get<{ [id: string]: Mapping } | undefined>(mappingsKey)
+            .getData();
         return { mappings: mappings ? _.values(mappings) : [], pager: {} };
     }
 
     public set<K extends keyof MappingData>(field: K, value: MappingData[K]): Mapping {
         return new Mapping({ ...this.data, [field]: value });
     }
-
     static async delete(api: D2Api, config: Config, mappingsToDelete: string[]) {
         const mappings = await (await Mapping.getList(api, config)).mappings;
         Mapping.saveList(
