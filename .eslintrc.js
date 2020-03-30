@@ -13,7 +13,7 @@ module.exports = {
     rules: {
         "no-console": "off",
         "@typescript-eslint/explicit-function-return-type": ["off"],
-        "@typescript-eslint/no-unused-vars": "off",
+        "@typescript-eslint/no-unused-vars": ["error", { argsIgnorePattern: "^_" }],
         "react/prop-types": "off",
         "no-unused-expressions": "off",
         "no-useless-concat": "off",
@@ -24,7 +24,7 @@ module.exports = {
         "@typescript-eslint/no-empty-interface": "off",
         "@typescript-eslint/ban-ts-ignore": "off",
         "@typescript-eslint/no-empty-function": "off",
-        "react-hooks/exhaustive-deps": "off",
+        "react-hooks/exhaustive-deps": "warn",
     },
     plugins: ["cypress"],
     env: { "cypress/globals": true },
