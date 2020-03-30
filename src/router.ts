@@ -2,7 +2,7 @@ import { useHistory } from "react-router";
 
 const routes = {
     imports: () => "/",
-    mapings: () => `/mappings`,
+    mappings: () => `/mappings`,
     "mappings.edit": ({ id }: { id: string }) => `/mappings/${id}`,
     "mappings.new": () => `/mappings/new`,
 };

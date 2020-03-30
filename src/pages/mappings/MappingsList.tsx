@@ -44,7 +44,8 @@ function getComponentConfig(
     const initialSorting = { field: "name" as const, order: "asc" as const };
     const columns: TableColumn<Mapping>[] = [
         { name: "name" as const, text: i18n.t("Name"), sortable: true },
-        { name: "dataSet" as const, text: i18n.t("Data set"), sortable: true },
+        { name: "dataSetName" as const, text: i18n.t("Dataset"), sortable: true },
+        { name: "dataSetId" as const, text: i18n.t("Dataset id"), sortable: true, hidden: true },
         { name: "geeImage" as const, text: i18n.t("G.E.E Dataset"), sortable: true },
     ];
 

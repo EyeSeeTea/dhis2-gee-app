@@ -1,51 +1,64 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import PageHeader from "../../../components/page-header/PageHeader";
 import i18n from "../../../locales";
 import { useGoTo } from "../../../router";
-import { ConfirmationDialog } from "d2-ui-components";
+import { useLoading } from "d2-ui-components";
+import MappingWizard from "../../../components/mappings/wizard/MappingWizard";
+import Mapping from "../../../models/Mapping";
+import { useAppContext } from "../../../contexts/app-context";
+import ExitWizardButton from "../../../components/mappings/wizard/ExitWizardButton";
+import DataSet from "../../../models/DataSet";
 
 interface SyncRulesCreationParams {
     id?: string;
     action: "edit" | "new";
 }
-/*
-const initialSteps = [
-    {
-        key: "general-info",
-        label: i18n.t("General info"),
-        component: GeneralInfoStep,
-        description: i18n.t(`Please fill out information below for your project:`),
-        props: {}
-    },
-    {
-        key: "save-info",
-        label: i18n.t("Summary and save"),
-        component: GeneralInfoStep,
-        description: i18n.t(`Please fill out information below for your project:`),
-        props: {}
-    },
-];
-*/
 
 const MappingCreation: React.FC<SyncRulesCreationParams> = props => {
     const goTo = useGoTo();
+    const loading = useLoading();
+    const { api, config } = useAppContext();
     const { id, action } = props;
     const isEdit = action === "edit" && !!id;
 
     const title = !isEdit ? i18n.t("New mapping") : i18n.t("Edit mapping");
 
-    const cancel = !isEdit ? i18n.t("Cancel mapping creation") : i18n.t("Cancel mapping edition");
+    const [mapping, updateMapping] = useState(Mapping.create());
+    const [dialogOpen, setDialogOpen] = useState(false);
+    const [dataSets, updateDataSets] = useState<undefined | DataSet[]>([]);
+
+    async function getDataSets() {
+        const res = await DataSet.getList(api);
+        updateDataSets(res.dataSets);
+    }
+
+    useEffect(() => {
+        getDataSets();
+        if (isEdit && !!id) {
+            loading.show(true, "Loading mapping");
+            Mapping.get(api, config, id).then(m => {
+                updateMapping(m);
+                loading.reset();
+            });
+        }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [api, config, loading, isEdit, id]);
 
     return (
         <React.Fragment>
-            <ConfirmationDialog
-                isOpen={false}
-                title={cancel}
-                onSave={() => console.log("save")}
-                onCancel={() => console.log("cancel")}
-                saveText={i18n.t("Ok")}
+            <PageHeader title={title} onBackClick={() => setDialogOpen(true)} />
+            <ExitWizardButton
+                isOpen={dialogOpen}
+                onConfirm={() => goTo("imports")}
+                onCancel={() => setDialogOpen(false)}
             />
-            <PageHeader title={title} onBackClick={() => goTo("imports")} />
+
+            <MappingWizard
+                mapping={mapping}
+                onChange={updateMapping}
+                dataSets={dataSets ?? []}
+                onCancel={() => setDialogOpen(true)}
+            ></MappingWizard>
         </React.Fragment>
     );
 };

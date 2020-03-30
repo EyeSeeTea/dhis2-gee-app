@@ -76,8 +76,7 @@ export class Config {
     }
 
     static async build(api: D2Api): Promise<Config> {
-        console.log(api);
-
+        console.log({ api });
         const data: ConfigData = {
             base: baseConfig,
         };

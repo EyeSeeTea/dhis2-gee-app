@@ -5,8 +5,53 @@ msgstr ""
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1)\n"
-"POT-Creation-Date: 2020-03-30T13:49:45.249Z\n"
-"PO-Revision-Date: 2020-03-30T13:49:45.249Z\n"
+"POT-Creation-Date: 2020-03-30T15:21:23.682Z\n"
+"PO-Revision-Date: 2020-03-30T15:21:23.682Z\n"
+
+msgid "Mapping for attribute {{attr}}"
+msgstr ""
+
+msgid "Cancel"
+msgstr ""
+
+msgid "Disable mapping"
+msgstr ""
+
+msgid "Are you sure you want to disable mapping for {{total}} attributes?"
+msgstr ""
+
+msgid "Please select at least one item to disable mapping"
+msgstr ""
+
+msgid "Google Attribute"
+msgstr ""
+
+msgid "Mapped Id"
+msgstr ""
+
+msgid "Set mapping"
+msgstr ""
+
+msgid "Mapped Name"
+msgstr ""
+
+msgid "Mapped Code"
+msgstr ""
+
+msgid "Ok"
+msgstr ""
+
+msgid "Search by name / code"
+msgstr ""
+
+msgid "Name"
+msgstr ""
+
+msgid "Code"
+msgstr ""
+
+msgid "Select"
+msgstr ""
 
 msgid "Select organisation unit"
 msgstr ""
@@ -29,6 +74,33 @@ msgstr ""
 msgid "<No value>"
 msgstr ""
 
+msgid "Cancel mapping?"
+msgstr ""
+
+msgid "All your changes will be lost. Are you sure you want to proceed?"
+msgstr ""
+
+msgid "Yes"
+msgstr ""
+
+msgid "No"
+msgstr ""
+
+msgid "General info"
+msgstr ""
+
+msgid "Google Earth Engine variables mapping"
+msgstr ""
+
+msgid "Summary and save"
+msgstr ""
+
+msgid "Field cannot be blank"
+msgstr ""
+
+msgid "Dataset"
+msgstr ""
+
 msgid "Help"
 msgstr ""
 
@@ -43,16 +115,19 @@ msgid ""
 "to proceed?"
 msgstr ""
 
-msgid "Yes"
-msgstr ""
-
-msgid "No"
-msgstr ""
-
 msgid "Id"
 msgstr ""
 
-msgid "Name"
+msgid "Comment"
+msgstr ""
+
+msgid "Data element id"
+msgstr ""
+
+msgid "Data element code"
+msgstr ""
+
+msgid "Data element name"
 msgstr ""
 
 msgid "Description"
@@ -67,13 +142,25 @@ msgstr ""
 msgid "Selected query period"
 msgstr ""
 
+msgid "Import config failed."
+msgstr ""
+
 msgid "Instance Dataset"
+msgstr ""
+
+msgid "Instance DataSet"
 msgstr ""
 
 msgid "G.E.E Dataset"
 msgstr ""
 
 msgid "Created at"
+msgstr ""
+
+msgid "Attribute mappings"
+msgstr ""
+
+msgid "Google Band mapping with Data Element.q"
 msgstr ""
 
 msgid "Click to show feedback"
@@ -94,9 +181,6 @@ msgid "Importing..."
 msgstr ""
 
 msgid "Import"
-msgstr ""
-
-msgid "Cancel"
 msgstr ""
 
 msgid "Select Organisation Units"
@@ -158,25 +242,10 @@ msgstr ""
 msgid "Search by name or code"
 msgstr ""
 
-msgid "General info"
-msgstr ""
-
-msgid "Summary and save"
-msgstr ""
-
 msgid "New mapping"
 msgstr ""
 
 msgid "Edit mapping"
-msgstr ""
-
-msgid "Cancel mapping creation"
-msgstr ""
-
-msgid "Cancel mapping edition"
-msgstr ""
-
-msgid "Ok"
 msgstr ""
 
 msgid "Fixed period"
@@ -216,4 +285,16 @@ msgid "This year"
 msgstr ""
 
 msgid "Last year"
+msgstr ""
+
+msgid "Field {{field}} cannot be blank"
+msgstr ""
+
+msgid "This URL and username combination already exists"
+msgstr ""
+
+msgid "You need to select at least one {{element}}"
+msgstr ""
+
+msgid "Start and end dates are not a valid period"
 msgstr ""
