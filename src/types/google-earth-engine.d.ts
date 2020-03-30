@@ -13,7 +13,7 @@ declare module "@google/earthengine" {
         select(bands: string[]): this;
         filterDate(startDate: string, endDater: string): this;
         getRegion(geometry: GeometryInstance, scale: number): this;
-        getInfo(onSuccess: (data: InfoData) => void): void;
+        getInfo(onFinish: (data?: InfoData, error?: string) => void): void;
     }
 
     // [periodId, lon, lat, time, ...number]

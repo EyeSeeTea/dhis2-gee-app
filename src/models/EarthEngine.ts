@@ -117,7 +117,15 @@ function getGeeItemsFromApiRow<Band>(bands: Band[], row: any[]): DataItem<Band>[
 }
 
 async function getInfo(imageCollection: ImageCollection): Promise<InfoData> {
-    return new Promise<InfoData>(resolve => {
-        imageCollection.getInfo(data => resolve(data));
+    return new Promise<InfoData>((resolve, reject) => {
+        imageCollection.getInfo((data, error) => {
+            if (error) {
+                reject(error);
+            } else if (data) {
+                resolve(data);
+            } else {
+                throw new Error("[getInfo] Error: No data or error");
+            }
+        });
     });
 }
