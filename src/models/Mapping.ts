@@ -1,4 +1,5 @@
 import { Id, D2Api } from "d2-api";
+import _ from "lodash";
 import i18n from "../locales";
 import { TablePagination } from "d2-ui-components";
 import { Config } from "./Config";
@@ -76,7 +77,7 @@ class Mapping {
         const dataStore = getDataStore(api, config);
         const mappingsKey = config.data.base.dataStore.keys.mappings;
         const mappings = await dataStore.get<Mapping[] | undefined>(mappingsKey).getData();
-        return { mappings: mappings ? mappings : [], pager: {} };
+        return { mappings: mappings ? _.values(mappings) : [], pager: {} };
     }
 
     public set<K extends keyof MappingData>(field: K, value: MappingData[K]): Mapping {
