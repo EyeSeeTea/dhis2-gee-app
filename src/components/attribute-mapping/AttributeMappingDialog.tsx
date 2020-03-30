@@ -64,7 +64,7 @@ const AttributeMappingDialog: React.FC<AttributeMappingDialogProps> = props => {
     );
 
     const title = i18n.t("Mapping for attribute {{attr}}", {
-        attr: attributeMapping?.geeBand,
+        attr: attributeMapping ? attributeMapping.geeBand : "-",
     });
 
     return (

@@ -5,8 +5,8 @@ msgstr ""
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1)\n"
-"POT-Creation-Date: 2020-03-30T15:21:23.682Z\n"
-"PO-Revision-Date: 2020-03-30T15:21:23.682Z\n"
+"POT-Creation-Date: 2020-03-30T16:52:08.394Z\n"
+"PO-Revision-Date: 2020-03-30T16:52:08.394Z\n"
 
 msgid "Mapping for attribute {{attr}}"
 msgstr ""
@@ -166,7 +166,7 @@ msgstr ""
 msgid "Click to show feedback"
 msgstr ""
 
-msgid "Import successful"
+msgid "Import successful \n"
 msgstr ""
 
 msgid "New import request"
@@ -207,7 +207,7 @@ msgstr ""
 msgid "List"
 msgstr ""
 
-msgid "Data set"
+msgid "Dataset id"
 msgstr ""
 
 msgid "Created"
