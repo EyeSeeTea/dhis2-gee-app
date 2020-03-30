@@ -5,8 +5,8 @@ msgstr ""
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1)\n"
-"POT-Creation-Date: 2020-03-30T07:07:17.941Z\n"
-"PO-Revision-Date: 2020-03-30T07:07:17.941Z\n"
+"POT-Creation-Date: 2020-03-30T10:01:36.179Z\n"
+"PO-Revision-Date: 2020-03-30T10:01:36.179Z\n"
 
 msgid "Select organisation unit"
 msgstr ""
@@ -118,7 +118,21 @@ msgstr ""
 msgid "Click to show feedback"
 msgstr ""
 
+msgid "New import request"
+msgstr ""
+
+msgid ""
+"This operation will collect and import data from Google Earth Engine to the "
+"instance. Are you sure you want to proceed?"
+msgstr ""
+
+msgid "Importing..."
+msgstr ""
+
 msgid "Import"
+msgstr ""
+
+msgid "Cancel"
 msgstr ""
 
 msgid "Select Organisation Units"
@@ -175,9 +189,6 @@ msgid "Deleting..."
 msgstr ""
 
 msgid "Proceed"
-msgstr ""
-
-msgid "Cancel"
 msgstr ""
 
 msgid "Search by name or code"

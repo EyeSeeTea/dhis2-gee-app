@@ -13,8 +13,9 @@ import OUDialog from "../../components/dialogs/OrganisationUnitDialog";
 import PeriodSelectorDialog, {
     PeriodInformation,
 } from "../../components/dialogs/PeriodSelectorDialog";
-import { ConfirmationDialog } from "d2-ui-components";
+import { ConfirmationDialog, useSnackbar } from "d2-ui-components";
 import Mapping from "../../models/Mapping";
+import { Snackbar } from "material-ui";
 
 interface ImportDetailProps {
     prefix: string;
@@ -24,6 +25,7 @@ const ImportDetail: React.FunctionComponent<ImportDetailProps> = props => {
     const { prefix } = props;
     const { api, config } = useAppContext();
     const classes = useStyles();
+    const snackbar = useSnackbar();
     const [selectedMappings, setSelectedMappings] = useState<Mapping[]>([]);
     const [selectedOUs, setSelectedOUs] = useState<string[]>([]);
     const [periodInformation, setPeriodInformation] = useState<PeriodInformation>({ id: "" });
@@ -83,10 +85,17 @@ const ImportDetail: React.FunctionComponent<ImportDetailProps> = props => {
     const importData = useCallback(() => {
         setImporting(true);
         DataImport.getImportData(api, config, prefix).then(async imp => {
-            await imp.run();
+            const response = await imp.run();
             setImporting(false);
+            setOpenImportDialog(false);
+
+            if (response?.success) {
+                snackbar.success(i18n.t("Import successful"));
+            } else {
+                snackbar.error(i18n.t(response ? response.message : "Import failed"));
+            }
         });
-    }, []);
+    }, [api, config, prefix, snackbar]);
 
     return (
         <React.Fragment>
