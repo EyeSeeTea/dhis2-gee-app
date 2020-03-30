@@ -87,7 +87,7 @@ const ImportDetail: React.FunctionComponent<ImportDetailProps> = props => {
             setOpenImportDialog(false);
 
             if (response?.success) {
-                snackbar.success(i18n.t("Import successful"));
+                snackbar.success(i18n.t("Import successful \n") + response.messages);
             } else {
                 snackbar.error(i18n.t("Import failed: ") + response.failures);
             }

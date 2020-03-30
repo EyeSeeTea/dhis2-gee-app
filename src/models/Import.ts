@@ -1,14 +1,14 @@
 import { D2Api } from "d2-api";
 import _ from "lodash";
 import DataStore from "d2-api/api/dataStore";
-import { getDataStore } from "../utils/dhis2";
+import { getDataStore, getImportCountString } from "../utils/dhis2";
 import { Config } from "./Config";
 import i18n from "../locales";
 import { EarthEngine, Interval } from "./EarthEngine";
 import { GeeDhis2, OrgUnit } from "./GeeDhis2";
 import Axios from "axios";
 import Mapping from "./Mapping";
-import { getDataSetPointer } from "../utils/gee";
+import { getAttributeMappings, getDataSetValue } from "../utils/gee";
 import { buildPeriod } from "../utils/import";
 
 export type PeriodInformation = {
@@ -94,9 +94,10 @@ export class DataImport {
         await this.dataStore.save(this.importKey, this.data);
     }
 
-    public async run(): Promise<{ success: boolean; failures: string[] }> {
+    public async run(): Promise<{ success: boolean; failures: string[]; messages: string[] }> {
         console.log("object", this.data);
         let failures: string[] = [];
+        let messages: string[] = [];
         try {
             // const credentials = await api.get<Credentials>("/tokens/google").getData();
 
@@ -126,31 +127,45 @@ export class DataImport {
                     try {
                         const dataValueSet = await geeDhis2.getDataValueSet({
                             ...baseImportConfig,
-                            geeDataSetId: getDataSetPointer(selectedMapping.geeImage, this.config),
-                            mapping: {
-                                // eslint-disable-next-line @typescript-eslint/camelcase
-                                total_precipitation: "uWYGA1xiwuZ",
-                                // eslint-disable-next-line @typescript-eslint/camelcase
-                                mean_2m_air_temperature: "RSJpUZqMoxC",
-                            },
+                            geeDataSetId: getDataSetValue(
+                                selectedMapping.geeImage,
+                                this.config,
+                                "pointer"
+                            ),
+                            mapping: getAttributeMappings(
+                                selectedMapping.attributeMappingDictionary
+                            ),
                         });
 
                         console.log({ dataValueSet });
 
                         const res = await geeDhis2.postDataValueSet(dataValueSet);
                         console.log("mapping_response", res);
+                        messages = [
+                            ...messages,
+                            getImportCountString(
+                                res.importCount,
+                                getDataSetValue(
+                                    selectedMapping.geeImage,
+                                    this.config,
+                                    "displayName"
+                                )
+                            ),
+                        ];
                     } catch (err) {
-                        failures.push(err);
+                        failures = [...failures, err];
                     }
                 })
             );
             return {
                 success: _.isEmpty(failures),
+                messages: messages,
                 failures: failures,
             };
         } catch (err) {
             return {
                 success: false,
+                messages: messages,
                 failures: [...failures, i18n.t("Import config failed.")],
             };
         }

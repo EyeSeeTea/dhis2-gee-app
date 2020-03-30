@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from "react";
-import moment from "moment";
 //@ts-ignore
 import { HeaderBar } from "@dhis2/ui-widgets";
 import { MuiThemeProvider } from "@material-ui/core/styles";
@@ -11,7 +10,7 @@ import _ from "lodash";
 import i18n from "@dhis2/d2-i18n";
 import { init } from "d2";
 import { SnackbarProvider } from "d2-ui-components";
-import { D2ApiDefault, D2Api } from "d2-api";
+import { D2ApiDefault } from "d2-api";
 
 import "./App.css";
 import { muiTheme } from "./themes/dhis2.theme";
@@ -22,9 +21,6 @@ import { AppContext } from "../../contexts/app-context";
 import { Config } from "../../models/Config";
 import { User } from "../../models/User";
 import { LinearProgress } from "@material-ui/core";
-import { GeeDhis2 } from "../../models/GeeDhis2";
-import Axios from "axios";
-import { EarthEngine } from "../../models/EarthEngine";
 import ee from "@google/earthengine";
 
 type D2 = object;
@@ -89,7 +85,6 @@ const App = () => {
             setAppContext(appContext);
             // Google Earth Engine must be defined globally in window (as var 'ee') to work
             Object.assign(window, { app: appContext, ee });
-            //testGee(api);
 
             setShowShareButton(_(appConfig).get("appearance.showShareButton") || false);
             if (currentUser.canReportFeedback()) {
@@ -136,39 +131,6 @@ const App = () => {
         );
     }
 };
-
-async function testGee(api: D2Api) {
-    // const credentials = await api.get<Credentials>("/tokens/google").getData();
-
-    // Workaround until we have a working dhis-google-auth.json
-    const tokenUrl = "https://play.dhis2.org/2.33dev/api/tokens/google";
-    //const tokenUrl = "http://localhost:8030/api/tokens/google";
-    const auth = { username: "admin", password: "district" };
-    const credentials = (await Axios.get(tokenUrl, { auth })).data;
-
-    const earthEngine = await EarthEngine.init(credentials);
-    const geeDhis2 = GeeDhis2.init(api, earthEngine);
-
-    const dataValueSet = await geeDhis2.getDataValueSet({
-        geeDataSetId: "ECMWF/ERA5/DAILY",
-        mapping: {
-            // eslint-disable-next-line @typescript-eslint/camelcase
-            total_precipitation: "uWYGA1xiwuZ",
-            // eslint-disable-next-line @typescript-eslint/camelcase
-            mean_2m_air_temperature: "RSJpUZqMoxC",
-        },
-        orgUnits: [{ id: "IyO9ICB0WIn" }, { id: "xloTsC6lk5Q" }],
-        interval: {
-            type: "daily",
-            start: moment("2018-08-23"),
-            end: moment("2018-08-25"), // Last day is not included
-        },
-    });
-    console.log(dataValueSet);
-
-    const res = await geeDhis2.postDataValueSet(dataValueSet);
-    console.log(res);
-}
 
 interface AppConfig {
     appKey: string;

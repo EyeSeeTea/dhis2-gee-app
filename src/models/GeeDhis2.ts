@@ -123,7 +123,10 @@ export class GeeDhis2 {
             }
         }
 
-        return _(geeData).map(getDataValue).compact().value();
+        return _(geeData)
+            .map(getDataValue)
+            .compact()
+            .value();
     }
 
     async postDataValueSet(dataValueSet: DataValueSet): Promise<DataValueSetsPostResponse> {
