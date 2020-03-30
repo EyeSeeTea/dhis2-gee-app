@@ -1,13 +1,8 @@
 import _ from "lodash";
 import moment, { Moment } from "moment";
 import ee from "@google/earthengine";
-import {
-    GeometryPoint,
-    GeometryPolygon,
-    ImageCollection,
-    InfoDataRowBase,
-    InfoData,
-} from "@google/earthengine";
+import { GeometryPoint, GeometryPolygon, ImageCollection } from "@google/earthengine";
+import { InfoDataRowBase, InfoData } from "@google/earthengine";
 
 export type DataSetId = string;
 export type Coordinates = [number, number];
@@ -65,7 +60,6 @@ export class EarthEngine {
 
     async getData<Band extends string>(options: GetDataOptions<Band>): Promise<GeeData<Band>> {
         const { id, bands, geometry, interval, scale = 30 } = options;
-
         const imageCollection = new ee.ImageCollection(id);
         const startDate = getDayString(interval.start);
         const endDate = getDayString(interval.end); // last day is not included

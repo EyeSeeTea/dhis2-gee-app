@@ -143,6 +143,7 @@ async function testGee(api: D2Api) {
 
     // Workaround until we have a working dhis-google-auth.json
     const tokenUrl = "https://play.dhis2.org/2.33dev/api/tokens/google";
+    //const tokenUrl = "http://localhost:8030/api/tokens/google";
     const auth = { username: "admin", password: "district" };
     const credentials = (await Axios.get(tokenUrl, { auth })).data;
 

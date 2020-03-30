@@ -71,7 +71,7 @@ export class GeeDhis2 {
         const orgUnitsWithGeometry = await this.getOrgUnitsWithGeometry(orgUnits);
         const pairs = orgUnitsWithGeometry.map(orgUnit => {
             const geometry = getGeometryFromOrgUnit(orgUnit);
-            return [orgUnit.id, geometry] as [OrgUnitId, Geometry];
+            return [orgUnit.id, geometry] as [OrgUnitId, Geometry | undefined];
         });
 
         return _.fromPairs(pairs);
@@ -106,21 +106,21 @@ export class GeeDhis2 {
     getDataValues<Band extends string>(options: GetDataValuesOptions<Band>): DataValue[] {
         const { orgUnitId, geeData, mapping } = options;
 
-        function getDataValue(item: DataItem<Band>) {
+        function getDataValue(item: DataItem<Band>): DataValue | undefined {
             const { date, band, value } = item;
             const dataElementId = get(mapping, band);
 
             if (!dataElementId) {
                 console.error(`Band not found in mapping: ${band}`);
                 return;
+            } else {
+                return {
+                    dataElement: dataElementId,
+                    value: value.toFixed(18),
+                    orgUnit: orgUnitId,
+                    period: date.format("YYYYMMDD"), // Assume periodType="DAILY"
+                };
             }
-
-            return {
-                dataElement: dataElementId,
-                value: value.toFixed(2),
-                orgUnit: orgUnitId,
-                period: date.format("YYYYMMDD"),
-            };
         }
 
         return _(geeData).map(getDataValue).compact().value();
@@ -137,6 +137,8 @@ function get<K extends keyof T, T>(obj: T, key: K): T[K] | undefined {
 
 function getGeometryFromOrgUnit(orgUnit: OrgUnit): Geometry | undefined {
     const coordinates = orgUnit.coordinates ? JSON.parse(orgUnit.coordinates) : null;
+    if (!coordinates) return;
+
     switch (orgUnit.featureType) {
         case "POINT":
             return { type: "point", coordinates };
@@ -152,7 +154,7 @@ function orgUnitHasGeometry(orgUnit: OrgUnit) {
     return orgUnit.featureType === "NONE" || orgUnit.coordinates;
 }
 
-/* Map sequentially over T[] with an asynchronous function and return array of mapped values */
+/* Map sequentially over T[] with an async function and return array of mapped values */
 export function promiseMap<T, S>(inputValues: T[], mapper: (value: T) => Promise<S>): Promise<S[]> {
     const reducer = (acc$: Promise<S[]>, inputValue: T): Promise<S[]> =>
         acc$.then((acc: S[]) =>
