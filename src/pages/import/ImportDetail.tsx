@@ -81,15 +81,30 @@ const ImportDetail: React.FunctionComponent<ImportDetailProps> = props => {
     const importData = useCallback(() => {
         setImporting(true);
         DataImport.getImportData(api, config, prefix).then(async imp => {
-            const response = await imp.run();
+            const response = await imp.run(false);
             console.log({ response });
             setImporting(false);
             setOpenImportDialog(false);
 
             if (response?.success) {
-                snackbar.success(i18n.t("Import successful \n") + response.messages);
+                snackbar.success(i18n.t("Import successful \n") + response.messages.join("\n"));
             } else {
-                snackbar.error(i18n.t("Import failed: ") + response.failures);
+                snackbar.error(i18n.t("Import failed: \n") + response.failures.join("\n"));
+            }
+        });
+    }, [api, config, prefix, snackbar]);
+
+    const downloadData = useCallback(() => {
+        setImporting(true);
+        DataImport.getImportData(api, config, prefix).then(async imp => {
+            const response = await imp.run(true);
+            console.log({ response });
+            setImporting(false);
+
+            if (response?.success) {
+                snackbar.success(i18n.t("Import successful \n") + response.messages.join("\n"));
+            } else {
+                snackbar.error(i18n.t("Import failed: ") + response.failures.join("\n"));
             }
         });
     }, [api, config, prefix, snackbar]);
@@ -149,9 +164,15 @@ const ImportDetail: React.FunctionComponent<ImportDetailProps> = props => {
                 {i18n.t("Import to DHIS2 ")}
                 <ImportExportIcon />
             </Button>
-            <Button className={classes.newImportButton} variant="contained">
+            <Button
+                className={classes.newImportButton}
+                variant="contained"
+                disabled={isImporting}
+                onClick={downloadData}
+            >
                 {i18n.t("Download JSON ")}
                 <GetAppIcon />
+                {isImporting && <LinearProgress />}
             </Button>
             <MappingsList
                 header={"Select & map datasets"}

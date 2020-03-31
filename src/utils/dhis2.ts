@@ -14,17 +14,10 @@ export async function getOrgUnitSubtree(api: D2Api, orgUnitId: string): Promise<
     return organisationUnits.map(({ id }) => id);
 }
 
-export function getImportCountString(
-    importCount: DataValueSetsPostResponse["importCount"],
-    importName: string
-) {
-    return i18n.t(
-        "{{name}}> imported: {{imported}} - updated: {{updated}} - ignored: {{ignored}} \n",
-        {
-            name: importName,
-            imported: importCount.imported,
-            updated: importCount.updated,
-            ignored: importCount.ignored,
-        }
-    );
+export function getImportCountString(importCount: DataValueSetsPostResponse["importCount"]) {
+    return i18n.t("Imported: {{imported}} - updated: {{updated}} - ignored: {{ignored}}", {
+        imported: importCount.imported,
+        updated: importCount.updated,
+        ignored: importCount.ignored,
+    });
 }

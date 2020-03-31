@@ -16,7 +16,6 @@ interface PeriodSelectorDialogProps {
 const PeriodSelectorDialog: React.FC<PeriodSelectorDialogProps> = props => {
     const { periodInformation, onCancel, onSave } = props;
 
-    console.log({ periodInformation });
     const [period, setPeriod] = React.useState<string>(periodInformation.id);
     const [fixedStart, setFixedStart] = React.useState<Date | undefined>(
         periodInformation.startDate ?? undefined

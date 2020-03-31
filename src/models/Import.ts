@@ -5,11 +5,11 @@ import { getDataStore, getImportCountString } from "../utils/dhis2";
 import { Config } from "./Config";
 import i18n from "../locales";
 import { EarthEngine, Interval } from "./EarthEngine";
-import { GeeDhis2, OrgUnit } from "./GeeDhis2";
+import { GeeDhis2, OrgUnit, DataValueSet } from "./GeeDhis2";
 import Axios from "axios";
 import Mapping from "./Mapping";
 import { getAttributeMappings, getDataSetValue } from "../utils/gee";
-import { buildPeriod } from "../utils/import";
+import { buildPeriod, downloadFile } from "../utils/import";
 
 export type PeriodInformation = {
     id: string;
@@ -94,8 +94,9 @@ export class DataImport {
         await this.dataStore.save(this.importKey, this.data);
     }
 
-    public async run(): Promise<{ success: boolean; failures: string[]; messages: string[] }> {
-        console.log("object", this.data);
+    public async run(
+        dryRun: boolean
+    ): Promise<{ success: boolean; failures: string[]; messages: string[] }> {
         let failures: string[] = [];
         let messages: string[] = [];
         try {
@@ -121,11 +122,12 @@ export class DataImport {
                     ...buildPeriod(this.data.periodInformation),
                 },
             };
+            let importDataValueSet: DataValueSet = { dataValues: [] };
 
             await Promise.all(
                 this.data.selectedMappings.map(async selectedMapping => {
                     try {
-                        const dataValueSet = await geeDhis2.getDataValueSet({
+                        const dataValueSet: DataValueSet = await geeDhis2.getDataValueSet({
                             ...baseImportConfig,
                             geeDataSetId: getDataSetValue(
                                 selectedMapping.geeImage,
@@ -138,27 +140,41 @@ export class DataImport {
                         });
 
                         console.log({ dataValueSet });
-
-                        const res = await geeDhis2.postDataValueSet(dataValueSet);
-                        console.log("mapping_response", res);
+                        importDataValueSet = {
+                            dataValues: _.concat(
+                                importDataValueSet.dataValues,
+                                dataValueSet.dataValues
+                            ),
+                        };
                         messages = [
                             ...messages,
-                            getImportCountString(
-                                res.importCount,
-                                getDataSetValue(
+                            i18n.t("{{n}} data values from {{name}} google data set.", {
+                                name: getDataSetValue(
                                     selectedMapping.geeImage,
                                     this.config,
                                     "displayName"
-                                )
-                            ),
+                                ),
+                                n: dataValueSet.dataValues.length,
+                            }),
                         ];
                     } catch (err) {
                         failures = [...failures, err];
                     }
                 })
             );
+            if (!dryRun) {
+                const res = await geeDhis2.postDataValueSet(importDataValueSet);
+                messages = [...messages, getImportCountString(res.importCount)];
+            } else {
+                messages = [...messages, i18n.t("No effective import into DHIS2, file download")];
+                downloadFile({
+                    filename: "data.json",
+                    mimeType: "application/json",
+                    contents: JSON.stringify(importDataValueSet),
+                });
+            }
             return {
-                success: _.isEmpty(failures),
+                success: _.isEmpty(failures) && !_.isEmpty(messages),
                 messages: messages,
                 failures: failures,
             };
@@ -166,7 +182,7 @@ export class DataImport {
             return {
                 success: false,
                 messages: messages,
-                failures: [...failures, i18n.t("Import config failed.")],
+                failures: [...failures, i18n.t("Import config failed"), err],
             };
         }
     }
