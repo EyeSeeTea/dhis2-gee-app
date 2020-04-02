@@ -8,7 +8,6 @@ import AttributeMappingTable from "../../../attribute-mapping/AttributeMappingTa
 class VariablesMappingStep extends React.Component<StepProps> {
     render() {
         const { api, config, mapping, onChange } = this.props;
-        console.log(_(config.data.base.googleDatasets).get(mapping.geeImage));
         return (
             <Card>
                 <CardContent>

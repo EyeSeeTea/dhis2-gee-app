@@ -114,7 +114,6 @@ export default function AttributeMappingTable({
                 ...mapping.attributeMappingDictionary,
                 [newAttributeMapping.id]: newAttributeMapping,
             });
-            console.log({ newMapping });
             setRows(
                 AttributeMapping.getList(availableBands, newMapping.attributeMappingDictionary)
                     .attributeMappings

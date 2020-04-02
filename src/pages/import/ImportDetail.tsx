@@ -1,5 +1,6 @@
 import React, { useCallback, useState } from "react";
 import i18n from "../../locales";
+import _ from "lodash";
 import { useAppContext } from "../../contexts/app-context";
 import { makeStyles } from "@material-ui/styles";
 import PageHeader from "../../components/page-header/PageHeader";
@@ -55,9 +56,19 @@ const ImportDetail: React.FunctionComponent<ImportDetailProps> = props => {
         [api, config, prefix]
     );
 
+    const onDeleteMappings = useCallback(
+        (deletedMappingsIds: string[]) => {
+            const newSelectedMappings = _.filter(
+                selectedMappings,
+                m => !deletedMappingsIds.includes(m.id)
+            );
+            onSelectedMappingsChange(newSelectedMappings);
+        },
+        [selectedMappings, onSelectedMappingsChange]
+    );
+
     const onSelectedOUsSave = useCallback(
         (newSelectedOUs: string[]) => {
-            console.log({ newSelectedOUs });
             setSelectedOUs(newSelectedOUs);
             DataImport.getImportData(api, config, prefix).then(imp => {
                 imp ? imp.setSelectedOUs(newSelectedOUs).save() : console.log("No import found");
@@ -178,6 +189,7 @@ const ImportDetail: React.FunctionComponent<ImportDetailProps> = props => {
                 header={"Select & map datasets"}
                 selectedMappings={selectedMappings}
                 onSelectionChange={onSelectedMappingsChange}
+                onDeleteMappings={onDeleteMappings}
             />
         </React.Fragment>
     );

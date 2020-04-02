@@ -157,7 +157,7 @@ class Mapping {
         const dataStore = getDataStore(api, config);
         const mappingsKey = config.data.base.dataStore.keys.mappings;
         const mappingsById = await dataStore.get<Mapping[] | undefined>(mappingsKey).getData();
-        return await dataStore.save(mappingsKey, {
+        const newMappingsList = {
             ...mappingsById,
             [this.id]: {
                 ...this.data,
@@ -165,7 +165,8 @@ class Mapping {
                     am => am.data
                 ),
             },
-        });
+        };
+        await dataStore.save(mappingsKey, newMappingsList).getData();
     }
 }
 

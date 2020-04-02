@@ -24,6 +24,7 @@ interface MappingsListProps {
     header?: string;
     selectedMappings?: Mapping[];
     onSelectionChange: (selectedMappings: Mapping[]) => void;
+    onDeleteMappings: (deletedMappings: string[]) => void;
 }
 
 const mouseActionsMapping: MouseActionsMapping = {
@@ -91,7 +92,7 @@ const MappingsList: React.FC<MappingsListProps> = props => {
     const { api, config } = useAppContext();
     const goTo = useGoTo();
     const snackbar = useSnackbar();
-    const { header, selectedMappings, onSelectionChange } = props;
+    const { header, selectedMappings, onSelectionChange, onDeleteMappings } = props;
     const [mappingIdsToDelete, setMappingIdsToDelete] = useState<string[] | undefined>(undefined);
     const componentConfig = React.useMemo(() => {
         return getComponentConfig(goTo, setMappingIdsToDelete);
@@ -106,7 +107,6 @@ const MappingsList: React.FC<MappingsListProps> = props => {
     const [objectsTableKey] = useState(() => new Date().getTime());
 
     const selection = useMemo(() => {
-        console.log({ rows });
         return rows
             .filter(mapping => selectedMappings?.map(m => m.id).includes(mapping.id))
             .map(mapping => ({ id: mapping.id }));
@@ -138,6 +138,7 @@ const MappingsList: React.FC<MappingsListProps> = props => {
             snackbar,
             async () => {
                 await Mapping.delete(api, config, mappingIdsToDelete ?? []);
+                onDeleteMappings(mappingIdsToDelete ?? []);
                 snackbar.success(
                     i18n.t("{{n}} mappings deleted", {
                         n: mappingIdsToDelete ? mappingIdsToDelete.length : 0,
@@ -146,6 +147,7 @@ const MappingsList: React.FC<MappingsListProps> = props => {
             },
             {
                 onFinally: () => {
+                    setDeleting(false);
                     setMappingIdsToDelete(undefined);
                     getMappings(sorting, { page: 1 });
                 },
@@ -161,7 +163,6 @@ const MappingsList: React.FC<MappingsListProps> = props => {
     const onTableChange = useCallback(
         (newSelectedMappingsIds: string[]) => {
             const newSelectedMappings = _.filter(rows, m => newSelectedMappingsIds.includes(m.id));
-            console.log({ newSelectedMappings });
             onSelectionChange(newSelectedMappings);
         },
         [rows, onSelectionChange]
@@ -173,7 +174,7 @@ const MappingsList: React.FC<MappingsListProps> = props => {
                     isOpen={true}
                     onSave={deleteMappings}
                     onCancel={isDeleting ? undefined : closeDeleteDialog}
-                    title={i18n.t("Delete project")}
+                    title={i18n.t("Delete mapping")}
                     description={i18n.t(
                         "This operation will delete ({{n}}) mappings. This operation cannot be undone. Are you sure you want to proceed?",
                         { n: mappingIdsToDelete.length }

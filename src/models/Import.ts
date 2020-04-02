@@ -91,7 +91,7 @@ export class DataImport {
     }
 
     public async save() {
-        await this.dataStore.save(this.importKey, this.data);
+        await this.dataStore.save(this.importKey, this.data).getData();
     }
 
     public async run(
@@ -139,7 +139,6 @@ export class DataImport {
                             ),
                         });
 
-                        console.log({ dataValueSet });
                         importDataValueSet = {
                             dataValues: _.concat(
                                 importDataValueSet.dataValues,

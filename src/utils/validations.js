@@ -11,7 +11,6 @@ const translations = {
 
 export async function getValidationMessages(d2, model, validationKeys = null) {
     const validationObj = await model.validate(d2);
-    console.log(validationObj);
 
     return _(validationObj)
         .at(validationKeys || _.keys(validationObj))

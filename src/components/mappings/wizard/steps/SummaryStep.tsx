@@ -59,7 +59,7 @@ const SummaryStep: React.FC<StepProps> = props => {
                                     <LiEntry
                                         label={attributeMapping.geeBand}
                                         value={
-                                            <span>
+                                            <span key={attributeMapping.geeBand + "Div"}>
                                                 {attributeMapping.dataElementName} - (
                                                 {attributeMapping.dataElementId})
                                             </span>

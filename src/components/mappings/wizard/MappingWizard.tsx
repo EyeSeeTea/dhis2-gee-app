@@ -53,7 +53,6 @@ const MappingWizard: React.FC<MappingWizardProps> = props => {
     }));
 
     const onStepChangeRequest = async (_currentStep: WizardStep, newStep: WizardStep) => {
-        console.log("Change");
         const index = _(steps).findIndex(step => step.key === newStep.key);
         const validationMessages = await Promise.all(
             _.take(steps, index).map(({ validationKeys }) =>
