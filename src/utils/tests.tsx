@@ -26,8 +26,17 @@ export function getTestUser() {
 
 export function getTestConfig() {
     return new Config({
-        base: {},
-        categoryCombos: [],
+        base: {
+            dataStore: {
+                namespace: "dhis2-gee-app",
+                keys: {
+                    imports: {
+                        suffix: "@import",
+                    },
+                    mappings: "mappings",
+                },
+            },
+        },
     });
 }
 

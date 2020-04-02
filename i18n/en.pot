@@ -5,8 +5,68 @@ msgstr ""
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1)\n"
-"POT-Creation-Date: 2020-03-09T08:28:53.161Z\n"
-"PO-Revision-Date: 2020-03-09T08:28:53.161Z\n"
+"POT-Creation-Date: 2020-03-30T07:07:17.941Z\n"
+"PO-Revision-Date: 2020-03-30T07:07:17.941Z\n"
+
+msgid "Select organisation unit"
+msgstr ""
+
+msgid "Save"
+msgstr ""
+
+msgid "Fixed period"
+msgstr ""
+
+msgid "Today"
+msgstr ""
+
+msgid "Yesterday"
+msgstr ""
+
+msgid "Last 7 days"
+msgstr ""
+
+msgid "Last 14 days"
+msgstr ""
+
+msgid "This week"
+msgstr ""
+
+msgid "Last week"
+msgstr ""
+
+msgid "This month"
+msgstr ""
+
+msgid "Last month"
+msgstr ""
+
+msgid "This quarter"
+msgstr ""
+
+msgid "Last quarter"
+msgstr ""
+
+msgid "This year"
+msgstr ""
+
+msgid "Last year"
+msgstr ""
+
+msgid "Select period interval"
+msgstr ""
+
+msgid "Period"
+msgstr ""
+
+msgid "Start date"
+msgstr ""
+
+msgid "End date"
+msgstr ""
+
+msgid "<No value>"
+msgstr ""
 
 msgid "Help"
 msgstr ""
@@ -14,11 +74,132 @@ msgstr ""
 msgid "Back"
 msgstr ""
 
+msgid "Cancel?"
+msgstr ""
+
+msgid ""
+"You are about to exit. All your changes will be lost. Are you sure you want "
+"to proceed?"
+msgstr ""
+
+msgid "Yes"
+msgstr ""
+
+msgid "No"
+msgstr ""
+
+msgid "Id"
+msgstr ""
+
+msgid "Name"
+msgstr ""
+
+msgid "Description"
+msgstr ""
+
+msgid "Selected mappings"
+msgstr ""
+
+msgid "Selected organisation units"
+msgstr ""
+
+msgid "Selected query period"
+msgstr ""
+
+msgid "Instance Dataset"
+msgstr ""
+
+msgid "G.E.E Dataset"
+msgstr ""
+
+msgid "Created at"
+msgstr ""
+
 msgid "Click to show feedback"
+msgstr ""
+
+msgid "Import"
+msgstr ""
+
+msgid "Select Organisation Units"
+msgstr ""
+
+msgid "Select Period"
+msgstr ""
+
+msgid "Import to DHIS2 "
+msgstr ""
+
+msgid "Download JSON "
+msgstr ""
+
+msgid "List and manage a new import."
+msgstr ""
+
+msgid "Configuration"
 msgstr ""
 
 msgid "Add"
 msgstr ""
 
 msgid "List"
+msgstr ""
+
+msgid "Data set"
+msgstr ""
+
+msgid "Created"
+msgstr ""
+
+msgid "Details"
+msgstr ""
+
+msgid "Edit"
+msgstr ""
+
+msgid "Delete"
+msgstr ""
+
+msgid "{{n}} mappings deleted"
+msgstr ""
+
+msgid "Delete project"
+msgstr ""
+
+msgid ""
+"This operation will delete ({{n}}) mappings. This operation cannot be "
+"undone. Are you sure you want to proceed?"
+msgstr ""
+
+msgid "Deleting..."
+msgstr ""
+
+msgid "Proceed"
+msgstr ""
+
+msgid "Cancel"
+msgstr ""
+
+msgid "Search by name or code"
+msgstr ""
+
+msgid "General info"
+msgstr ""
+
+msgid "Summary and save"
+msgstr ""
+
+msgid "New mapping"
+msgstr ""
+
+msgid "Edit mapping"
+msgstr ""
+
+msgid "Cancel mapping creation"
+msgstr ""
+
+msgid "Cancel mapping edition"
+msgstr ""
+
+msgid "Ok"
 msgstr ""

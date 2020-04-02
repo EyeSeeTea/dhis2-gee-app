@@ -2,13 +2,21 @@ import { D2Api, MetadataPick } from "d2-api";
 
 const baseConfig = {
     // Add here static configuration
+    dataStore: {
+        namespace: "dhis2-gee-app",
+        keys: {
+            mappings: "mappings",
+            imports: {
+                suffix: "@import",
+            },
+        },
+    },
 };
 
 export type BaseConfig = typeof baseConfig;
 
 export interface ConfigData {
     base: BaseConfig;
-    categoryCombos: CategoryCombo[];
 }
 
 export interface CategoryCombo {
@@ -16,12 +24,7 @@ export interface CategoryCombo {
     code: string;
 }
 
-// Example, get all categoryCombos[id,code]
-const metadataParams = {
-    categoryCombos: {
-        fields: { id: true, code: true },
-    },
-} as const;
+const metadataParams = {} as const;
 
 export type Metadata = MetadataPick<typeof metadataParams>;
 
@@ -37,11 +40,10 @@ export class Config {
     }
 
     static async build(api: D2Api): Promise<Config> {
-        const metadata = await api.metadata.get(metadataParams).getData();
+        console.log(api);
 
         const data: ConfigData = {
             base: baseConfig,
-            categoryCombos: metadata.categoryCombos,
         };
 
         return new Config(data);
