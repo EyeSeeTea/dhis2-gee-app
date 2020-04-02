@@ -22,12 +22,13 @@ type ContextualAction = "details" | "edit" | "delete";
 
 interface MappingsListProps {
     header?: string;
-    selectedMappings?: string[];
-    onSelectionChange: (selectedMappings: string[]) => void;
+    selectedMappings?: Mapping[];
+    onSelectionChange: (selectedMappings: Mapping[]) => void;
+    onDeleteMappings: (deletedMappings: string[]) => void;
 }
 
 const mouseActionsMapping: MouseActionsMapping = {
-    left: { type: "contextual" },
+    left: { type: "action", action: "edit" },
     right: { type: "contextual" },
 };
 
@@ -44,7 +45,8 @@ function getComponentConfig(
     const initialSorting = { field: "name" as const, order: "asc" as const };
     const columns: TableColumn<Mapping>[] = [
         { name: "name" as const, text: i18n.t("Name"), sortable: true },
-        { name: "dataSet" as const, text: i18n.t("Data set"), sortable: true },
+        { name: "dataSetName" as const, text: i18n.t("Dataset"), sortable: true },
+        { name: "dataSetId" as const, text: i18n.t("Dataset id"), sortable: true, hidden: true },
         { name: "geeImage" as const, text: i18n.t("G.E.E Dataset"), sortable: true },
     ];
 
@@ -90,7 +92,7 @@ const MappingsList: React.FC<MappingsListProps> = props => {
     const { api, config } = useAppContext();
     const goTo = useGoTo();
     const snackbar = useSnackbar();
-    const { header, selectedMappings, onSelectionChange } = props;
+    const { header, selectedMappings, onSelectionChange, onDeleteMappings } = props;
     const [mappingIdsToDelete, setMappingIdsToDelete] = useState<string[] | undefined>(undefined);
     const componentConfig = React.useMemo(() => {
         return getComponentConfig(goTo, setMappingIdsToDelete);
@@ -105,9 +107,8 @@ const MappingsList: React.FC<MappingsListProps> = props => {
     const [objectsTableKey] = useState(() => new Date().getTime());
 
     const selection = useMemo(() => {
-        console.log({ rows });
         return rows
-            .filter(mapping => selectedMappings?.includes(mapping.id))
+            .filter(mapping => selectedMappings?.map(m => m.id).includes(mapping.id))
             .map(mapping => ({ id: mapping.id }));
     }, [rows, selectedMappings]);
 
@@ -137,6 +138,7 @@ const MappingsList: React.FC<MappingsListProps> = props => {
             snackbar,
             async () => {
                 await Mapping.delete(api, config, mappingIdsToDelete ?? []);
+                onDeleteMappings(mappingIdsToDelete ?? []);
                 snackbar.success(
                     i18n.t("{{n}} mappings deleted", {
                         n: mappingIdsToDelete ? mappingIdsToDelete.length : 0,
@@ -145,6 +147,7 @@ const MappingsList: React.FC<MappingsListProps> = props => {
             },
             {
                 onFinally: () => {
+                    setDeleting(false);
                     setMappingIdsToDelete(undefined);
                     getMappings(sorting, { page: 1 });
                 },
@@ -157,6 +160,13 @@ const MappingsList: React.FC<MappingsListProps> = props => {
         setMappingIdsToDelete(undefined);
     }, []);
 
+    const onTableChange = useCallback(
+        (newSelectedMappingsIds: string[]) => {
+            const newSelectedMappings = _.filter(rows, m => newSelectedMappingsIds.includes(m.id));
+            onSelectionChange(newSelectedMappings);
+        },
+        [rows, onSelectionChange]
+    );
     return (
         <div>
             {mappingIdsToDelete && (
@@ -164,7 +174,7 @@ const MappingsList: React.FC<MappingsListProps> = props => {
                     isOpen={true}
                     onSave={deleteMappings}
                     onCancel={isDeleting ? undefined : closeDeleteDialog}
-                    title={i18n.t("Delete project")}
+                    title={i18n.t("Delete mapping")}
                     description={i18n.t(
                         "This operation will delete ({{n}}) mappings. This operation cannot be undone. Are you sure you want to proceed?",
                         { n: mappingIdsToDelete.length }
@@ -181,7 +191,7 @@ const MappingsList: React.FC<MappingsListProps> = props => {
                     key={objectsTableKey}
                     selection={selection}
                     searchBoxLabel={i18n.t("Search by name or code")}
-                    onChange={state => onSelectionChange(state.selection.map(m => m.id))}
+                    onChange={state => onTableChange(state.selection.map(m => m.id))}
                     forceSelectionColumn={true}
                     pagination={pagination}
                     details={componentConfig.details}
