@@ -92,7 +92,7 @@ const ImportDetail: React.FunctionComponent<ImportDetailProps> = props => {
     const importData = useCallback(() => {
         setImporting(true);
         DataImport.getImportData(api, config, prefix).then(async imp => {
-            const response = await imp.run(false);
+            const response = await imp.run(false, api);
             console.log({ response });
             setImporting(false);
             setOpenImportDialog(false);
@@ -108,7 +108,7 @@ const ImportDetail: React.FunctionComponent<ImportDetailProps> = props => {
     const downloadData = useCallback(() => {
         setImporting(true);
         DataImport.getImportData(api, config, prefix).then(async imp => {
-            const response = await imp.run(true);
+            const response = await imp.run(true, api);
             console.log({ response });
             setImporting(false);
 

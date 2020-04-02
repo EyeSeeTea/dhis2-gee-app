@@ -4,9 +4,8 @@ import DataStore from "d2-api/api/dataStore";
 import { getDataStore, getImportCountString } from "../utils/dhis2";
 import { Config } from "./Config";
 import i18n from "../locales";
-import { EarthEngine, Interval } from "./EarthEngine";
+import { EarthEngine, Interval, Credentials } from "./EarthEngine";
 import { GeeDhis2, OrgUnit, DataValueSet } from "./GeeDhis2";
-import Axios from "axios";
 import Mapping from "./Mapping";
 import { getAttributeMappings, getDataSetValue } from "../utils/gee";
 import { buildPeriod, downloadFile } from "../utils/import";
@@ -95,17 +94,13 @@ export class DataImport {
     }
 
     public async run(
-        dryRun: boolean
+        dryRun: boolean,
+        api: D2Api
     ): Promise<{ success: boolean; failures: string[]; messages: string[] }> {
         let failures: string[] = [];
         let messages: string[] = [];
         try {
-            // const credentials = await api.get<Credentials>("/tokens/google").getData();
-
-            // Workaround until we have a working dhis-google-auth.json
-            const tokenUrl = "https://play.dhis2.org/2.33dev/api/tokens/google";
-            const auth = { username: "admin", password: "district" };
-            const credentials = (await Axios.get(tokenUrl, { auth })).data;
+            const credentials = await api.get<Credentials>("/tokens/google").getData();
 
             const earthEngine = await EarthEngine.init(credentials);
             const geeDhis2 = GeeDhis2.init(this.api, earthEngine);
