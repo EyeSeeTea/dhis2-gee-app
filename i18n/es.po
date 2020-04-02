@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: i18next-conv\n"
-"POT-Creation-Date: 2020-03-30T16:52:08.394Z\n"
+"POT-Creation-Date: 2020-04-02T13:03:34.066Z\n"
 "PO-Revision-Date: 2018-10-25T09:02:35.143Z\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -142,7 +142,13 @@ msgstr ""
 msgid "Selected query period"
 msgstr ""
 
-msgid "Import config failed."
+msgid "{{n}} data values from {{name}} google data set."
+msgstr ""
+
+msgid "No effective import into DHIS2, file download"
+msgstr ""
+
+msgid "Import config failed"
 msgstr ""
 
 msgid "Instance Dataset"
