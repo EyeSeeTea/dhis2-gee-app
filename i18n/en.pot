@@ -1,0 +1,306 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: i18next-conv\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1)\n"
+"POT-Creation-Date: 2020-04-02T14:50:37.733Z\n"
+"PO-Revision-Date: 2020-04-02T14:50:37.733Z\n"
+
+msgid "Mapping for attribute {{attr}}"
+msgstr ""
+
+msgid "Cancel"
+msgstr ""
+
+msgid "Disable mapping"
+msgstr ""
+
+msgid "Are you sure you want to disable mapping for {{total}} attributes?"
+msgstr ""
+
+msgid "Please select at least one item to disable mapping"
+msgstr ""
+
+msgid "Google Attribute"
+msgstr ""
+
+msgid "Mapped Id"
+msgstr ""
+
+msgid "Set mapping"
+msgstr ""
+
+msgid "Mapped Name"
+msgstr ""
+
+msgid "Mapped Code"
+msgstr ""
+
+msgid "Ok"
+msgstr ""
+
+msgid "Search by name / code"
+msgstr ""
+
+msgid "Name"
+msgstr ""
+
+msgid "Code"
+msgstr ""
+
+msgid "Select"
+msgstr ""
+
+msgid "Select organisation unit"
+msgstr ""
+
+msgid "Save"
+msgstr ""
+
+msgid "Select period interval"
+msgstr ""
+
+msgid "Period"
+msgstr ""
+
+msgid "Start date"
+msgstr ""
+
+msgid "End date"
+msgstr ""
+
+msgid "<No value>"
+msgstr ""
+
+msgid "Cancel mapping?"
+msgstr ""
+
+msgid "All your changes will be lost. Are you sure you want to proceed?"
+msgstr ""
+
+msgid "Yes"
+msgstr ""
+
+msgid "No"
+msgstr ""
+
+msgid "General info"
+msgstr ""
+
+msgid "Google Earth Engine variables mapping"
+msgstr ""
+
+msgid "Summary and save"
+msgstr ""
+
+msgid "Field cannot be blank"
+msgstr ""
+
+msgid "Dataset"
+msgstr ""
+
+msgid "Help"
+msgstr ""
+
+msgid "Back"
+msgstr ""
+
+msgid "Cancel?"
+msgstr ""
+
+msgid ""
+"You are about to exit. All your changes will be lost. Are you sure you want "
+"to proceed?"
+msgstr ""
+
+msgid "Id"
+msgstr ""
+
+msgid "Comment"
+msgstr ""
+
+msgid "Data element id"
+msgstr ""
+
+msgid "Data element code"
+msgstr ""
+
+msgid "Data element name"
+msgstr ""
+
+msgid "Description"
+msgstr ""
+
+msgid "Selected mappings"
+msgstr ""
+
+msgid "Selected organisation units"
+msgstr ""
+
+msgid "Selected query period"
+msgstr ""
+
+msgid "{{n}} data values from {{name}} google data set."
+msgstr ""
+
+msgid "No effective import into DHIS2, file download"
+msgstr ""
+
+msgid "Import config failed"
+msgstr ""
+
+msgid "Instance Dataset"
+msgstr ""
+
+msgid "Instance DataSet"
+msgstr ""
+
+msgid "G.E.E Dataset"
+msgstr ""
+
+msgid "Created at"
+msgstr ""
+
+msgid "Attribute mappings"
+msgstr ""
+
+msgid "Google Band mapping with Data Element.q"
+msgstr ""
+
+msgid "Click to show feedback"
+msgstr ""
+
+msgid "Import successful \n"
+msgstr ""
+
+msgid "New import request"
+msgstr ""
+
+msgid ""
+"This operation will collect and import data from Google Earth Engine to the "
+"instance. Are you sure you want to proceed?"
+msgstr ""
+
+msgid "Importing..."
+msgstr ""
+
+msgid "Import"
+msgstr ""
+
+msgid "Select Organisation Units"
+msgstr ""
+
+msgid "Select Period"
+msgstr ""
+
+msgid "Import to DHIS2 "
+msgstr ""
+
+msgid "Download JSON "
+msgstr ""
+
+msgid "List and manage a new import."
+msgstr ""
+
+msgid "Configuration"
+msgstr ""
+
+msgid "Add"
+msgstr ""
+
+msgid "List"
+msgstr ""
+
+msgid "Dataset id"
+msgstr ""
+
+msgid "Created"
+msgstr ""
+
+msgid "Details"
+msgstr ""
+
+msgid "Edit"
+msgstr ""
+
+msgid "Delete"
+msgstr ""
+
+msgid "{{n}} mappings deleted"
+msgstr ""
+
+msgid "Delete mapping"
+msgstr ""
+
+msgid ""
+"This operation will delete ({{n}}) mappings. This operation cannot be "
+"undone. Are you sure you want to proceed?"
+msgstr ""
+
+msgid "Deleting..."
+msgstr ""
+
+msgid "Proceed"
+msgstr ""
+
+msgid "Search by name or code"
+msgstr ""
+
+msgid "New mapping"
+msgstr ""
+
+msgid "Edit mapping"
+msgstr ""
+
+msgid "Fixed period"
+msgstr ""
+
+msgid "Today"
+msgstr ""
+
+msgid "Yesterday"
+msgstr ""
+
+msgid "Last 7 days"
+msgstr ""
+
+msgid "Last 14 days"
+msgstr ""
+
+msgid "This week"
+msgstr ""
+
+msgid "Last week"
+msgstr ""
+
+msgid "This month"
+msgstr ""
+
+msgid "Last month"
+msgstr ""
+
+msgid "This quarter"
+msgstr ""
+
+msgid "Last quarter"
+msgstr ""
+
+msgid "This year"
+msgstr ""
+
+msgid "Last year"
+msgstr ""
+
+msgid "Field {{field}} cannot be blank"
+msgstr ""
+
+msgid "This URL and username combination already exists"
+msgstr ""
+
+msgid "You need to select at least one {{element}}"
+msgstr ""
+
+msgid "Start and end dates are not a valid period"
+msgstr ""

@@ -1,0 +1,17 @@
+language: node_js
+node_js:
+    - 12.13.0
+dist: bionic
+cache:
+    directories:
+        - "$HOME/.cache"
+install:
+    - yarn install --frozen-lockfile
+    - yarn build-webapp
+addons:
+    apt:
+        packages:
+            - libgconf-2-4
+notifications:
+    slack:
+        secure: eyeseetea:ftMfk0oeXVhQVbdks9mZVunc
