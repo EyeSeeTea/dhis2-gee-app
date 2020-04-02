@@ -28,10 +28,7 @@ export function buildPeriod(periodInfo: PeriodInformation): { start: Moment; end
     const {
         id,
         startDate = "1970-01-01",
-        endDate = moment()
-            .add(10, "years")
-            .endOf("year")
-            .format("YYYY-MM-DD"),
+        endDate = moment().add(10, "years").endOf("year").format("YYYY-MM-DD"),
     } = periodInfo;
 
     if (!id || id === "ALL" || id === "FIXED") {

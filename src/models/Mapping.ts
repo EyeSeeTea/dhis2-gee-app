@@ -26,7 +26,7 @@ export interface MappingData {
 export type MappingField = keyof MappingData;
 
 function defineGetters(sourceObject: any, targetObject: any) {
-    Object.keys(sourceObject).forEach(function(key) {
+    Object.keys(sourceObject).forEach(function (key) {
         Object.defineProperty(targetObject, key, {
             get: () => sourceObject[key],
             enumerable: true,

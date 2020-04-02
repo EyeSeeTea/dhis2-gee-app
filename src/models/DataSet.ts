@@ -11,7 +11,7 @@ export interface DataSetData {
 export type DataElementField = keyof DataSetData;
 
 function defineGetters(sourceObject: any, targetObject: any) {
-    Object.keys(sourceObject).forEach(function(key) {
+    Object.keys(sourceObject).forEach(function (key) {
         Object.defineProperty(targetObject, key, {
             get: () => sourceObject[key],
             enumerable: true,
