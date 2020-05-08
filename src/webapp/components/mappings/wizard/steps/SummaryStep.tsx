@@ -4,7 +4,7 @@ import { StepProps } from "../MappingWizard";
 import { makeStyles, Button, LinearProgress } from "@material-ui/core";
 import i18n from "../../../../locales";
 import Mapping from "../../../../models/Mapping";
-import { useGoTo } from "../../../../router";
+import { useGoTo } from "../../../../../router";
 import { useSnackbar } from "d2-ui-components";
 
 const SummaryStep: React.FC<StepProps> = props => {

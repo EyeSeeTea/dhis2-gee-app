@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import PageHeader from "../../../components/page-header/PageHeader";
 import i18n from "../../../locales";
-import { useGoTo } from "../../../router";
+import { useGoTo } from "../../../../router";
 import { useLoading } from "d2-ui-components";
 import MappingWizard from "../../../components/mappings/wizard/MappingWizard";
 import Mapping from "../../../models/Mapping";

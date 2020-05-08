@@ -15,7 +15,7 @@ import i18n from "../../locales";
 import { useAppContext } from "../../contexts/app-context";
 import { makeStyles } from "@material-ui/styles";
 import { Theme, createStyles, LinearProgress, Icon } from "@material-ui/core";
-import { useGoTo, GoTo } from "../../router";
+import { useGoTo, GoTo } from "../../../router";
 import { withSnackbarOnError } from "../../utils/error";
 
 type ContextualAction = "details" | "edit" | "delete";
