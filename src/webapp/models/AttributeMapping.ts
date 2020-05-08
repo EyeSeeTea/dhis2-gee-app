@@ -3,7 +3,7 @@ import _ from "lodash";
 import i18n from "../locales";
 import { Config } from "./Config";
 import { getDataStore } from "../utils/dhis2";
-import { Validation } from "../types/validations";
+import { Validation } from "../../types/validations";
 import { AttributeMappingDictionary } from "./Mapping";
 import DataElement from "./DataElement";
 
@@ -100,9 +100,9 @@ class AttributeMapping {
             geeImage: _.compact([
                 !this.geeBand.trim()
                     ? {
-                          key: "cannotBeEmpty",
-                          namespace: { element: AttributeMapping.getFieldName("geeBand") },
-                      }
+                        key: "cannotBeEmpty",
+                        namespace: { element: AttributeMapping.getFieldName("geeBand") },
+                    }
                     : null,
             ]),
         });
@@ -114,6 +114,6 @@ class AttributeMapping {
             .set("dataElementCode", dataElement.code);
     }
 }
-interface AttributeMapping extends AttributeMappingData {}
+interface AttributeMapping extends AttributeMappingData { }
 
 export default AttributeMapping;

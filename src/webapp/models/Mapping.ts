@@ -4,7 +4,7 @@ import i18n from "../locales";
 import { TablePagination } from "d2-ui-components";
 import { Config } from "./Config";
 import { getDataStore } from "../utils/dhis2";
-import { Validation } from "../types/validations";
+import { Validation } from "../../types/validations";
 import AttributeMapping from "./AttributeMapping";
 import { generateUid } from "d2/uid";
 
@@ -119,35 +119,35 @@ class Mapping {
             name: _.compact([
                 !this.name.trim()
                     ? {
-                          key: "cannotBeBlank",
-                          namespace: { field: Mapping.getFieldName("name") },
-                      }
+                        key: "cannotBeBlank",
+                        namespace: { field: Mapping.getFieldName("name") },
+                    }
                     : null,
             ]),
             geeImage: _.compact([
                 !this.geeImage.trim()
                     ? {
-                          key: "cannotBeBlank",
-                          namespace: { element: Mapping.getFieldName("geeImage") },
-                      }
+                        key: "cannotBeBlank",
+                        namespace: { element: Mapping.getFieldName("geeImage") },
+                    }
                     : null,
             ]),
             dataSet: _.compact([
                 !this.dataSetId.trim()
                     ? {
-                          key: "cannotBeBlank",
-                          namespace: { element: Mapping.getFieldName("dataSetId") },
-                      }
+                        key: "cannotBeBlank",
+                        namespace: { element: Mapping.getFieldName("dataSetId") },
+                    }
                     : null,
             ]),
             attributeMappingDictionary: _.compact([
                 _.isEmpty(this.attributeMappingDictionary)
                     ? {
-                          key: "cannotBeEmpty",
-                          namespace: {
-                              element: i18n.t("Google Band mapping with Data Element.q"),
-                          },
-                      }
+                        key: "cannotBeEmpty",
+                        namespace: {
+                            element: i18n.t("Google Band mapping with Data Element.q"),
+                        },
+                    }
                     : null,
             ]),
         });
@@ -170,6 +170,6 @@ class Mapping {
     }
 }
 
-interface Mapping extends MappingData {}
+interface Mapping extends MappingData { }
 
 export default Mapping;
