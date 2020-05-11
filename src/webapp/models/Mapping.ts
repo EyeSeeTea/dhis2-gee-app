@@ -161,7 +161,10 @@ class Mapping {
         const newMappingsList = {
             ...mappingsById,
             [this.id]: {
-                ...this.data
+                ...this.data,
+                attributeMappingDictionary: _(this.data.attributeMappingDictionary).mapValues(
+                    am => am.data
+                ).value(),
             },
         };
 
