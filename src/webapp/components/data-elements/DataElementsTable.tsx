@@ -1,29 +1,18 @@
 import React from "react";
-import {
-    ObjectsTable,
-    TablePagination,
-    TableColumn,
-    MouseActionsMapping,
-    TableAction,
-} from "d2-ui-components";
+import { ObjectsTable, TableColumn, MouseActionsMapping, TableAction } from "d2-ui-components";
 import _ from "lodash";
 import i18n from "../../locales";
-import DataElement from "../../models/DataElement";
+import DataElement from "../../../domain/entities/DataElement";
 
 export interface DataElementsTableProps {
     dataElements: DataElement[];
     onSelectedMapping: (dataElement: DataElement) => void;
 }
 
-const initialPagination: Partial<TablePagination> = {
-    pageSize: 50,
-    page: 1,
-    pageSizeOptions: [10, 20, 50],
-};
-
-const DataElementsTable: React.FC<DataElementsTableProps> = props => {
-    const { dataElements, onSelectedMapping } = props;
-
+const DataElementsTable: React.FC<DataElementsTableProps> = ({
+    dataElements,
+    onSelectedMapping,
+}) => {
     const columns: TableColumn<DataElement>[] = [
         {
             name: "name" as const,
@@ -68,7 +57,6 @@ const DataElementsTable: React.FC<DataElementsTableProps> = props => {
             forceSelectionColumn={false}
             mouseActionsMapping={mouseActionsMapping}
             actions={actions}
-            initialState={{ pagination: initialPagination }}
             columns={columns}
             searchBoxLabel={i18n.t("Search by name / code")}
             searchBoxColumns={["name", "code"]}

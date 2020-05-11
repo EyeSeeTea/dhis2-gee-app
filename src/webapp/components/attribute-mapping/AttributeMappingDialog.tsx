@@ -1,11 +1,14 @@
 import i18n from "@dhis2/d2-i18n";
 import DialogContent from "@material-ui/core/DialogContent";
-import { ConfirmationDialog, TableSorting, TablePagination } from "d2-ui-components";
+import { ConfirmationDialog } from "d2-ui-components";
 import React, { useEffect, useState, useCallback } from "react";
 import DataElementsTable from "../data-elements/DataElementsTable";
-import DataElement from "../../models/DataElement";
+
 import { D2Api } from "d2-api";
 import AttributeMapping from "../../models/AttributeMapping";
+import GetDataElementsByDataSetIdUseCase from "../../../domain/usecases/GetDataElementsByDataSetIdUseCase";
+import DataElementD2ApiRepository from "../../../data/DataElementD2ApiRepository";
+import DataElement from "../../../domain/entities/DataElement";
 
 export interface AttributeMappingDialogConfig {
     dataset: string;
@@ -19,42 +22,28 @@ export interface AttributeMappingDialogProps {
     onClose: () => void;
 }
 
-type DataElementSorting = TableSorting<DataElement>;
-
-const AttributeMappingDialog: React.FC<AttributeMappingDialogProps> = props => {
-    const { api, params, onMappingChange, onClose } = props;
+const AttributeMappingDialog: React.FC<AttributeMappingDialogProps> = ({
+    api,
+    params,
+    onMappingChange,
+    onClose,
+}) => {
     const { dataset, attributeMapping } = params;
-    const [rows, setRows] = useState<DataElement[] | undefined>(undefined);
-    const [pagination, setPagination] = useState({
-        page: 1,
-        pageSize: 15,
-        pageSizeOptions: [10, 15, 30],
-    });
-    const [sorting, setSorting] = useState<DataElementSorting>({
-        field: "name" as const,
-        order: "asc" as const,
-    });
+    const [rows, setRows] = useState<DataElement[]>([]);
 
     useEffect(() => {
-        getDataElements(sorting, { page: 1 });
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [sorting]);
+        const dataElementsRepository = new DataElementD2ApiRepository(api);
+        const getDataElementsByDataSetIdUseCase = new GetDataElementsByDataSetIdUseCase(
+            dataElementsRepository
+        );
 
-    async function getDataElements(
-        sorting: TableSorting<DataElement>,
-        paginationOptions: Partial<TablePagination>
-    ) {
-        const listPagination = { ...pagination, ...paginationOptions };
-
-        const res = await DataElement.getList(api, dataset);
-        setRows(res.dataElements);
-        setPagination({ ...listPagination, ...res.pager });
-        setSorting(sorting);
-    }
+        getDataElementsByDataSetIdUseCase.execute(dataset).then(setRows);
+    }, [api, dataset]);
 
     const onSelectedDataElement = useCallback(
         (dataElement: DataElement) => {
             if (attributeMapping) {
+                debugger;
                 onMappingChange(attributeMapping.setDataElement(dataElement));
             } else {
                 console.error("Error adding mapping of google band.");
@@ -78,10 +67,7 @@ const AttributeMappingDialog: React.FC<AttributeMappingDialogProps> = props => {
             cancelText={i18n.t("Cancel")}
         >
             <DialogContent>
-                <DataElementsTable
-                    dataElements={rows ?? []}
-                    onSelectedMapping={onSelectedDataElement}
-                />
+                <DataElementsTable dataElements={rows} onSelectedMapping={onSelectedDataElement} />
             </DialogContent>
         </ConfirmationDialog>
     );
