@@ -79,12 +79,12 @@ class AttributeMapping {
     ): { attributeMappings: AttributeMapping[] } {
         const attributeMappings: AttributeMapping[] = availableBands.map(
             band =>
-                mappingDictionary[band] ??
-                new AttributeMapping({
-                    id: band,
-                    geeBand: band,
-                    comment: "",
-                })
+                mappingDictionary[band] ? AttributeMapping.build(mappingDictionary[band]) :
+                    new AttributeMapping({
+                        id: band,
+                        geeBand: band,
+                        comment: "",
+                    })
         );
         return { attributeMappings: attributeMappings };
     }

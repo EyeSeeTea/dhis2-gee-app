@@ -43,7 +43,6 @@ const AttributeMappingDialog: React.FC<AttributeMappingDialogProps> = ({
     const onSelectedDataElement = useCallback(
         (dataElement: DataElement) => {
             if (attributeMapping) {
-                debugger;
                 onMappingChange(attributeMapping.setDataElement(dataElement));
             } else {
                 console.error("Error adding mapping of google band.");
