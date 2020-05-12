@@ -40,10 +40,10 @@ export class GeeDhis2 {
     ): Promise<DataValueSet> {
         const { geeDataRepository } = this;
         const { geeDataSetId, orgUnits, mapping, interval, scale } = options;
-        const geometries = await this.getGeometries(orgUnits);
-        console.log({ geometries });
 
-        const dataValuesList = await promiseMap(_.toPairs(geometries), async ([ouId, geometry]) => {
+        const dataValuesList = await promiseMap(orgUnits, async (orgUnit) => {
+            const geometry = getGeometryFromOrgUnit(orgUnit);
+
             if (!geometry) return [];
 
             const options: GeeDataFilters<Band> = {
@@ -55,7 +55,7 @@ export class GeeDhis2 {
             };
 
             const geeData = await geeDataRepository.getData(options);
-            return this.getDataValues({ orgUnitId: ouId, geeData, mapping });
+            return this.getDataValues({ orgUnitId: orgUnit.id, geeData, mapping });
         });
 
         return { dataValues: _.flatten(dataValuesList) };
@@ -63,37 +63,6 @@ export class GeeDhis2 {
 
     async postDataValueSet(dataValueSet: DataValueSet): Promise<DataValueSetsPostResponse> {
         return this.api.dataValues.postSet({}, dataValueSet).getData();
-    }
-
-    private async getOrgUnitsWithGeometry(orgUnits: OrgUnit[]): Promise<OrgUnit[]> {
-        const { api } = this;
-        const [ousWithGeometry, ousWithoutGeometry] = _.partition(orgUnits, orgUnitHasGeometry);
-
-        // d2-api supports 2.32 ou.geometry, not 2.30 ou.featureType/coordinates, do custom request
-        const orgUnitIds = ousWithoutGeometry.map(ou => ou.id);
-        const apiPath = [
-            "/metadata?",
-            "organisationUnits:fields=id,featureType,coordinates",
-            "&",
-            `organisationUnits:filter=id:in:[${orgUnitIds.join(",")}]`,
-        ].join("");
-        const { organisationUnits: organisationUnitsWithGeometryFromDb = [] } = await api
-            .get<{ organisationUnits: OrgUnit[] | undefined }>(apiPath)
-            .getData();
-
-        return [...ousWithGeometry, ...organisationUnitsWithGeometryFromDb];
-    }
-
-    private async getGeometries(
-        orgUnits: OrgUnit[]
-    ): Promise<Record<OrgUnitId, GeeGeometry | undefined>> {
-        const orgUnitsWithGeometry = await this.getOrgUnitsWithGeometry(orgUnits);
-        const pairs = orgUnitsWithGeometry.map(orgUnit => {
-            const geometry = getGeometryFromOrgUnit(orgUnit);
-            return [orgUnit.id, geometry] as [OrgUnitId, GeeGeometry | undefined];
-        });
-
-        return _.fromPairs(pairs);
     }
 
     private getDataValues<Band extends string>(options: GetDataValuesOptions<Band>): DataValue[] {
@@ -137,10 +106,6 @@ function getGeometryFromOrgUnit(orgUnit: OrgUnit): GeeGeometry | undefined {
         default:
             return;
     }
-}
-
-function orgUnitHasGeometry(orgUnit: OrgUnit) {
-    return orgUnit.featureType === "NONE" || orgUnit.coordinates;
 }
 
 /* Map sequentially over T[] with an async function and return array of mapped values */

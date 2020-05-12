@@ -11,6 +11,7 @@ import { DataImportData } from "../../webapp/models/Import";
 import { GeeInterval, GeeDataRepository } from "../repositories/GeeDataRepository";
 import { OrgUnit } from "../entities/OrgUnit";
 import { DataValueSet } from "../entities/DataValue";
+import OrgUnitRepository from "../repositories/OrgUnitRepository";
 
 //TODO: this use case is the old run method in old import model
 // little a little we are going to refactoring this use case 
@@ -19,7 +20,8 @@ import { DataValueSet } from "../entities/DataValue";
 class ImportUseCase {
     constructor(private api: D2Api,
         private config: Config,
-        private geeDataRepository: GeeDataRepository) { }
+        private geeDataRepository: GeeDataRepository,
+        private orgUnitRepository: OrgUnitRepository) { }
 
     public async execute(
         dryRun: boolean,
@@ -31,13 +33,12 @@ class ImportUseCase {
 
             const geeDhis2 = GeeDhis2.init(this.api, this.geeDataRepository);
 
+            const orgUnitIds = _.compact(data.selectedOUs.map(o => o.split("/").pop()));
+            const orgUnits = await this.orgUnitRepository.getByIds(orgUnitIds);
+
             const baseImportConfig: { orgUnits: OrgUnit[]; interval: GeeInterval } = {
                 //orgUnits: [{ id: "IyO9ICB0WIn" }, { id: "xloTsC6lk5Q" }],
-                orgUnits: data.selectedOUs.map(o => {
-                    return {
-                        id: o.split("/").pop(),
-                    } as OrgUnit;
-                }),
+                orgUnits: orgUnits,
                 interval: {
                     type: "daily",
                     ...buildPeriod(data.periodInformation),
