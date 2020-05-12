@@ -3,12 +3,14 @@ import _ from "lodash";
 import { getImportCountString } from "../../webapp/utils/dhis2";
 import { Config } from "../../webapp/models/Config";
 import i18n from "../../webapp/locales";
-import { GeeDhis2, OrgUnit, DataValueSet } from "../../webapp/models/GeeDhis2";
+import { GeeDhis2 } from "../../webapp/models/GeeDhis2";
 import { getAttributeMappings, getDataSetValue } from "../../webapp/utils/gee";
 import { buildPeriod, downloadFile } from "../../webapp/utils/import";
 import { D2Api } from "d2-api";
 import { DataImportData } from "../../webapp/models/Import";
 import { GeeInterval, GeeDataRepository } from "../repositories/GeeDataRepository";
+import { OrgUnit } from "../entities/OrgUnit";
+import { DataValueSet } from "../entities/DataValue";
 
 //TODO: this use case is the old run method in old import model
 // little a little we are going to refactoring this use case 

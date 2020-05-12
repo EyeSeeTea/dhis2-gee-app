@@ -1,5 +1,5 @@
 import _ from "lodash";
-import { D2Api, Id, DataValueSetsPostResponse } from "d2-api";
+import { D2Api, DataValueSetsPostResponse } from "d2-api";
 import {
     GeeDataSetId,
     GeeInterval,
@@ -8,28 +8,11 @@ import {
     GeeDataRepository
 } from "../../domain/repositories/GeeDataRepository";
 import { GeeData, GeeDataItem } from "../../domain/entities/GeeData";
-
-export interface OrgUnit {
-    id: Id;
-    featureType?: "NONE" | "MULTI_POLYGON" | "POLYGON" | "POINT" | "SYMBOL";
-    coordinates?: string;
-}
+import { DataValueSet, DataValue } from "../../domain/entities/DataValue";
+import { OrgUnit } from "../../domain/entities/OrgUnit";
 
 type DataElementId = string;
 type OrgUnitId = string;
-
-export interface DataValue {
-    dataElement: Id;
-    value: string;
-    orgUnit: Id;
-    period: string;
-    attributeOptionCombo?: Id;
-    categoryOptionCombo?: Id;
-}
-
-export interface DataValueSet {
-    dataValues: DataValue[];
-}
 
 export interface GetDataValueSetOptions<Band extends string> {
     geeDataSetId: GeeDataSetId;
