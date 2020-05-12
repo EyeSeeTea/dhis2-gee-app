@@ -1,7 +1,7 @@
 import React, { useCallback, useState } from "react";
 import i18n from "../../locales";
 import _ from "lodash";
-import { useAppContext } from "../../contexts/app-context";
+import { useAppContext, useCompositionRootContext } from "../../contexts/app-context";
 import { makeStyles } from "@material-ui/styles";
 import PageHeader from "../../components/page-header/PageHeader";
 import MappingsList from "../mappings/MappingsList";
@@ -30,6 +30,7 @@ const ImportDetail: React.FunctionComponent<ImportDetailProps> = props => {
     const [showPeriodDialog, setPeriodDialog] = useState<boolean>(false);
     const [openImportDialog, setOpenImportDialog] = useState<boolean>(false);
     const [isImporting, setImporting] = useState(false);
+    const geeImport = useCompositionRootContext().geeImport;
 
     React.useEffect(() => {
         DataImport.getImportData(api, config, prefix).then(imp => {
@@ -92,7 +93,8 @@ const ImportDetail: React.FunctionComponent<ImportDetailProps> = props => {
     const importData = useCallback(() => {
         setImporting(true);
         DataImport.getImportData(api, config, prefix).then(async imp => {
-            const response = await imp.run(false, api);
+            const response = await geeImport.import(false, imp.data);
+
             console.log({ response });
             setImporting(false);
             setOpenImportDialog(false);
@@ -103,12 +105,13 @@ const ImportDetail: React.FunctionComponent<ImportDetailProps> = props => {
                 snackbar.error(i18n.t("Import failed: \n") + response.failures.join("\n"));
             }
         });
-    }, [api, config, prefix, snackbar]);
+    }, [api, config, prefix, snackbar, geeImport]);
 
     const downloadData = useCallback(() => {
         setImporting(true);
         DataImport.getImportData(api, config, prefix).then(async imp => {
-            const response = await imp.run(true, api);
+            const response = await geeImport.import(true, imp.data);
+
             console.log({ response });
             setImporting(false);
 
@@ -118,7 +121,7 @@ const ImportDetail: React.FunctionComponent<ImportDetailProps> = props => {
                 snackbar.error(i18n.t("Import failed: ") + response.failures.join("\n"));
             }
         });
-    }, [api, config, prefix, snackbar]);
+    }, [api, config, prefix, snackbar, geeImport]);
 
     return (
         <React.Fragment>

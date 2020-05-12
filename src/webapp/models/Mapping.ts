@@ -94,7 +94,11 @@ class Mapping {
         const mappings = await dataStore
             .get<{ [id: string]: Mapping } | undefined>(mappingsKey)
             .getData();
-        return { mappings: mappings ? _.values(mappings) : [], pager: {} };
+
+        debugger;
+        const mappingModels = _.values(mappings).map(mapping => Mapping.build(mapping));
+
+        return { mappings: mappingModels ?? [], pager: {} };
     }
 
     public set<K extends keyof MappingData>(field: K, value: MappingData[K]): Mapping {
@@ -163,10 +167,12 @@ class Mapping {
             [this.id]: {
                 ...this.data,
                 attributeMappingDictionary: _(this.data.attributeMappingDictionary).mapValues(
-                    am => am.data
+                    am => am.data ?? am
                 ).value(),
             },
         };
+
+        debugger;
 
         await dataStore.save(mappingsKey, newMappingsList).getData();
     }

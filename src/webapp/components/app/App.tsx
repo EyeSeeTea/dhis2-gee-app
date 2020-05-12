@@ -81,7 +81,7 @@ const App = () => {
                 User.getCurrent(api),
             ]);
 
-            const compositionRoot = new CompositionRoot(baseUrl);
+            const compositionRoot = new CompositionRoot(baseUrl, config);
 
             configI18n(data.userSettings);
             const appContext: AppContext = { d2, api, config, currentUser, compositionRoot };

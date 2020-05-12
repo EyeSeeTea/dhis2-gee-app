@@ -1,14 +1,9 @@
 import { D2Api } from "d2-api";
-import _ from "lodash";
 import DataStore from "d2-api/api/dataStore";
-import { getDataStore, getImportCountString } from "../utils/dhis2";
+import { getDataStore } from "../utils/dhis2";
 import { Config } from "./Config";
 import i18n from "../locales";
-import { EarthEngine, Interval, Credentials } from "./EarthEngine";
-import { GeeDhis2, OrgUnit, DataValueSet } from "./GeeDhis2";
 import Mapping from "./Mapping";
-import { getAttributeMappings, getDataSetValue } from "../utils/gee";
-import { buildPeriod, downloadFile } from "../utils/import";
 
 export type PeriodInformation = {
     id: string;
@@ -91,93 +86,5 @@ export class DataImport {
 
     public async save() {
         await this.dataStore.save(this.importKey, this.data).getData();
-    }
-
-    public async run(
-        dryRun: boolean,
-        api: D2Api
-    ): Promise<{ success: boolean; failures: string[]; messages: string[] }> {
-        let failures: string[] = [];
-        let messages: string[] = [];
-        try {
-            const credentials = await api.get<Credentials>("/tokens/google").getData();
-
-            const earthEngine = await EarthEngine.init(credentials);
-            const geeDhis2 = GeeDhis2.init(this.api, earthEngine);
-
-            const baseImportConfig: { orgUnits: OrgUnit[]; interval: Interval } = {
-                //orgUnits: [{ id: "IyO9ICB0WIn" }, { id: "xloTsC6lk5Q" }],
-                orgUnits: this.data.selectedOUs.map(o => {
-                    return {
-                        id: o.split("/").pop(),
-                    } as OrgUnit;
-                }),
-                interval: {
-                    type: "daily",
-                    ...buildPeriod(this.data.periodInformation),
-                },
-            };
-            let importDataValueSet: DataValueSet = { dataValues: [] };
-
-            await Promise.all(
-                this.data.selectedMappings.map(async selectedMapping => {
-                    try {
-                        const dataValueSet: DataValueSet = await geeDhis2.getDataValueSet({
-                            ...baseImportConfig,
-                            geeDataSetId: getDataSetValue(
-                                selectedMapping.geeImage,
-                                this.config,
-                                "pointer"
-                            ),
-                            mapping: getAttributeMappings(
-                                selectedMapping.attributeMappingDictionary
-                            ),
-                        });
-
-                        importDataValueSet = {
-                            dataValues: _.concat(
-                                importDataValueSet.dataValues,
-                                dataValueSet.dataValues
-                            ),
-                        };
-                        messages = [
-                            ...messages,
-                            i18n.t("{{n}} data values from {{name}} google data set.", {
-                                name: getDataSetValue(
-                                    selectedMapping.geeImage,
-                                    this.config,
-                                    "displayName"
-                                ),
-                                n: dataValueSet.dataValues.length,
-                            }),
-                        ];
-                    } catch (err) {
-                        failures = [...failures, err];
-                    }
-                })
-            );
-            if (!dryRun) {
-                const res = await geeDhis2.postDataValueSet(importDataValueSet);
-                messages = [...messages, getImportCountString(res.importCount)];
-            } else {
-                messages = [...messages, i18n.t("No effective import into DHIS2, file download")];
-                downloadFile({
-                    filename: "data.json",
-                    mimeType: "application/json",
-                    contents: JSON.stringify(importDataValueSet),
-                });
-            }
-            return {
-                success: _.isEmpty(failures) && !_.isEmpty(messages),
-                messages: messages,
-                failures: failures,
-            };
-        } catch (err) {
-            return {
-                success: false,
-                messages: messages,
-                failures: [...failures, i18n.t("Import config failed"), err],
-            };
-        }
     }
 }
