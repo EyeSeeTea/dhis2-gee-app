@@ -22,6 +22,7 @@ import { Config } from "../../models/Config";
 import { User } from "../../models/User";
 import { LinearProgress } from "@material-ui/core";
 import ee from "@google/earthengine";
+import CompositionRoot from "../../../CompositionRoot";
 
 type D2 = object;
 
@@ -80,8 +81,10 @@ const App = () => {
                 User.getCurrent(api),
             ]);
 
+            const compositionRoot = new CompositionRoot(baseUrl);
+
             configI18n(data.userSettings);
-            const appContext: AppContext = { d2, api, config, currentUser };
+            const appContext: AppContext = { d2, api, config, currentUser, compositionRoot };
             setAppContext(appContext);
             // Google Earth Engine must be defined globally in window (as var 'ee') to work
             Object.assign(window, { app: appContext, ee });

@@ -6,9 +6,8 @@ import DataElementsTable from "../data-elements/DataElementsTable";
 
 import { D2Api } from "d2-api";
 import AttributeMapping from "../../models/AttributeMapping";
-import GetDataElementsByDataSetIdUseCase from "../../../domain/usecases/GetDataElementsByDataSetIdUseCase";
-import DataElementD2ApiRepository from "../../../data/DataElementD2ApiRepository";
 import DataElement from "../../../domain/entities/DataElement";
+import { useCompositionRootContext } from "../../contexts/app-context";
 
 export interface AttributeMappingDialogConfig {
     dataset: string;
@@ -30,15 +29,11 @@ const AttributeMappingDialog: React.FC<AttributeMappingDialogProps> = ({
 }) => {
     const { dataset, attributeMapping } = params;
     const [rows, setRows] = useState<DataElement[]>([]);
+    const dataElements = useCompositionRootContext().dataElements;
 
     useEffect(() => {
-        const dataElementsRepository = new DataElementD2ApiRepository(api);
-        const getDataElementsByDataSetIdUseCase = new GetDataElementsByDataSetIdUseCase(
-            dataElementsRepository
-        );
-
-        getDataElementsByDataSetIdUseCase.execute(dataset).then(setRows);
-    }, [api, dataset]);
+        dataElements.get(dataset).then(setRows);
+    }, [dataElements, dataset]);
 
     const onSelectedDataElement = useCallback(
         (dataElement: DataElement) => {
