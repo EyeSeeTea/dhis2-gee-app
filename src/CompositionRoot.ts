@@ -1,5 +1,5 @@
 import { D2Api, D2ApiDefault } from "d2-api"
-import DataElementD2ApiRepository from "./data/DataElementD2ApiRepository";
+import DataElementD2ApiRepository from "./data/repositories/DataElementD2ApiRepository";
 import { GetDataElementsUseCase } from "./domain/usecases/GetDataElementsUseCase";
 import ImportUseCase from "./domain/usecases/ImportUseCase";
 import { Config } from "./webapp/models/Config";
