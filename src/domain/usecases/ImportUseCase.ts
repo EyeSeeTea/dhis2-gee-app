@@ -3,20 +3,21 @@ import _ from "lodash";
 import { getImportCountString } from "../../webapp/utils/dhis2";
 import { Config } from "../../webapp/models/Config";
 import i18n from "../../webapp/locales";
-import { GeeDataEarthEngineRepository, geeCredentials } from "../../data/GeeDataEarthEngineRepository";
 import { GeeDhis2, OrgUnit, DataValueSet } from "../../webapp/models/GeeDhis2";
 import { getAttributeMappings, getDataSetValue } from "../../webapp/utils/gee";
 import { buildPeriod, downloadFile } from "../../webapp/utils/import";
 import { D2Api } from "d2-api";
 import { DataImportData } from "../../webapp/models/Import";
-import { GeeInterval } from "../repositories/GeeDataRepository";
+import { GeeInterval, GeeDataRepository } from "../repositories/GeeDataRepository";
 
 //TODO: this use case is the old run method in old import model
 // little a little we are going to refactoring this use case 
 // creating adapters that invoke it until the usecase has not 
 // webapp and infrastructure dependencies
 class ImportUseCase {
-    constructor(private api: D2Api, private config: Config) { }
+    constructor(private api: D2Api,
+        private config: Config,
+        private geeDataRepository: GeeDataRepository) { }
 
     public async execute(
         dryRun: boolean,
@@ -25,10 +26,8 @@ class ImportUseCase {
         let failures: string[] = [];
         let messages: string[] = [];
         try {
-            const credentials = await this.api.get<geeCredentials>("/tokens/google").getData();
 
-            const earthEngine = await GeeDataEarthEngineRepository.init(credentials);
-            const geeDhis2 = GeeDhis2.init(this.api, earthEngine);
+            const geeDhis2 = GeeDhis2.init(this.api, this.geeDataRepository);
 
             const baseImportConfig: { orgUnits: OrgUnit[]; interval: GeeInterval } = {
                 //orgUnits: [{ id: "IyO9ICB0WIn" }, { id: "xloTsC6lk5Q" }],

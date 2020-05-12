@@ -1,7 +1,12 @@
 import _ from "lodash";
 import { D2Api, Id, DataValueSetsPostResponse } from "d2-api";
-import { GeeDataEarthEngineRepository } from "../../data/GeeDataEarthEngineRepository";
-import { GeeDataSetId, GeeInterval, GeeGeometry, GeeDataFilters } from "../../domain/repositories/GeeDataRepository";
+import {
+    GeeDataSetId,
+    GeeInterval,
+    GeeGeometry,
+    GeeDataFilters,
+    GeeDataRepository
+} from "../../domain/repositories/GeeDataRepository";
 import { GeeData, GeeDataItem } from "../../domain/entities/GeeData";
 
 export interface OrgUnit {
@@ -41,16 +46,16 @@ export interface GetDataValuesOptions<Band extends string> {
 }
 
 export class GeeDhis2 {
-    constructor(public api: D2Api, public ee: GeeDataEarthEngineRepository) { }
+    constructor(public api: D2Api, public geeDataRepository: GeeDataRepository) { }
 
-    static init(api: D2Api, ee: GeeDataEarthEngineRepository) {
-        return new GeeDhis2(api, ee);
+    static init(api: D2Api, geeDataRepository: GeeDataRepository) {
+        return new GeeDhis2(api, geeDataRepository);
     }
 
     async getDataValueSet<Band extends string>(
         options: GetDataValueSetOptions<Band>
     ): Promise<DataValueSet> {
-        const { ee } = this;
+        const { geeDataRepository } = this;
         const { geeDataSetId, orgUnits, mapping, interval, scale } = options;
         const geometries = await this.getGeometries(orgUnits);
         console.log({ geometries });
@@ -66,7 +71,7 @@ export class GeeDhis2 {
                 scale,
             };
 
-            const geeData = await ee.getData(options);
+            const geeData = await geeDataRepository.getData(options);
             return this.getDataValues({ orgUnitId: ouId, geeData, mapping });
         });
 

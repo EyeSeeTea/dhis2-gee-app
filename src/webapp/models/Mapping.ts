@@ -95,7 +95,6 @@ class Mapping {
             .get<{ [id: string]: Mapping } | undefined>(mappingsKey)
             .getData();
 
-        debugger;
         const mappingModels = _.values(mappings).map(mapping => Mapping.build(mapping));
 
         return { mappings: mappingModels ?? [], pager: {} };
@@ -171,8 +170,6 @@ class Mapping {
                 ).value(),
             },
         };
-
-        debugger;
 
         await dataStore.save(mappingsKey, newMappingsList).getData();
     }

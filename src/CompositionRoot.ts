@@ -3,6 +3,7 @@ import DataElementD2ApiRepository from "./data/DataElementD2ApiRepository";
 import { GetDataElementsUseCase } from "./domain/usecases/GetDataElementsUseCase";
 import ImportUseCase from "./domain/usecases/ImportUseCase";
 import { Config } from "./webapp/models/Config";
+import { GeeDataEarthEngineRepository } from "./data/GeeDataEarthEngineRepository";
 
 class CompositionRoot {
     private d2Api: D2Api;
@@ -30,7 +31,8 @@ class CompositionRoot {
     }
 
     private createImportUseCase(): ImportUseCase {
-        return new ImportUseCase(this.d2Api, this.config);
+        const geeDataRepository = new GeeDataEarthEngineRepository(this.d2Api);
+        return new ImportUseCase(this.d2Api, this.config, geeDataRepository);
     }
 }
 
