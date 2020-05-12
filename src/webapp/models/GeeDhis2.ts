@@ -1,7 +1,8 @@
 import _ from "lodash";
 import { D2Api, Id, DataValueSetsPostResponse } from "d2-api";
-import { DataSetId, GeeData, GetDataOptions, DataItem } from "./EarthEngine";
-import { EarthEngine, Interval, Geometry } from "./EarthEngine";
+import { GeeDataEarthEngineRepository } from "../../data/GeeDataEarthEngineRepository";
+import { GeeDataSetId, GeeInterval, GeeGeometry, GeeDataFilters } from "../../domain/repositories/GeeDataRepository";
+import { GeeData, GeeDataItem } from "../../domain/entities/GeeData";
 
 export interface OrgUnit {
     id: Id;
@@ -26,10 +27,10 @@ export interface DataValueSet {
 }
 
 export interface GetDataValueSetOptions<Band extends string> {
-    geeDataSetId: DataSetId;
+    geeDataSetId: GeeDataSetId;
     mapping: Record<Band, DataElementId>;
     orgUnits: OrgUnit[];
-    interval: Interval;
+    interval: GeeInterval;
     scale?: number;
 }
 
@@ -40,9 +41,9 @@ export interface GetDataValuesOptions<Band extends string> {
 }
 
 export class GeeDhis2 {
-    constructor(public api: D2Api, public ee: EarthEngine) { }
+    constructor(public api: D2Api, public ee: GeeDataEarthEngineRepository) { }
 
-    static init(api: D2Api, ee: EarthEngine) {
+    static init(api: D2Api, ee: GeeDataEarthEngineRepository) {
         return new GeeDhis2(api, ee);
     }
 
@@ -57,7 +58,7 @@ export class GeeDhis2 {
         const dataValuesList = await promiseMap(_.toPairs(geometries), async ([ouId, geometry]) => {
             if (!geometry) return [];
 
-            const options: GetDataOptions<Band> = {
+            const options: GeeDataFilters<Band> = {
                 id: geeDataSetId,
                 bands: _.keys(mapping) as Band[],
                 geometry,
@@ -97,11 +98,11 @@ export class GeeDhis2 {
 
     private async getGeometries(
         orgUnits: OrgUnit[]
-    ): Promise<Record<OrgUnitId, Geometry | undefined>> {
+    ): Promise<Record<OrgUnitId, GeeGeometry | undefined>> {
         const orgUnitsWithGeometry = await this.getOrgUnitsWithGeometry(orgUnits);
         const pairs = orgUnitsWithGeometry.map(orgUnit => {
             const geometry = getGeometryFromOrgUnit(orgUnit);
-            return [orgUnit.id, geometry] as [OrgUnitId, Geometry | undefined];
+            return [orgUnit.id, geometry] as [OrgUnitId, GeeGeometry | undefined];
         });
 
         return _.fromPairs(pairs);
@@ -110,7 +111,7 @@ export class GeeDhis2 {
     private getDataValues<Band extends string>(options: GetDataValuesOptions<Band>): DataValue[] {
         const { orgUnitId, geeData, mapping } = options;
 
-        function getDataValue(item: DataItem<Band>): DataValue | undefined {
+        function getDataValue(item: GeeDataItem<Band>): DataValue | undefined {
             const { date, band, value } = item;
             const dataElementId = get(mapping, band);
 
@@ -135,7 +136,7 @@ function get<K extends keyof T, T>(obj: T, key: K): T[K] | undefined {
     return obj[key];
 }
 
-function getGeometryFromOrgUnit(orgUnit: OrgUnit): Geometry | undefined {
+function getGeometryFromOrgUnit(orgUnit: OrgUnit): GeeGeometry | undefined {
     const coordinates = orgUnit.coordinates ? JSON.parse(orgUnit.coordinates) : null;
     if (!coordinates) return;
 

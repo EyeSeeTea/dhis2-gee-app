@@ -3,12 +3,13 @@ import _ from "lodash";
 import { getImportCountString } from "../../webapp/utils/dhis2";
 import { Config } from "../../webapp/models/Config";
 import i18n from "../../webapp/locales";
-import { EarthEngine, Interval, Credentials } from "../../webapp/models/EarthEngine";
+import { GeeDataEarthEngineRepository, geeCredentials } from "../../data/GeeDataEarthEngineRepository";
 import { GeeDhis2, OrgUnit, DataValueSet } from "../../webapp/models/GeeDhis2";
 import { getAttributeMappings, getDataSetValue } from "../../webapp/utils/gee";
 import { buildPeriod, downloadFile } from "../../webapp/utils/import";
 import { D2Api } from "d2-api";
 import { DataImportData } from "../../webapp/models/Import";
+import { GeeInterval } from "../repositories/GeeDataRepository";
 
 //TODO: this use case is the old run method in old import model
 // little a little we are going to refactoring this use case 
@@ -24,12 +25,12 @@ class ImportUseCase {
         let failures: string[] = [];
         let messages: string[] = [];
         try {
-            const credentials = await this.api.get<Credentials>("/tokens/google").getData();
+            const credentials = await this.api.get<geeCredentials>("/tokens/google").getData();
 
-            const earthEngine = await EarthEngine.init(credentials);
+            const earthEngine = await GeeDataEarthEngineRepository.init(credentials);
             const geeDhis2 = GeeDhis2.init(this.api, earthEngine);
 
-            const baseImportConfig: { orgUnits: OrgUnit[]; interval: Interval } = {
+            const baseImportConfig: { orgUnits: OrgUnit[]; interval: GeeInterval } = {
                 //orgUnits: [{ id: "IyO9ICB0WIn" }, { id: "xloTsC6lk5Q" }],
                 orgUnits: data.selectedOUs.map(o => {
                     return {

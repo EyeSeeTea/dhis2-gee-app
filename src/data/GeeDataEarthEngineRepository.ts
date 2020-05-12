@@ -3,44 +3,19 @@ import moment, { Moment } from "moment";
 import ee from "@google/earthengine";
 import { GeometryPoint, GeometryPolygon, ImageCollection } from "@google/earthengine";
 import { InfoDataRowBase, InfoData } from "@google/earthengine";
+import { GeeDataRepository, GeeDataFilters, GeeGeometry } from "../domain/repositories/GeeDataRepository";
+import { GeeData, GeeDataItem } from "../domain/entities/GeeData";
 
-export type DataSetId = string;
-export type Coordinates = [number, number];
-export type Interval = { type: "daily"; start: Moment; end: Moment };
+type Geometry = GeometryPoint | GeometryPolygon;
 
-export type Geometry =
-    | { type: "point"; coordinates: Coordinates }
-    | { type: "multi-polygon"; polygonCoordinates: Coordinates[][][] };
-
-export interface GetDataOptions<Band> {
-    id: DataSetId;
-    bands: Band[];
-    geometry: Geometry;
-    interval: Interval;
-    scale?: number;
-}
-
-export type DataItem<Band> = {
-    periodId: string;
-    date: Moment;
-    lat: number;
-    lon: number;
-    band: Band;
-    value: number;
-};
-
-export type GeeData<Band> = DataItem<Band>[];
-
-export interface Credentials {
+export interface geeCredentials {
     client_id: string;
     access_token: string;
     expires_in: number;
 }
 
-type GeeGeometry = GeometryPoint | GeometryPolygon;
-
-export class EarthEngine {
-    static async init(credentials: Credentials) {
+export class GeeDataEarthEngineRepository implements GeeDataRepository {
+    static async init(credentials: geeCredentials) {
         ee.data.setAuthToken(
             credentials.client_id,
             "Bearer",
@@ -55,10 +30,10 @@ export class EarthEngine {
             ee.initialize(null, null, resolve, reject);
         });
 
-        return new EarthEngine();
+        return new GeeDataEarthEngineRepository();
     }
 
-    async getData<Band extends string>(options: GetDataOptions<Band>): Promise<GeeData<Band>> {
+    async getData<Band extends string>(options: GeeDataFilters<Band>): Promise<GeeData<Band>> {
         const { id, bands, geometry, interval, scale = 30 } = options;
         const imageCollection = new ee.ImageCollection(id);
         const startDate = getDayString(interval.start);
@@ -94,7 +69,7 @@ function getDayString(date: Moment): string {
     return date.format("YYYY-MM-DD");
 }
 
-function getGeometry(geometry: Geometry): GeeGeometry {
+function getGeometry(geometry: GeeGeometry): Geometry {
     switch (geometry.type) {
         case "point":
             return ee.Geometry.Point(geometry.coordinates);
@@ -103,7 +78,7 @@ function getGeometry(geometry: Geometry): GeeGeometry {
     }
 }
 
-function getGeeItemsFromApiRow<Band>(bands: Band[], row: any[]): DataItem<Band>[] {
+function getGeeItemsFromApiRow<Band>(bands: Band[], row: any[]): GeeDataItem<Band>[] {
     const [periodId, lon, lat, time] = _.take(row, 4) as InfoDataRowBase;
     const values = _.drop(row, 4) as number[];
     const date = moment(time);
