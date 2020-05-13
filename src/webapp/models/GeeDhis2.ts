@@ -12,7 +12,6 @@ import { DataValueSet, DataValue } from "../../domain/entities/DataValue";
 import { OrgUnit } from "../../domain/entities/OrgUnit";
 
 type DataElementId = string;
-type OrgUnitId = string;
 
 export interface GetDataValueSetOptions<Band extends string> {
     geeDataSetId: GeeDataSetId;
