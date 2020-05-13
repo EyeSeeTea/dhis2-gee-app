@@ -1,8 +1,6 @@
 import _ from "lodash";
 import moment, { Moment } from "moment";
-import ee from "@google/earthengine";
-import { GeometryPoint, GeometryPolygon, ImageCollection } from "@google/earthengine";
-import { InfoDataRowBase, InfoData } from "@google/earthengine";
+import ee, { GeometryPoint, GeometryPolygon, ImageCollection, InfoDataRowBase, InfoData } from "@google/earthengine";
 import { GeeDataRepository, GeeDataFilters, GeeGeometry } from "../domain/repositories/GeeDataRepository";
 import { GeeData, GeeDataItem } from "../domain/entities/GeeData";
 import { D2Api } from "d2-api";
@@ -22,11 +20,11 @@ export class GeeDataEarthEngineRepository implements GeeDataRepository {
         await this.initializeEngine();
 
         const { id, bands, geometry, interval, scale = 30 } = options;
-        const imageCollection = new ee.ImageCollection(id);
         const startDate = this.getDayString(interval.start);
         const endDate = this.getDayString(interval.end); // last day is not included
         const engineGeometry = this.getGeometry(geometry);
 
+        const imageCollection = new ee.ImageCollection(id);
         console.log("ee.getImageCollection", { id, bands, startDate, endDate, geometry, scale });
 
         const rows = await this.getInfo(
