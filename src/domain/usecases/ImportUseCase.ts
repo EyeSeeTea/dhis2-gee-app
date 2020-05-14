@@ -14,11 +14,11 @@ import { GeeDataItem } from "../entities/GeeData";
 import { promiseMap } from "../utils";
 import { ImportRule, AttributeMappingDictionary } from "../entities/ImportRule";
 
-import { getImportCountString } from "../../webapp/utils/dhis2";
+// To decouple
 import { Config } from "../../webapp/models/Config";
 import i18n from "../../webapp/locales";
 import { buildPeriod, downloadFile } from "../../webapp/utils/import";
-import { D2Api } from "d2-api";
+import { D2Api, DataValueSetsPostResponse } from "d2-api";
 
 type DataElementId = string;
 
@@ -100,7 +100,7 @@ class ImportUseCase {
             );
             if (!dryRun) {
                 const res = await this.api.dataValues.postSet({}, importDataValueSet).getData();
-                messages = [...messages, getImportCountString(res.importCount)];
+                messages = [...messages, this.getImportCountString(res.importCount)];
             } else {
                 messages = [...messages, i18n.t("No effective import into DHIS2, file download")];
                 downloadFile({
@@ -198,6 +198,14 @@ class ImportUseCase {
             return m.dataElementId ?? "";
         });
         return bandDeMappings;
+    }
+
+    private getImportCountString(importCount: DataValueSetsPostResponse["importCount"]) {
+        return i18n.t("Imported: {{imported}} - updated: {{updated}} - ignored: {{ignored}}", {
+            imported: importCount.imported,
+            updated: importCount.updated,
+            ignored: importCount.ignored,
+        });
     }
 
 }
