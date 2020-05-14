@@ -1,5 +1,9 @@
 import { Id } from "./ReferenceObject";
 
+export interface DataValueSet {
+    dataValues: DataValue[];
+}
+
 export interface DataValue {
     dataElement: Id;
     value: string;
@@ -9,6 +13,3 @@ export interface DataValue {
     categoryOptionCombo?: Id;
 }
 
-export interface DataValueSet {
-    dataValues: DataValue[];
-}
