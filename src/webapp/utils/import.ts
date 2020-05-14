@@ -51,17 +51,3 @@ export function buildPeriod(periodInfo: PeriodInformation): { start: Moment; end
         };
     }
 }
-
-type Options = { filename: string; mimeType: string; contents: string | ArrayBuffer };
-
-export function downloadFile(options: Options) {
-    const { filename, mimeType, contents } = options;
-    const blob = new Blob([contents], { type: mimeType });
-    const element = document.createElement("a");
-    element.id = "download-file";
-    element.href = window.URL.createObjectURL(blob);
-    element.setAttribute("download", filename);
-    element.style.display = "none";
-    document.body.appendChild(element);
-    element.click();
-}

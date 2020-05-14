@@ -17,7 +17,7 @@ import DataValueSetRepository, { SaveDataValueSetReponse } from "./dhis2/reposit
 import { GeeDataSetRepository } from "./gee/repositories/GeeDataSetRepository";
 
 // To decouple
-import { buildPeriod, downloadFile } from "../webapp/utils/import";
+import { buildPeriod } from "../webapp/utils/import";
 
 import i18n from "../webapp/locales";
 
@@ -37,7 +37,6 @@ export default class ImportUseCase {
         private dataValueSetRepository: DataValueSetRepository) { }
 
     public async execute(
-        dryRun: boolean,
         importRule: ImportRule
     ): Promise<{ success: boolean; failures: string[]; messages: string[] }> {
         let failures: string[] = [];
@@ -89,17 +88,10 @@ export default class ImportUseCase {
                     }
                 })
             );
-            if (!dryRun) {
-                const response = await this.dataValueSetRepository.save(importDataValueSet);
-                messages = [...messages, this.getImportCountString(response)];
-            } else {
-                messages = [...messages, i18n.t("No effective import into DHIS2, file download")];
-                downloadFile({
-                    filename: "data.json",
-                    mimeType: "application/json",
-                    contents: JSON.stringify(importDataValueSet),
-                });
-            }
+
+            const response = await this.dataValueSetRepository.save(importDataValueSet);
+            messages = [...messages, this.getImportCountString(response)];
+
             return {
                 success: _.isEmpty(failures) && !_.isEmpty(messages),
                 messages: messages,
@@ -186,14 +178,17 @@ export default class ImportUseCase {
         return bandDeMappings;
     }
 
-    private getImportCountString(dataValueSetReponse: SaveDataValueSetReponse) {
-        return i18n.t("Imported: {{imported}} - updated: {{updated}} - ignored: {{ignored}}", {
-            imported: dataValueSetReponse.imported,
-            updated: dataValueSetReponse.updated,
-            ignored: dataValueSetReponse.ignored,
-        });
+    private getImportCountString(dataValueSetReponse: SaveDataValueSetReponse): string {
+        if (typeof dataValueSetReponse == "string") {
+            return dataValueSetReponse;
+        } else {
+            return i18n.t("Imported: {{imported}} - updated: {{updated}} - ignored: {{ignored}}", {
+                imported: dataValueSetReponse.imported,
+                updated: dataValueSetReponse.updated,
+                ignored: dataValueSetReponse.ignored,
+            });
+        }
     }
-
 }
 
 type DataElementId = string;

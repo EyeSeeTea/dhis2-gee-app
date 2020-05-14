@@ -93,7 +93,7 @@ const ImportDetail: React.FunctionComponent<ImportDetailProps> = props => {
     const importData = useCallback(() => {
         setImporting(true);
         DataImport.getImportData(api, config, prefix).then(async imp => {
-            const result = await geeImport.import(false, imp.getImportRule());
+            const result = await geeImport.import(imp.getImportRule());
 
             console.log({ result });
             setImporting(false);
@@ -110,7 +110,7 @@ const ImportDetail: React.FunctionComponent<ImportDetailProps> = props => {
     const downloadData = useCallback(() => {
         setImporting(true);
         DataImport.getImportData(api, config, prefix).then(async imp => {
-            const result = await geeImport.import(true, imp.getImportRule());
+            const result = await geeImport.download(imp.getImportRule());
 
             console.log({ result });
             setImporting(false);
