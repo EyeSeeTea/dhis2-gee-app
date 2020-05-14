@@ -1,6 +1,5 @@
-import { D2Api, DataValueSetsPostResponse } from "d2-api";
+import { D2Api } from "d2-api";
 import { Config } from "../models/Config";
-import i18n from "../locales";
 
 export function getDataStore(api: D2Api, config: Config) {
     return api.dataStore(config.data.base.dataStore.namespace);

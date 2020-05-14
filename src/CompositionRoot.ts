@@ -5,6 +5,7 @@ import ImportUseCase from "./domain/usecases/ImportUseCase";
 import { Config } from "./webapp/models/Config";
 import { GeeDataEarthEngineRepository } from "./data/GeeDataEarthEngineRepository";
 import OrgUnitD2ApiRepository from "./data/OrgUnitD2ApiRepository";
+import DataValueSetD2ApiRepository from "./data/DataValueSetD2ApiRepository";
 //const OrgUnitRepository = new LiteralToken('OrgUnitRepository');
 
 class CompositionRoot {
@@ -38,7 +39,11 @@ class CompositionRoot {
     private initializeImport() {
         const geeDataRepository = new GeeDataEarthEngineRepository(this.d2Api);
         const orgUnitsRepository = new OrgUnitD2ApiRepository(this.d2Api);
-        const importUseCase = new ImportUseCase(this.d2Api, this.config, geeDataRepository, orgUnitsRepository);
+        const dataValueSetD2ApiRepository = new DataValueSetD2ApiRepository(this.d2Api);
+
+        const importUseCase =
+            new ImportUseCase(this.config, geeDataRepository, orgUnitsRepository, dataValueSetD2ApiRepository);
+
         this.dependencies.set(ImportUseCase, importUseCase);
     }
 }

@@ -13,12 +13,12 @@ import OrgUnitRepository from "../repositories/OrgUnitRepository";
 import { GeeDataItem } from "../entities/GeeData";
 import { promiseMap } from "../utils";
 import { ImportRule, AttributeMappingDictionary } from "../entities/ImportRule";
+import DataValueSetRepository, { SaveDataValueSetReponse } from "../repositories/DataValueSetRepository";
 
 // To decouple
 import { Config } from "../../webapp/models/Config";
 import i18n from "../../webapp/locales";
 import { buildPeriod, downloadFile } from "../../webapp/utils/import";
-import { D2Api, DataValueSetsPostResponse } from "d2-api";
 
 type DataElementId = string;
 
@@ -35,10 +35,11 @@ interface GetDataValueSetOptions<Band extends string> {
 // creating adapters that invoke it until the usecase has not
 // webapp and infrastructure dependencies
 class ImportUseCase {
-    constructor(private api: D2Api,
+    constructor(
         private config: Config,
         private geeDataRepository: GeeDataRepository,
-        private orgUnitRepository: OrgUnitRepository) { }
+        private orgUnitRepository: OrgUnitRepository,
+        private dataValueSetRepository: DataValueSetRepository) { }
 
     public async execute(
         dryRun: boolean,
@@ -99,8 +100,8 @@ class ImportUseCase {
                 })
             );
             if (!dryRun) {
-                const res = await this.api.dataValues.postSet({}, importDataValueSet).getData();
-                messages = [...messages, this.getImportCountString(res.importCount)];
+                const response = await this.dataValueSetRepository.save(importDataValueSet);
+                messages = [...messages, this.getImportCountString(response)];
             } else {
                 messages = [...messages, i18n.t("No effective import into DHIS2, file download")];
                 downloadFile({
@@ -200,11 +201,11 @@ class ImportUseCase {
         return bandDeMappings;
     }
 
-    private getImportCountString(importCount: DataValueSetsPostResponse["importCount"]) {
+    private getImportCountString(dataValueSetReponse: SaveDataValueSetReponse) {
         return i18n.t("Imported: {{imported}} - updated: {{updated}} - ignored: {{ignored}}", {
-            imported: importCount.imported,
-            updated: importCount.updated,
-            ignored: importCount.ignored,
+            imported: dataValueSetReponse.imported,
+            updated: dataValueSetReponse.updated,
+            ignored: dataValueSetReponse.ignored,
         });
     }
 
