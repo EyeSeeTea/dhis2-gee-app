@@ -4,6 +4,7 @@ import { getDataStore } from "../utils/dhis2";
 import { Config } from "./Config";
 import i18n from "../locales";
 import Mapping from "./Mapping";
+import { ImportRule } from "../../domain/entities/ImportRule";
 
 export type PeriodInformation = {
     id: string;
@@ -86,5 +87,11 @@ export class DataImport {
 
     public async save() {
         await this.dataStore.save(this.importKey, this.data).getData();
+    }
+
+    public getImportRule(): ImportRule {
+        // TODO: ImportRule is this model transformed in new domain entity
+        // To the future this model should disappear when it's no used
+        return this.data as ImportRule;
     }
 }

@@ -12,12 +12,11 @@ import { DataValueSet, DataValue } from "../entities/DataValue";
 import OrgUnitRepository from "../repositories/OrgUnitRepository";
 import { GeeDataItem } from "../entities/GeeData";
 import { promiseMap } from "../utils";
+import { ImportRule, AttributeMappingDictionary } from "../entities/ImportRule";
 
 import { getImportCountString } from "../../webapp/utils/dhis2";
 import { Config } from "../../webapp/models/Config";
 import i18n from "../../webapp/locales";
-import { DataImportData } from "../../webapp/models/Import";
-import { getAttributeMappings, getDataSetValue } from "../../webapp/utils/gee";
 import { buildPeriod, downloadFile } from "../../webapp/utils/import";
 import { D2Api } from "d2-api";
 
@@ -43,13 +42,13 @@ class ImportUseCase {
 
     public async execute(
         dryRun: boolean,
-        data: DataImportData
+        importRule: ImportRule
     ): Promise<{ success: boolean; failures: string[]; messages: string[] }> {
         let failures: string[] = [];
         let messages: string[] = [];
         try {
 
-            const orgUnitIds = _.compact(data.selectedOUs.map(o => o.split("/").pop()));
+            const orgUnitIds = _.compact(importRule.selectedOUs.map(o => o.split("/").pop()));
             const orgUnits = await this.orgUnitRepository.getByIds(orgUnitIds);
 
             const baseImportConfig: { orgUnits: OrgUnit[]; interval: GeeInterval } = {
@@ -57,22 +56,22 @@ class ImportUseCase {
                 orgUnits: orgUnits,
                 interval: {
                     type: "daily",
-                    ...buildPeriod(data.periodInformation),
+                    ...buildPeriod(importRule.periodInformation),
                 },
             };
             let importDataValueSet: DataValueSet = { dataValues: [] };
 
             await Promise.all(
-                data.selectedMappings.map(async selectedMapping => {
+                importRule.selectedMappings.map(async selectedMapping => {
                     try {
                         const dataValueSet: DataValueSet = await this.getDataValueSet({
                             ...baseImportConfig,
-                            geeDataSetId: getDataSetValue(
+                            geeDataSetId: this.getGeeDataSetValue(
                                 selectedMapping.geeImage,
                                 this.config,
                                 "pointer"
                             ),
-                            mapping: getAttributeMappings(
+                            mapping: this.getAttributeMappings(
                                 selectedMapping.attributeMappingDictionary
                             ),
                         });
@@ -86,7 +85,7 @@ class ImportUseCase {
                         messages = [
                             ...messages,
                             i18n.t("{{n}} data values from {{name}} google data set.", {
-                                name: getDataSetValue(
+                                name: this.getGeeDataSetValue(
                                     selectedMapping.geeImage,
                                     this.config,
                                     "displayName"
@@ -187,6 +186,21 @@ class ImportUseCase {
             };
         }
     }
+
+    private getGeeDataSetValue(id: string, config: Config, value: string) {
+        const ds = _(config.data.base.googleDatasets).get(id);
+        return ds ? ds[value] : "";
+    }
+
+    private getAttributeMappings(
+        attributeMappingsDictionary: AttributeMappingDictionary
+    ): Record<string, string> {
+        const bandDeMappings = _.mapValues(attributeMappingsDictionary, m => {
+            return m.dataElementId ?? "";
+        });
+        return bandDeMappings;
+    }
+
 }
 
 export default ImportUseCase;
