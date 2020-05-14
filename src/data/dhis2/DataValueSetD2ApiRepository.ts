@@ -1,6 +1,7 @@
 import { D2Api } from "d2-api";
-import DataValueSetRepository, { SaveDataValueSetReponse } from "../domain/repositories/DataValueSetRepository";
-import { DataValueSet } from "../domain/entities/DataValueSet";
+import DataValueSetRepository, { SaveDataValueSetReponse } from "../../domain/dhis2/repositories/DataValueSetRepository";
+import { DataValueSet } from "../../domain/dhis2/entities/DataValueSet";
+
 
 class DataValueSetD2ApiRepository implements DataValueSetRepository {
     constructor(private d2Api: D2Api) { }

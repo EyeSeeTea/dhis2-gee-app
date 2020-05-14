@@ -2,7 +2,7 @@ import React from "react";
 import { ObjectsTable, TableColumn, MouseActionsMapping, TableAction } from "d2-ui-components";
 import _ from "lodash";
 import i18n from "../../locales";
-import DataElement from "../../../domain/entities/DataElement";
+import DataElement from "../../../domain/dhis2/entities/DataElement";
 
 export interface DataElementsTableProps {
     dataElements: DataElement[];

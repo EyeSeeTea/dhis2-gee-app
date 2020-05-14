@@ -1,4 +1,4 @@
-import { PeriodInformation } from "../../webapp/models/Import";
+import { PeriodInformation } from "../../../webapp/models/Import";
 import { Id } from "./ReferenceObject";
 
 export interface ImportRule {

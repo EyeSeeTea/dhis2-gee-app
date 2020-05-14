@@ -1,11 +1,11 @@
 import { D2Api, D2ApiDefault } from "d2-api"
-import DataElementD2ApiRepository from "./data/DataElementD2ApiRepository";
-import { GetDataElementsUseCase } from "./domain/usecases/GetDataElementsUseCase";
-import ImportUseCase from "./domain/usecases/ImportUseCase";
+import DataElementD2ApiRepository from "./data/dhis2/DataElementD2ApiRepository";
+import { GetDataElementsUseCase } from "./domain/dhis2/usecases/GetDataElementsUseCase";
+import ImportUseCase from "./domain/ImportUseCase";
 import { Config } from "./webapp/models/Config";
-import { GeeDataEarthEngineRepository } from "./data/GeeDataEarthEngineRepository";
-import OrgUnitD2ApiRepository from "./data/OrgUnitD2ApiRepository";
-import DataValueSetD2ApiRepository from "./data/DataValueSetD2ApiRepository";
+import { GeeDataEarthEngineRepository } from "./data/gee/GeeDataEarthEngineRepository";
+import OrgUnitD2ApiRepository from "./data/dhis2/OrgUnitD2ApiRepository";
+import DataValueSetD2ApiRepository from "./data/dhis2/DataValueSetD2ApiRepository";
 //const OrgUnitRepository = new LiteralToken('OrgUnitRepository');
 
 class CompositionRoot {

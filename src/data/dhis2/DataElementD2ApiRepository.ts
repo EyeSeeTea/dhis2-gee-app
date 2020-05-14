@@ -1,7 +1,7 @@
-import DataElementRepository from "../domain/repositories/DataElementRepository"
-import { Id } from "../domain/entities/ReferenceObject";
-import { D2Api } from "d2-api";
-import DataElement from "../domain/entities/DataElement";
+import DataElementRepository from "../../domain/dhis2/repositories/DataElementRepository";
+import { D2Api, Id } from "d2-api";
+import DataElement from "../../domain/dhis2/entities/DataElement";
+
 
 class DataElementD2ApiRepository implements DataElementRepository {
     constructor(private d2Api: D2Api) { }

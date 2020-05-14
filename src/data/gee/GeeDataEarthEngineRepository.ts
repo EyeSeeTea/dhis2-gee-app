@@ -1,8 +1,18 @@
 import _ from "lodash";
 import moment, { Moment } from "moment";
-import ee, { GeometryPoint, GeometryPolygon, ImageCollection, InfoDataRowBase, InfoData } from "@google/earthengine";
-import { GeeDataRepository, GeeDataFilters, GeeGeometry } from "../domain/repositories/GeeDataRepository";
-import { GeeData, GeeDataItem } from "../domain/entities/GeeData";
+import ee, {
+    GeometryPoint,
+    GeometryPolygon,
+    ImageCollection,
+    InfoDataRowBase,
+    InfoData
+} from "@google/earthengine";
+import {
+    GeeDataRepository,
+    GeeDataFilters,
+    GeeGeometry
+} from "../../domain/gee/repositories/GeeDataRepository";
+import { GeeData, GeeDataItem } from "../../domain/gee/entities/GeeData";
 import { D2Api } from "d2-api";
 
 type Geometry = GeometryPoint | GeometryPolygon;
