@@ -7,7 +7,7 @@ import {
     GeeDataFilters,
     GeeDataRepository
 } from "../../domain/repositories/GeeDataRepository";
-import { GeeData, GeeDataItem } from "../../domain/entities/GeeData";
+import { GeeDataItem } from "../../domain/entities/GeeData";
 import { DataValueSet, DataValue } from "../../domain/entities/DataValue";
 import { OrgUnit } from "../../domain/entities/OrgUnit";
 
@@ -21,11 +21,6 @@ export interface GetDataValueSetOptions<Band extends string> {
     scale?: number;
 }
 
-export interface GetDataValuesOptions<Band extends string> {
-    orgUnitId: string;
-    geeData: GeeData<Band>;
-    mapping: Record<Band, DataElementId>;
-}
 
 export class GeeDhis2 {
     constructor(public api: D2Api, public geeDataRepository: GeeDataRepository) { }
@@ -54,37 +49,32 @@ export class GeeDhis2 {
             };
 
             const geeData = await geeDataRepository.getData(options);
-            return this.getDataValues({ orgUnitId: orgUnit.id, geeData, mapping });
+
+            return _(geeData).map(item =>
+                this.mapGeeDataItemToDataValue(item, orgUnit.id, mapping)).compact().value()
         });
 
         return { dataValues: _.flatten(dataValuesList) };
     }
 
-    async postDataValueSet(dataValueSet: DataValueSet): Promise<DataValueSetsPostResponse> {
-        return this.api.dataValues.postSet({}, dataValueSet).getData();
-    }
+    mapGeeDataItemToDataValue<Band extends string>(
+        item: GeeDataItem<Band>, orgUnitId: string,
+        mapping: Record<Band, DataElementId>): DataValue | undefined {
 
-    private getDataValues<Band extends string>(options: GetDataValuesOptions<Band>): DataValue[] {
-        const { orgUnitId, geeData, mapping } = options;
+        const { date, band, value } = item;
+        const dataElementId = get(mapping, band);
 
-        function getDataValue(item: GeeDataItem<Band>): DataValue | undefined {
-            const { date, band, value } = item;
-            const dataElementId = get(mapping, band);
-
-            if (!dataElementId) {
-                console.error(`Band not found in mapping: ${band}`);
-                return;
-            } else {
-                return {
-                    dataElement: dataElementId,
-                    value: value.toFixed(18),
-                    orgUnit: orgUnitId,
-                    period: date.format("YYYYMMDD"), // Assume periodType="DAILY"
-                };
-            }
+        if (!dataElementId) {
+            console.error(`Band not found in mapping: ${band}`);
+            return;
+        } else {
+            return {
+                dataElement: dataElementId,
+                value: value.toFixed(18),
+                orgUnit: orgUnitId,
+                period: date.format("YYYYMMDD"), // Assume periodType="DAILY"
+            };
         }
-
-        return _(geeData).map(getDataValue).compact().value();
     }
 }
 

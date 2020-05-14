@@ -84,7 +84,7 @@ class ImportUseCase {
                 })
             );
             if (!dryRun) {
-                const res = await geeDhis2.postDataValueSet(importDataValueSet);
+                const res = await this.api.dataValues.postSet({}, importDataValueSet).getData();
                 messages = [...messages, getImportCountString(res.importCount)];
             } else {
                 messages = [...messages, i18n.t("No effective import into DHIS2, file download")];
