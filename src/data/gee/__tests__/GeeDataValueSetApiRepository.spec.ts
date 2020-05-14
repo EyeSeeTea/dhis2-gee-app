@@ -1,4 +1,4 @@
-import { GeeDataEarthEngineRepository } from "../GeeDataEarthEngineRepository";
+import { GeeDataEarthEngineRepository } from "../GeeDataValueSetApiRepository";
 import ee, { ImageCollection, InfoData } from "@google/earthengine";
 import { D2ApiDefault } from "d2-api";
 import { Params, D2ApiResponse, D2Response } from "d2-api/api/common";

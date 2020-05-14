@@ -10,7 +10,7 @@ import {
 import { OrgUnit } from "./dhis2/entities/OrgUnit";
 import { DataValueSet, DataValue } from "./dhis2/entities/DataValueSet";
 import OrgUnitRepository from "./dhis2/repositories/OrgUnitRepository";
-import { GeeDataItem } from "./gee/entities/GeeData";
+import { GeeDataValue } from "./gee/entities/GeeDataValueSet";
 import { promiseMap } from "./utils";
 import { ImportRule, AttributeMappingDictionary } from "./dhis2/entities/ImportRule";
 import DataValueSetRepository, { SaveDataValueSetReponse } from "./dhis2/repositories/DataValueSetRepository";
@@ -140,7 +140,7 @@ export default class ImportUseCase {
             const geeData = await geeDataRepository.getData(options);
 
             return _(geeData).map(item =>
-                this.mapGeeDataItemToDataValue(item, orgUnit.id, attributeIdsMapping)).compact().value()
+                this.mapGeeDataValueToDataValue(item, orgUnit.id, attributeIdsMapping)).compact().value()
         });
 
         return { dataValues: _.flatten(dataValuesList) };
@@ -161,8 +161,8 @@ export default class ImportUseCase {
         }
     }
 
-    private mapGeeDataItemToDataValue<Band extends string>(
-        item: GeeDataItem<Band>, orgUnitId: string,
+    private mapGeeDataValueToDataValue<Band extends string>(
+        item: GeeDataValue<Band>, orgUnitId: string,
         mapping: Record<Band, DataElementId>): DataValue | undefined {
 
         const { date, band, value } = item;

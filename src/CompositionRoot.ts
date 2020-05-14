@@ -3,7 +3,7 @@ import DataElementD2ApiRepository from "./data/dhis2/DataElementD2ApiRepository"
 import { GetDataElementsUseCase } from "./domain/dhis2/usecases/GetDataElementsUseCase";
 import ImportUseCase from "./domain/ImportUseCase";
 import { Config } from "./webapp/models/Config";
-import { GeeDataEarthEngineRepository } from "./data/gee/GeeDataEarthEngineRepository";
+import { GeeDataEarthEngineRepository } from "./data/gee/GeeDataValueSetApiRepository";
 import OrgUnitD2ApiRepository from "./data/dhis2/OrgUnitD2ApiRepository";
 import DataValueSetD2ApiRepository from "./data/dhis2/DataValueSetD2ApiRepository";
 //const OrgUnitRepository = new LiteralToken('OrgUnitRepository');

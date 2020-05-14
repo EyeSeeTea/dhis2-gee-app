@@ -1,5 +1,5 @@
 import { Moment } from "moment";
-import { GeeData } from "../entities/GeeData";
+import { GeeDataValueSet } from "../entities/GeeDataValueSet";
 
 export type GeeGeometry =
     | { type: "point"; coordinates: GeeCoordinates }
@@ -18,5 +18,5 @@ export interface GeeDataFilters<Band> {
 }
 
 export interface GeeDataRepository {
-    getData<Band extends string>(options: GeeDataFilters<Band>): Promise<GeeData<Band>>
+    getData<Band extends string>(options: GeeDataFilters<Band>): Promise<GeeDataValueSet<Band>>
 } 

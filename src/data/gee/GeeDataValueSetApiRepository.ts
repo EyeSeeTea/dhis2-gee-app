@@ -12,7 +12,7 @@ import {
     GeeDataFilters,
     GeeGeometry
 } from "../../domain/gee/repositories/GeeDataRepository";
-import { GeeData, GeeDataItem } from "../../domain/gee/entities/GeeData";
+import { GeeDataValueSet, GeeDataValue } from "../../domain/gee/entities/GeeDataValueSet";
 import { D2Api } from "d2-api";
 
 type Geometry = GeometryPoint | GeometryPolygon;
@@ -26,7 +26,7 @@ export interface geeCredentials {
 export class GeeDataEarthEngineRepository implements GeeDataRepository {
     constructor(private d2Api: D2Api) { }
 
-    async getData<Band extends string>(options: GeeDataFilters<Band>): Promise<GeeData<Band>> {
+    async getData<Band extends string>(options: GeeDataFilters<Band>): Promise<GeeDataValueSet<Band>> {
         await this.initializeEngine();
 
         const { id, bands, geometry, interval, scale = 30 } = options;
@@ -89,7 +89,7 @@ export class GeeDataEarthEngineRepository implements GeeDataRepository {
         }
     }
 
-    private getGeeItemsFromApiRow<Band>(bands: Band[], row: any[]): GeeDataItem<Band>[] {
+    private getGeeItemsFromApiRow<Band>(bands: Band[], row: any[]): GeeDataValue<Band>[] {
         const [periodId, lon, lat, time] = _.take(row, 4) as InfoDataRowBase;
         const values = _.drop(row, 4) as number[];
         const date = moment(time);
