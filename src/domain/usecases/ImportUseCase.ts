@@ -8,7 +8,7 @@ import {
     GeeDataFilters
 } from "../repositories/GeeDataRepository";
 import { OrgUnit } from "../entities/OrgUnit";
-import { DataValueSet, DataValue } from "../entities/DataValue";
+import { DataValueSet, DataValue } from "../entities/DataValueSet";
 import OrgUnitRepository from "../repositories/OrgUnitRepository";
 import { GeeDataItem } from "../entities/GeeData";
 import { promiseMap } from "../utils";
@@ -24,7 +24,7 @@ type DataElementId = string;
 
 interface GetDataValueSetOptions<Band extends string> {
     geeDataSetId: GeeDataSetId;
-    mapping: Record<Band, DataElementId>;
+    attributeIdsMapping: Record<Band, DataElementId>;
     orgUnits: OrgUnit[];
     interval: GeeInterval;
     scale?: number;
@@ -71,7 +71,7 @@ class ImportUseCase {
                                 this.config,
                                 "pointer"
                             ),
-                            mapping: this.getAttributeMappings(
+                            attributeIdsMapping: this.getAttributeIdMappings(
                                 selectedMapping.attributeMappingDictionary
                             ),
                         });
@@ -123,8 +123,35 @@ class ImportUseCase {
         }
     }
 
+    private async getDataValueSet<Band extends string>(
+        options: GetDataValueSetOptions<Band>
+    ): Promise<DataValueSet> {
+        const { geeDataRepository } = this;
+        const { geeDataSetId, orgUnits, attributeIdsMapping, interval, scale } = options;
 
-    private getGeometryFromOrgUnit(orgUnit: OrgUnit): GeeGeometry | undefined {
+        const dataValuesList = await promiseMap(orgUnits, async (orgUnit) => {
+            const geometry = this.mapOrgUnitToGeeGeometry(orgUnit);
+
+            if (!geometry) return [];
+
+            const options: GeeDataFilters<Band> = {
+                id: geeDataSetId,
+                bands: _.keys(attributeIdsMapping) as Band[],
+                geometry,
+                interval,
+                scale,
+            };
+
+            const geeData = await geeDataRepository.getData(options);
+
+            return _(geeData).map(item =>
+                this.mapGeeDataItemToDataValue(item, orgUnit.id, attributeIdsMapping)).compact().value()
+        });
+
+        return { dataValues: _.flatten(dataValuesList) };
+    }
+
+    private mapOrgUnitToGeeGeometry(orgUnit: OrgUnit): GeeGeometry | undefined {
         const coordinates = orgUnit.coordinates ? JSON.parse(orgUnit.coordinates) : null;
         if (!coordinates) return;
 
@@ -137,34 +164,6 @@ class ImportUseCase {
             default:
                 return;
         }
-    }
-
-    private async getDataValueSet<Band extends string>(
-        options: GetDataValueSetOptions<Band>
-    ): Promise<DataValueSet> {
-        const { geeDataRepository } = this;
-        const { geeDataSetId, orgUnits, mapping, interval, scale } = options;
-
-        const dataValuesList = await promiseMap(orgUnits, async (orgUnit) => {
-            const geometry = this.getGeometryFromOrgUnit(orgUnit);
-
-            if (!geometry) return [];
-
-            const options: GeeDataFilters<Band> = {
-                id: geeDataSetId,
-                bands: _.keys(mapping) as Band[],
-                geometry,
-                interval,
-                scale,
-            };
-
-            const geeData = await geeDataRepository.getData(options);
-
-            return _(geeData).map(item =>
-                this.mapGeeDataItemToDataValue(item, orgUnit.id, mapping)).compact().value()
-        });
-
-        return { dataValues: _.flatten(dataValuesList) };
     }
 
     private mapGeeDataItemToDataValue<Band extends string>(
@@ -192,7 +191,7 @@ class ImportUseCase {
         return ds ? ds[value] : "";
     }
 
-    private getAttributeMappings(
+    private getAttributeIdMappings(
         attributeMappingsDictionary: AttributeMappingDictionary
     ): Record<string, string> {
         const bandDeMappings = _.mapValues(attributeMappingsDictionary, m => {
