@@ -1,7 +1,7 @@
 import { D2Api, D2ApiDefault } from "d2-api"
 import DataElementD2ApiRepository from "./data/dhis2/DataElementD2ApiRepository";
 import { GetDataElementsUseCase } from "./domain/dhis2/usecases/GetDataElementsUseCase";
-import ImportUseCase from "./domain/ImportUseCase";
+import ImportUseCase from "./domain/import/ImportUseCase";
 import { Config } from "./webapp/models/Config";
 import { GeeDataEarthEngineRepository } from "./data/gee/GeeDataValueSetApiRepository";
 import OrgUnitD2ApiRepository from "./data/dhis2/OrgUnitD2ApiRepository";

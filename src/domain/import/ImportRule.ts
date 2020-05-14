@@ -1,5 +1,5 @@
-import { PeriodInformation } from "../../../webapp/models/Import";
-import { Id } from "./ReferenceObject";
+import { Id } from "../dhis2/entities/ReferenceObject";
+import { PeriodId } from "./PeriodOption"
 
 export interface ImportRule {
     name: string | undefined;
@@ -9,6 +9,12 @@ export interface ImportRule {
     selectedOUs: string[];
     periodInformation: PeriodInformation;
 }
+
+export type PeriodInformation = {
+    id: PeriodId;
+    startDate?: Date;
+    endDate?: Date;
+};
 
 export interface Mapping {
     id: Id;

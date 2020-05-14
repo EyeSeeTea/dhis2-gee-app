@@ -5,7 +5,7 @@ import { DialogContent } from "@material-ui/core";
 import i18n from "../../locales";
 import Dropdown from "../dropdown/Dropdown";
 import { PeriodInformation } from "../../models/Import";
-import { availablePeriods } from "../../utils/import";
+import { availablePeriods } from "../../../domain/import/PeriodOption";
 
 interface PeriodSelectorDialogProps {
     periodInformation: PeriodInformation;

@@ -6,20 +6,17 @@ import {
     GeeGeometry,
     GeeDataSetId,
     GeeDataFilters
-} from "./gee/repositories/GeeDataValueSetRepository";
-import { OrgUnit } from "./dhis2/entities/OrgUnit";
-import { DataValueSet, DataValue } from "./dhis2/entities/DataValueSet";
-import OrgUnitRepository from "./dhis2/repositories/OrgUnitRepository";
-import { GeeDataValue } from "./gee/entities/GeeDataValueSet";
-import { promiseMap } from "./utils";
-import { ImportRule, AttributeMappingDictionary } from "./dhis2/entities/ImportRule";
-import DataValueSetRepository, { SaveDataValueSetReponse } from "./dhis2/repositories/DataValueSetRepository";
-import { GeeDataSetRepository } from "./gee/repositories/GeeDataSetRepository";
+} from "../gee/repositories/GeeDataValueSetRepository";
+import { OrgUnit } from "../dhis2/entities/OrgUnit";
+import { DataValueSet, DataValue } from "../dhis2/entities/DataValueSet";
+import OrgUnitRepository from "../dhis2/repositories/OrgUnitRepository";
+import { GeeDataValue } from "../gee/entities/GeeDataValueSet";
+import { promiseMap, buildPeriod } from "./utils";
+import { ImportRule, AttributeMappingDictionary } from "./ImportRule";
+import DataValueSetRepository, { SaveDataValueSetReponse } from "../dhis2/repositories/DataValueSetRepository";
+import { GeeDataSetRepository } from "../gee/repositories/GeeDataSetRepository";
 
-// To decouple
-import { buildPeriod } from "../webapp/utils/import";
-
-import i18n from "../webapp/locales";
+import i18n from "../../webapp/utils/i18n";
 
 export interface ImportUseCaseResult {
     success: boolean; failures: string[]; messages: string[]
