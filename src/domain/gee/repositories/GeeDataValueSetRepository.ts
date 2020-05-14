@@ -17,6 +17,6 @@ export interface GeeDataFilters<Band> {
     scale?: number;
 }
 
-export interface GeeDataRepository {
+export interface GeeDataValueSetRepository {
     getData<Band extends string>(options: GeeDataFilters<Band>): Promise<GeeDataValueSet<Band>>
 } 

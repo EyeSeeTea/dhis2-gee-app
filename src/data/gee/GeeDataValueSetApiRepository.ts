@@ -8,10 +8,10 @@ import ee, {
     InfoData
 } from "@google/earthengine";
 import {
-    GeeDataRepository,
+    GeeDataValueSetRepository,
     GeeDataFilters,
     GeeGeometry
-} from "../../domain/gee/repositories/GeeDataRepository";
+} from "../../domain/gee/repositories/GeeDataValueSetRepository";
 import { GeeDataValueSet, GeeDataValue } from "../../domain/gee/entities/GeeDataValueSet";
 import { D2Api } from "d2-api";
 
@@ -23,7 +23,7 @@ export interface geeCredentials {
     expires_in: number;
 }
 
-export class GeeDataEarthEngineRepository implements GeeDataRepository {
+export class GeeDataEarthEngineRepository implements GeeDataValueSetRepository {
     constructor(private d2Api: D2Api) { }
 
     async getData<Band extends string>(options: GeeDataFilters<Band>): Promise<GeeDataValueSet<Band>> {

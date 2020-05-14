@@ -2,11 +2,11 @@ import _ from "lodash";
 
 import {
     GeeInterval,
-    GeeDataRepository,
+    GeeDataValueSetRepository,
     GeeGeometry,
     GeeDataSetId,
     GeeDataFilters
-} from "./gee/repositories/GeeDataRepository";
+} from "./gee/repositories/GeeDataValueSetRepository";
 import { OrgUnit } from "./dhis2/entities/OrgUnit";
 import { DataValueSet, DataValue } from "./dhis2/entities/DataValueSet";
 import OrgUnitRepository from "./dhis2/repositories/OrgUnitRepository";
@@ -14,11 +14,12 @@ import { GeeDataValue } from "./gee/entities/GeeDataValueSet";
 import { promiseMap } from "./utils";
 import { ImportRule, AttributeMappingDictionary } from "./dhis2/entities/ImportRule";
 import DataValueSetRepository, { SaveDataValueSetReponse } from "./dhis2/repositories/DataValueSetRepository";
+import { GeeDataSetRepository } from "./gee/repositories/GeeDataSetRepository";
 
 // To decouple
-import { Config } from "../webapp/models/Config";
-import i18n from "../webapp/locales";
 import { buildPeriod, downloadFile } from "../webapp/utils/import";
+
+import i18n from "../webapp/locales";
 
 export interface ImportUseCaseResult {
     success: boolean; failures: string[]; messages: string[]
@@ -30,8 +31,8 @@ export interface ImportUseCaseResult {
 // webapp and infrastructure dependencies
 export default class ImportUseCase {
     constructor(
-        private config: Config,
-        private geeDataRepository: GeeDataRepository,
+        private geeDataSetRepository: GeeDataSetRepository,
+        private geeDataRepository: GeeDataValueSetRepository,
         private orgUnitRepository: OrgUnitRepository,
         private dataValueSetRepository: DataValueSetRepository) { }
 
@@ -59,13 +60,12 @@ export default class ImportUseCase {
             await Promise.all(
                 importRule.selectedMappings.map(async selectedMapping => {
                     try {
+
+                        const geeDataSet = await this.geeDataSetRepository.getByCode(selectedMapping.geeImage);
+
                         const dataValueSet: DataValueSet = await this.getDataValueSet({
                             ...baseImportConfig,
-                            geeDataSetId: this.getGeeDataSetValue(
-                                selectedMapping.geeImage,
-                                this.config,
-                                "pointer"
-                            ),
+                            geeDataSetId: geeDataSet.imageCollectionId,
                             attributeIdsMapping: this.getAttributeIdMappings(
                                 selectedMapping.attributeMappingDictionary
                             ),
@@ -80,11 +80,7 @@ export default class ImportUseCase {
                         messages = [
                             ...messages,
                             i18n.t("{{n}} data values from {{name}} google data set.", {
-                                name: this.getGeeDataSetValue(
-                                    selectedMapping.geeImage,
-                                    this.config,
-                                    "displayName"
-                                ),
+                                name: geeDataSet.displayName,
                                 n: dataValueSet.dataValues.length,
                             }),
                         ];
@@ -179,11 +175,6 @@ export default class ImportUseCase {
                 period: date.format("YYYYMMDD"), // Assume periodType="DAILY"
             };
         }
-    }
-
-    private getGeeDataSetValue(id: string, config: Config, value: string) {
-        const ds = _(config.data.base.googleDatasets).get(id);
-        return ds ? ds[value] : "";
     }
 
     private getAttributeIdMappings(

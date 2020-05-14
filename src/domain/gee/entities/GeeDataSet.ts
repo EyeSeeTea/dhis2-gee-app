@@ -1,6 +1,7 @@
 export type GeeDataSet = {
+    code: string
     displayName: string;
-    pointer: string;
+    imageCollectionId: string;
     bands: number[];
     doc: number;
 };

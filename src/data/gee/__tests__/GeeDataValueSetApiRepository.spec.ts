@@ -3,7 +3,7 @@ import ee, { ImageCollection, InfoData } from "@google/earthengine";
 import { D2ApiDefault } from "d2-api";
 import { Params, D2ApiResponse, D2Response } from "d2-api/api/common";
 import moment from "moment";
-import { GeeDataFilters } from "../../../domain/gee/repositories/GeeDataRepository";
+import { GeeDataFilters } from "../../../domain/gee/repositories/GeeDataValueSetRepository";
 
 jest.mock("@google/earthengine");
 jest.mock("d2-api");
