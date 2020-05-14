@@ -20,21 +20,15 @@ import { Config } from "../../webapp/models/Config";
 import i18n from "../../webapp/locales";
 import { buildPeriod, downloadFile } from "../../webapp/utils/import";
 
-type DataElementId = string;
-
-interface GetDataValueSetOptions<Band extends string> {
-    geeDataSetId: GeeDataSetId;
-    attributeIdsMapping: Record<Band, DataElementId>;
-    orgUnits: OrgUnit[];
-    interval: GeeInterval;
-    scale?: number;
+export interface ImportUseCaseResult {
+    success: boolean; failures: string[]; messages: string[]
 }
 
 //TODO: this use case is the old run method in old import model
 // little a little we are going to refactoring this use case
 // creating adapters that invoke it until the usecase has not
 // webapp and infrastructure dependencies
-class ImportUseCase {
+export default class ImportUseCase {
     constructor(
         private config: Config,
         private geeDataRepository: GeeDataRepository,
@@ -211,4 +205,12 @@ class ImportUseCase {
 
 }
 
-export default ImportUseCase;
+type DataElementId = string;
+
+interface GetDataValueSetOptions<Band extends string> {
+    geeDataSetId: GeeDataSetId;
+    attributeIdsMapping: Record<Band, DataElementId>;
+    orgUnits: OrgUnit[];
+    interval: GeeInterval;
+    scale?: number;
+}

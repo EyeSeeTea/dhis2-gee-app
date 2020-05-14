@@ -93,16 +93,16 @@ const ImportDetail: React.FunctionComponent<ImportDetailProps> = props => {
     const importData = useCallback(() => {
         setImporting(true);
         DataImport.getImportData(api, config, prefix).then(async imp => {
-            const response = await geeImport.import(false, imp.getImportRule());
+            const result = await geeImport.import(false, imp.getImportRule());
 
-            console.log({ response });
+            console.log({ result });
             setImporting(false);
             setOpenImportDialog(false);
 
-            if (response?.success) {
-                snackbar.success(i18n.t("Import successful \n") + response.messages.join("\n"));
+            if (result?.success) {
+                snackbar.success(i18n.t("Import successful \n") + result.messages.join("\n"));
             } else {
-                snackbar.error(i18n.t("Import failed: \n") + response.failures.join("\n"));
+                snackbar.error(i18n.t("Import failed: \n") + result.failures.join("\n"));
             }
         });
     }, [api, config, prefix, snackbar, geeImport]);
@@ -110,15 +110,15 @@ const ImportDetail: React.FunctionComponent<ImportDetailProps> = props => {
     const downloadData = useCallback(() => {
         setImporting(true);
         DataImport.getImportData(api, config, prefix).then(async imp => {
-            const response = await geeImport.import(true, imp.getImportRule());
+            const result = await geeImport.import(true, imp.getImportRule());
 
-            console.log({ response });
+            console.log({ result });
             setImporting(false);
 
-            if (response?.success) {
-                snackbar.success(i18n.t("Import successful \n") + response.messages.join("\n"));
+            if (result?.success) {
+                snackbar.success(i18n.t("Import successful \n") + result.messages.join("\n"));
             } else {
-                snackbar.error(i18n.t("Import failed: ") + response.failures.join("\n"));
+                snackbar.error(i18n.t("Import failed: ") + result.failures.join("\n"));
             }
         });
     }, [api, config, prefix, snackbar, geeImport]);
