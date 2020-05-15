@@ -1,16 +1,4 @@
-import moment, { Moment } from "moment";
 import i18n from "../../webapp/utils/i18n";
-
-export type PeriodId = "FIXED" | "TODAY" | "YESTERDAY" | "LAST_7_DAYS" | "LAST_14_DAYS" |
-    "THIS_WEEK" | "LAST_WEEK" | "THIS_MONTH" | "LAST_MONTH" | "THIS_QUARTER" |
-    "LAST_QUARTER" | "THIS_YEAR" | "LAST_YEAR"
-
-export interface PeriodOption {
-    id: PeriodId
-    name: string;
-    start?: [number, string];
-    end?: [number, string]
-}
 
 const FIXED: PeriodOption = { id: "FIXED", name: i18n.t("Fixed period") };
 const TODAY: PeriodOption = { id: "TODAY", name: i18n.t("Today"), start: [0, "day"] };
@@ -44,45 +32,14 @@ export const availablePeriods: {
     LAST_YEAR,
 };
 
-export interface PeriodSeed {
-    id: string;
-    name?: string;
-    start?: string;
-    end?: string;
-    startDate?: Date
-    endDate?: Date
+export type PeriodId = "FIXED" | "TODAY" | "YESTERDAY" | "LAST_7_DAYS" | "LAST_14_DAYS" |
+    "THIS_WEEK" | "LAST_WEEK" | "THIS_MONTH" | "LAST_MONTH" | "THIS_QUARTER" |
+    "LAST_QUARTER" | "THIS_YEAR" | "LAST_YEAR"
+
+export interface PeriodOption {
+    id: PeriodId
+    name: string;
+    start?: [number, string];
+    end?: [number, string]
 }
 
-class Period {
-    public readonly startDate: Moment;
-    public readonly endDate: Moment;
-
-    constructor(public periodSeed: PeriodSeed) {
-        const {
-            id,
-            startDate = "1970-01-01",
-            endDate = moment().add(10, "years").endOf("year").format("YYYY-MM-DD"),
-        } = periodSeed;
-
-        if (!id || id === "ALL" || id === "FIXED") {
-            this.startDate = moment(startDate);
-            this.endDate = moment(endDate);
-        } else {
-            const { start, end = start } = availablePeriods[id];
-            if (start === undefined || end === undefined)
-                throw new Error("Unsupported period provided");
-
-            const [startAmount, startType] = start;
-            const [endAmount, endType] = end;
-
-            this.startDate = moment()
-                .subtract(startAmount, startType as moment.unitOfTime.DurationConstructor)
-                .startOf(startType as moment.unitOfTime.DurationConstructor);
-            this.endDate = moment()
-                .subtract(endAmount, endType as moment.unitOfTime.DurationConstructor)
-                .endOf(endType as moment.unitOfTime.DurationConstructor);
-        }
-    }
-}
-
-export default Period;
