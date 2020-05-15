@@ -1,6 +1,6 @@
-import { Config } from "../../webapp/models/Config";
-import { GeeDataSetRepository } from "../../domain/gee/repositories/GeeDataSetRepository";
-import { GeeDataSet } from "../../domain/gee/entities/GeeDataSet";
+import { Config } from "../webapp/models/Config";
+import { GeeDataSetRepository } from "../domain/repositories/GeeDataSetRepository";
+import { GeeDataSet } from "../domain/entities/GeeDataSet";
 import _ from "lodash";
 
 export class GeeDataSetConfigRepository implements GeeDataSetRepository {

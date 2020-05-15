@@ -1,13 +1,13 @@
 import { D2Api, D2ApiDefault } from "d2-api"
-import DataElementD2ApiRepository from "./data/dhis2/DataElementD2ApiRepository";
-import { GetDataElementsUseCase } from "./domain/dhis2/usecases/GetDataElementsUseCase";
-import ImportUseCase from "./domain/import/ImportUseCase";
+import DataElementD2ApiRepository from "./data/DataElementD2ApiRepository";
+import { GetDataElementsUseCase } from "./domain/usecases/GetDataElementsUseCase";
+import ImportUseCase from "./domain/usecases/ImportUseCase";
 import { Config } from "./webapp/models/Config";
-import { GeeDataEarthEngineRepository } from "./data/gee/GeeDataValueSetApiRepository";
-import OrgUnitD2ApiRepository from "./data/dhis2/OrgUnitD2ApiRepository";
-import DataValueSetD2ApiRepository from "./data/dhis2/DataValueSetD2ApiRepository";
-import { GeeDataSetConfigRepository } from "./data/gee/GeeDataSetConfigRepository";
-import DataValueSetFileRepository from "./data/dhis2/DataValueSetFileRepository";
+import { GeeDataEarthEngineRepository } from "./data/GeeDataValueSetApiRepository";
+import OrgUnitD2ApiRepository from "./data/OrgUnitD2ApiRepository";
+import DataValueSetD2ApiRepository from "./data/DataValueSetD2ApiRepository";
+import { GeeDataSetConfigRepository } from "./data/GeeDataSetConfigRepository";
+import DataValueSetFileRepository from "./data/DataValueSetFileRepository";
 //const OrgUnitRepository = new LiteralToken('OrgUnitRepository');
 
 interface Type<T> {

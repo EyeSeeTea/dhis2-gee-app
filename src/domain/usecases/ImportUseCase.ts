@@ -6,15 +6,15 @@ import {
     GeeGeometry,
     GeeDataSetId,
     GeeDataFilters
-} from "../gee/repositories/GeeDataValueSetRepository";
-import { OrgUnit } from "../dhis2/entities/OrgUnit";
-import { DataValueSet, DataValue } from "../dhis2/entities/DataValueSet";
-import OrgUnitRepository from "../dhis2/repositories/OrgUnitRepository";
-import { GeeDataValue } from "../gee/entities/GeeDataValueSet";
-import { promiseMap, buildPeriod } from "./utils";
-import { ImportRule, AttributeMappingDictionary } from "./ImportRule";
-import DataValueSetRepository, { SaveDataValueSetReponse } from "../dhis2/repositories/DataValueSetRepository";
-import { GeeDataSetRepository } from "../gee/repositories/GeeDataSetRepository";
+} from "../repositories/GeeDataValueSetRepository";
+import { OrgUnit } from "../entities/OrgUnit";
+import { DataValueSet, DataValue } from "../entities/DataValueSet";
+import OrgUnitRepository from "../repositories/OrgUnitRepository";
+import { GeeDataValue } from "../entities/GeeDataValueSet";
+import { promiseMap, buildPeriod } from "../utils";
+import { ImportRule, AttributeMappingDictionary } from "../entities/ImportRule";
+import DataValueSetRepository, { SaveDataValueSetReponse } from "../repositories/DataValueSetRepository";
+import { GeeDataSetRepository } from "../repositories/GeeDataSetRepository";
 
 import i18n from "../../webapp/utils/i18n";
 

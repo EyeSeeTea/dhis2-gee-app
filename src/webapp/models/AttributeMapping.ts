@@ -5,7 +5,7 @@ import { Config } from "./Config";
 import { getDataStore } from "../utils/dhis2";
 import { Validation } from "../../types/validations";
 import { AttributeMappingDictionary } from "./Mapping";
-import DataElement from "../../domain/dhis2/entities/DataElement";
+import DataElement from "../../domain/entities/DataElement";
 
 
 export interface AttributeMappingData {

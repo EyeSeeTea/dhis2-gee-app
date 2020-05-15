@@ -1,4 +1,4 @@
-import { Id } from "../dhis2/entities/ReferenceObject";
+import { Id } from "./ReferenceObject";
 import { PeriodId } from "./PeriodOption"
 
 export interface ImportRule {

@@ -11,8 +11,8 @@ import {
     GeeDataValueSetRepository,
     GeeDataFilters,
     GeeGeometry
-} from "../../domain/gee/repositories/GeeDataValueSetRepository";
-import { GeeDataValueSet, GeeDataValue } from "../../domain/gee/entities/GeeDataValueSet";
+} from "../domain/repositories/GeeDataValueSetRepository";
+import { GeeDataValueSet, GeeDataValue } from "../domain/entities/GeeDataValueSet";
 import { D2Api } from "d2-api";
 
 type Geometry = GeometryPoint | GeometryPolygon;

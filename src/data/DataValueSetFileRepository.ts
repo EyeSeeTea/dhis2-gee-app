@@ -1,6 +1,6 @@
-import DataValueSetRepository, { SaveDataValueSetReponse } from "../../domain/dhis2/repositories/DataValueSetRepository";
-import { DataValueSet } from "../../domain/dhis2/entities/DataValueSet";
-import i18n from "../../webapp/locales";
+import DataValueSetRepository, { SaveDataValueSetReponse } from "../domain/repositories/DataValueSetRepository";
+import { DataValueSet } from "../domain/entities/DataValueSet";
+import i18n from "../webapp/locales";
 
 type Options = { filename: string; mimeType: string; contents: string | ArrayBuffer };
 

@@ -4,7 +4,7 @@ import { getDataStore } from "../utils/dhis2";
 import { Config } from "./Config";
 import i18n from "../locales";
 import Mapping from "./Mapping";
-import { ImportRule } from "../../domain/import/ImportRule";
+import { ImportRule } from "../../domain/entities/ImportRule";
 
 export type PeriodInformation = {
     id: string;

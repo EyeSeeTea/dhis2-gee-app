@@ -1,7 +1,7 @@
 /* Map sequentially over T[] with an async function and return array of mapped values */
 import moment, { Moment } from "moment";
-import { PeriodInformation } from "./ImportRule";
-import { availablePeriods } from "./PeriodOption";
+import { PeriodInformation } from "../entities/ImportRule";
+import { availablePeriods } from "../entities/PeriodOption";
 
 export function promiseMap<T, S>(inputValues: T[], mapper: (value: T) => Promise<S>): Promise<S[]> {
     const reducer = (acc$: Promise<S[]>, inputValue: T): Promise<S[]> =>

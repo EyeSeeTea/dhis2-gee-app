@@ -6,7 +6,7 @@ import DataElementsTable from "../data-elements/DataElementsTable";
 
 import { D2Api } from "d2-api";
 import AttributeMapping from "../../models/AttributeMapping";
-import DataElement from "../../../domain/dhis2/entities/DataElement";
+import DataElement from "../../../domain/entities/DataElement";
 import { useCompositionRootContext } from "../../contexts/app-context";
 
 export interface AttributeMappingDialogConfig {

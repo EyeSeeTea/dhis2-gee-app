@@ -1,6 +1,6 @@
-import OrgUnitRepository from "../../domain/dhis2/repositories/OrgUnitRepository";
+import OrgUnitRepository from "../domain/repositories/OrgUnitRepository";
 import { D2Api, Id } from "d2-api";
-import { OrgUnit } from "../../domain/dhis2/entities/OrgUnit";
+import { OrgUnit } from "../domain/entities/OrgUnit";
 
 class OrgUnitD2ApiRepository implements OrgUnitRepository {
     constructor(private d2Api: D2Api) { }

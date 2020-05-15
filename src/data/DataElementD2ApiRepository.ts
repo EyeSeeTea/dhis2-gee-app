@@ -1,6 +1,6 @@
-import DataElementRepository from "../../domain/dhis2/repositories/DataElementRepository";
+import DataElementRepository from "../domain/repositories/DataElementRepository";
 import { D2Api, Id } from "d2-api";
-import DataElement from "../../domain/dhis2/entities/DataElement";
+import DataElement from "../domain/entities/DataElement";
 
 
 class DataElementD2ApiRepository implements DataElementRepository {
