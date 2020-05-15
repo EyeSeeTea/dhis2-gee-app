@@ -14,11 +14,11 @@ export function promiseMap<T, S>(inputValues: T[], mapper: (value: T) => Promise
     return inputValues.reduce(reducer, Promise.resolve([]));
 }
 
-export function buildPeriod(periodInfo: PeriodInformation): { start: Moment; end: Moment } {
+export function buildPeriod(periodInfo: PeriodInformation, today: Moment = moment()): { start: Moment; end: Moment } {
     const {
         id,
         startDate = "1970-01-01",
-        endDate = moment().add(10, "years").endOf("year").format("YYYY-MM-DD"),
+        endDate = moment(today).add(10, "years").endOf("year").format("YYYY-MM-DD"),
     } = periodInfo;
 
     if (!id || id === "FIXED") {
@@ -32,10 +32,10 @@ export function buildPeriod(periodInfo: PeriodInformation): { start: Moment; end
         const [endAmount, endType] = end;
 
         return {
-            start: moment()
+            start: moment(today)
                 .subtract(startAmount, startType as moment.unitOfTime.DurationConstructor)
                 .startOf(startType as moment.unitOfTime.DurationConstructor),
-            end: moment()
+            end: moment(today)
                 .subtract(endAmount, endType as moment.unitOfTime.DurationConstructor)
                 .endOf(endType as moment.unitOfTime.DurationConstructor),
         };
