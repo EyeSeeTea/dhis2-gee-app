@@ -13,6 +13,7 @@ import OUDialog from "../../components/dialogs/OrganisationUnitDialog";
 import PeriodSelectorDialog from "../../components/dialogs/PeriodSelectorDialog";
 import { ConfirmationDialog, useSnackbar } from "d2-ui-components";
 import Mapping from "../../models/Mapping";
+import { useHistory } from "react-router-dom";
 
 interface ImportDetailProps {
     prefix: string;
@@ -31,6 +32,7 @@ const ImportDetail: React.FunctionComponent<ImportDetailProps> = props => {
     const [openImportDialog, setOpenImportDialog] = useState<boolean>(false);
     const [isImporting, setImporting] = useState(false);
     const geeImport = useCompositionRootContext().geeImport;
+    const history = useHistory();
 
     React.useEffect(() => {
         DataImport.getImportData(api, config, prefix).then(imp => {
@@ -125,6 +127,8 @@ const ImportDetail: React.FunctionComponent<ImportDetailProps> = props => {
 
     return (
         <React.Fragment>
+            <PageHeader onBackClick={() => history.goBack()} title={i18n.t("Import")} />
+
             {openImportDialog && (
                 <ConfirmationDialog
                     isOpen={true}
@@ -155,7 +159,7 @@ const ImportDetail: React.FunctionComponent<ImportDetailProps> = props => {
                     onSave={onPeriodSelectionSave}
                 />
             )}
-            <PageHeader title={i18n.t("Import")} />
+
             <Button
                 className={classes.button}
                 variant="contained"

@@ -1,7 +1,7 @@
 import { makeStyles } from "@material-ui/core";
 import React from "react";
-import MenuCard, { MenuCardProps } from "./landing/MenuCard";
-import PageHeader from "../../components/page-header/PageHeader";
+import MenuCard, { MenuCardProps } from "./MenuCard";
+import PageHeader from "../page-header/PageHeader";
 
 const useStyles = makeStyles({
     container: {
