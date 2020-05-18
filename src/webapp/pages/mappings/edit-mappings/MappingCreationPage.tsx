@@ -1,13 +1,13 @@
 import React, { useEffect, useState } from "react";
 import PageHeader from "../../../components/page-header/PageHeader";
 import i18n from "../../../locales";
-import { useGoTo } from "../../../../router";
 import { useLoading } from "d2-ui-components";
 import MappingWizard from "../../../components/mappings/wizard/MappingWizard";
 import Mapping from "../../../models/Mapping";
 import { useAppContext } from "../../../contexts/app-context";
 import ExitWizardButton from "../../../components/mappings/wizard/ExitWizardButton";
 import DataSet from "../../../models/DataSet";
+import { useHistory } from "react-router-dom";
 
 interface SyncRulesCreationParams {
     id?: string;
@@ -15,7 +15,7 @@ interface SyncRulesCreationParams {
 }
 
 const MappingCreation: React.FC<SyncRulesCreationParams> = props => {
-    const goTo = useGoTo();
+    const history = useHistory();
     const loading = useLoading();
     const { api, config } = useAppContext();
     const { id, action } = props;
@@ -47,7 +47,7 @@ const MappingCreation: React.FC<SyncRulesCreationParams> = props => {
             <PageHeader title={title} onBackClick={() => setDialogOpen(true)} />
             <ExitWizardButton
                 isOpen={dialogOpen}
-                onConfirm={() => goTo("imports")}
+                onConfirm={() => history.goBack()}
                 onCancel={() => setDialogOpen(false)}
             />
 

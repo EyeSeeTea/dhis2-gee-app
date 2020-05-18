@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: i18next-conv\n"
-"POT-Creation-Date: 2020-05-15T14:48:39.043Z\n"
+"POT-Creation-Date: 2020-05-18T05:57:27.121Z\n"
 "PO-Revision-Date: 2018-10-25T09:02:35.143Z\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -122,6 +122,12 @@ msgstr ""
 msgid "<No value>"
 msgstr ""
 
+msgid "Add"
+msgstr ""
+
+msgid "List"
+msgstr ""
+
 msgid "Cancel mapping?"
 msgstr ""
 
@@ -211,7 +217,35 @@ msgstr ""
 msgid "Click to show feedback"
 msgstr "Pinche para ver feedback"
 
+msgid "Manual Import"
+msgstr ""
+
+msgid ""
+"Manually import gee data values by selecting organisation unit, period and "
+"creating o select the mapping/s for gee data sets."
+msgstr ""
+
+msgid "Import rules"
+msgstr ""
+
+msgid ""
+"Create, modify, delete, execute import rules for gee data values selecting "
+"organisation unit, period and creating o select the mapping/s for gee data "
+"sets. "
+msgstr ""
+
+msgid "History"
+msgstr ""
+
+msgid ""
+"View and analyse the status and results of the manual import and import "
+"rules executions."
+msgstr ""
+
 msgid "Import successful \n"
+msgstr ""
+
+msgid "Import"
 msgstr ""
 
 msgid "New import request"
@@ -225,9 +259,6 @@ msgstr ""
 msgid "Importing..."
 msgstr ""
 
-msgid "Import"
-msgstr ""
-
 msgid "Select Organisation Units"
 msgstr ""
 
@@ -238,18 +269,6 @@ msgid "Import to DHIS2 "
 msgstr ""
 
 msgid "Download JSON "
-msgstr ""
-
-msgid "List and manage a new import."
-msgstr ""
-
-msgid "Configuration"
-msgstr ""
-
-msgid "Add"
-msgstr ""
-
-msgid "List"
 msgstr ""
 
 msgid "Dataset id"

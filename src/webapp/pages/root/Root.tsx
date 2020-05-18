@@ -1,20 +1,58 @@
 import React from "react";
-import { Route, Switch, HashRouter } from "react-router-dom";
+import { Route, Switch, HashRouter, useHistory } from "react-router-dom";
 import ImportDetail from "../import/ImportDetail";
 import MappingCreationPage from "../mappings/edit-mappings/MappingCreationPage";
 import LandingPage from "../home/HomePage";
+
+export const pageRoutes = {
+    home: { path: "/" },
+    import: { path: "/import" },
+    importRules: { path: "/import-rules" },
+    importRulesNew: { path: "/import-rules/new" },
+    mappingsNew: { path: "/mappings/new" },
+    mappingsEdit: {
+        path: "/mappings/:id",
+        generateUrl: ({ id }: { id: string }) => `/mappings/${id}`,
+    },
+    history: { path: "/history" },
+};
+
+interface PageRoute {
+    path: string;
+    generateUrl?: (params: any) => string;
+}
+
+export type GoTo = (pageRoute: PageRoute, params?: any) => void;
+
+export function useGoTo() {
+    const history = useHistory();
+    const goTo: GoTo = (pageRoute: PageRoute, params?: any) => {
+        if (pageRoute.generateUrl && params) {
+            history.push(pageRoute.generateUrl(params));
+        } else {
+            history.push(pageRoute.path);
+        }
+    };
+    return goTo;
+}
 
 const Root = () => {
     return (
         <HashRouter>
             <Switch>
-                <Route path="/" exact render={() => <LandingPage />} />
+                <Route path={pageRoutes.home.path} exact render={() => <LandingPage />} />
 
-                <Route path="/import" render={() => <ImportDetail prefix="default" />} />
-
-                <Route path="/mappings/new" render={() => <MappingCreationPage action={"new"} />} />
                 <Route
-                    path="/mappings/:id"
+                    path={pageRoutes.import.path}
+                    render={() => <ImportDetail prefix="default" />}
+                />
+
+                <Route
+                    path={pageRoutes.mappingsNew.path}
+                    render={() => <MappingCreationPage action={"new"} />}
+                />
+                <Route
+                    path={pageRoutes.mappingsEdit.path}
                     render={({ match }) => (
                         <MappingCreationPage action={"edit"} id={match.params.id} />
                     )}

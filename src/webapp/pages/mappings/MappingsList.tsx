@@ -15,8 +15,8 @@ import i18n from "../../locales";
 import { useAppContext } from "../../contexts/app-context";
 import { makeStyles } from "@material-ui/styles";
 import { Theme, createStyles, LinearProgress, Icon } from "@material-ui/core";
-import { useGoTo, GoTo } from "../../../router";
 import { withSnackbarOnError } from "../../utils/error";
+import { useGoTo, GoTo, pageRoutes } from "../root/Root";
 
 type ContextualAction = "details" | "edit" | "delete";
 
@@ -70,7 +70,7 @@ function getComponentConfig(
             multiple: false,
             icon: <Icon>edit</Icon>,
             primary: true,
-            onClick: (ids: string[]) => onFirst(ids, id => goTo("mappings.edit", { id })),
+            onClick: (ids: string[]) => onFirst(ids, id => goTo(pageRoutes.mappingsEdit, { id })),
         },
         delete: {
             name: "delete",
@@ -197,7 +197,7 @@ const MappingsList: React.FC<MappingsListProps> = props => {
                     details={componentConfig.details}
                     columns={componentConfig.columns}
                     actions={componentConfig.actions}
-                    onActionButtonClick={() => goTo("mappings.new")}
+                    onActionButtonClick={() => goTo(pageRoutes.mappingsNew)}
                     mouseActionsMapping={mouseActionsMapping}
                     rows={rows}
                     filterComponents={
