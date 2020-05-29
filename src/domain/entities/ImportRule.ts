@@ -1,4 +1,4 @@
-import { Id } from "./ReferenceObject";
+import { Id } from "./Ref";
 import { PeriodId } from "./PeriodOption"
 
 export interface ImportRule {

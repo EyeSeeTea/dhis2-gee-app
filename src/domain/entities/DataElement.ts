@@ -1,4 +1,4 @@
-import { Id } from "./ReferenceObject";
+import { Id } from "./Ref";
 
 export default interface DataElement {
     id: Id;

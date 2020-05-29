@@ -1,4 +1,4 @@
-import { Id } from "./ReferenceObject";
+import { Id } from "./Ref";
 
 export interface OrgUnit {
     id: Id;

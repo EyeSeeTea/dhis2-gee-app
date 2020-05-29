@@ -1,5 +1,5 @@
 export type Id = string;
 
-export interface ReferenceObject {
+export interface Ref {
     id: Id;
 }
