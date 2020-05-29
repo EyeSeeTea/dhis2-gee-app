@@ -3,6 +3,7 @@ import { Route, Switch, HashRouter, useHistory } from "react-router-dom";
 import ImportDetail from "../import/ImportDetail";
 import MappingCreationPage from "../mappings/edit-mappings/MappingCreationPage";
 import LandingPage from "../home/HomePage";
+import ImportRulesPage from "../import-rules-list/ImportRulesListPage";
 
 export const pageRoutes = {
     home: { path: "/" },
@@ -51,6 +52,7 @@ const Root = () => {
                     path={pageRoutes.mappingsNew.path}
                     render={() => <MappingCreationPage action={"new"} />}
                 />
+                <Route path={pageRoutes.importRules.path} render={() => <ImportRulesPage />} />
                 <Route
                     path={pageRoutes.mappingsEdit.path}
                     render={({ match }) => (

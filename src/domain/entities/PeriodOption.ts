@@ -1,6 +1,6 @@
 import i18n from "../../webapp/utils/i18n";
 
-const FIXED: PeriodOption = { id: "FIXED", name: i18n.t("Fixed period") };
+export const FIXED: PeriodOption = { id: "FIXED", name: i18n.t("Fixed period") };
 const TODAY: PeriodOption = { id: "TODAY", name: i18n.t("Today"), start: [0, "day"] };
 const YESTERDAY: PeriodOption = { id: "YESTERDAY", name: i18n.t("Yesterday"), start: [1, "day"] };
 const LAST_7_DAYS: PeriodOption = { id: "LAST_7_DAYS", name: i18n.t("Last 7 days"), start: [7, "day"], end: [0, "day"] };

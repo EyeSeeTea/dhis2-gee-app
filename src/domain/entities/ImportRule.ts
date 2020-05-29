@@ -2,12 +2,16 @@ import { Id } from "./ReferenceObject";
 import { PeriodId } from "./PeriodOption"
 
 export interface ImportRule {
-    name: string | undefined;
-    description: string | undefined;
-    id: string | undefined;
-    selectedMappings: Mapping[];
+    id: string;
+    name: string;
+    code?: string;
+    created: Date;
+    description?: string;
     selectedOUs: string[];
     periodInformation: PeriodInformation;
+    selectedMappings: Mapping[];
+    lastExecuted?: Date;
+    lastUpdated: Date;
 }
 
 export type PeriodInformation = {

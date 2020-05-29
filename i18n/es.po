@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: i18next-conv\n"
-"POT-Creation-Date: 2020-05-18T05:57:27.121Z\n"
+"POT-Creation-Date: 2020-05-29T11:07:19.273Z\n"
 "PO-Revision-Date: 2018-10-25T09:02:35.143Z\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -271,11 +271,22 @@ msgstr ""
 msgid "Download JSON "
 msgstr ""
 
-msgid "Dataset id"
+msgid "Last updated"
 msgstr ""
 
-msgid "Created"
+msgid "Deleting Import Rules"
 msgstr ""
+
+msgid "deleted"
+msgstr ""
+
+msgid "Failed to delete some rules"
+msgstr ""
+
+msgid "Successfully deleted {{count}} rules"
+msgid_plural "Successfully deleted {{count}} rules"
+msgstr[0] ""
+msgstr[1] ""
 
 msgid "Details"
 msgstr ""
@@ -284,6 +295,35 @@ msgid "Edit"
 msgstr ""
 
 msgid "Delete"
+msgstr ""
+
+msgid "Execute"
+msgstr ""
+
+msgid "Download JSON"
+msgstr ""
+
+msgid "Replicate"
+msgstr ""
+
+msgid "Import Rules"
+msgstr ""
+
+msgid "Search by name"
+msgstr ""
+
+msgid "Delete Rules?"
+msgstr ""
+
+msgid "Are you sure you want to delete {{count}} rules?"
+msgid_plural "Are you sure you want to delete {{count}} rules?"
+msgstr[0] ""
+msgstr[1] ""
+
+msgid "Dataset id"
+msgstr ""
+
+msgid "Created"
 msgstr ""
 
 msgid "{{n}} mappings deleted"
