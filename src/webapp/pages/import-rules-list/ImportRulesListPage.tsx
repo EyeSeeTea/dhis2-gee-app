@@ -22,11 +22,13 @@ import { useCompositionRoot } from "../../contexts/app-context";
 import { GetImportRulesUseCase } from "../../../domain/usecases/GetImportRulesUseCase";
 import ImportUseCase from "../../../domain/usecases/ImportUseCase";
 import { Id } from "d2-api";
+import { useGoTo, pageRoutes } from "../root/Root";
 
 const ImportRulesPage: React.FC = () => {
     const loading = useLoading();
     const snackbar = useSnackbar();
     const history = useHistory();
+    const goTo = useGoTo();
 
     const compositionRoot = useCompositionRoot();
     const getImportRulesUseCase = compositionRoot.get(GetImportRulesUseCase);
@@ -105,13 +107,14 @@ const ImportRulesPage: React.FC = () => {
     };
 
     const createRule = () => {
-        //history.push(`/sync-rules/${type}/new`);
+        goTo(pageRoutes.importRulesNew);
     };
 
     const editRule = (ids: string[]) => {
-        // const id = _.first(ids);
-        // if (!id) return;
-        // history.push(`/sync-rules/${type}/edit/${id}`);
+        if (!ids || ids.length !== 1) return;
+        const id = ids[0];
+
+        goTo(pageRoutes.importRulesEdit, { id: id });
     };
 
     const executeOrDownload = async (id: Id, useCase: ImportUseCase) => {
