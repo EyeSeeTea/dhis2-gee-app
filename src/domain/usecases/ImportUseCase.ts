@@ -12,11 +12,13 @@ import { DataValueSet, DataValue } from "../entities/DataValueSet";
 import OrgUnitRepository from "../repositories/OrgUnitRepository";
 import { GeeDataValue } from "../entities/GeeDataValueSet";
 import { promiseMap, buildPeriod } from "../utils";
-import { ImportRule, AttributeMappingDictionary } from "../entities/ImportRule";
+import { AttributeMappingDictionary } from "../entities/ImportRule";
 import DataValueSetRepository, {
     SaveDataValueSetReponse,
 } from "../repositories/DataValueSetRepository";
 import { GeeDataSetRepository } from "../repositories/GeeDataSetRepository";
+import { ImportRuleRepository } from "../repositories/ImportRuleRepository";
+import { Id } from "../entities/Ref";
 
 import i18n from "../../webapp/utils/i18n";
 
@@ -26,29 +28,29 @@ export interface ImportUseCaseResult {
     messages: string[];
 }
 
-//TODO: this use case is the old run method in old import model
-// little a little we are going to refactoring this use case
-// creating adapters that invoke it until the usecase has not
-// webapp and infrastructure dependencies
 export default class ImportUseCase {
     constructor(
+        private importRuleRepository: ImportRuleRepository,
         private geeDataSetRepository: GeeDataSetRepository,
         private geeDataRepository: GeeDataValueSetRepository,
         private orgUnitRepository: OrgUnitRepository,
         private dataValueSetRepository: DataValueSetRepository
-    ) {}
+    ) { }
 
     public async execute(
-        importRule: ImportRule
+        importRuleId: Id
     ): Promise<{ success: boolean; failures: string[]; messages: string[] }> {
         let failures: string[] = [];
         let messages: string[] = [];
         try {
+            debugger;
+            const importRuleResult = await this.importRuleRepository.getById(importRuleId);
+            const importRule = importRuleResult.getOrThrow(`importRule with id ${importRuleId} does not exist`);
+
             const orgUnitIds = _.compact(importRule.selectedOUs.map(o => o.split("/").pop()));
             const orgUnits = await this.orgUnitRepository.getByIds(orgUnitIds);
 
             const baseImportConfig: { orgUnits: OrgUnit[]; interval: GeeInterval } = {
-                //orgUnits: [{ id: "IyO9ICB0WIn" }, { id: "xloTsC6lk5Q" }],
                 orgUnits: orgUnits,
                 interval: {
                     type: "daily",

@@ -7,7 +7,7 @@ import DataElementsTable from "../data-elements/DataElementsTable";
 import { D2Api } from "d2-api";
 import AttributeMapping from "../../models/AttributeMapping";
 import DataElement from "../../../domain/entities/DataElement";
-import { useCompositionRootContext } from "../../contexts/app-context";
+import { useCompositionRoot } from "../../contexts/app-context";
 
 export interface AttributeMappingDialogConfig {
     dataset: string;
@@ -29,7 +29,7 @@ const AttributeMappingDialog: React.FC<AttributeMappingDialogProps> = ({
 }) => {
     const { dataset, attributeMapping } = params;
     const [rows, setRows] = useState<DataElement[]>([]);
-    const dataElements = useCompositionRootContext().dataElements;
+    const dataElements = useCompositionRoot().dataElements;
 
     useEffect(() => {
         dataElements.get(dataset).then(setRows);

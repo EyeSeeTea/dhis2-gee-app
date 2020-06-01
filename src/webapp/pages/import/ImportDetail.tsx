@@ -1,7 +1,7 @@
 import React, { useCallback, useState } from "react";
 import i18n from "../../locales";
 import _ from "lodash";
-import { useAppContext, useCompositionRootContext } from "../../contexts/app-context";
+import { useAppContext, useCompositionRoot } from "../../contexts/app-context";
 import { makeStyles } from "@material-ui/styles";
 import PageHeader from "../../components/page-header/PageHeader";
 import MappingsList from "../mappings/MappingsList";
@@ -14,6 +14,7 @@ import PeriodSelectorDialog from "../../components/dialogs/PeriodSelectorDialog"
 import { ConfirmationDialog, useSnackbar } from "d2-ui-components";
 import Mapping from "../../models/Mapping";
 import { useHistory } from "react-router-dom";
+import ImportUseCase from "../../../domain/usecases/ImportUseCase";
 
 interface ImportDetailProps {
     prefix: string;
@@ -24,6 +25,7 @@ const ImportDetail: React.FunctionComponent<ImportDetailProps> = props => {
     const { api, config } = useAppContext();
     const classes = useStyles();
     const snackbar = useSnackbar();
+
     const [selectedMappings, setSelectedMappings] = useState<Mapping[]>([]);
     const [selectedOUs, setSelectedOUs] = useState<string[]>([]);
     const [periodInformation, setPeriodInformation] = useState<PeriodInformation>({ id: "" });
@@ -31,7 +33,11 @@ const ImportDetail: React.FunctionComponent<ImportDetailProps> = props => {
     const [showPeriodDialog, setPeriodDialog] = useState<boolean>(false);
     const [openImportDialog, setOpenImportDialog] = useState<boolean>(false);
     const [isImporting, setImporting] = useState(false);
-    const geeImport = useCompositionRootContext().geeImport;
+
+    const compositionRoot = useCompositionRoot();
+    const importUseCase = compositionRoot.get<ImportUseCase>("importUseCase");
+    const downloadUseCase = compositionRoot.get<ImportUseCase>("downloadUseCase");
+
     const history = useHistory();
 
     React.useEffect(() => {
@@ -92,38 +98,29 @@ const ImportDetail: React.FunctionComponent<ImportDetailProps> = props => {
         [api, config, prefix]
     );
 
-    const importData = useCallback(() => {
+    const executeOrDownload = async (useCase: ImportUseCase) => {
         setImporting(true);
-        DataImport.getImportData(api, config, prefix).then(async imp => {
-            const result = await geeImport.import(imp.getImportRule());
 
-            console.log({ result });
-            setImporting(false);
-            setOpenImportDialog(false);
+        const result = await useCase.execute(prefix);
 
-            if (result?.success) {
-                snackbar.success(i18n.t("Import successful \n") + result.messages.join("\n"));
-            } else {
-                snackbar.error(i18n.t("Import failed: \n") + result.failures.join("\n"));
-            }
-        });
-    }, [api, config, prefix, snackbar, geeImport]);
+        console.log({ result });
+        setImporting(false);
 
-    const downloadData = useCallback(() => {
-        setImporting(true);
-        DataImport.getImportData(api, config, prefix).then(async imp => {
-            const result = await geeImport.download(imp.getImportRule());
+        if (result?.success) {
+            snackbar.success(i18n.t("Import successful \n") + result.messages.join("\n"));
+        } else {
+            snackbar.error(i18n.t("Import failed: \n") + result.failures.join("\n"));
+        }
+    };
 
-            console.log({ result });
-            setImporting(false);
+    const importData = async () => {
+        await executeOrDownload(importUseCase);
+        setOpenImportDialog(false);
+    };
 
-            if (result?.success) {
-                snackbar.success(i18n.t("Import successful \n") + result.messages.join("\n"));
-            } else {
-                snackbar.error(i18n.t("Import failed: ") + result.failures.join("\n"));
-            }
-        });
-    }, [api, config, prefix, snackbar, geeImport]);
+    const downloadData = async () => {
+        await executeOrDownload(downloadUseCase);
+    };
 
     return (
         <React.Fragment>

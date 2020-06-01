@@ -23,7 +23,7 @@ export function useAppContext() {
     }
 }
 
-export function useCompositionRootContext() {
+export function useCompositionRoot() {
     const context = useContext(AppContext);
     if (context) {
         return context.compositionRoot;
