@@ -92,6 +92,6 @@ export class DataImport {
     public getImportRule(): ImportRule {
         // TODO: ImportRule is this model transformed in new domain entity
         // To the future this model should disappear when it's no used
-        return this.data as unknown as ImportRule;
+        return (this.data as unknown) as ImportRule;
     }
 }

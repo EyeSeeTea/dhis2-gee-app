@@ -5,7 +5,7 @@ import {
     GeeDataValueSetRepository,
     GeeGeometry,
     GeeDataSetId,
-    GeeDataFilters
+    GeeDataFilters,
 } from "../repositories/GeeDataValueSetRepository";
 import { OrgUnit } from "../entities/OrgUnit";
 import { DataValueSet, DataValue } from "../entities/DataValueSet";
@@ -13,13 +13,17 @@ import OrgUnitRepository from "../repositories/OrgUnitRepository";
 import { GeeDataValue } from "../entities/GeeDataValueSet";
 import { promiseMap, buildPeriod } from "../utils";
 import { ImportRule, AttributeMappingDictionary } from "../entities/ImportRule";
-import DataValueSetRepository, { SaveDataValueSetReponse } from "../repositories/DataValueSetRepository";
+import DataValueSetRepository, {
+    SaveDataValueSetReponse,
+} from "../repositories/DataValueSetRepository";
 import { GeeDataSetRepository } from "../repositories/GeeDataSetRepository";
 
 import i18n from "../../webapp/utils/i18n";
 
 export interface ImportUseCaseResult {
-    success: boolean; failures: string[]; messages: string[]
+    success: boolean;
+    failures: string[];
+    messages: string[];
 }
 
 //TODO: this use case is the old run method in old import model
@@ -31,7 +35,8 @@ export default class ImportUseCase {
         private geeDataSetRepository: GeeDataSetRepository,
         private geeDataRepository: GeeDataValueSetRepository,
         private orgUnitRepository: OrgUnitRepository,
-        private dataValueSetRepository: DataValueSetRepository) { }
+        private dataValueSetRepository: DataValueSetRepository
+    ) {}
 
     public async execute(
         importRule: ImportRule
@@ -39,7 +44,6 @@ export default class ImportUseCase {
         let failures: string[] = [];
         let messages: string[] = [];
         try {
-
             const orgUnitIds = _.compact(importRule.selectedOUs.map(o => o.split("/").pop()));
             const orgUnits = await this.orgUnitRepository.getByIds(orgUnitIds);
 
@@ -56,8 +60,9 @@ export default class ImportUseCase {
             await Promise.all(
                 importRule.selectedMappings.map(async selectedMapping => {
                     try {
-
-                        const geeDataSet = await this.geeDataSetRepository.getByCode(selectedMapping.geeImage);
+                        const geeDataSet = await this.geeDataSetRepository.getByCode(
+                            selectedMapping.geeImage
+                        );
 
                         const dataValueSet: DataValueSet = await this.getDataValueSet({
                             ...baseImportConfig,
@@ -109,7 +114,7 @@ export default class ImportUseCase {
         const { geeDataRepository } = this;
         const { geeDataSetId, orgUnits, attributeIdsMapping, interval, scale } = options;
 
-        const dataValuesList = await promiseMap(orgUnits, async (orgUnit) => {
+        const dataValuesList = await promiseMap(orgUnits, async orgUnit => {
             const geometry = this.mapOrgUnitToGeeGeometry(orgUnit);
 
             if (!geometry) return [];
@@ -124,8 +129,10 @@ export default class ImportUseCase {
 
             const geeData = await geeDataRepository.getData(options);
 
-            return _(geeData).map(item =>
-                this.mapGeeDataValueToDataValue(item, orgUnit.id, attributeIdsMapping)).compact().value()
+            return _(geeData)
+                .map(item => this.mapGeeDataValueToDataValue(item, orgUnit.id, attributeIdsMapping))
+                .compact()
+                .value();
         });
 
         return { dataValues: _.flatten(dataValuesList) };
@@ -147,9 +154,10 @@ export default class ImportUseCase {
     }
 
     private mapGeeDataValueToDataValue<Band extends string>(
-        item: GeeDataValue<Band>, orgUnitId: string,
-        mapping: Record<Band, DataElementId>): DataValue | undefined {
-
+        item: GeeDataValue<Band>,
+        orgUnitId: string,
+        mapping: Record<Band, DataElementId>
+    ): DataValue | undefined {
         const { date, band, value } = item;
         const dataElementId = mapping[band];
 

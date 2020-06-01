@@ -1,4 +1,4 @@
-import { D2Api, D2ApiDefault } from "d2-api"
+import { D2Api, D2ApiDefault } from "d2-api";
 import DataElementD2ApiRepository from "./data/DataElementD2ApiRepository";
 import { GetDataElementsUseCase } from "./domain/usecases/GetDataElementsUseCase";
 import ImportUseCase from "./domain/usecases/ImportUseCase";
@@ -13,7 +13,7 @@ import { GetImportRulesUseCase } from "./domain/usecases/GetImportRulesUseCase";
 //const OrgUnitRepository = new LiteralToken('OrgUnitRepository');
 
 interface Type<T> {
-    new(...args: any[]): T;
+    new (...args: any[]): T;
 }
 
 class LiteralToken {
@@ -58,7 +58,7 @@ class CompositionRoot {
     }
 
     public get<T>(token: Type<T> | LiteralToken): T {
-        return this.dependencies.get(token)
+        return this.dependencies.get(token);
     }
 
     //TODO:review this

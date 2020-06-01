@@ -1,5 +1,5 @@
 import { Id } from "./Ref";
-import { PeriodOption } from "./PeriodOption"
+import { PeriodOption } from "./PeriodOption";
 
 export interface ImportRule {
     id: string;

@@ -7,7 +7,6 @@ import { Validation } from "../../types/validations";
 import { AttributeMappingDictionary } from "./Mapping";
 import DataElement from "../../domain/entities/DataElement";
 
-
 export interface AttributeMappingData {
     id: string;
     geeBand: string;
@@ -77,14 +76,14 @@ class AttributeMapping {
         availableBands: string[],
         mappingDictionary: AttributeMappingDictionary
     ): { attributeMappings: AttributeMapping[] } {
-        const attributeMappings: AttributeMapping[] = availableBands.map(
-            band =>
-                mappingDictionary[band] ? AttributeMapping.build(mappingDictionary[band]) :
-                    new AttributeMapping({
-                        id: band,
-                        geeBand: band,
-                        comment: "",
-                    })
+        const attributeMappings: AttributeMapping[] = availableBands.map(band =>
+            mappingDictionary[band]
+                ? AttributeMapping.build(mappingDictionary[band])
+                : new AttributeMapping({
+                      id: band,
+                      geeBand: band,
+                      comment: "",
+                  })
         );
         return { attributeMappings: attributeMappings };
     }
@@ -101,9 +100,9 @@ class AttributeMapping {
             geeImage: _.compact([
                 !this.geeBand.trim()
                     ? {
-                        key: "cannotBeEmpty",
-                        namespace: { element: AttributeMapping.getFieldName("geeBand") },
-                    }
+                          key: "cannotBeEmpty",
+                          namespace: { element: AttributeMapping.getFieldName("geeBand") },
+                      }
                     : null,
             ]),
         });
@@ -115,6 +114,6 @@ class AttributeMapping {
             .set("dataElementCode", dataElement.code);
     }
 }
-interface AttributeMapping extends AttributeMappingData { }
+interface AttributeMapping extends AttributeMappingData {}
 
 export default AttributeMapping;

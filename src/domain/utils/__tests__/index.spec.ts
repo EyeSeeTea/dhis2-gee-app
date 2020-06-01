@@ -1,8 +1,16 @@
-
 import {
-    TODAY, YESTERDAY, LAST_7_DAYS, LAST_14_DAYS,
-    THIS_WEEK, LAST_QUARTER, THIS_YEAR, LAST_YEAR, THIS_QUARTER,
-    LAST_WEEK, THIS_MONTH, LAST_MONTH
+    TODAY,
+    YESTERDAY,
+    LAST_7_DAYS,
+    LAST_14_DAYS,
+    THIS_WEEK,
+    LAST_QUARTER,
+    THIS_YEAR,
+    LAST_YEAR,
+    THIS_QUARTER,
+    LAST_WEEK,
+    THIS_MONTH,
+    LAST_MONTH,
 } from "../../entities/PeriodOption";
 import { buildPeriod } from "..";
 import moment, { Moment } from "moment";
@@ -12,13 +20,12 @@ const YYYYMMDD = "YYYY-MM-DD";
 describe("buildPeriod", () => {
     describe("should return expected start and end date for", () => {
         it("FIXED", async () => {
-            const { start, end } = buildPeriod(
-                {
-                    id: "FIXED",
-                    name: "Fixed period",
-                    startDate: new Date("2020-03-01"),
-                    endDate: new Date("2020-03-31")
-                });
+            const { start, end } = buildPeriod({
+                id: "FIXED",
+                name: "Fixed period",
+                startDate: new Date("2020-03-01"),
+                endDate: new Date("2020-03-31"),
+            });
 
             expect(start.format(YYYYMMDD)).toEqual("2020-03-01");
             expect(end.format(YYYYMMDD)).toEqual("2020-03-31");
@@ -98,4 +105,4 @@ describe("buildPeriod", () => {
     });
 });
 
-export { };
+export {};

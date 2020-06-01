@@ -5,12 +5,12 @@ import ee, {
     GeometryPolygon,
     ImageCollection,
     InfoDataRowBase,
-    InfoData
+    InfoData,
 } from "@google/earthengine";
 import {
     GeeDataValueSetRepository,
     GeeDataFilters,
-    GeeGeometry
+    GeeGeometry,
 } from "../domain/repositories/GeeDataValueSetRepository";
 import { GeeDataValueSet, GeeDataValue } from "../domain/entities/GeeDataValueSet";
 import { D2Api } from "d2-api";
@@ -24,9 +24,11 @@ export interface geeCredentials {
 }
 
 export class GeeDataEarthEngineRepository implements GeeDataValueSetRepository {
-    constructor(private d2Api: D2Api) { }
+    constructor(private d2Api: D2Api) {}
 
-    async getData<Band extends string>(options: GeeDataFilters<Band>): Promise<GeeDataValueSet<Band>> {
+    async getData<Band extends string>(
+        options: GeeDataFilters<Band>
+    ): Promise<GeeDataValueSet<Band>> {
         await this.initializeEngine();
 
         const { id, bands, geometry, interval, scale = 30 } = options;
@@ -116,5 +118,3 @@ export class GeeDataEarthEngineRepository implements GeeDataValueSetRepository {
         });
     }
 }
-
-

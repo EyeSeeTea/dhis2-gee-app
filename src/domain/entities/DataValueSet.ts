@@ -12,4 +12,3 @@ export interface DataValue {
     attributeOptionCombo?: Id;
     categoryOptionCombo?: Id;
 }
-

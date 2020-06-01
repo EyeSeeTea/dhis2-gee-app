@@ -13,7 +13,10 @@ export function promiseMap<T, S>(inputValues: T[], mapper: (value: T) => Promise
     return inputValues.reduce(reducer, Promise.resolve([]));
 }
 
-export function buildPeriod(periodInfo: PeriodOption, today: Moment = moment()): { start: Moment; end: Moment } {
+export function buildPeriod(
+    periodInfo: PeriodOption,
+    today: Moment = moment()
+): { start: Moment; end: Moment } {
     const {
         id,
         startDate = "1970-01-01",

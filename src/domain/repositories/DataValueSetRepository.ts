@@ -7,10 +7,10 @@ interface Dhis2Reponse {
     deleted: number;
 }
 
-type FileResponse = string
+type FileResponse = string;
 
-export type SaveDataValueSetReponse = Dhis2Reponse | FileResponse
+export type SaveDataValueSetReponse = Dhis2Reponse | FileResponse;
 
 export default interface DataValueSetRepository {
-    save(dataValueSet: DataValueSet): Promise<SaveDataValueSetReponse>
-} 
+    save(dataValueSet: DataValueSet): Promise<SaveDataValueSetReponse>;
+}

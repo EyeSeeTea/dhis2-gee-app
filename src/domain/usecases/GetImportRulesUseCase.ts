@@ -2,10 +2,9 @@ import { ImportRuleRepository, ImportRuleFilters } from "../repositories/ImportR
 import { ImportRule } from "../entities/ImportRule";
 
 export class GetImportRulesUseCase implements GetImportRulesUseCase {
-    constructor(private importRuleRepository: ImportRuleRepository) { }
+    constructor(private importRuleRepository: ImportRuleRepository) {}
 
     execute(filters?: ImportRuleFilters): Promise<ImportRule[]> {
         return this.importRuleRepository.getAll(filters);
     }
 }
-

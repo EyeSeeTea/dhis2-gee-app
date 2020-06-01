@@ -1,5 +1,5 @@
 export type GeeDataSet = {
-    code: string
+    code: string;
     displayName: string;
     imageCollectionId: string;
     bands: string[];

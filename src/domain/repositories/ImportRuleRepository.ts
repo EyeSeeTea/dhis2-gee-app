@@ -7,5 +7,5 @@ export interface ImportRuleFilters {
 }
 
 export interface ImportRuleRepository {
-    getAll(filters?: ImportRuleFilters): Promise<ImportRule[]>
-} 
+    getAll(filters?: ImportRuleFilters): Promise<ImportRule[]>;
+}
