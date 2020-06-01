@@ -1,7 +1,6 @@
 /* Map sequentially over T[] with an async function and return array of mapped values */
 import moment, { Moment } from "moment";
-import { PeriodInformation } from "../entities/ImportRule";
-import { availablePeriods } from "../entities/PeriodOption";
+import { availablePeriods, PeriodOption } from "../entities/PeriodOption";
 
 export function promiseMap<T, S>(inputValues: T[], mapper: (value: T) => Promise<S>): Promise<S[]> {
     const reducer = (acc$: Promise<S[]>, inputValue: T): Promise<S[]> =>
@@ -14,7 +13,7 @@ export function promiseMap<T, S>(inputValues: T[], mapper: (value: T) => Promise
     return inputValues.reduce(reducer, Promise.resolve([]));
 }
 
-export function buildPeriod(periodInfo: PeriodInformation, today: Moment = moment()): { start: Moment; end: Moment } {
+export function buildPeriod(periodInfo: PeriodOption, today: Moment = moment()): { start: Moment; end: Moment } {
     const {
         id,
         startDate = "1970-01-01",

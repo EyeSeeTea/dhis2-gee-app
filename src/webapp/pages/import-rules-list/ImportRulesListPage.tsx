@@ -18,8 +18,9 @@ import { useHistory } from "react-router-dom";
 import PageHeader from "../../components/page-header/PageHeader";
 import { ImportRule } from "../../../domain/entities/ImportRule";
 import { FIXED } from "../../../domain/entities/PeriodOption";
-import { mockComponent } from "react-dom/test-utils";
 import moment from "moment";
+import { useCompositionRootContext } from "../../contexts/app-context";
+import { GetImportRulesUseCase } from "../../../domain/usecases/GetImportRulesUseCase";
 
 // interface ImportRulesState{
 //     rows:ImportRule[],
@@ -29,28 +30,24 @@ const ImportRulesPage: React.FC = () => {
     const loading = useLoading();
     const snackbar = useSnackbar();
     const history = useHistory();
+    const getImportRulesUseCase = useCompositionRootContext().get(GetImportRulesUseCase);
 
     const [rows, setRows] = useState<ImportRule[]>([]);
     const [selection, setSelection] = useState<TableSelection[]>([]);
     const [toDelete, setToDelete] = useState<string[]>([]);
     const [search, setSearchFilter] = useState("");
-
-    //const [lastExecutedFilter, setLastExecutedFilter] = useState<Moment | null>(null);
+    const [lastExecutedFilter, setLastExecutedFilter] = useState<Date | undefined>(undefined);
 
     useEffect(() => {
-        // SyncRule.list(
-        //     api,
-        //     { type, targetInstanceFilter, enabledFilter, lastExecutedFilter, search },
-        //     { paging: false }
-        // ).then(({ objects }) => {
-        //     setRows(objects.map(SyncRule.build));
-        // });
-    }, [search]);
+        getImportRulesUseCase
+            .execute({ search: search, lastExecutedFilter: lastExecutedFilter })
+            .then(setRows);
+    }, [getImportRulesUseCase, search, lastExecutedFilter]);
 
     const getPeriodText = (importRule: ImportRule) => {
-        const formatDate = (date: Date) => moment(date).format("YYYY-MM-DD HH:mm:ss");
+        const formatDate = (date: Date) => moment(date).format("YYYY-MM-DD");
 
-        return `${importRule.periodInformation.id} 
+        return `${importRule.periodInformation.id}
         ${
             importRule.periodInformation.id === FIXED.id
                 ? `- start: ${formatDate(
@@ -62,6 +59,7 @@ const ImportRulesPage: React.FC = () => {
 
     const columns: TableColumn<ImportRule>[] = [
         { name: "name", text: i18n.t("Name"), sortable: true },
+        { name: "description", text: i18n.t("Description"), sortable: true },
         {
             name: "periodInformation",
             text: i18n.t("Period"),
@@ -169,13 +167,6 @@ const ImportRulesPage: React.FC = () => {
             multiple: false,
             onClick: downloadJSON,
             icon: <Icon>cloud_download</Icon>,
-        },
-        {
-            name: "replicate",
-            text: i18n.t("Replicate"),
-            multiple: false,
-            onClick: replicateRule,
-            icon: <Icon>content_copy</Icon>,
         },
     ];
 

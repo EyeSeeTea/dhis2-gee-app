@@ -35,6 +35,7 @@ export function getTestConfig() {
                 namespace: "dhis2-gee-app",
                 keys: {
                     mappings: "mappings",
+                    importRules: "importRules",
                     imports: {
                         suffix: "@import",
                     },

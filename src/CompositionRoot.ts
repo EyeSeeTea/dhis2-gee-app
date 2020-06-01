@@ -8,22 +8,25 @@ import OrgUnitD2ApiRepository from "./data/OrgUnitD2ApiRepository";
 import DataValueSetD2ApiRepository from "./data/DataValueSetD2ApiRepository";
 import { GeeDataSetConfigRepository } from "./data/GeeDataSetConfigRepository";
 import DataValueSetFileRepository from "./data/DataValueSetFileRepository";
+import ImportRuleD2ApiRepository from "./data/ImportRuleD2ApiRepository";
+import { GetImportRulesUseCase } from "./domain/usecases/GetImportRulesUseCase";
 //const OrgUnitRepository = new LiteralToken('OrgUnitRepository');
 
 interface Type<T> {
     new(...args: any[]): T;
 }
 
-// Interfaces don't have type information at runtime, so we need
-// a way to have a key to interfaces in runtime
 class LiteralToken {
-    constructor(public injectionIdentifier: string) { }
+    constructor(public injectionIdentifier: string) {
+        // Interfaces don't have type information at runtime, so we need
+        // a way to have a key to interfaces in runtime
+    }
 }
 
 type Token<T> = Type<T> | LiteralToken;
 
-const importUseCaseToken = new LiteralToken('importUseCaseToken');
-const downloadUseCaseToken = new LiteralToken('downloadUseCaseToken');
+const importUseCaseToken = new LiteralToken("importUseCaseToken");
+const downloadUseCaseToken = new LiteralToken("downloadUseCaseToken");
 
 class CompositionRoot {
     private d2Api: D2Api;
@@ -35,8 +38,10 @@ class CompositionRoot {
 
         this.initializeDataElements();
         this.initializeImportAndDownload();
+        this.initializeImportRules();
     }
 
+    //TODO:review this
     public get dataElements() {
         const getDataElementsUseCase = this.dependencies.get(GetDataElementsUseCase);
         return { get: getDataElementsUseCase.execute.bind(getDataElementsUseCase) };
@@ -48,10 +53,15 @@ class CompositionRoot {
 
         return {
             import: importUseCase.execute.bind(importUseCase),
-            download: downloadUseCase.execute.bind(downloadUseCase)
+            download: downloadUseCase.execute.bind(downloadUseCase),
         };
     }
 
+    public get<T>(token: Type<T> | LiteralToken): T {
+        return this.dependencies.get(token)
+    }
+
+    //TODO:review this
     private initializeDataElements() {
         const dataElementsRepository = new DataElementD2ApiRepository(this.d2Api);
         const getDataElementsUseCase = new GetDataElementsUseCase(dataElementsRepository);
@@ -66,15 +76,31 @@ class CompositionRoot {
 
         const dataValueSetFileRepository = new DataValueSetFileRepository();
 
-        const importUseCase =
-            new ImportUseCase(geeDataSetRepository, geeDataRepository, orgUnitsRepository, dataValueSetD2ApiRepository);
+        const importUseCase = new ImportUseCase(
+            geeDataSetRepository,
+            geeDataRepository,
+            orgUnitsRepository,
+            dataValueSetD2ApiRepository
+        );
 
-        const downloadUseCase =
-            new ImportUseCase(geeDataSetRepository, geeDataRepository, orgUnitsRepository, dataValueSetFileRepository);
+        const downloadUseCase = new ImportUseCase(
+            geeDataSetRepository,
+            geeDataRepository,
+            orgUnitsRepository,
+            dataValueSetFileRepository
+        );
 
         this.dependencies.set(importUseCaseToken, importUseCase);
         this.dependencies.set(downloadUseCaseToken, downloadUseCase);
     }
+
+    private initializeImportRules() {
+        const dataStore = this.d2Api.dataStore(this.config.data.base.dataStore.namespace);
+        const importRulesKey = this.config.data.base.dataStore.keys.importRules;
+        const importRuleRepository = new ImportRuleD2ApiRepository(dataStore, importRulesKey);
+        const getImportRulesUseCase = new GetImportRulesUseCase(importRuleRepository);
+        this.dependencies.set(GetImportRulesUseCase, getImportRulesUseCase);
+    }
 }
 
-export default CompositionRoot
+export default CompositionRoot;
