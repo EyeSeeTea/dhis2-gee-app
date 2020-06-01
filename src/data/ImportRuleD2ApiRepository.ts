@@ -9,7 +9,7 @@ import { PeriodId } from "../domain/entities/PeriodOption";
 export default class ImportRuleD2ApiRepository implements ImportRuleRepository {
     constructor(private dataStore: DataStore, private dataStoreKey: string) {}
 
-    async getAll(filters?: ImportRuleFilters): Promise<ImportRule[]> {
+    async getAll(filters: ImportRuleFilters): Promise<ImportRule[]> {
         const importRulesData = await this.dataStore
             .get<ImportRuleData[]>(this.dataStoreKey)
             .getData();
@@ -35,10 +35,36 @@ export default class ImportRuleD2ApiRepository implements ImportRuleRepository {
                     },
                 };
             });
-            return importRules;
+
+            const filteredImportRules = this.applyFilters(importRules, filters);
+
+            return filteredImportRules;
         } else {
             return [];
         }
+    }
+
+    private applyFilters(importRules: ImportRule[], filters: ImportRuleFilters): ImportRule[] {
+        const { search, lastExecuted } = filters;
+
+        const filteredBySearchImportRules = search
+            ? importRules.filter(
+                  importRule =>
+                      importRule.name.toLowerCase().includes(search.toLowerCase()) ||
+                      importRule.description?.toLowerCase().includes(search.toLowerCase()) ||
+                      importRule.code?.toLowerCase().includes(search.toLowerCase())
+              )
+            : importRules;
+
+        const filteredByLastExecuted = lastExecuted
+            ? filteredBySearchImportRules.filter(importRule => {
+                  const importRuleTime = importRule.lastExecuted?.getTime() ?? undefined;
+
+                  return importRuleTime ? importRuleTime >= lastExecuted.getTime() : false;
+              })
+            : filteredBySearchImportRules;
+
+        return filteredByLastExecuted;
     }
 }
 

@@ -11,6 +11,7 @@ import {
     TableState,
     ReferenceObject,
     TableSelection,
+    DatePicker,
 } from "d2-ui-components";
 import _ from "lodash";
 import React, { useEffect, useState } from "react";
@@ -22,10 +23,6 @@ import moment from "moment";
 import { useCompositionRootContext } from "../../contexts/app-context";
 import { GetImportRulesUseCase } from "../../../domain/usecases/GetImportRulesUseCase";
 
-// interface ImportRulesState{
-//     rows:ImportRule[],
-// }
-
 const ImportRulesPage: React.FC = () => {
     const loading = useLoading();
     const snackbar = useSnackbar();
@@ -36,11 +33,14 @@ const ImportRulesPage: React.FC = () => {
     const [selection, setSelection] = useState<TableSelection[]>([]);
     const [toDelete, setToDelete] = useState<string[]>([]);
     const [search, setSearchFilter] = useState("");
-    const [lastExecutedFilter, setLastExecutedFilter] = useState<Date | undefined>(undefined);
+    const [lastExecutedFilter, setLastExecutedFilter] = useState<Date | null>(null);
 
     useEffect(() => {
         getImportRulesUseCase
-            .execute({ search: search, lastExecutedFilter: lastExecutedFilter })
+            .execute({
+                search: search,
+                lastExecuted: lastExecutedFilter ? lastExecutedFilter : undefined,
+            })
             .then(setRows);
     }, [getImportRulesUseCase, search, lastExecutedFilter]);
 
@@ -66,14 +66,14 @@ const ImportRulesPage: React.FC = () => {
             sortable: true,
             getValue: getPeriodText,
         },
-        { name: "lastUpdated", text: i18n.t("Last updated"), sortable: true },
+        { name: "lastExecuted", text: i18n.t("Last executed"), sortable: true },
     ];
 
     const details: ObjectsTableDetailField<ImportRule>[] = [
         { name: "name", text: i18n.t("Name") },
         { name: "description", text: i18n.t("Description") },
         { name: "periodInformation", text: i18n.t("Period"), getValue: getPeriodText },
-        { name: "lastUpdated", text: i18n.t("Last updated") },
+        { name: "lastExecuted", text: i18n.t("Last executed") },
     ];
 
     const downloadJSON = async (ids: string[]) => {};
@@ -175,6 +175,17 @@ const ImportRulesPage: React.FC = () => {
         setSelection(selection);
     };
 
+    const filterComponents = (
+        <React.Fragment>
+            <DatePicker
+                placeholder={i18n.t("Last executed")}
+                value={lastExecutedFilter}
+                onChange={setLastExecutedFilter}
+                isFilter={true}
+            />
+        </React.Fragment>
+    );
+
     return (
         <React.Fragment>
             <PageHeader title={i18n.t("Import Rules")} onBackClick={() => history.goBack()} />
@@ -188,6 +199,7 @@ const ImportRulesPage: React.FC = () => {
                 onActionButtonClick={createRule}
                 searchBoxLabel={i18n.t("Search by name")}
                 onChangeSearch={setSearchFilter}
+                filterComponents={filterComponents}
             />
 
             {toDelete.length > 0 && (

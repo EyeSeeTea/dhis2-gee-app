@@ -3,7 +3,7 @@ import { ImportRule } from "../entities/ImportRule";
 
 export interface ImportRuleFilters {
     search?: string;
-    lastExecutedFilter?: Date;
+    lastExecuted?: Date;
 }
 
 export interface ImportRuleRepository {
