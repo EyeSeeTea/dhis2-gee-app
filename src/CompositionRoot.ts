@@ -14,7 +14,7 @@ import { ImportRuleRepository } from "./domain/repositories/ImportRuleRepository
 //const OrgUnitRepository = new LiteralToken('OrgUnitRepository');
 
 interface Type<T> {
-    new (...args: any[]): T;
+    new(...args: any[]): T;
 }
 
 export type NamedToken = "importUseCase" | "downloadUseCase";
@@ -36,14 +36,12 @@ class CompositionRoot {
         this.initializeImportAndDownload();
     }
 
-    //TODO:review this
-    public get dataElements() {
-        const getDataElementsUseCase = this.dependencies.get(GetDataElementsUseCase);
-        return { get: getDataElementsUseCase.execute.bind(getDataElementsUseCase) };
-    }
-
     public get<T>(token: Type<T> | NamedToken): T {
         return this.dependencies.get(token);
+    }
+
+    public bind<T>(token: Type<T> | NamedToken, value: T) {
+        this.dependencies.set(token, value);
     }
 
     private initializeDataElements() {

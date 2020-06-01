@@ -6,6 +6,7 @@ import DataElementsTable from "../data-elements/DataElementsTable";
 import AttributeMapping from "../../models/AttributeMapping";
 import DataElement from "../../../domain/entities/DataElement";
 import { useCompositionRoot } from "../../contexts/app-context";
+import { GetDataElementsUseCase } from "../../../domain/usecases/GetDataElementsUseCase";
 
 export interface AttributeMappingDialogConfig {
     dataset: string;
@@ -25,11 +26,12 @@ const AttributeMappingDialog: React.FC<AttributeMappingDialogProps> = ({
 }) => {
     const { dataset, attributeMapping } = params;
     const [rows, setRows] = useState<DataElement[]>([]);
-    const dataElements = useCompositionRoot().dataElements;
+    const compositionRoot = useCompositionRoot();
+    const getDataElementsUseCase = compositionRoot.get(GetDataElementsUseCase);
 
     useEffect(() => {
-        dataElements.get(dataset).then(setRows);
-    }, [dataElements, dataset]);
+        getDataElementsUseCase.execute(dataset).then(setRows);
+    }, [getDataElementsUseCase, dataset]);
 
     const onSelectedDataElement = useCallback(
         (dataElement: DataElement) => {
