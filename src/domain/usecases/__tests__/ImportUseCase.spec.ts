@@ -41,10 +41,13 @@ function givenAImportRule(): ImportRule {
         name: "Default",
         description: "Default import. Unique default for all the instance",
         periodInformation: {
-            endDate: new Date("2018-01-31T16:43:00.000Z"),
             id: "FIXED",
+            name: "Fixed period",
+            endDate: new Date("2018-01-31T16:43:00.000Z"),
             startDate: new Date("2018-01-01T16:43:00.000Z")
         },
+        created: new Date(),
+        lastUpdated: new Date(),
         selectedMappings: [{
             id: "utQIFECT8tF",
             name: "ERA",

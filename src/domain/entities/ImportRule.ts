@@ -1,5 +1,5 @@
 import { Id } from "./Ref";
-import { PeriodId } from "./PeriodOption"
+import { PeriodOption } from "./PeriodOption"
 
 export interface ImportRule {
     id: string;
@@ -8,17 +8,11 @@ export interface ImportRule {
     created: Date;
     description?: string;
     selectedOUs: string[];
-    periodInformation: PeriodInformation;
+    periodInformation: PeriodOption;
     selectedMappings: Mapping[];
     lastExecuted?: Date;
     lastUpdated: Date;
 }
-
-export type PeriodInformation = {
-    id: PeriodId;
-    startDate?: Date;
-    endDate?: Date;
-};
 
 export interface Mapping {
     id: Id;
