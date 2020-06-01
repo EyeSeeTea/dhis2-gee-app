@@ -14,7 +14,7 @@ import { ImportRuleRepository } from "./domain/repositories/ImportRuleRepository
 //const OrgUnitRepository = new LiteralToken('OrgUnitRepository');
 
 interface Type<T> {
-    new(...args: any[]): T;
+    new (...args: any[]): T;
 }
 
 export type NamedToken = "importUseCase" | "downloadUseCase";
@@ -56,7 +56,11 @@ class CompositionRoot {
         const dataStore = this.d2Api.dataStore(this.config.data.base.dataStore.namespace);
         const importRulesKey = this.config.data.base.dataStore.keys.importRules;
         const importRulesDefaultSuffixKey = this.config.data.base.dataStore.keys.imports.suffix;
-        const importRuleRepository = new ImportRuleD2ApiRepository(dataStore, importRulesKey, importRulesDefaultSuffixKey);
+        const importRuleRepository = new ImportRuleD2ApiRepository(
+            dataStore,
+            importRulesKey,
+            importRulesDefaultSuffixKey
+        );
         this.dependencies.set("importRuleRepository", importRuleRepository);
 
         const getImportRulesUseCase = new GetImportRulesUseCase(importRuleRepository);
@@ -64,7 +68,9 @@ class CompositionRoot {
     }
 
     private initializeImportAndDownload() {
-        const importRuleRepository = this.dependencies.get("importRuleRepository") as ImportRuleRepository;
+        const importRuleRepository = this.dependencies.get(
+            "importRuleRepository"
+        ) as ImportRuleRepository;
         const geeDataSetRepository = new GeeDataSetConfigRepository(this.config);
         const geeDataRepository = new GeeDataEarthEngineRepository(this.d2Api);
         const orgUnitsRepository = new OrgUnitD2ApiRepository(this.d2Api);

@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/camelcase */
+
 import moment from "moment";
 import ImportUseCase from "../ImportUseCase";
 
@@ -41,8 +43,7 @@ describe("ImportUseCase", () => {
     });
 });
 
-export { };
-
+export {};
 
 function givenAGeeDataSetRepository(): GeeDataSetRepository {
     return {
@@ -87,7 +88,7 @@ function givenAImportRuleRepository(): ImportRuleRepository {
         getDefault: jest.fn().mockImplementation(() => {
             return Maybe.fromValue(defaultImportRule);
         }),
-        getAll: jest.fn()
+        getAll: jest.fn(),
     };
 }
 

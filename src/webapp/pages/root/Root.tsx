@@ -10,6 +10,10 @@ export const pageRoutes = {
     import: { path: "/import" },
     importRules: { path: "/import-rules" },
     importRulesNew: { path: "/import-rules/new" },
+    importRulesEdit: {
+        path: "/import-rules/:id",
+        generateUrl: ({ id }: { id: string }) => `/import-rules/${id}`,
+    },
     mappingsNew: { path: "/mappings/new" },
     mappingsEdit: {
         path: "/mappings/:id",

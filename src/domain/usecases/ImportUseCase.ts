@@ -35,7 +35,7 @@ export default class ImportUseCase {
         private geeDataRepository: GeeDataValueSetRepository,
         private orgUnitRepository: OrgUnitRepository,
         private dataValueSetRepository: DataValueSetRepository
-    ) { }
+    ) {}
 
     public async execute(
         importRuleId: Id
@@ -43,9 +43,10 @@ export default class ImportUseCase {
         let failures: string[] = [];
         let messages: string[] = [];
         try {
-            debugger;
             const importRuleResult = await this.importRuleRepository.getById(importRuleId);
-            const importRule = importRuleResult.getOrThrow(`importRule with id ${importRuleId} does not exist`);
+            const importRule = importRuleResult.getOrThrow(
+                `importRule with id ${importRuleId} does not exist`
+            );
 
             const orgUnitIds = _.compact(importRule.selectedOUs.map(o => o.split("/").pop()));
             const orgUnits = await this.orgUnitRepository.getByIds(orgUnitIds);

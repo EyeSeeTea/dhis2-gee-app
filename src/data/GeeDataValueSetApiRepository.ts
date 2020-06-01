@@ -17,7 +17,7 @@ import { D2Api } from "d2-api";
 
 type Geometry = GeometryPoint | GeometryPolygon;
 
-export interface geeCredentials {
+export interface GeeCredentials {
     client_id: string;
     access_token: string;
     expires_in: number;
@@ -63,7 +63,7 @@ export class GeeDataEarthEngineRepository implements GeeDataValueSetRepository {
     }
 
     private async initializeEngine() {
-        const credentials = await this.d2Api.get<geeCredentials>("/tokens/google").getData();
+        const credentials = await this.d2Api.get<GeeCredentials>("/tokens/google").getData();
 
         ee.data.setAuthToken(
             credentials.client_id,

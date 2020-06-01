@@ -13,7 +13,7 @@ import {
     LAST_MONTH,
 } from "../../entities/PeriodOption";
 import { buildPeriod } from "..";
-import moment, { Moment } from "moment";
+import moment from "moment";
 
 const YYYYMMDD = "YYYY-MM-DD";
 

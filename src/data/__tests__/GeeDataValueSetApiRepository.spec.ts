@@ -1,7 +1,9 @@
+/* eslint-disable @typescript-eslint/camelcase */
+
 import { GeeDataEarthEngineRepository } from "../GeeDataValueSetApiRepository";
 import ee, { ImageCollection, InfoData } from "@google/earthengine";
 import { D2ApiDefault } from "d2-api";
-import { Params, D2ApiResponse, D2Response } from "d2-api/api/common";
+import { D2ApiResponse, D2Response } from "d2-api/api/common";
 import moment from "moment";
 import { GeeDataFilters } from "../../domain/repositories/GeeDataValueSetRepository";
 
@@ -104,8 +106,8 @@ function givenAGeeImageCollection() {
 function givenAD2Api(): D2ApiDefault {
     const mockedD2ApiDefault: any = {};
 
-    mockedD2ApiDefault.get = (url: string, params?: Params) => {
-        const reponse = new Promise<D2Response<any>>((resolve, reject) => {
+    mockedD2ApiDefault.get = () => {
+        const reponse = new Promise<D2Response<any>>(resolve => {
             resolve({
                 status: 200,
                 data: {

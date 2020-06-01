@@ -20,12 +20,16 @@ const defaultImportData = {
 };
 
 export default class ImportRuleD2ApiRepository implements ImportRuleRepository {
-    constructor(private dataStore: DataStore, private dataStoreKey: string, private defaultSuffixKey: string) { }
+    constructor(
+        private dataStore: DataStore,
+        private dataStoreKey: string,
+        private defaultSuffixKey: string
+    ) {}
 
     async getDefault(): Promise<ImportRule> {
-        const importRuleData = Maybe.fromValue(await this.dataStore
-            .get<ImportRuleData>(`default${this.defaultSuffixKey}`)
-            .getData());
+        const importRuleData = Maybe.fromValue(
+            await this.dataStore.get<ImportRuleData>(`default${this.defaultSuffixKey}`).getData()
+        );
 
         const importRule = importRuleData.map(this.mapToDomain);
 
@@ -34,11 +38,13 @@ export default class ImportRuleD2ApiRepository implements ImportRuleRepository {
 
     async getById(id: Id): Promise<Maybe<ImportRule>> {
         if (id === "default") {
-            return Maybe.fromValue(await this.getDefault())
+            return Maybe.fromValue(await this.getDefault());
         } else {
             const importRulesData = await this.getImportRulesData();
 
-            const importRuleData = Maybe.fromValue(importRulesData.find(importRulesData => importRulesData.id === id));
+            const importRuleData = Maybe.fromValue(
+                importRulesData.find(importRulesData => importRulesData.id === id)
+            );
 
             return importRuleData.map(this.mapToDomain);
         }
@@ -47,7 +53,9 @@ export default class ImportRuleD2ApiRepository implements ImportRuleRepository {
     async getAll(filters: ImportRuleFilters): Promise<ImportRule[]> {
         const importRulesData = await this.getImportRulesData();
 
-        const importRules = importRulesData?.map(importRuleData => this.mapToDomain(importRuleData));
+        const importRules = importRulesData?.map(importRuleData =>
+            this.mapToDomain(importRuleData)
+        );
 
         const filteredImportRules = this.applyFilters(importRules, filters);
 
@@ -59,19 +67,19 @@ export default class ImportRuleD2ApiRepository implements ImportRuleRepository {
 
         const filteredBySearchImportRules = search
             ? importRules.filter(
-                importRule =>
-                    importRule.name.toLowerCase().includes(search.toLowerCase()) ||
-                    importRule.description?.toLowerCase().includes(search.toLowerCase()) ||
-                    importRule.code?.toLowerCase().includes(search.toLowerCase())
-            )
+                  importRule =>
+                      importRule.name.toLowerCase().includes(search.toLowerCase()) ||
+                      importRule.description?.toLowerCase().includes(search.toLowerCase()) ||
+                      importRule.code?.toLowerCase().includes(search.toLowerCase())
+              )
             : importRules;
 
         const filteredByLastExecuted = lastExecuted
             ? filteredBySearchImportRules.filter(importRule => {
-                const importRuleTime = importRule.lastExecuted?.getTime() ?? undefined;
+                  const importRuleTime = importRule.lastExecuted?.getTime() ?? undefined;
 
-                return importRuleTime ? importRuleTime >= lastExecuted.getTime() : false;
-            })
+                  return importRuleTime ? importRuleTime >= lastExecuted.getTime() : false;
+              })
             : filteredBySearchImportRules;
 
         return filteredByLastExecuted;
@@ -99,9 +107,7 @@ export default class ImportRuleD2ApiRepository implements ImportRuleRepository {
     }
 
     private async getImportRulesData(): Promise<ImportRuleData[]> {
-        const data = await this.dataStore
-            .get<ImportRuleData[]>(this.dataStoreKey)
-            .getData();
+        const data = await this.dataStore.get<ImportRuleData[]>(this.dataStoreKey).getData();
 
         return data || [];
     }

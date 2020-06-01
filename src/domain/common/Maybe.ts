@@ -1,5 +1,5 @@
 export class Maybe<T> {
-    private constructor(private value: T | null) { }
+    private constructor(private value: T | null) {}
 
     static some<T>(value: T) {
         if (!value) {

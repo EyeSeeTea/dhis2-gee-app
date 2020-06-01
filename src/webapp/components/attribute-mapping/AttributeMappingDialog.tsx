@@ -3,8 +3,6 @@ import DialogContent from "@material-ui/core/DialogContent";
 import { ConfirmationDialog } from "d2-ui-components";
 import React, { useEffect, useState, useCallback } from "react";
 import DataElementsTable from "../data-elements/DataElementsTable";
-
-import { D2Api } from "d2-api";
 import AttributeMapping from "../../models/AttributeMapping";
 import DataElement from "../../../domain/entities/DataElement";
 import { useCompositionRoot } from "../../contexts/app-context";
@@ -15,14 +13,12 @@ export interface AttributeMappingDialogConfig {
 }
 
 export interface AttributeMappingDialogProps {
-    api: D2Api;
     params: AttributeMappingDialogConfig;
     onMappingChange: (newMapping: AttributeMapping) => void;
     onClose: () => void;
 }
 
 const AttributeMappingDialog: React.FC<AttributeMappingDialogProps> = ({
-    api,
     params,
     onMappingChange,
     onClose,
