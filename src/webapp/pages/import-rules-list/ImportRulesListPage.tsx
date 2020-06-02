@@ -6,7 +6,6 @@ import {
     ObjectsTableDetailField,
     TableAction,
     TableColumn,
-    useLoading,
     useSnackbar,
     TableState,
     ReferenceObject,
@@ -23,9 +22,10 @@ import { GetImportRulesUseCase } from "../../../domain/usecases/GetImportRulesUs
 import ImportUseCase from "../../../domain/usecases/ImportUseCase";
 import { Id } from "d2-api";
 import { useGoTo, pageRoutes } from "../root/Root";
+import { DeleteImportRulesUseCase } from "../../../domain/usecases/DeleteImportRulesUseCase";
+import { DeleteByIdError } from "../../../domain/repositories/ImportRuleRepository";
 
 const ImportRulesPage: React.FC = () => {
-    const loading = useLoading();
     const snackbar = useSnackbar();
     const history = useHistory();
     const goTo = useGoTo();
@@ -34,6 +34,7 @@ const ImportRulesPage: React.FC = () => {
     const getImportRulesUseCase = compositionRoot.get(GetImportRulesUseCase);
     const importUseCase = compositionRoot.get<ImportUseCase>("importUseCase");
     const downloadUseCase = compositionRoot.get<ImportUseCase>("downloadUseCase");
+    const deleteImportRuleUseCase = compositionRoot.get(DeleteImportRulesUseCase);
 
     //TODO: Unify to unique state?
     const [rows, setRows] = useState<ImportRule[]>([]);
@@ -42,8 +43,10 @@ const ImportRulesPage: React.FC = () => {
     const [search, setSearchFilter] = useState("");
     const [lastExecutedFilter, setLastExecutedFilter] = useState<Date | null>(null);
     const [openImportDialog, setOpenImportDialog] = useState<boolean>(false);
-    const [isImporting, setImporting] = useState(false);
+    const [isImporting, setImporting] = useState<boolean>(false);
+    const [isDeleting, setIsDeleting] = useState<boolean>(false);
     const [importRuleToExecute, setImportRuleToExecute] = useState<string | undefined>(undefined);
+    const [objectsTableKey, setObjectsTableKey] = useState(new Date().getTime());
 
     useEffect(() => {
         getImportRulesUseCase
@@ -52,7 +55,7 @@ const ImportRulesPage: React.FC = () => {
                 lastExecuted: lastExecutedFilter ? lastExecutedFilter : undefined,
             })
             .then(setRows);
-    }, [getImportRulesUseCase, search, lastExecutedFilter]);
+    }, [getImportRulesUseCase, search, lastExecutedFilter, objectsTableKey]);
 
     const getPeriodText = (importRule: ImportRule) => {
         const formatDate = (date?: Date) => moment(date).format("YYYY-MM-DD");
@@ -87,23 +90,42 @@ const ImportRulesPage: React.FC = () => {
     ];
 
     const confirmDelete = async () => {
-        // loading.show(true, i18n.t("Deleting Import Rules"));
-        // const results = [];
-        // for (const id of toDelete) {
-        //     const rule = await SyncRule.get(api, id);
-        //     const deletedRuleLabel = `${rule.name} (${i18n.t("deleted")})`;
-        //     results.push(await rule.remove(api));
-        // }
-        // if (_.some(results, ["status", false])) {
-        //     snackbar.error(i18n.t("Failed to delete some rules"));
-        // } else {
-        //     snackbar.success(
-        //         i18n.t("Successfully deleted {{count}} rules", { count: toDelete.length })
-        //     );
-        // }
-        // loading.reset();
-        // setToDelete([]);
-        // setSelection([]);
+        setIsDeleting(true);
+
+        const results = await deleteImportRuleUseCase.execute(toDelete);
+
+        if (results.failures.length === 0) {
+            snackbar.success(i18n.t("Successfully deleted {{success}} import rules", results));
+        } else {
+            const handleFailure = (failure: DeleteByIdError): string => {
+                switch (failure.kind) {
+                    case "ImportRuleIdNotFound":
+                        return i18n.t("Import rule does not exists: ") + failure.id;
+                    case "UnexpectedError":
+                        return (
+                            i18n.t("An unexpected error has ocurred deleting import rule: ") +
+                            failure.error.message
+                        );
+                }
+            };
+
+            const failedMessages = results.failures.map(handleFailure);
+
+            const resultSummary: string[] = [
+                i18n.t("An error has ocurred deleting import rules"),
+                i18n.t("Successfully import rule deleted: ") + results.success,
+                i18n.t("failed import rule  deleted: ") + results.success,
+            ];
+
+            const resultWithFailedMessages = [...resultSummary, ...failedMessages];
+
+            snackbar.error(resultWithFailedMessages.join("\n"));
+        }
+
+        setIsDeleting(false);
+        setToDelete([]);
+        setSelection([]);
+        setObjectsTableKey(new Date().getTime());
     };
 
     const createRule = () => {
@@ -253,7 +275,9 @@ const ImportRulesPage: React.FC = () => {
                             : ""
                     }
                     saveText={i18n.t("Ok")}
-                />
+                >
+                    {isDeleting && <LinearProgress />}
+                </ConfirmationDialog>
             )}
         </React.Fragment>
     );

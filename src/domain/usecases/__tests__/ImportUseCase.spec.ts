@@ -89,6 +89,7 @@ function givenAImportRuleRepository(): ImportRuleRepository {
             return Maybe.fromValue(defaultImportRule);
         }),
         getAll: jest.fn(),
+        deleteById: jest.fn(),
     };
 }
 

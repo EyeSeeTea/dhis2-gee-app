@@ -1,12 +1,14 @@
 import {
     ImportRuleRepository,
     ImportRuleFilters,
+    DeleteByIdError,
 } from "../domain/repositories/ImportRuleRepository";
 import { ImportRule, Mapping } from "../domain/entities/ImportRule";
 import DataStore from "d2-api/api/dataStore";
 import { PeriodId, THIS_YEAR } from "../domain/entities/PeriodOption";
 import { Maybe } from "../domain/common/Maybe";
 import { Id } from "d2-api";
+import { Either } from "../domain/common/Either";
 
 const defaultImportData = {
     id: "default",
@@ -40,11 +42,7 @@ export default class ImportRuleD2ApiRepository implements ImportRuleRepository {
         if (id === "default") {
             return Maybe.fromValue(await this.getDefault());
         } else {
-            const importRulesData = await this.getImportRulesData();
-
-            const importRuleData = Maybe.fromValue(
-                importRulesData.find(importRulesData => importRulesData.id === id)
-            );
+            const importRuleData = await this.getDataById(id);
 
             return importRuleData.map(this.mapToDomain);
         }
@@ -60,6 +58,34 @@ export default class ImportRuleD2ApiRepository implements ImportRuleRepository {
         const filteredImportRules = this.applyFilters(importRules, filters);
 
         return filteredImportRules;
+    }
+
+    async deleteById(id: Id): Promise<Either<DeleteByIdError, true>> {
+        const importRulesData = await this.getImportRulesData();
+
+        const importRuleToDelete = importRulesData.find(
+            importRulesData => importRulesData.id === id
+        );
+
+        if (!importRuleToDelete) {
+            return Either.failure({
+                kind: "ImportRuleIdNotFound",
+                id: id,
+            });
+        } else {
+            try {
+                const newimportRulesData = importRulesData.filter(data => data.id !== id);
+
+                await this.saveImportRulesData(newimportRulesData);
+
+                return Either.Success(true);
+            } catch (e) {
+                return Either.failure({
+                    kind: "UnexpectedError",
+                    error: e,
+                });
+            }
+        }
     }
 
     private applyFilters(importRules: ImportRule[], filters: ImportRuleFilters): ImportRule[] {
@@ -85,6 +111,22 @@ export default class ImportRuleD2ApiRepository implements ImportRuleRepository {
         return filteredByLastExecuted;
     }
 
+    private async getImportRulesData(): Promise<ImportRuleData[]> {
+        const data = await this.dataStore.get<ImportRuleData[]>(this.dataStoreKey).getData();
+
+        return data || [];
+    }
+
+    private async saveImportRulesData(imporRulesData: ImportRuleData[]): Promise<void> {
+        this.dataStore.save(this.dataStoreKey, imporRulesData);
+    }
+
+    private async getDataById(id: string): Promise<Maybe<ImportRuleData>> {
+        const importRulesData = await this.getImportRulesData();
+
+        return Maybe.fromValue(importRulesData.find(importRulesData => importRulesData.id === id));
+    }
+
     private mapToDomain(importRuleData: ImportRuleData): ImportRule {
         return {
             ...importRuleData,
@@ -106,10 +148,24 @@ export default class ImportRuleD2ApiRepository implements ImportRuleRepository {
         };
     }
 
-    private async getImportRulesData(): Promise<ImportRuleData[]> {
-        const data = await this.dataStore.get<ImportRuleData[]>(this.dataStoreKey).getData();
-
-        return data || [];
+    private mapToDataStore(importRule: ImportRule): ImportRuleData {
+        return {
+            ...importRule,
+            created: importRule.created.toISOString(),
+            lastUpdated: importRule.lastUpdated.toISOString(),
+            lastExecuted: importRule.lastExecuted
+                ? importRule.lastExecuted.toISOString()
+                : undefined,
+            periodInformation: {
+                ...importRule.periodInformation,
+                startDate: importRule.periodInformation.startDate
+                    ? importRule.periodInformation.startDate.toISOString()
+                    : undefined,
+                endDate: importRule.periodInformation.endDate
+                    ? importRule.periodInformation.endDate.toISOString()
+                    : undefined,
+            },
+        };
     }
 }
 

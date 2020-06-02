@@ -11,10 +11,11 @@ import DataValueSetFileRepository from "./data/DataValueSetFileRepository";
 import ImportRuleD2ApiRepository from "./data/ImportRuleD2ApiRepository";
 import { GetImportRulesUseCase } from "./domain/usecases/GetImportRulesUseCase";
 import { ImportRuleRepository } from "./domain/repositories/ImportRuleRepository";
+import { DeleteImportRulesUseCase } from "./domain/usecases/DeleteImportRulesUseCase";
 //const OrgUnitRepository = new LiteralToken('OrgUnitRepository');
 
 interface Type<T> {
-    new(...args: any[]): T;
+    new (...args: any[]): T;
 }
 
 export type NamedToken = "importUseCase" | "downloadUseCase";
@@ -62,7 +63,10 @@ class CompositionRoot {
         this.dependencies.set("importRuleRepository", importRuleRepository);
 
         const getImportRulesUseCase = new GetImportRulesUseCase(importRuleRepository);
+        const deleteImportRulesUseCase = new DeleteImportRulesUseCase(importRuleRepository);
+
         this.dependencies.set(GetImportRulesUseCase, getImportRulesUseCase);
+        this.dependencies.set(DeleteImportRulesUseCase, deleteImportRulesUseCase);
     }
 
     private initializeImportAndDownload() {

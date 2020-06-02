@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: i18next-conv\n"
-"POT-Creation-Date: 2020-06-01T10:59:07.568Z\n"
+"POT-Creation-Date: 2020-06-02T05:06:46.213Z\n"
 "PO-Revision-Date: 2018-10-25T09:02:35.143Z\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -277,16 +277,11 @@ msgstr ""
 msgid "Deleting Import Rules"
 msgstr ""
 
-msgid "deleted"
+msgid "Successfully deleted {{success}} import rules"
 msgstr ""
 
-msgid "Failed to delete some rules"
+msgid "An error has ocurred deleting import rules"
 msgstr ""
-
-msgid "Successfully deleted {{count}} rules"
-msgid_plural "Successfully deleted {{count}} rules"
-msgstr[0] ""
-msgstr[1] ""
 
 msgid "Details"
 msgstr ""
