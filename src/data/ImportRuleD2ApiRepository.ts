@@ -1,3 +1,4 @@
+import moment from "moment";
 import {
     ImportRuleRepository,
     ImportRuleFilters,
@@ -136,11 +137,11 @@ export default class ImportRuleD2ApiRepository implements ImportRuleRepository {
             : importRules;
 
         const filteredByLastExecuted = lastExecuted
-            ? filteredBySearchImportRules.filter(importRule => {
-                  const importRuleTime = importRule.lastExecuted?.getTime() ?? undefined;
-
-                  return importRuleTime ? importRuleTime >= lastExecuted.getTime() : false;
-              })
+            ? filteredBySearchImportRules.filter(importRule =>
+                  lastExecuted && importRule.lastExecuted
+                      ? moment(lastExecuted).isSameOrBefore(moment(importRule.lastExecuted), "date")
+                      : true
+              )
             : filteredBySearchImportRules;
 
         return filteredByLastExecuted;

@@ -16,7 +16,7 @@ import { useHistory } from "react-router-dom";
 import PageHeader from "../../components/page-header/PageHeader";
 import { ImportRule } from "../../../domain/entities/ImportRule";
 import { FIXED } from "../../../domain/entities/PeriodOption";
-import moment from "moment";
+import moment, { Moment } from "moment";
 import { useCompositionRoot } from "../../contexts/app-context";
 import { GetImportRulesUseCase } from "../../../domain/usecases/GetImportRulesUseCase";
 import ImportUseCase from "../../../domain/usecases/ImportUseCase";
@@ -41,7 +41,7 @@ const ImportRulesPage: React.FC = () => {
     const [selection, setSelection] = useState<{ id: string }[]>([]);
     const [toDelete, setToDelete] = useState<string[]>([]);
     const [search, setSearchFilter] = useState("");
-    const [lastExecutedFilter, setLastExecutedFilter] = useState<Date | null>(null);
+    const [lastExecutedFilter, setLastExecutedFilter] = useState<Moment | null>(null);
     const [openImportDialog, setOpenImportDialog] = useState<boolean>(false);
     const [isImporting, setImporting] = useState<boolean>(false);
     const [isDeleting, setIsDeleting] = useState<boolean>(false);
@@ -52,7 +52,7 @@ const ImportRulesPage: React.FC = () => {
         getImportRulesUseCase
             .execute({
                 search: search,
-                lastExecuted: lastExecutedFilter ? lastExecutedFilter : undefined,
+                lastExecuted: lastExecutedFilter ? lastExecutedFilter.toDate() : undefined,
             })
             .then(setRows);
     }, [getImportRulesUseCase, search, lastExecutedFilter, objectsTableKey]);
