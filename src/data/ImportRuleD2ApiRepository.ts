@@ -2,6 +2,7 @@ import {
     ImportRuleRepository,
     ImportRuleFilters,
     DeleteByIdError,
+    SaveError,
 } from "../domain/repositories/ImportRuleRepository";
 import { ImportRule, Mapping } from "../domain/entities/ImportRule";
 import DataStore from "d2-api/api/dataStore";
@@ -10,8 +11,10 @@ import { Maybe } from "../domain/common/Maybe";
 import { Id } from "d2-api";
 import { Either } from "../domain/common/Either";
 
+const defaultPrefixKey = "default";
+
 const defaultImportData = {
-    id: "default",
+    id: defaultPrefixKey,
     name: "Default import",
     description: "Default import. Unique default for all the instance",
     selectedMappings: [],
@@ -22,15 +25,18 @@ const defaultImportData = {
 };
 
 export default class ImportRuleD2ApiRepository implements ImportRuleRepository {
+    private defaultKey: string;
     constructor(
         private dataStore: DataStore,
         private dataStoreKey: string,
         private defaultSuffixKey: string
-    ) {}
+    ) {
+        this.defaultKey = `${defaultPrefixKey}${this.defaultSuffixKey}`;
+    }
 
     async getDefault(): Promise<ImportRule> {
         const importRuleData = Maybe.fromValue(
-            await this.dataStore.get<ImportRuleData>(`default${this.defaultSuffixKey}`).getData()
+            await this.dataStore.get<ImportRuleData>(this.defaultKey).getData()
         );
 
         const importRule = importRuleData.map(this.mapToDomain);
@@ -39,7 +45,7 @@ export default class ImportRuleD2ApiRepository implements ImportRuleRepository {
     }
 
     async getById(id: Id): Promise<Maybe<ImportRule>> {
-        if (id === "default") {
+        if (id === defaultPrefixKey) {
             return Maybe.fromValue(await this.getDefault());
         } else {
             const importRuleData = await this.getDataById(id);
@@ -88,6 +94,35 @@ export default class ImportRuleD2ApiRepository implements ImportRuleRepository {
         }
     }
 
+    async save(importRule: ImportRule): Promise<Either<SaveError, true>> {
+        try {
+            if (importRule.id === defaultPrefixKey) {
+                this.saveDefaultData(this.mapToDataStore(importRule));
+                return Either.Success(true);
+            } else {
+                const importRulesData = await this.getImportRulesData();
+                const importRuleData = this.mapToDataStore(importRule);
+
+                const exist = importRulesData.find(data => data.id === importRule.id);
+
+                const newimportRulesData = exist
+                    ? importRulesData.map(data =>
+                          data.id === importRule.id ? importRuleData : data
+                      )
+                    : [...importRulesData, importRuleData];
+
+                await this.saveImportRulesData(newimportRulesData);
+
+                return Either.Success(true);
+            }
+        } catch (e) {
+            return Either.failure({
+                kind: "UnexpectedError",
+                error: e,
+            });
+        }
+    }
+
     private applyFilters(importRules: ImportRule[], filters: ImportRuleFilters): ImportRule[] {
         const { search, lastExecuted } = filters;
 
@@ -119,6 +154,10 @@ export default class ImportRuleD2ApiRepository implements ImportRuleRepository {
 
     private async saveImportRulesData(imporRulesData: ImportRuleData[]): Promise<void> {
         this.dataStore.save(this.dataStoreKey, imporRulesData);
+    }
+
+    private async saveDefaultData(importRuleData: ImportRuleData): Promise<void> {
+        this.dataStore.save(this.defaultKey, importRuleData);
     }
 
     private async getDataById(id: string): Promise<Maybe<ImportRuleData>> {

@@ -146,6 +146,7 @@ const ImportRulesPage: React.FC = () => {
 
         console.log({ result });
         setImporting(false);
+        setObjectsTableKey(new Date().getTime());
 
         if (result?.success) {
             snackbar.success(i18n.t("Import successful \n") + result.messages.join("\n"));

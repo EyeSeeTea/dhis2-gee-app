@@ -10,6 +10,7 @@ import DataValueSetRepository from "../../repositories/DataValueSetRepository";
 import { ImportRuleRepository } from "../../repositories/ImportRuleRepository";
 import { DataValueSet } from "../../entities/DataValueSet";
 import { Maybe } from "../../common/Maybe";
+import { Either } from "../../common/Either";
 
 describe("ImportUseCase", () => {
     it("should import expected data value set and return expected message", async () => {
@@ -90,6 +91,9 @@ function givenAImportRuleRepository(): ImportRuleRepository {
         }),
         getAll: jest.fn(),
         deleteById: jest.fn(),
+        save: jest.fn().mockImplementation(() => {
+            return Either.Success(true);
+        }),
     };
 }
 

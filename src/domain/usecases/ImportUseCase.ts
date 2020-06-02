@@ -94,8 +94,17 @@ export default class ImportUseCase {
                 })
             );
 
-            const response = await this.dataValueSetRepository.save(importDataValueSet);
-            messages = [...messages, this.getImportCountString(response)];
+            const dataValueSetResponse = await this.dataValueSetRepository.save(importDataValueSet);
+
+            messages = [...messages, this.getImportCountString(dataValueSetResponse)];
+
+            const updatedImportRule = { ...importRule, lastExecuted: new Date() };
+            const syncRuleResponse = await this.importRuleRepository.save(updatedImportRule);
+
+            failures = syncRuleResponse.fold(
+                failure => [...failures, failure.error.message],
+                () => failures
+            );
 
             return {
                 success: _.isEmpty(failures) && !_.isEmpty(messages),
