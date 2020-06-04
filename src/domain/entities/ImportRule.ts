@@ -63,27 +63,46 @@ export class ImportRule {
         return this.id === importRuleDefaultId;
     }
 
-    public changeMappings(selectedMappings: string[]) {
+    public changeMappings(selectedMappings: string[]): ImportRule {
         const newData = {
             ...this.data,
             selectedMappings: selectedMappings,
-            lastUpdated: new Date(),
         };
+        return new ImportRule(newData).updateLastUpdated();
+    }
+
+    public changeOUs(selectedOUs: string[]): ImportRule {
+        const newData = { ...this.data, selectedOUs: selectedOUs };
         return new ImportRule(newData);
     }
 
-    public changeOUs(selectedOUs: string[]) {
-        const newData = { ...this.data, selectedOUs: selectedOUs, lastUpdated: new Date() };
+    public changePeriod(period: PeriodOption): ImportRule {
+        const newData = { ...this.data, periodInformation: period };
+        return new ImportRule(newData).updateLastUpdated();
+    }
+
+    public changeName(name: string): ImportRule {
+        const newData = { ...this.data, name };
+        return new ImportRule(newData).updateLastUpdated();
+    }
+
+    public changeDescription(description?: string): ImportRule {
+        const newData = { ...this.data, description };
+        return new ImportRule(newData).updateLastUpdated();
+    }
+
+    public changeCode(code?: string): ImportRule {
+        const newData = { ...this.data, code };
+        return new ImportRule(newData).updateLastUpdated();
+    }
+
+    public updateLastUpdated(): ImportRule {
+        const newData = { ...this.data, lastUpdated: new Date() };
         return new ImportRule(newData);
     }
 
-    public changePeriod(period: PeriodOption) {
-        const newData = { ...this.data, periodInformation: period, lastUpdated: new Date() };
-        return new ImportRule(newData);
-    }
-
-    public updateLastExecuted() {
+    public updateLastExecuted(): ImportRule {
         const newData = { ...this.data, lastExecuted: new Date() };
-        return new ImportRule(newData);
+        return new ImportRule(newData).updateLastUpdated();
     }
 }

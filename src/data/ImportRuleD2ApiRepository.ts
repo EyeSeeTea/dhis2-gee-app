@@ -143,7 +143,7 @@ export default class ImportRuleD2ApiRepository implements ImportRuleRepository {
             ? filteredBySearchImportRules.filter(importRule =>
                   lastExecuted && importRule.lastExecuted
                       ? moment(lastExecuted).isSameOrBefore(moment(importRule.lastExecuted), "date")
-                      : true
+                      : false
               )
             : filteredBySearchImportRules;
 

@@ -129,14 +129,14 @@ const ImportRulesPage: React.FC = () => {
     };
 
     const createRule = () => {
-        goTo(pageRoutes.importRulesNew);
+        goTo(pageRoutes.importRulesDetail, { action: "new" });
     };
 
     const editRule = (ids: string[]) => {
         if (!ids || ids.length !== 1) return;
         const id = ids[0];
 
-        goTo(pageRoutes.importRulesEdit, { id: id });
+        goTo(pageRoutes.importRulesDetail, { id: id, action: "edit" });
     };
 
     const executeOrDownload = async (id: Id, useCase: ImportUseCase) => {

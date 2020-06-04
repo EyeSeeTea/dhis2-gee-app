@@ -10,11 +10,12 @@ import {
     ConfirmationDialog,
     useSnackbar,
 } from "d2-ui-components";
+import AddIcon from "@material-ui/icons/Add";
 import Mapping from "../../models/Mapping";
 import i18n from "../../locales";
 import { useAppContext } from "../../contexts/app-context";
 import { makeStyles } from "@material-ui/styles";
-import { Theme, createStyles, LinearProgress, Icon } from "@material-ui/core";
+import { Theme, createStyles, LinearProgress, Icon, Box, Fab } from "@material-ui/core";
 import { withSnackbarOnError } from "../../utils/error";
 import { useGoTo, GoTo, pageRoutes } from "../root/Root";
 
@@ -187,23 +188,33 @@ const MappingsList: React.FC<MappingsListProps> = props => {
                 </ConfirmationDialog>
             )}
             {rows && (
-                <ObjectsTable<Mapping>
-                    key={objectsTableKey}
-                    selection={selection}
-                    searchBoxLabel={i18n.t("Search by name or code")}
-                    onChange={state => onTableChange(state.selection.map(m => m.id))}
-                    forceSelectionColumn={true}
-                    pagination={pagination}
-                    details={componentConfig.details}
-                    columns={componentConfig.columns}
-                    actions={componentConfig.actions}
-                    onActionButtonClick={() => goTo(pageRoutes.mappingsNew)}
-                    mouseActionsMapping={mouseActionsMapping}
-                    rows={rows}
-                    filterComponents={
-                        header && <div className={classes.tableHeader}>{header}:</div>
-                    }
-                />
+                <Box display="flex" flexDirection="column">
+                    {header && <div className={classes.tableHeader}>{header}:</div>}
+
+                    <ObjectsTable<Mapping>
+                        key={objectsTableKey}
+                        selection={selection}
+                        searchBoxLabel={i18n.t("Search by name or code")}
+                        onChange={state => onTableChange(state.selection.map(m => m.id))}
+                        forceSelectionColumn={true}
+                        pagination={pagination}
+                        details={componentConfig.details}
+                        columns={componentConfig.columns}
+                        actions={componentConfig.actions}
+                        mouseActionsMapping={mouseActionsMapping}
+                        rows={rows}
+                        filterComponents={
+                            <Fab
+                                className={classes.addButton}
+                                size="small"
+                                aria-label="add"
+                                onClick={() => goTo(pageRoutes.mappingsNew)}
+                            >
+                                <AddIcon />
+                            </Fab>
+                        }
+                    />
+                </Box>
             )}
         </div>
     );
@@ -213,7 +224,12 @@ const useStyles = makeStyles((theme: Theme) =>
     createStyles({
         tableHeader: {
             ...theme.typography.button,
-            padding: theme.spacing(1),
+            marginTop: theme.spacing(5),
+            marginLeft: theme.spacing(1),
+        },
+        addButton: {
+            marginLeft: theme.spacing(1),
+            boxShadow: "none",
         },
     })
 );

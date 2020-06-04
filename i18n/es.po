@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: i18next-conv\n"
-"POT-Creation-Date: 2020-06-04T09:08:06.000Z\n"
+"POT-Creation-Date: 2020-06-04T12:29:28.064Z\n"
 "PO-Revision-Date: 2018-10-25T09:02:35.143Z\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -125,6 +125,12 @@ msgstr ""
 msgid "<No value>"
 msgstr ""
 
+msgid "Field cannot be blank"
+msgstr ""
+
+msgid "Description"
+msgstr ""
+
 msgid "Add"
 msgstr ""
 
@@ -150,9 +156,6 @@ msgid "Google Earth Engine variables mapping"
 msgstr ""
 
 msgid "Summary and save"
-msgstr ""
-
-msgid "Field cannot be blank"
 msgstr ""
 
 msgid "Dataset"
@@ -185,9 +188,6 @@ msgid "Data element code"
 msgstr ""
 
 msgid "Data element name"
-msgstr ""
-
-msgid "Description"
 msgstr ""
 
 msgid "Instance Dataset"
@@ -270,6 +270,15 @@ msgid "Import to DHIS2 "
 msgstr ""
 
 msgid "Download JSON "
+msgstr ""
+
+msgid "Success"
+msgstr ""
+
+msgid "Manual import"
+msgstr ""
+
+msgid "Import Rule"
 msgstr ""
 
 msgid "Last executed"

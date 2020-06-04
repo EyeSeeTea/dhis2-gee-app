@@ -18,11 +18,11 @@ import { PeriodOption } from "../../../domain/entities/PeriodOption";
 import { ImportOnDemandState, importOnDemandInitialState, ImportRuleState } from "./ImportState";
 import { SaveError } from "../../../domain/repositories/ImportRuleRepository";
 
-interface ImportDetailProps {
+interface ImportOnDemandPageProps {
     id: string;
 }
 
-const ImportOnDemandPage: React.FC<ImportDetailProps> = ({ id }) => {
+const ImportOnDemandPage: React.FC<ImportOnDemandPageProps> = ({ id }) => {
     const classes = useStyles();
     const snackbar = useSnackbar();
 
