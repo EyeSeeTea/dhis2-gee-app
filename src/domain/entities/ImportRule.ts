@@ -4,72 +4,48 @@ import { PeriodOption } from "./PeriodOption";
 export const importRuleDefaultId = "default";
 
 export interface ImportRuleData {
-    id: string;
+    id: Id;
     name: string;
     code?: string;
-    created: Date;
     description?: string;
     selectedOUs: string[];
     periodInformation: PeriodOption;
-    selectedMappings: Mapping[];
-    lastExecuted?: Date;
-    lastUpdated: Date;
-}
-
-export interface Mapping {
-    id: Id;
-    name: string;
-    description: string;
-    dataSetId: string;
-    dataSetName: string;
-    geeImage: string;
+    selectedMappings: string[];
     created: Date;
-    attributeMappingDictionary: AttributeMappingDictionary;
-}
-
-export interface AttributeMappingDictionary {
-    [geeBand: string]: AttributeMapping;
-}
-
-export interface AttributeMapping {
-    id: string;
-    geeBand: string;
-    comment: string;
-    dataElementId?: string;
-    dataElementCode?: string;
-    dataElementName?: string;
+    lastUpdated: Date;
+    lastExecuted?: Date;
 }
 
 export class ImportRule {
-    public readonly id: string;
+    public readonly id: Id;
     public readonly name: string;
     public readonly code?: string;
-    public readonly created: Date;
     public readonly description?: string;
     public readonly selectedOUs: string[];
     public readonly periodInformation: PeriodOption;
-    public readonly selectedMappings: Mapping[];
-    public readonly lastExecuted?: Date;
+    public readonly selectedMappings: string[];
+    public readonly created: Date;
     public readonly lastUpdated: Date;
+    public readonly lastExecuted?: Date;
 
     constructor(private data: ImportRuleData) {
         this.id = data.id;
         this.name = data.name;
         this.code = data.code;
-        this.created = data.created;
         this.description = data.description;
         this.selectedOUs = data.selectedOUs;
         this.periodInformation = data.periodInformation;
         this.selectedMappings = data.selectedMappings;
-        this.lastExecuted = data.lastExecuted;
+        this.created = data.created;
         this.lastUpdated = data.lastUpdated;
+        this.lastExecuted = data.lastExecuted;
     }
 
     public get isDefault(): boolean {
         return this.id === importRuleDefaultId;
     }
 
-    public changeMappings(selectedMappings: Mapping[]) {
+    public changeMappings(selectedMappings: string[]) {
         const newData = { ...this.data, selectedMappings: selectedMappings };
         return new ImportRule(newData);
     }

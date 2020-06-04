@@ -5,7 +5,7 @@ import {
     DeleteByIdError,
     SaveError,
 } from "../domain/repositories/ImportRuleRepository";
-import { ImportRule, Mapping, importRuleDefaultId } from "../domain/entities/ImportRule";
+import { ImportRule, importRuleDefaultId } from "../domain/entities/ImportRule";
 import DataStore from "d2-api/api/dataStore";
 import { PeriodId } from "../domain/entities/PeriodOption";
 import { Maybe } from "../domain/common/Maybe";
@@ -220,7 +220,7 @@ interface ImportRuleDS {
     description?: string;
     selectedOUs: string[];
     periodInformation: PeriodOptionDS;
-    selectedMappings: Mapping[];
+    selectedMappings: string[];
     lastExecuted?: string;
     lastUpdated: string;
 }

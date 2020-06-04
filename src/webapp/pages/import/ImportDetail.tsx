@@ -14,7 +14,6 @@ import { useHistory } from "react-router-dom";
 import ImportUseCase from "../../../domain/usecases/ImportUseCase";
 import { GetImportRuleByIdUseCase } from "../../../domain/usecases/GetImportRuleByIdUseCase";
 import { SaveImportRuleUseCase } from "../../../domain/usecases/SaveImportRuleUseCase";
-import Mapping from "../../models/Mapping";
 import { ImportRule } from "../../../domain/entities/ImportRule";
 import { PeriodOption } from "../../../domain/entities/PeriodOption";
 
@@ -26,7 +25,7 @@ const ImportDetail: React.FC<ImportDetailProps> = ({ id }) => {
     const classes = useStyles();
     const snackbar = useSnackbar();
 
-    const [selectedMappings, setSelectedMappings] = useState<Mapping[]>([]);
+    const [selectedMappings, setSelectedMappings] = useState<string[]>([]);
     const [selectedOUs, setSelectedOUs] = useState<string[]>([]);
     const [period, setPeriod] = useState<PeriodOption>();
     const [showOUDialog, setOUDialog] = useState<boolean>(false);
@@ -47,7 +46,7 @@ const ImportDetail: React.FC<ImportDetailProps> = ({ id }) => {
         getImportRuleByIdUseCase.execute(id).then(response => {
             if (response.isDefined()) {
                 const importRule = response.get();
-                setSelectedMappings(importRule.selectedMappings as Mapping[]);
+                setSelectedMappings(importRule.selectedMappings);
                 setSelectedOUs(importRule.selectedOUs);
                 setPeriod(importRule.periodInformation);
                 setImportRule(importRule);
@@ -74,7 +73,7 @@ const ImportDetail: React.FC<ImportDetailProps> = ({ id }) => {
         }
     };
 
-    const onSelectedMappingsChange = (newSelectedMappings: Mapping[]) => {
+    const onSelectedMappingsChange = (newSelectedMappings: string[]) => {
         setSelectedMappings(newSelectedMappings);
         const editedImportRule = importRule!!.changeMappings(newSelectedMappings);
         saveIfDefault(editedImportRule);

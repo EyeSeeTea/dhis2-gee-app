@@ -12,7 +12,6 @@ import { DataValueSet, DataValue } from "../entities/DataValueSet";
 import OrgUnitRepository from "../repositories/OrgUnitRepository";
 import { GeeDataValue } from "../entities/GeeDataValueSet";
 import { promiseMap, buildPeriod } from "../utils";
-import { AttributeMappingDictionary } from "../entities/ImportRule";
 import DataValueSetRepository, {
     SaveDataValueSetReponse,
 } from "../repositories/DataValueSetRepository";
@@ -21,6 +20,8 @@ import { ImportRuleRepository } from "../repositories/ImportRuleRepository";
 import { Id } from "../entities/Ref";
 
 import i18n from "../../webapp/utils/i18n";
+import { AttributeMappingDictionary } from "../entities/Mapping";
+import MappingRepository from "../repositories/MappingRepository";
 
 export interface ImportUseCaseResult {
     success: boolean;
@@ -31,6 +32,7 @@ export interface ImportUseCaseResult {
 export default class ImportUseCase {
     constructor(
         private importRuleRepository: ImportRuleRepository,
+        private mappingRepository: MappingRepository,
         private geeDataSetRepository: GeeDataSetRepository,
         private geeDataRepository: GeeDataValueSetRepository,
         private orgUnitRepository: OrgUnitRepository,
@@ -60,8 +62,10 @@ export default class ImportUseCase {
             };
             let importDataValueSet: DataValueSet = { dataValues: [] };
 
+            const mappings = await this.mappingRepository.getAll(importRule.selectedMappings);
+
             await Promise.all(
-                importRule.selectedMappings.map(async selectedMapping => {
+                mappings.map(async selectedMapping => {
                     try {
                         const geeDataSet = await this.geeDataSetRepository.getByCode(
                             selectedMapping.geeImage

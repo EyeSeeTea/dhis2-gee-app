@@ -14,6 +14,7 @@ import { ImportRuleRepository } from "./domain/repositories/ImportRuleRepository
 import { DeleteImportRulesUseCase } from "./domain/usecases/DeleteImportRulesUseCase";
 import { GetImportRuleByIdUseCase } from "./domain/usecases/GetImportRuleByIdUseCase";
 import { SaveImportRuleUseCase } from "./domain/usecases/SaveImportRuleUseCase";
+import MappingD2ApiRepository from "./data/MappingD2ApiRepository";
 
 interface Type<T> {
     new (...args: any[]): T;
@@ -21,7 +22,7 @@ interface Type<T> {
 
 export type NamedToken = "importUseCase" | "downloadUseCase";
 
-type PrivateNamedToken = "importRuleRepository";
+type PrivateNamedToken = "dataStore" | "importRuleRepository";
 
 type Token<T> = Type<T> | NamedToken | PrivateNamedToken;
 
@@ -33,6 +34,7 @@ class CompositionRoot {
     constructor(baseUrl: string, private config: Config) {
         this.d2Api = new D2ApiDefault({ baseUrl });
 
+        this.initializeDataStore();
         this.initializeDataElements();
         this.initializeImportRules();
         this.initializeImportAndDownload();
@@ -46,6 +48,11 @@ class CompositionRoot {
         this.dependencies.set(token, value);
     }
 
+    private initializeDataStore() {
+        const dataStore = this.d2Api.dataStore(this.config.data.base.dataStore.namespace);
+        this.dependencies.set("dataStore", dataStore);
+    }
+
     private initializeDataElements() {
         const dataElementsRepository = new DataElementD2ApiRepository(this.d2Api);
         const getDataElementsUseCase = new GetDataElementsUseCase(dataElementsRepository);
@@ -53,13 +60,10 @@ class CompositionRoot {
     }
 
     private initializeImportRules() {
-        const dataStore = this.d2Api.dataStore(this.config.data.base.dataStore.namespace);
-        const importRulesKey = this.config.data.base.dataStore.keys.importRules;
-        const importRulesDefaultSuffixKey = this.config.data.base.dataStore.keys.imports.suffix;
         const importRuleRepository = new ImportRuleD2ApiRepository(
-            dataStore,
-            importRulesKey,
-            importRulesDefaultSuffixKey
+            this.dependencies.get("dataStore"),
+            this.config.data.base.dataStore.keys.importRules,
+            this.config.data.base.dataStore.keys.imports.suffix
         );
         this.dependencies.set("importRuleRepository", importRuleRepository);
 
@@ -78,6 +82,12 @@ class CompositionRoot {
         const importRuleRepository = this.dependencies.get(
             "importRuleRepository"
         ) as ImportRuleRepository;
+
+        const mappingRepository = new MappingD2ApiRepository(
+            this.dependencies.get("dataStore"),
+            this.config.data.base.dataStore.keys.mappings
+        );
+
         const geeDataSetRepository = new GeeDataSetConfigRepository(this.config);
         const geeDataRepository = new GeeDataEarthEngineRepository(this.d2Api);
         const orgUnitsRepository = new OrgUnitD2ApiRepository(this.d2Api);
@@ -86,6 +96,7 @@ class CompositionRoot {
 
         const importUseCase = new ImportUseCase(
             importRuleRepository,
+            mappingRepository,
             geeDataSetRepository,
             geeDataRepository,
             orgUnitsRepository,
@@ -94,6 +105,7 @@ class CompositionRoot {
 
         const downloadUseCase = new ImportUseCase(
             importRuleRepository,
+            mappingRepository,
             geeDataSetRepository,
             geeDataRepository,
             orgUnitsRepository,

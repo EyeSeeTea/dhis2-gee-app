@@ -22,8 +22,8 @@ type ContextualAction = "details" | "edit" | "delete";
 
 interface MappingsListProps {
     header?: string;
-    selectedMappings?: Mapping[];
-    onSelectionChange: (selectedMappings: Mapping[]) => void;
+    selectedMappings?: string[];
+    onSelectionChange: (selectedMappings: string[]) => void;
     onDeleteMappings: (deletedMappings: string[]) => void;
 }
 
@@ -108,7 +108,7 @@ const MappingsList: React.FC<MappingsListProps> = props => {
 
     const selection = useMemo(() => {
         return rows
-            .filter(mapping => selectedMappings?.map(m => m.id).includes(mapping.id))
+            .filter(mapping => selectedMappings?.includes(mapping.id))
             .map(mapping => ({ id: mapping.id }));
     }, [rows, selectedMappings]);
 
@@ -163,7 +163,7 @@ const MappingsList: React.FC<MappingsListProps> = props => {
     const onTableChange = useCallback(
         (newSelectedMappingsIds: string[]) => {
             const newSelectedMappings = _.filter(rows, m => newSelectedMappingsIds.includes(m.id));
-            onSelectionChange(newSelectedMappings);
+            onSelectionChange(newSelectedMappings.map(mapping => mapping.id));
         },
         [rows, onSelectionChange]
     );

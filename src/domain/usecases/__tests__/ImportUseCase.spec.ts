@@ -12,10 +12,12 @@ import { DataValueSet } from "../../entities/DataValueSet";
 import { Maybe } from "../../common/Maybe";
 import { Either } from "../../common/Either";
 import { ImportRule } from "../../entities/ImportRule";
+import MappingRepository from "../../repositories/MappingRepository";
 
 describe("ImportUseCase", () => {
     it("should import expected data value set and return expected message", async () => {
         const ImportRuleRepository = givenAImportRuleRepository();
+        const mappingRepository = givenAMappingRepository();
         const geeDataSetRepository = givenAGeeDataSetRepository();
         const geeDataRepository = givenAGeeDataValueSetRepository();
         const orgUnitRepository = givenAOrgUnitRepository();
@@ -23,6 +25,7 @@ describe("ImportUseCase", () => {
 
         const importUseCase = new ImportUseCase(
             ImportRuleRepository,
+            mappingRepository,
             geeDataSetRepository,
             geeDataRepository,
             orgUnitRepository,
@@ -45,7 +48,7 @@ describe("ImportUseCase", () => {
     });
 });
 
-export { };
+export {};
 
 function givenAGeeDataSetRepository(): GeeDataSetRepository {
     return {
@@ -77,6 +80,50 @@ function givenAOrgUnitRepository(): OrgUnitRepository {
         getByIds: jest.fn().mockImplementation(() => {
             return [
                 { id: "WFAboRxdVjA", coordinates: "[-2.708309,6.675618]", featureType: "POINT" },
+            ];
+        }),
+    };
+}
+
+function givenAMappingRepository(): MappingRepository {
+    return {
+        getAll: jest.fn().mockImplementation(() => {
+            return [
+                {
+                    id: "utQIFECT8tF",
+                    name: "ERA",
+                    dataSetId: "rayEGGqQwIC",
+                    dataSetName: "Climate factors",
+                    description: "",
+                    geeImage: "era5Daily",
+                    attributeMappingDictionary: {
+                        minimum_2m_air_temperature: {
+                            id: "minimum_2m_air_temperature",
+                            geeBand: "minimum_2m_air_temperature",
+                            dataElementId: "klaKtwaWAvG",
+                            dataElementName: "CC - Temperature min",
+                            dataElementCode: "CC - Temperature min",
+                            comment: "",
+                        },
+                        maximum_2m_air_temperature: {
+                            id: "maximum_2m_air_temperature",
+                            geeBand: "maximum_2m_air_temperature",
+                            dataElementId: "c24Y5UNjXyj",
+                            dataElementName: "CC - Temperature max",
+                            dataElementCode: "CC - Temperature max",
+                            comment: "",
+                        },
+                        mean_2m_air_temperature: {
+                            id: "mean_2m_air_temperature",
+                            geeBand: "mean_2m_air_temperature",
+                            dataElementId: "RSJpUZqMoxC",
+                            dataElementName: "CC - Temperature",
+                            dataElementCode: "CC - Temperature",
+                            comment: "",
+                        },
+                    },
+                    created: new Date(),
+                },
             ];
         }),
     };
@@ -222,42 +269,6 @@ const defaultImportRule = new ImportRule({
     },
     created: new Date(),
     lastUpdated: new Date(),
-    selectedMappings: [
-        {
-            id: "utQIFECT8tF",
-            name: "ERA",
-            dataSetId: "rayEGGqQwIC",
-            dataSetName: "Climate factors",
-            description: "",
-            geeImage: "era5Daily",
-            attributeMappingDictionary: {
-                minimum_2m_air_temperature: {
-                    id: "minimum_2m_air_temperature",
-                    geeBand: "minimum_2m_air_temperature",
-                    dataElementId: "klaKtwaWAvG",
-                    dataElementName: "CC - Temperature min",
-                    dataElementCode: "CC - Temperature min",
-                    comment: "",
-                },
-                maximum_2m_air_temperature: {
-                    id: "maximum_2m_air_temperature",
-                    geeBand: "maximum_2m_air_temperature",
-                    dataElementId: "c24Y5UNjXyj",
-                    dataElementName: "CC - Temperature max",
-                    dataElementCode: "CC - Temperature max",
-                    comment: "",
-                },
-                mean_2m_air_temperature: {
-                    id: "mean_2m_air_temperature",
-                    geeBand: "mean_2m_air_temperature",
-                    dataElementId: "RSJpUZqMoxC",
-                    dataElementName: "CC - Temperature",
-                    dataElementCode: "CC - Temperature",
-                    comment: "",
-                },
-            },
-            created: new Date(),
-        },
-    ],
+    selectedMappings: ["utQIFECT8tF"],
     selectedOUs: ["/E4h5WBOg71F/RnDSNvg7zR2/KwLlNNoREes/GY1mRd2suuj/WFAboRxdVjA"],
 });
