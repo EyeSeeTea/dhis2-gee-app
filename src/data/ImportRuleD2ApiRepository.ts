@@ -101,8 +101,8 @@ export default class ImportRuleD2ApiRepository implements ImportRuleRepository {
 
                 const newimportRulesData = exist
                     ? importRulesData.map(data =>
-                          data.id === importRule.id ? importRuleData : data
-                      )
+                        data.id === importRule.id ? importRuleData : data
+                    )
                     : [...importRulesData, importRuleData];
 
                 await this.saveImportRulesData(newimportRulesData);
@@ -132,19 +132,19 @@ export default class ImportRuleD2ApiRepository implements ImportRuleRepository {
 
         const filteredBySearchImportRules = search
             ? importRules.filter(
-                  importRule =>
-                      importRule.name.toLowerCase().includes(search.toLowerCase()) ||
-                      importRule.description?.toLowerCase().includes(search.toLowerCase()) ||
-                      importRule.code?.toLowerCase().includes(search.toLowerCase())
-              )
+                importRule =>
+                    importRule.name.toLowerCase().includes(search.toLowerCase()) ||
+                    importRule.description?.toLowerCase().includes(search.toLowerCase()) ||
+                    importRule.code?.toLowerCase().includes(search.toLowerCase())
+            )
             : importRules;
 
         const filteredByLastExecuted = lastExecuted
             ? filteredBySearchImportRules.filter(importRule =>
-                  lastExecuted && importRule.lastExecuted
-                      ? moment(lastExecuted).isSameOrBefore(moment(importRule.lastExecuted), "date")
-                      : true
-              )
+                lastExecuted && importRule.lastExecuted
+                    ? moment(lastExecuted).isSameOrBefore(moment(importRule.lastExecuted), "date")
+                    : true
+            )
             : filteredBySearchImportRules;
 
         return filteredByLastExecuted;
@@ -193,12 +193,11 @@ export default class ImportRuleD2ApiRepository implements ImportRuleRepository {
 
     private mapToDataStore(importRule: ImportRule): ImportRuleDS {
         return {
-            ...importRule,
-            created: importRule.created.toISOString(),
-            lastUpdated: importRule.lastUpdated.toISOString(),
-            lastExecuted: importRule.lastExecuted
-                ? importRule.lastExecuted.toISOString()
-                : undefined,
+            id: importRule.id,
+            name: importRule.name,
+            code: importRule.code,
+            description: importRule.description,
+            selectedOUs: importRule.selectedOUs,
             periodInformation: {
                 ...importRule.periodInformation,
                 startDate: importRule.periodInformation.startDate
@@ -208,6 +207,12 @@ export default class ImportRuleD2ApiRepository implements ImportRuleRepository {
                     ? importRule.periodInformation.endDate.toISOString()
                     : undefined,
             },
+            selectedMappings: importRule.selectedMappings,
+            created: importRule.created.toISOString(),
+            lastUpdated: importRule.lastUpdated.toISOString(),
+            lastExecuted: importRule.lastExecuted
+                ? importRule.lastExecuted.toISOString()
+                : undefined,
         };
     }
 }
@@ -216,13 +221,13 @@ interface ImportRuleDS {
     id: string;
     name: string;
     code?: string;
-    created: string;
     description?: string;
     selectedOUs: string[];
     periodInformation: PeriodOptionDS;
     selectedMappings: string[];
-    lastExecuted?: string;
+    created: string;
     lastUpdated: string;
+    lastExecuted?: string;
 }
 
 interface PeriodOptionDS {
