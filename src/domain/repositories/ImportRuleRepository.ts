@@ -22,7 +22,6 @@ export type DeleteByIdError = ImportRuleIdNotFound | UnexpectedError;
 export type SaveError = UnexpectedError;
 
 export interface ImportRuleRepository {
-    getDefault(): Promise<ImportRule>;
     getById(id: Id): Promise<Maybe<ImportRule>>;
     getAll(filters?: ImportRuleFilters): Promise<ImportRule[]>;
     deleteById(id: Id): Promise<Either<DeleteByIdError, true>>;

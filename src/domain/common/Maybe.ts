@@ -24,8 +24,8 @@ export class Maybe<T> {
         return value ? Maybe.some(value) : Maybe.none<T>();
     }
 
-    get() {
-        return this.value;
+    get(): T {
+        return this.getOrThrow();
     }
 
     getOrElse(defaultValue: T) {

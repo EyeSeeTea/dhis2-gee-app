@@ -12,7 +12,8 @@ import ImportRuleD2ApiRepository from "./data/ImportRuleD2ApiRepository";
 import { GetImportRulesUseCase } from "./domain/usecases/GetImportRulesUseCase";
 import { ImportRuleRepository } from "./domain/repositories/ImportRuleRepository";
 import { DeleteImportRulesUseCase } from "./domain/usecases/DeleteImportRulesUseCase";
-//const OrgUnitRepository = new LiteralToken('OrgUnitRepository');
+import { GetImportRuleByIdUseCase } from "./domain/usecases/GetImportRuleByIdUseCase";
+import { SaveImportRuleUseCase } from "./domain/usecases/SaveImportRuleUseCase";
 
 interface Type<T> {
     new (...args: any[]): T;
@@ -62,10 +63,14 @@ class CompositionRoot {
         );
         this.dependencies.set("importRuleRepository", importRuleRepository);
 
+        const getImportRuleById = new GetImportRuleByIdUseCase(importRuleRepository);
         const getImportRulesUseCase = new GetImportRulesUseCase(importRuleRepository);
+        const saveImportRuleUseCase = new SaveImportRuleUseCase(importRuleRepository);
         const deleteImportRulesUseCase = new DeleteImportRulesUseCase(importRuleRepository);
 
+        this.dependencies.set(GetImportRuleByIdUseCase, getImportRuleById);
         this.dependencies.set(GetImportRulesUseCase, getImportRulesUseCase);
+        this.dependencies.set(SaveImportRuleUseCase, saveImportRuleUseCase);
         this.dependencies.set(DeleteImportRulesUseCase, deleteImportRulesUseCase);
     }
 

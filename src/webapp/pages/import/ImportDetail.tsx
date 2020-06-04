@@ -1,107 +1,115 @@
 import React, { useCallback, useState } from "react";
 import i18n from "../../locales";
-import _ from "lodash";
-import { useAppContext, useCompositionRoot } from "../../contexts/app-context";
+import { useCompositionRoot } from "../../contexts/app-context";
 import { makeStyles } from "@material-ui/styles";
 import PageHeader from "../../components/page-header/PageHeader";
 import MappingsList from "../mappings/MappingsList";
 import { Button, LinearProgress } from "@material-ui/core";
 import GetAppIcon from "@material-ui/icons/GetApp";
 import ImportExportIcon from "@material-ui/icons/ImportExport";
-import { DataImport, PeriodInformation } from "../../models/Import";
 import OUDialog from "../../components/dialogs/OrganisationUnitDialog";
 import PeriodSelectorDialog from "../../components/dialogs/PeriodSelectorDialog";
 import { ConfirmationDialog, useSnackbar } from "d2-ui-components";
-import Mapping from "../../models/Mapping";
 import { useHistory } from "react-router-dom";
 import ImportUseCase from "../../../domain/usecases/ImportUseCase";
+import { GetImportRuleByIdUseCase } from "../../../domain/usecases/GetImportRuleByIdUseCase";
+import { SaveImportRuleUseCase } from "../../../domain/usecases/SaveImportRuleUseCase";
+import Mapping from "../../models/Mapping";
+import { ImportRule } from "../../../domain/entities/ImportRule";
+import { PeriodOption } from "../../../domain/entities/PeriodOption";
 
 interface ImportDetailProps {
-    prefix: string;
+    id: string;
 }
 
-const ImportDetail: React.FunctionComponent<ImportDetailProps> = props => {
-    const { prefix } = props;
-    const { api, config } = useAppContext();
+const ImportDetail: React.FC<ImportDetailProps> = ({ id }) => {
     const classes = useStyles();
     const snackbar = useSnackbar();
 
     const [selectedMappings, setSelectedMappings] = useState<Mapping[]>([]);
     const [selectedOUs, setSelectedOUs] = useState<string[]>([]);
-    const [periodInformation, setPeriodInformation] = useState<PeriodInformation>({ id: "" });
+    const [period, setPeriod] = useState<PeriodOption>();
     const [showOUDialog, setOUDialog] = useState<boolean>(false);
     const [showPeriodDialog, setPeriodDialog] = useState<boolean>(false);
     const [openImportDialog, setOpenImportDialog] = useState<boolean>(false);
     const [isImporting, setImporting] = useState(false);
+    const [importRule, setImportRule] = useState<ImportRule>();
 
     const compositionRoot = useCompositionRoot();
     const importUseCase = compositionRoot.get<ImportUseCase>("importUseCase");
     const downloadUseCase = compositionRoot.get<ImportUseCase>("downloadUseCase");
+    const getImportRuleByIdUseCase = compositionRoot.get(GetImportRuleByIdUseCase);
+    const saveImportRuleUseCase = compositionRoot.get(SaveImportRuleUseCase);
 
     const history = useHistory();
 
     React.useEffect(() => {
-        DataImport.getImportData(api, config, prefix).then(imp => {
-            setSelectedMappings(imp ? imp.data.selectedMappings : []);
-            setSelectedOUs(imp ? imp.data.selectedOUs : []);
-            setPeriodInformation(imp ? imp.data.periodInformation : { id: "" });
+        getImportRuleByIdUseCase.execute(id).then(response => {
+            if (response.isDefined()) {
+                const importRule = response.get();
+                setSelectedMappings(importRule.selectedMappings as Mapping[]);
+                setSelectedOUs(importRule.selectedOUs);
+                setPeriod(importRule.periodInformation);
+                setImportRule(importRule);
+            } else {
+                history.goBack();
+                snackbar.error(i18n.t("Import Rule {{id}} not found", { id }));
+            }
         });
-    }, [api, config, prefix]);
+    }, [getImportRuleByIdUseCase, id, snackbar, history]);
 
     const closeDialog = useCallback(() => {
         setOUDialog(false);
         setPeriodDialog(false);
     }, []);
 
-    const onSelectedMappingsChange = useCallback(
-        (newSelectedMappings: Mapping[]) => {
-            setSelectedMappings(newSelectedMappings);
-            DataImport.getImportData(api, config, prefix).then(imp => {
-                imp
-                    ? imp.setSelectedMappings(newSelectedMappings).save()
-                    : console.log("No import found");
-            });
-        },
-        [api, config, prefix]
-    );
+    const saveIfDefault = async (editedImportRule: ImportRule) => {
+        if (editedImportRule && editedImportRule.isDefault) {
+            const saveReponse = await saveImportRuleUseCase.execute(editedImportRule);
 
-    const onDeleteMappings = useCallback(
-        (deletedMappingsIds: string[]) => {
-            const newSelectedMappings = _.filter(
-                selectedMappings,
-                m => !deletedMappingsIds.includes(m.id)
+            saveReponse.fold(
+                () => snackbar.error(i18n.t("Import Rule {{error}} not found", { id })),
+                () => console.log("Default import rule updated")
             );
-            onSelectedMappingsChange(newSelectedMappings);
-        },
-        [selectedMappings, onSelectedMappingsChange]
-    );
+        }
+    };
 
-    const onSelectedOUsSave = useCallback(
-        (newSelectedOUs: string[]) => {
-            setSelectedOUs(newSelectedOUs);
-            DataImport.getImportData(api, config, prefix).then(imp => {
-                imp ? imp.setSelectedOUs(newSelectedOUs).save() : console.log("No import found");
-            });
-            setOUDialog(false);
-        },
-        [api, config, prefix]
-    );
+    const onSelectedMappingsChange = (newSelectedMappings: Mapping[]) => {
+        setSelectedMappings(newSelectedMappings);
+        const editedImportRule = importRule!!.changeMappings(newSelectedMappings);
+        saveIfDefault(editedImportRule);
+        setImportRule(editedImportRule);
+    };
 
-    const onPeriodSelectionSave = useCallback(
-        (newPeriod: PeriodInformation) => {
-            setPeriodInformation(newPeriod);
-            DataImport.getImportData(api, config, prefix).then(imp => {
-                imp ? imp.setPeriodInformation(newPeriod).save() : console.log("No import found");
-            });
-            setPeriodDialog(false);
-        },
-        [api, config, prefix]
-    );
+    const onDeleteMappings = () => {
+        //TODO: if possible delete an used mapping
+        // const newSelectedMappings = _.filter(
+        //     selectedMappings,
+        //     m => !deletedMappingsIds.includes(m.id)
+        // );
+        // onSelectedMappingsChange(newSelectedMappings);
+    };
+
+    const onSelectedOUsSave = (newSelectedOUs: string[]) => {
+        setSelectedOUs(newSelectedOUs);
+        const editedImportRule = importRule!!.changeOUs(newSelectedOUs);
+        saveIfDefault(editedImportRule);
+        setImportRule(editedImportRule);
+        setOUDialog(false);
+    };
+
+    const onPeriodSelectionSave = (newPeriod: PeriodOption) => {
+        setPeriod(newPeriod);
+        const editedImportRule = importRule!!.changePeriod(newPeriod);
+        saveIfDefault(editedImportRule);
+        setImportRule(editedImportRule);
+        setPeriodDialog(false);
+    };
 
     const executeOrDownload = async (useCase: ImportUseCase) => {
         setImporting(true);
 
-        const result = await useCase.execute(prefix);
+        const result = await useCase.execute(id);
 
         console.log({ result });
         setImporting(false);
@@ -151,7 +159,7 @@ const ImportDetail: React.FunctionComponent<ImportDetailProps> = props => {
             )}
             {showPeriodDialog && (
                 <PeriodSelectorDialog
-                    periodInformation={periodInformation}
+                    periodInformation={period}
                     onCancel={closeDialog}
                     onSave={onPeriodSelectionSave}
                 />

@@ -11,6 +11,7 @@ import { ImportRuleRepository } from "../../repositories/ImportRuleRepository";
 import { DataValueSet } from "../../entities/DataValueSet";
 import { Maybe } from "../../common/Maybe";
 import { Either } from "../../common/Either";
+import { ImportRule } from "../../entities/ImportRule";
 
 describe("ImportUseCase", () => {
     it("should import expected data value set and return expected message", async () => {
@@ -44,7 +45,7 @@ describe("ImportUseCase", () => {
     });
 });
 
-export {};
+export { };
 
 function givenAGeeDataSetRepository(): GeeDataSetRepository {
     return {
@@ -84,9 +85,6 @@ function givenAOrgUnitRepository(): OrgUnitRepository {
 function givenAImportRuleRepository(): ImportRuleRepository {
     return {
         getById: jest.fn().mockImplementation(() => {
-            return Maybe.fromValue(defaultImportRule);
-        }),
-        getDefault: jest.fn().mockImplementation(() => {
             return Maybe.fromValue(defaultImportRule);
         }),
         getAll: jest.fn(),
@@ -212,7 +210,7 @@ function givenAnExpectedDataValueSet(): DataValueSet {
     return dataValueSet;
 }
 
-const defaultImportRule = {
+const defaultImportRule = new ImportRule({
     id: "Default",
     name: "Default",
     description: "Default import. Unique default for all the instance",
@@ -262,4 +260,4 @@ const defaultImportRule = {
         },
     ],
     selectedOUs: ["/E4h5WBOg71F/RnDSNvg7zR2/KwLlNNoREes/GY1mRd2suuj/WFAboRxdVjA"],
-};
+});

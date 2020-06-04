@@ -47,10 +47,7 @@ const Root = () => {
             <Switch>
                 <Route path={pageRoutes.home.path} exact render={() => <LandingPage />} />
 
-                <Route
-                    path={pageRoutes.import.path}
-                    render={() => <ImportDetail prefix="default" />}
-                />
+                <Route path={pageRoutes.import.path} render={() => <ImportDetail id="default" />} />
 
                 <Route
                     path={pageRoutes.mappingsNew.path}

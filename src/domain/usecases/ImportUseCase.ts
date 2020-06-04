@@ -98,7 +98,7 @@ export default class ImportUseCase {
 
             messages = [...messages, this.getImportCountString(dataValueSetResponse)];
 
-            const updatedImportRule = { ...importRule, lastExecuted: new Date() };
+            const updatedImportRule = importRule.updateLastExecuted();
             const syncRuleResponse = await this.importRuleRepository.save(updatedImportRule);
 
             failures = syncRuleResponse.fold(

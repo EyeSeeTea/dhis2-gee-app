@@ -1,36 +1,31 @@
 import React from "react";
-import _ from "lodash";
 import { DatePicker, ConfirmationDialog } from "d2-ui-components";
 import { DialogContent } from "@material-ui/core";
 import i18n from "../../locales";
 import Dropdown from "../dropdown/Dropdown";
-import { PeriodInformation } from "../../models/Import";
-import { availablePeriods } from "../../../domain/entities/PeriodOption";
+import { availablePeriods, PeriodOption, PeriodId } from "../../../domain/entities/PeriodOption";
 
 interface PeriodSelectorDialogProps {
-    periodInformation: PeriodInformation;
+    periodInformation: PeriodOption | undefined;
     onCancel(): void;
-    onSave: (periodInformation: PeriodInformation) => void;
+    onSave: (periodInformation: PeriodOption) => void;
 }
 
 const PeriodSelectorDialog: React.FC<PeriodSelectorDialogProps> = props => {
     const { periodInformation, onCancel, onSave } = props;
 
-    const [period, setPeriod] = React.useState<string>(periodInformation.id);
+    const [period, setPeriod] = React.useState<string>(periodInformation?.id || "");
     const [fixedStart, setFixedStart] = React.useState<Date | undefined>(
-        periodInformation.startDate ?? undefined
+        periodInformation?.startDate ?? undefined
     );
     const [fixedEnd, setFixedEnd] = React.useState<Date | undefined>(
-        periodInformation.endDate ?? undefined
+        periodInformation?.endDate ?? undefined
     );
 
-    const periodItems = _(availablePeriods)
-        .mapValues((value, key) => ({ ...value, id: key }))
-        .values()
-        .value();
+    const periodItems = Object.values(availablePeriods);
 
     const onSaveClicked = () => {
-        const periodInformation = { ...availablePeriods[period], id: period };
+        const periodInformation = availablePeriods[period];
         if (period === "FIXED") {
             onSave({
                 ...periodInformation,
@@ -57,7 +52,7 @@ const PeriodSelectorDialog: React.FC<PeriodSelectorDialogProps> = props => {
                         label={i18n.t("Period")}
                         items={periodItems}
                         value={period}
-                        onValueChange={setPeriod}
+                        onValueChange={(value: string) => setPeriod(value as PeriodId)}
                         hideEmpty={true}
                     />
 

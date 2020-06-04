@@ -5,24 +5,27 @@ import {
     DeleteByIdError,
     SaveError,
 } from "../domain/repositories/ImportRuleRepository";
-import { ImportRule, Mapping } from "../domain/entities/ImportRule";
+import { ImportRule, Mapping, importRuleDefaultId } from "../domain/entities/ImportRule";
 import DataStore from "d2-api/api/dataStore";
-import { PeriodId, THIS_YEAR } from "../domain/entities/PeriodOption";
+import { PeriodId } from "../domain/entities/PeriodOption";
 import { Maybe } from "../domain/common/Maybe";
 import { Id } from "d2-api";
 import { Either } from "../domain/common/Either";
+import i18n from "../webapp/utils/i18n";
 
-const defaultPrefixKey = "default";
-
-const defaultImportData = {
-    id: defaultPrefixKey,
+const defaultImportRuleData: ImportRuleDS = {
+    id: importRuleDefaultId,
     name: "Default import",
     description: "Default import. Unique default for all the instance",
     selectedMappings: [],
     selectedOUs: [],
-    periodInformation: THIS_YEAR,
-    created: new Date(),
-    lastUpdated: new Date(),
+    periodInformation: {
+        id: "THIS_YEAR",
+        name: i18n.t("This year"),
+        start: [0, "year"],
+    },
+    created: new Date().toISOString(),
+    lastUpdated: new Date().toISOString(),
 };
 
 export default class ImportRuleD2ApiRepository implements ImportRuleRepository {
@@ -32,21 +35,11 @@ export default class ImportRuleD2ApiRepository implements ImportRuleRepository {
         private dataStoreKey: string,
         private defaultSuffixKey: string
     ) {
-        this.defaultKey = `${defaultPrefixKey}${this.defaultSuffixKey}`;
-    }
-
-    async getDefault(): Promise<ImportRule> {
-        const importRuleData = Maybe.fromValue(
-            await this.dataStore.get<ImportRuleData>(this.defaultKey).getData()
-        );
-
-        const importRule = importRuleData.map(this.mapToDomain);
-
-        return importRule.getOrElse(defaultImportData);
+        this.defaultKey = `${importRuleDefaultId}${this.defaultSuffixKey}`;
     }
 
     async getById(id: Id): Promise<Maybe<ImportRule>> {
-        if (id === defaultPrefixKey) {
+        if (id === importRuleDefaultId) {
             return Maybe.fromValue(await this.getDefault());
         } else {
             const importRuleData = await this.getDataById(id);
@@ -97,7 +90,7 @@ export default class ImportRuleD2ApiRepository implements ImportRuleRepository {
 
     async save(importRule: ImportRule): Promise<Either<SaveError, true>> {
         try {
-            if (importRule.id === defaultPrefixKey) {
+            if (importRule.id === importRuleDefaultId) {
                 this.saveDefaultData(this.mapToDataStore(importRule));
                 return Either.Success(true);
             } else {
@@ -124,6 +117,16 @@ export default class ImportRuleD2ApiRepository implements ImportRuleRepository {
         }
     }
 
+    private async getDefault(): Promise<ImportRule> {
+        const importRuleDataResult = Maybe.fromValue(
+            await this.dataStore.get<ImportRuleDS>(this.defaultKey).getData()
+        );
+
+        const importRuleData = importRuleDataResult.getOrElse(defaultImportRuleData);
+
+        return this.mapToDomain(importRuleData);
+    }
+
     private applyFilters(importRules: ImportRule[], filters: ImportRuleFilters): ImportRule[] {
         const { search, lastExecuted } = filters;
 
@@ -147,28 +150,28 @@ export default class ImportRuleD2ApiRepository implements ImportRuleRepository {
         return filteredByLastExecuted;
     }
 
-    private async getImportRulesData(): Promise<ImportRuleData[]> {
-        const data = await this.dataStore.get<ImportRuleData[]>(this.dataStoreKey).getData();
+    private async getImportRulesData(): Promise<ImportRuleDS[]> {
+        const data = await this.dataStore.get<ImportRuleDS[]>(this.dataStoreKey).getData();
 
         return data || [];
     }
 
-    private async saveImportRulesData(imporRulesData: ImportRuleData[]): Promise<void> {
+    private async saveImportRulesData(imporRulesData: ImportRuleDS[]): Promise<void> {
         this.dataStore.save(this.dataStoreKey, imporRulesData);
     }
 
-    private async saveDefaultData(importRuleData: ImportRuleData): Promise<void> {
+    private async saveDefaultData(importRuleData: ImportRuleDS): Promise<void> {
         this.dataStore.save(this.defaultKey, importRuleData);
     }
 
-    private async getDataById(id: string): Promise<Maybe<ImportRuleData>> {
+    private async getDataById(id: string): Promise<Maybe<ImportRuleDS>> {
         const importRulesData = await this.getImportRulesData();
 
         return Maybe.fromValue(importRulesData.find(importRulesData => importRulesData.id === id));
     }
 
-    private mapToDomain(importRuleData: ImportRuleData): ImportRule {
-        return {
+    private mapToDomain(importRuleData: ImportRuleDS): ImportRule {
+        return new ImportRule({
             ...importRuleData,
             created: new Date(importRuleData.created),
             lastUpdated: new Date(importRuleData.lastUpdated),
@@ -185,10 +188,10 @@ export default class ImportRuleD2ApiRepository implements ImportRuleRepository {
                     ? new Date(importRuleData.periodInformation.endDate)
                     : undefined,
             },
-        };
+        });
     }
 
-    private mapToDataStore(importRule: ImportRule): ImportRuleData {
+    private mapToDataStore(importRule: ImportRule): ImportRuleDS {
         return {
             ...importRule,
             created: importRule.created.toISOString(),
@@ -209,20 +212,20 @@ export default class ImportRuleD2ApiRepository implements ImportRuleRepository {
     }
 }
 
-export interface ImportRuleData {
+interface ImportRuleDS {
     id: string;
     name: string;
     code?: string;
     created: string;
     description?: string;
     selectedOUs: string[];
-    periodInformation: PeriodOptionData;
+    periodInformation: PeriodOptionDS;
     selectedMappings: Mapping[];
     lastExecuted?: string;
     lastUpdated: string;
 }
 
-export interface PeriodOptionData {
+interface PeriodOptionDS {
     id: string;
     name: string;
     start?: [number, string];

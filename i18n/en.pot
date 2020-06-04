@@ -5,10 +5,13 @@ msgstr ""
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1)\n"
-"POT-Creation-Date: 2020-06-02T05:41:25.456Z\n"
-"PO-Revision-Date: 2020-06-02T05:41:25.456Z\n"
+"POT-Creation-Date: 2020-06-04T04:57:48.148Z\n"
+"PO-Revision-Date: 2020-06-04T04:57:48.148Z\n"
 
 msgid "No effective import into DHIS2, file download"
+msgstr ""
+
+msgid "This year"
 msgstr ""
 
 msgid "Fixed period"
@@ -42,9 +45,6 @@ msgid "This quarter"
 msgstr ""
 
 msgid "Last quarter"
-msgstr ""
-
-msgid "This year"
 msgstr ""
 
 msgid "Last year"
@@ -187,15 +187,6 @@ msgstr ""
 msgid "Description"
 msgstr ""
 
-msgid "Selected mappings"
-msgstr ""
-
-msgid "Selected organisation units"
-msgstr ""
-
-msgid "Selected query period"
-msgstr ""
-
 msgid "Instance Dataset"
 msgstr ""
 
@@ -240,6 +231,12 @@ msgstr ""
 msgid ""
 "View and analyse the status and results of the manual import and import "
 "rules executions."
+msgstr ""
+
+msgid "Import Rule {{id}} not found"
+msgstr ""
+
+msgid "Import Rule {{error}} not found"
 msgstr ""
 
 msgid "Import successful \n"
