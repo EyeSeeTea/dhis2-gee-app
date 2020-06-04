@@ -257,7 +257,7 @@ function givenAnExpectedDataValueSet(): DataValueSet {
     return dataValueSet;
 }
 
-const defaultImportRule = new ImportRule({
+const defaultImportRule = ImportRule.createExisted({
     id: "Default",
     name: "Default",
     description: "Default import. Unique default for all the instance",

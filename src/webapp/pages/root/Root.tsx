@@ -1,6 +1,6 @@
 import React from "react";
 import { Route, Switch, HashRouter, useHistory } from "react-router-dom";
-import ImportDetail from "../import/ImportDetail";
+import ImportOnDemandPage from "../import-on-demand/ImportOnDemandPage";
 import MappingCreationPage from "../mappings/edit-mappings/MappingCreationPage";
 import LandingPage from "../home/HomePage";
 import ImportRulesPage from "../import-rules-list/ImportRulesListPage";
@@ -47,7 +47,10 @@ const Root = () => {
             <Switch>
                 <Route path={pageRoutes.home.path} exact render={() => <LandingPage />} />
 
-                <Route path={pageRoutes.import.path} render={() => <ImportDetail id="default" />} />
+                <Route
+                    path={pageRoutes.import.path}
+                    render={() => <ImportOnDemandPage id="default" />}
+                />
 
                 <Route
                     path={pageRoutes.mappingsNew.path}

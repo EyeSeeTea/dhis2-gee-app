@@ -1,20 +1,25 @@
-import { Id } from "./Ref";
+import { Id, generateId } from "./Ref";
 import { PeriodOption } from "./PeriodOption";
 
 export const importRuleDefaultId = "default";
 
-export interface ImportRuleData {
-    id: Id;
+export interface ImportRuleWritableData {
     name: string;
     code?: string;
     description?: string;
     selectedOUs: string[];
     periodInformation: PeriodOption;
     selectedMappings: string[];
+}
+
+export interface ImportRuleProtectedData {
+    id: Id;
     created: Date;
     lastUpdated: Date;
     lastExecuted?: Date;
 }
+
+type ImportRuleData = ImportRuleWritableData & ImportRuleProtectedData;
 
 export class ImportRule {
     public readonly id: Id;
@@ -28,7 +33,7 @@ export class ImportRule {
     public readonly lastUpdated: Date;
     public readonly lastExecuted?: Date;
 
-    constructor(private data: ImportRuleData) {
+    private constructor(private data: ImportRuleData) {
         this.id = data.id;
         this.name = data.name;
         this.code = data.code;
@@ -41,22 +46,39 @@ export class ImportRule {
         this.lastExecuted = data.lastExecuted;
     }
 
+    public static createNew(newData: ImportRuleWritableData) {
+        return new ImportRule({
+            ...newData,
+            id: generateId(),
+            created: new Date(),
+            lastUpdated: new Date(),
+        });
+    }
+
+    public static createExisted(data: ImportRuleData) {
+        return new ImportRule(data);
+    }
+
     public get isDefault(): boolean {
         return this.id === importRuleDefaultId;
     }
 
     public changeMappings(selectedMappings: string[]) {
-        const newData = { ...this.data, selectedMappings: selectedMappings };
+        const newData = {
+            ...this.data,
+            selectedMappings: selectedMappings,
+            lastUpdated: new Date(),
+        };
         return new ImportRule(newData);
     }
 
     public changeOUs(selectedOUs: string[]) {
-        const newData = { ...this.data, selectedOUs: selectedOUs };
+        const newData = { ...this.data, selectedOUs: selectedOUs, lastUpdated: new Date() };
         return new ImportRule(newData);
     }
 
     public changePeriod(period: PeriodOption) {
-        const newData = { ...this.data, periodInformation: period };
+        const newData = { ...this.data, periodInformation: period, lastUpdated: new Date() };
         return new ImportRule(newData);
     }
 

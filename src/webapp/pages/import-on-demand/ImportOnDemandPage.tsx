@@ -1,4 +1,4 @@
-import React, { useCallback, useState } from "react";
+import React, { useState } from "react";
 import i18n from "../../locales";
 import { useCompositionRoot } from "../../contexts/app-context";
 import { makeStyles } from "@material-ui/styles";
@@ -14,25 +14,19 @@ import { useHistory } from "react-router-dom";
 import ImportUseCase from "../../../domain/usecases/ImportUseCase";
 import { GetImportRuleByIdUseCase } from "../../../domain/usecases/GetImportRuleByIdUseCase";
 import { SaveImportRuleUseCase } from "../../../domain/usecases/SaveImportRuleUseCase";
-import { ImportRule } from "../../../domain/entities/ImportRule";
 import { PeriodOption } from "../../../domain/entities/PeriodOption";
+import { ImportOnDemandState, importOnDemandInitialState, ImportRuleState } from "./ImportState";
+import { SaveError } from "../../../domain/repositories/ImportRuleRepository";
 
 interface ImportDetailProps {
     id: string;
 }
 
-const ImportDetail: React.FC<ImportDetailProps> = ({ id }) => {
+const ImportOnDemandPage: React.FC<ImportDetailProps> = ({ id }) => {
     const classes = useStyles();
     const snackbar = useSnackbar();
 
-    const [selectedMappings, setSelectedMappings] = useState<string[]>([]);
-    const [selectedOUs, setSelectedOUs] = useState<string[]>([]);
-    const [period, setPeriod] = useState<PeriodOption>();
-    const [showOUDialog, setOUDialog] = useState<boolean>(false);
-    const [showPeriodDialog, setPeriodDialog] = useState<boolean>(false);
-    const [openImportDialog, setOpenImportDialog] = useState<boolean>(false);
-    const [isImporting, setImporting] = useState(false);
-    const [importRule, setImportRule] = useState<ImportRule>();
+    const [state, setState] = useState<ImportOnDemandState>(importOnDemandInitialState);
 
     const compositionRoot = useCompositionRoot();
     const importUseCase = compositionRoot.get<ImportUseCase>("importUseCase");
@@ -46,10 +40,20 @@ const ImportDetail: React.FC<ImportDetailProps> = ({ id }) => {
         getImportRuleByIdUseCase.execute(id).then(response => {
             if (response.isDefined()) {
                 const importRule = response.get();
-                setSelectedMappings(importRule.selectedMappings);
-                setSelectedOUs(importRule.selectedOUs);
-                setPeriod(importRule.periodInformation);
-                setImportRule(importRule);
+                setState(state => {
+                    return {
+                        ...state,
+                        importRule: {
+                            id: importRule.id,
+                            name: importRule.name,
+                            code: importRule.code,
+                            description: importRule.description,
+                            selectedOUs: importRule.selectedOUs,
+                            periodInformation: importRule.periodInformation,
+                            selectedMappings: importRule.selectedMappings,
+                        },
+                    };
+                });
             } else {
                 history.goBack();
                 snackbar.error(i18n.t("Import Rule {{id}} not found", { id }));
@@ -57,27 +61,46 @@ const ImportDetail: React.FC<ImportDetailProps> = ({ id }) => {
         });
     }, [getImportRuleByIdUseCase, id, snackbar, history]);
 
-    const closeDialog = useCallback(() => {
-        setOUDialog(false);
-        setPeriodDialog(false);
-    }, []);
+    const closeDialog = () => {
+        setState({
+            ...state,
+            showOUDialog: false,
+            showPeriodDialog: false,
+        });
+    };
 
-    const saveIfDefault = async (editedImportRule: ImportRule) => {
-        if (editedImportRule && editedImportRule.isDefault) {
+    const handleSaveError = (error: SaveError): string => {
+        switch (error.kind) {
+            case "ImportRuleIdNotFound":
+                return i18n.t("Import Rule {{id}} not found", { id });
+            case "UnexpectedError":
+                return i18n.t(
+                    "An unexpected error has ocurred updating last changes for on demand import"
+                );
+        }
+    };
+
+    const save = async (editedImportRule: ImportRuleState) => {
+        if (editedImportRule) {
             const saveReponse = await saveImportRuleUseCase.execute(editedImportRule);
-
             saveReponse.fold(
-                () => snackbar.error(i18n.t("Import Rule {{error}} not found", { id })),
+                error => snackbar.error(handleSaveError(error)),
                 () => console.log("Default import rule updated")
             );
         }
     };
 
     const onSelectedMappingsChange = (newSelectedMappings: string[]) => {
-        setSelectedMappings(newSelectedMappings);
-        const editedImportRule = importRule!!.changeMappings(newSelectedMappings);
-        saveIfDefault(editedImportRule);
-        setImportRule(editedImportRule);
+        const newState = {
+            ...state,
+            importRule: {
+                ...state.importRule,
+                selectedMappings: newSelectedMappings,
+            },
+        };
+
+        save(newState.importRule);
+        setState(newState);
     };
 
     const onDeleteMappings = () => {
@@ -90,28 +113,47 @@ const ImportDetail: React.FC<ImportDetailProps> = ({ id }) => {
     };
 
     const onSelectedOUsSave = (newSelectedOUs: string[]) => {
-        setSelectedOUs(newSelectedOUs);
-        const editedImportRule = importRule!!.changeOUs(newSelectedOUs);
-        saveIfDefault(editedImportRule);
-        setImportRule(editedImportRule);
-        setOUDialog(false);
+        const newState = {
+            ...state,
+            importRule: {
+                ...state.importRule,
+                selectedOUs: newSelectedOUs,
+            },
+            showOUDialog: false,
+        };
+
+        save(newState.importRule);
+        setState(newState);
     };
 
     const onPeriodSelectionSave = (newPeriod: PeriodOption) => {
-        setPeriod(newPeriod);
-        const editedImportRule = importRule!!.changePeriod(newPeriod);
-        saveIfDefault(editedImportRule);
-        setImportRule(editedImportRule);
-        setPeriodDialog(false);
+        const newState = {
+            ...state,
+            importRule: {
+                ...state.importRule,
+                periodInformation: newPeriod,
+            },
+            showPeriodDialog: false,
+        };
+
+        save(newState.importRule);
+        setState(newState);
     };
 
     const executeOrDownload = async (useCase: ImportUseCase) => {
-        setImporting(true);
+        setState({
+            ...state,
+            isImporting: true,
+        });
 
         const result = await useCase.execute(id);
 
         console.log({ result });
-        setImporting(false);
+
+        setState({
+            ...state,
+            isImporting: false,
+        });
 
         if (result?.success) {
             snackbar.success(i18n.t("Import successful \n") + result.messages.join("\n"));
@@ -122,7 +164,10 @@ const ImportDetail: React.FC<ImportDetailProps> = ({ id }) => {
 
     const importData = async () => {
         await executeOrDownload(importUseCase);
-        setOpenImportDialog(false);
+        setState({
+            ...state,
+            showImportDialog: false,
+        });
     };
 
     const downloadData = async () => {
@@ -133,32 +178,39 @@ const ImportDetail: React.FC<ImportDetailProps> = ({ id }) => {
         <React.Fragment>
             <PageHeader onBackClick={() => history.goBack()} title={i18n.t("Import")} />
 
-            {openImportDialog && (
+            {state.showImportDialog && (
                 <ConfirmationDialog
                     isOpen={true}
                     onSave={importData}
-                    onCancel={() => (isImporting ? { undefined } : setOpenImportDialog(false))}
+                    onCancel={() =>
+                        state.isImporting
+                            ? { undefined }
+                            : setState({
+                                  ...state,
+                                  showImportDialog: false,
+                              })
+                    }
                     title={i18n.t("New import request")}
                     description={i18n.t(
                         "This operation will collect and import data from Google Earth Engine to the instance. Are you sure you want to proceed?"
                     )}
-                    saveText={isImporting ? i18n.t("Importing...") : i18n.t("Import")}
-                    disableSave={isImporting}
+                    saveText={state.isImporting ? i18n.t("Importing...") : i18n.t("Import")}
+                    disableSave={state.isImporting}
                     cancelText={i18n.t("Cancel")}
                 >
-                    {isImporting && <LinearProgress />}
+                    {state.isImporting && <LinearProgress />}
                 </ConfirmationDialog>
             )}
-            {showOUDialog && (
+            {state.showOUDialog && (
                 <OUDialog
-                    selectedOUs={selectedOUs}
+                    selectedOUs={state.importRule.selectedOUs}
                     onCancel={closeDialog}
                     onSave={onSelectedOUsSave}
                 />
             )}
-            {showPeriodDialog && (
+            {state.showPeriodDialog && (
                 <PeriodSelectorDialog
-                    periodInformation={period}
+                    periodInformation={state.importRule.periodInformation}
                     onCancel={closeDialog}
                     onSave={onPeriodSelectionSave}
                 />
@@ -167,21 +219,36 @@ const ImportDetail: React.FC<ImportDetailProps> = ({ id }) => {
             <Button
                 className={classes.button}
                 variant="contained"
-                onClick={() => setOUDialog(true)}
+                onClick={() =>
+                    setState({
+                        ...state,
+                        showOUDialog: true,
+                    })
+                }
             >
                 {i18n.t("Select Organisation Units")}
             </Button>
             <Button
                 className={classes.button}
                 variant="contained"
-                onClick={() => setPeriodDialog(true)}
+                onClick={() =>
+                    setState({
+                        ...state,
+                        showPeriodDialog: true,
+                    })
+                }
             >
                 {i18n.t("Select Period")}
             </Button>
             <Button
                 className={classes.newImportButton}
                 variant="contained"
-                onClick={() => setOpenImportDialog(true)}
+                onClick={() =>
+                    setState({
+                        ...state,
+                        showImportDialog: true,
+                    })
+                }
             >
                 {i18n.t("Import to DHIS2 ")}
                 <ImportExportIcon />
@@ -189,16 +256,16 @@ const ImportDetail: React.FC<ImportDetailProps> = ({ id }) => {
             <Button
                 className={classes.newImportButton}
                 variant="contained"
-                disabled={isImporting}
+                disabled={state.isImporting}
                 onClick={downloadData}
             >
                 {i18n.t("Download JSON ")}
                 <GetAppIcon />
-                {isImporting && <LinearProgress />}
+                {state.isImporting && <LinearProgress />}
             </Button>
             <MappingsList
                 header={"Select & map datasets"}
-                selectedMappings={selectedMappings}
+                selectedMappings={state.importRule.selectedMappings}
                 onSelectionChange={onSelectedMappingsChange}
                 onDeleteMappings={onDeleteMappings}
             />
@@ -220,4 +287,4 @@ const useStyles = makeStyles({
     },
 });
 
-export default React.memo(ImportDetail);
+export default React.memo(ImportOnDemandPage);

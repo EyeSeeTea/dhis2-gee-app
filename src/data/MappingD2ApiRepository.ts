@@ -4,7 +4,7 @@ import { Mapping } from "../domain/entities/Mapping";
 import MappingRepository from "../domain/repositories/MappingRepository";
 
 export default class MappingD2ApiRepository implements MappingRepository {
-    constructor(private dataStore: DataStore, private dataStoreKey: string) { }
+    constructor(private dataStore: DataStore, private dataStoreKey: string) {}
 
     async getAll(ids?: Id[]): Promise<Mapping[]> {
         const mappingData = await this.getMappingData();

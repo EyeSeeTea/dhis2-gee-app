@@ -106,7 +106,10 @@ export default class ImportUseCase {
             const syncRuleResponse = await this.importRuleRepository.save(updatedImportRule);
 
             failures = syncRuleResponse.fold(
-                failure => [...failures, failure.error.message],
+                () => [
+                    ...failures,
+                    i18n.t("An error has ocurred updating lastUpdate field of import rule"),
+                ],
                 () => failures
             );
 

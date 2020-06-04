@@ -101,8 +101,8 @@ export default class ImportRuleD2ApiRepository implements ImportRuleRepository {
 
                 const newimportRulesData = exist
                     ? importRulesData.map(data =>
-                        data.id === importRule.id ? importRuleData : data
-                    )
+                          data.id === importRule.id ? importRuleData : data
+                      )
                     : [...importRulesData, importRuleData];
 
                 await this.saveImportRulesData(newimportRulesData);
@@ -132,19 +132,19 @@ export default class ImportRuleD2ApiRepository implements ImportRuleRepository {
 
         const filteredBySearchImportRules = search
             ? importRules.filter(
-                importRule =>
-                    importRule.name.toLowerCase().includes(search.toLowerCase()) ||
-                    importRule.description?.toLowerCase().includes(search.toLowerCase()) ||
-                    importRule.code?.toLowerCase().includes(search.toLowerCase())
-            )
+                  importRule =>
+                      importRule.name.toLowerCase().includes(search.toLowerCase()) ||
+                      importRule.description?.toLowerCase().includes(search.toLowerCase()) ||
+                      importRule.code?.toLowerCase().includes(search.toLowerCase())
+              )
             : importRules;
 
         const filteredByLastExecuted = lastExecuted
             ? filteredBySearchImportRules.filter(importRule =>
-                lastExecuted && importRule.lastExecuted
-                    ? moment(lastExecuted).isSameOrBefore(moment(importRule.lastExecuted), "date")
-                    : true
-            )
+                  lastExecuted && importRule.lastExecuted
+                      ? moment(lastExecuted).isSameOrBefore(moment(importRule.lastExecuted), "date")
+                      : true
+              )
             : filteredBySearchImportRules;
 
         return filteredByLastExecuted;
@@ -171,7 +171,7 @@ export default class ImportRuleD2ApiRepository implements ImportRuleRepository {
     }
 
     private mapToDomain(importRuleData: ImportRuleDS): ImportRule {
-        return new ImportRule({
+        return ImportRule.createExisted({
             ...importRuleData,
             created: new Date(importRuleData.created),
             lastUpdated: new Date(importRuleData.lastUpdated),

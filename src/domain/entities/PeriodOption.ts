@@ -101,3 +101,5 @@ export interface PeriodOption {
     startDate?: Date;
     endDate?: Date;
 }
+
+export const defaultPeriod = LAST_YEAR;

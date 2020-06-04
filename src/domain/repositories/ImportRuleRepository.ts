@@ -19,7 +19,7 @@ export type UnexpectedError = {
 };
 
 export type DeleteByIdError = ImportRuleIdNotFound | UnexpectedError;
-export type SaveError = UnexpectedError;
+export type SaveError = UnexpectedError | ImportRuleIdNotFound;
 
 export interface ImportRuleRepository {
     getById(id: Id): Promise<Maybe<ImportRule>>;
