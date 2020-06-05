@@ -258,9 +258,9 @@ function givenAnExpectedDataValueSet(): DataValueSet {
 }
 
 const defaultImportRule = ImportRule.createExisted({
-    id: "Default",
-    name: "Default",
-    description: "Default import. Unique default for all the instance",
+    id: "ondemand",
+    name: "Ondemand import",
+    description: "Ondemand import. Unique ondemand for all the instance",
     periodInformation: {
         id: "FIXED",
         name: "Fixed period",

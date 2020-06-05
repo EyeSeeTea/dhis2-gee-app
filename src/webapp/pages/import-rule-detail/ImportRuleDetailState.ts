@@ -4,13 +4,13 @@ import {
     ImportRuleProtectedData,
 } from "../../../domain/entities/ImportRule";
 
-export interface ImportOnDemandState {
+export interface ImportRuleDetailState {
     importRule: ImportRuleState;
     showOUDialog: boolean;
     showPeriodDialog: boolean;
     showImportDialog: boolean;
     isImporting: boolean;
-    isDefault: boolean | undefined;
+    isOndemand: boolean | undefined;
 }
 
 export type ImportRuleState = ImportRuleWritableData & Pick<ImportRuleProtectedData, "id">;
@@ -29,5 +29,5 @@ export const importOnDemandInitialState = {
     showPeriodDialog: false,
     showImportDialog: false,
     isImporting: false,
-    isDefault: undefined,
+    isOndemand: undefined,
 };

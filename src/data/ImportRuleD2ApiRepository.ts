@@ -5,7 +5,7 @@ import {
     DeleteByIdError,
     SaveError,
 } from "../domain/repositories/ImportRuleRepository";
-import { ImportRule, importRuleDefaultId } from "../domain/entities/ImportRule";
+import { ImportRule, importRuleOndemandId } from "../domain/entities/ImportRule";
 import DataStore from "d2-api/api/dataStore";
 import { PeriodId } from "../domain/entities/PeriodOption";
 import { Maybe } from "../domain/common/Maybe";
@@ -14,9 +14,9 @@ import { Either } from "../domain/common/Either";
 import i18n from "../webapp/utils/i18n";
 
 const defaultImportRuleData: ImportRuleDS = {
-    id: importRuleDefaultId,
-    name: "Default import",
-    description: "Default import. Unique default for all the instance",
+    id: importRuleOndemandId,
+    name: "Ondemand import",
+    description: "Ondemand import. Unique ondemand for all the instance",
     selectedMappings: [],
     selectedOUs: [],
     periodInformation: {
@@ -35,11 +35,11 @@ export default class ImportRuleD2ApiRepository implements ImportRuleRepository {
         private dataStoreKey: string,
         private defaultSuffixKey: string
     ) {
-        this.defaultKey = `${importRuleDefaultId}${this.defaultSuffixKey}`;
+        this.defaultKey = `${importRuleOndemandId}${this.defaultSuffixKey}`;
     }
 
     async getById(id: Id): Promise<Maybe<ImportRule>> {
-        if (id === importRuleDefaultId) {
+        if (id === importRuleOndemandId) {
             return Maybe.fromValue(await this.getDefault());
         } else {
             const importRuleData = await this.getDataById(id);
@@ -90,7 +90,7 @@ export default class ImportRuleD2ApiRepository implements ImportRuleRepository {
 
     async save(importRule: ImportRule): Promise<Either<SaveError, true>> {
         try {
-            if (importRule.id === importRuleDefaultId) {
+            if (importRule.id === importRuleOndemandId) {
                 this.saveDefaultData(this.mapToDataStore(importRule));
                 return Either.Success(true);
             } else {

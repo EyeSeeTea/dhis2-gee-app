@@ -2,7 +2,7 @@ import { ImportRuleRepository, SaveError } from "../repositories/ImportRuleRepos
 import {
     ImportRuleWritableData,
     ImportRuleProtectedData,
-    importRuleDefaultId,
+    importRuleOndemandId,
     ImportRule,
 } from "../entities/ImportRule";
 import { Either } from "../common/Either";
@@ -15,7 +15,7 @@ export type UpdateImportRuleRequest = ImportRuleWritableData & Pick<ImportRulePr
 export type UpdateImportRuleError = ImportRuleIdNotFound | ValidationErrors | SaveError;
 
 export class UpdateImportRuleUseCase {
-    constructor(private importRuleRepository: ImportRuleRepository) { }
+    constructor(private importRuleRepository: ImportRuleRepository) {}
 
     async execute(
         importRuleRequest: UpdateImportRuleRequest
@@ -41,7 +41,7 @@ export class UpdateImportRuleUseCase {
     }
 
     private validateId(importRuleRequest: UpdateImportRuleRequest) {
-        if (!isValidId(importRuleRequest.id) && importRuleRequest.id !== importRuleDefaultId) {
+        if (!isValidId(importRuleRequest.id) && importRuleRequest.id !== importRuleOndemandId) {
             throw Error(`Invalid import rule id: ${importRuleRequest.id}`);
         }
     }

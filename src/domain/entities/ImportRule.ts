@@ -4,7 +4,7 @@ import { ValidationErrors, ErrorsDictionary } from "../errors/Generic";
 import { Either } from "../common/Either";
 import { validateRequired } from "../utils/Validations";
 
-export const importRuleDefaultId = "default";
+export const importRuleOndemandId = "ondemand";
 
 export interface ImportRuleWritableData {
     name: string;
@@ -70,8 +70,8 @@ export class ImportRule {
         return new ImportRule(data);
     }
 
-    public get isDefault(): boolean {
-        return this.id === importRuleDefaultId;
+    public get isOndemand(): boolean {
+        return this.id === importRuleOndemandId;
     }
 
     public update(newData: ImportRuleWritableData): Either<ValidationErrors, ImportRule> {

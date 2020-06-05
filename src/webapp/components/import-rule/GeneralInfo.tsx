@@ -1,6 +1,6 @@
 import React from "react";
 import i18n from "@dhis2/d2-i18n";
-import { ImportRuleState } from "../../pages/import-rule-detail/ImportState";
+import { ImportRuleState } from "../../pages/import-rule-detail/ImportRuleDetailState";
 
 /* eslint-disable @typescript-eslint/no-var-requires */
 const { TextField } = require("@dhis2/d2-ui-core");

@@ -26,8 +26,12 @@ import {
     UpdateImportRuleError,
 } from "../../../domain/usecases/UpdateImportRuleUseCase";
 import { PeriodOption } from "../../../domain/entities/PeriodOption";
-import { ImportOnDemandState, importOnDemandInitialState, ImportRuleState } from "./ImportState";
-import { importRuleDefaultId } from "../../../domain/entities/ImportRule";
+import {
+    ImportRuleDetailState,
+    importOnDemandInitialState,
+    ImportRuleState,
+} from "./ImportRuleDetailState";
+import { importRuleOndemandId } from "../../../domain/entities/ImportRule";
 import GeneralInfo from "../../components/import-rule/GeneralInfo";
 import {
     CreateImportRuleUseCase,
@@ -45,7 +49,7 @@ const ImportRuleDetailPage: React.FC = () => {
     const snackbar = useSnackbar();
     const { action, id } = useParams() as ImportRuleDetailPageParams;
 
-    const [state, setState] = useState<ImportOnDemandState>(importOnDemandInitialState);
+    const [state, setState] = useState<ImportRuleDetailState>(importOnDemandInitialState);
 
     const compositionRoot = useCompositionRoot();
     const importUseCase = compositionRoot.get<ImportUseCase>("importUseCase");
@@ -58,7 +62,7 @@ const ImportRuleDetailPage: React.FC = () => {
 
     React.useEffect(() => {
         if (action === "edit" || action === "ondemand") {
-            const importRuleId = action === "edit" ? id : importRuleDefaultId;
+            const importRuleId = action === "edit" ? id : importRuleOndemandId;
             getImportRuleByIdUseCase.execute(importRuleId).then(response => {
                 if (response.isDefined()) {
                     const importRule = response.get();
@@ -74,7 +78,7 @@ const ImportRuleDetailPage: React.FC = () => {
                                 periodInformation: importRule.periodInformation,
                                 selectedMappings: importRule.selectedMappings,
                             },
-                            isDefault: importRule.isDefault,
+                            isOndemand: importRule.isOndemand,
                         };
                     });
                 } else {
@@ -86,7 +90,7 @@ const ImportRuleDetailPage: React.FC = () => {
             setState(state => {
                 return {
                     ...state,
-                    isDefault: false,
+                    isOndemand: false,
                 };
             });
         }
@@ -112,7 +116,7 @@ const ImportRuleDetailPage: React.FC = () => {
     };
 
     const saveIfDefault = async (editedImportRule: ImportRuleState) => {
-        if (state.isDefault) {
+        if (state.isOndemand) {
             save(editedImportRule);
         }
     };
@@ -227,7 +231,7 @@ const ImportRuleDetailPage: React.FC = () => {
 
             <Card className={classes.card}>
                 <CardContent>
-                    {state.isDefault === false && (
+                    {state.isOndemand === false && (
                         <Box className={classes.generalInfo}>
                             <GeneralInfo
                                 importRule={state.importRule}
@@ -265,7 +269,7 @@ const ImportRuleDetailPage: React.FC = () => {
                                     {i18n.t("Select Period")}
                                 </Button>
                             </Box>
-                            {state.isDefault && (
+                            {state.isOndemand && (
                                 <Box display="flex" flexDirection="row">
                                     <Button
                                         className={`${classes.newImportButton} ${classes.firstButton}`}
@@ -301,7 +305,7 @@ const ImportRuleDetailPage: React.FC = () => {
                         />
                     </Box>
                 </CardContent>
-                {state.isDefault === false && (
+                {state.isOndemand === false && (
                     <CardActions>
                         <Button
                             color="primary"
