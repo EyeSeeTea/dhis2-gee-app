@@ -139,13 +139,12 @@ const ImportRuleDetailPage: React.FC = () => {
         setState(newState);
     };
 
-    const onDeleteMappings = () => {
-        //TODO: if possible delete an used mapping
-        // const newSelectedMappings = _.filter(
-        //     selectedMappings,
-        //     m => !deletedMappingsIds.includes(m.id)
-        // );
-        // onSelectedMappingsChange(newSelectedMappings);
+    const onDeleteMappings = (deletedMappingsIds: string[]) => {
+        const newSelectedMappings = state.importRule.selectedMappings.filter(
+            mappingId => !deletedMappingsIds.includes(mappingId)
+        );
+
+        onSelectedMappingsChange(newSelectedMappings);
     };
 
     const onSelectedOUsSave = (newSelectedOUs: string[]) => {

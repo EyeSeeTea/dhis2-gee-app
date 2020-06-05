@@ -94,14 +94,16 @@ export class ImportRule {
         }
     }
 
+    public updateSelectedMapping(selectedMappings: Id[]): ImportRule {
+        return new ImportRule({ ...this.data, selectedMappings }).updateLastUpdated();
+    }
+
     public updateLastExecuted(): ImportRule {
-        const newData = { ...this.data, lastExecuted: new Date() };
-        return new ImportRule(newData).updateLastUpdated();
+        return new ImportRule({ ...this.data, lastExecuted: new Date() }).updateLastUpdated();
     }
 
     private updateLastUpdated(): ImportRule {
-        const newData = { ...this.data };
-        return new ImportRule(newData);
+        return new ImportRule({ ...this.data, lastUpdated: new Date() });
     }
 }
 

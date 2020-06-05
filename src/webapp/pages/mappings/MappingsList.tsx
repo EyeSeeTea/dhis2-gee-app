@@ -13,11 +13,11 @@ import {
 import AddIcon from "@material-ui/icons/Add";
 import Mapping from "../../models/Mapping";
 import i18n from "../../locales";
-import { useAppContext } from "../../contexts/app-context";
+import { useAppContext, useCompositionRoot } from "../../contexts/app-context";
 import { makeStyles } from "@material-ui/styles";
 import { Theme, createStyles, LinearProgress, Icon, Box, Fab } from "@material-ui/core";
-import { withSnackbarOnError } from "../../utils/error";
 import { useGoTo, GoTo, pageRoutes } from "../root/Root";
+import { DeleteByIdError } from "../../../domain/repositories/MappingRepository";
 
 type ContextualAction = "details" | "edit" | "delete";
 
@@ -107,6 +107,8 @@ const MappingsList: React.FC<MappingsListProps> = props => {
     const [isDeleting, setDeleting] = useState(false);
     const [objectsTableKey] = useState(() => new Date().getTime());
 
+    const mapping = useCompositionRoot().mapping();
+
     const selection = useMemo(() => {
         return rows
             .filter(mapping => selectedMappings?.includes(mapping.id))
@@ -133,29 +135,46 @@ const MappingsList: React.FC<MappingsListProps> = props => {
         setLoading(false);
     }
 
-    const deleteMappings = React.useCallback(() => {
+    const deleteMappings = async () => {
+        if (!mappingIdsToDelete) return;
+
         setDeleting(true);
-        withSnackbarOnError(
-            snackbar,
-            async () => {
-                await Mapping.delete(api, config, mappingIdsToDelete ?? []);
-                onDeleteMappings(mappingIdsToDelete ?? []);
-                snackbar.success(
-                    i18n.t("{{n}} mappings deleted", {
-                        n: mappingIdsToDelete ? mappingIdsToDelete.length : 0,
-                    })
-                );
-            },
-            {
-                onFinally: () => {
-                    setDeleting(false);
-                    setMappingIdsToDelete(undefined);
-                    getMappings(sorting, { page: 1 });
-                },
-            }
-        );
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [api, config, snackbar, sorting, mappingIdsToDelete]);
+
+        const results = await mapping.delete.execute(mappingIdsToDelete);
+
+        if (results.failures.length === 0) {
+            snackbar.success(i18n.t("Successfully deleted {{success}} mappings", results));
+            onDeleteMappings(mappingIdsToDelete ?? []);
+        } else {
+            const handleFailure = (failure: DeleteByIdError): string => {
+                switch (failure.kind) {
+                    case "ItemIdNotFoundError":
+                        return i18n.t("Mapping does not exists: ") + failure.id;
+                    case "UnexpectedError":
+                        return (
+                            i18n.t("An unexpected error has ocurred deleting mapping: ") +
+                            failure.error.message
+                        );
+                }
+            };
+
+            const failedMessages = results.failures.map(handleFailure);
+
+            const resultSummary: string[] = [
+                i18n.t("An error has ocurred deleting mappings"),
+                i18n.t("Successfully mappings deleted: ") + results.success,
+                i18n.t("failed mappings deleted: ") + results.failures,
+            ];
+
+            const resultWithFailedMessages = [...resultSummary, ...failedMessages];
+
+            snackbar.error(resultWithFailedMessages.join("\n"));
+        }
+
+        setDeleting(false);
+        setMappingIdsToDelete(undefined);
+        getMappings(sorting, { page: 1 });
+    };
 
     const closeDeleteDialog = useCallback(() => {
         setMappingIdsToDelete(undefined);
@@ -177,7 +196,7 @@ const MappingsList: React.FC<MappingsListProps> = props => {
                     onCancel={isDeleting ? undefined : closeDeleteDialog}
                     title={i18n.t("Delete mapping")}
                     description={i18n.t(
-                        "This operation will delete ({{n}}) mappings. This operation cannot be undone. Are you sure you want to proceed?",
+                        "This operation will delete ({{n}}) mappings and remove it as selected in related import rules. This operation cannot be undone. Are you sure you want to proceed?",
                         { n: mappingIdsToDelete.length }
                     )}
                     saveText={isDeleting ? i18n.t("Deleting...") : i18n.t("Proceed")}

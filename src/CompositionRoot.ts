@@ -16,6 +16,7 @@ import { GetImportRuleByIdUseCase } from "./domain/usecases/GetImportRuleByIdUse
 import { UpdateImportRuleUseCase } from "./domain/usecases/UpdateImportRuleUseCase";
 import MappingD2ApiRepository from "./data/MappingD2ApiRepository";
 import { CreateImportRuleUseCase } from "./domain/usecases/CreateImportRuleUseCase";
+import { DeleteMappingsUseCase } from "./domain/usecases/DeleteMappingsUseCase";
 
 interface Type<T> {
     new (...args: any[]): T;
@@ -39,6 +40,7 @@ class CompositionRoot {
         this.initializeDataElements();
         this.initializeImportRules();
         this.initializeImportAndDownload();
+        this.initializeMapping();
     }
 
     public get<T>(token: Type<T> | NamedToken): T {
@@ -69,6 +71,12 @@ class CompositionRoot {
     public dataElements() {
         return {
             getByDataSet: this.get(GetDataElementsUseCase),
+        };
+    }
+
+    public mapping() {
+        return {
+            delete: this.get(DeleteMappingsUseCase),
         };
     }
 
@@ -140,6 +148,24 @@ class CompositionRoot {
 
         this.dependencies.set("importUseCase", importUseCase);
         this.dependencies.set("downloadUseCase", downloadUseCase);
+    }
+
+    private initializeMapping() {
+        const mappingRepository = new MappingD2ApiRepository(
+            this.dependencies.get("dataStore"),
+            this.config.data.base.dataStore.keys.mappings
+        );
+
+        const importRuleRepository = this.dependencies.get(
+            "importRuleRepository"
+        ) as ImportRuleRepository;
+
+        const deleteMappingsUseCase = new DeleteMappingsUseCase(
+            mappingRepository,
+            importRuleRepository
+        );
+
+        this.dependencies.set(DeleteMappingsUseCase, deleteMappingsUseCase);
     }
 }
 

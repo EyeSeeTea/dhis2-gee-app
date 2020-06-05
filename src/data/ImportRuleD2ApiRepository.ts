@@ -48,14 +48,14 @@ export default class ImportRuleD2ApiRepository implements ImportRuleRepository {
         }
     }
 
-    async getAll(filters: ImportRuleFilters): Promise<ImportRule[]> {
+    async getAll(filters?: ImportRuleFilters): Promise<ImportRule[]> {
         const importRulesData = await this.getImportRulesData();
 
         const importRules = importRulesData?.map(importRuleData =>
             this.mapToDomain(importRuleData)
         );
 
-        const filteredImportRules = this.applyFilters(importRules, filters);
+        const filteredImportRules = filters ? this.applyFilters(importRules, filters) : importRules;
 
         return filteredImportRules;
     }
@@ -106,9 +106,45 @@ export default class ImportRuleD2ApiRepository implements ImportRuleRepository {
                     : [...importRulesData, importRuleData];
 
                 await this.saveImportRulesData(newimportRulesData);
-
                 return Either.Success(true);
             }
+        } catch (e) {
+            return Either.failure({
+                kind: "UnexpectedError",
+                error: e,
+            });
+        }
+    }
+
+    async saveAll(importRules: ImportRule[]): Promise<Either<SaveError, true>> {
+        try {
+            const importRulesDataToSave = importRules.map(importRule =>
+                this.mapToDataStore(importRule)
+            );
+
+            const existedImportRulesData = await this.getImportRulesData();
+            const existedImportRulesDataIds = existedImportRulesData.map(data => data.id);
+
+            const existedImportRulesDataToSave = importRulesDataToSave.filter(
+                importRuleDataToSave => existedImportRulesDataIds.includes(importRuleDataToSave.id)
+            );
+
+            const newImportRulesDataToSave = importRulesDataToSave.filter(
+                importRuleDataToSave => !existedImportRulesDataIds.includes(importRuleDataToSave.id)
+            );
+
+            const allDataToSave = [
+                ...existedImportRulesData.map(
+                    existed =>
+                        existedImportRulesDataToSave.find(updated => updated.id === existed.id) ||
+                        existed
+                ),
+                ...newImportRulesDataToSave,
+            ];
+
+            await this.saveImportRulesData(allDataToSave);
+
+            return Either.Success(true);
         } catch (e) {
             return Either.failure({
                 kind: "UnexpectedError",

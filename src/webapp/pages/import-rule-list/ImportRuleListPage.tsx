@@ -112,7 +112,7 @@ const ImportRuleListPage: React.FC = () => {
             const resultSummary: string[] = [
                 i18n.t("An error has ocurred deleting import rules"),
                 i18n.t("Successfully import rule deleted: ") + results.success,
-                i18n.t("failed import rule  deleted: ") + results.success,
+                i18n.t("failed import rule  deleted: ") + results.failures,
             ];
 
             const resultWithFailedMessages = [...resultSummary, ...failedMessages];

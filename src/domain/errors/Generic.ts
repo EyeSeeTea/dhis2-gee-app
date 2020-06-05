@@ -3,6 +3,11 @@ export type UnexpectedError = {
     error: Error;
 };
 
+export type ItemIdNotFoundError = {
+    kind: "ItemIdNotFoundError";
+    id: string;
+};
+
 export interface ValidationErrors {
     kind: "ValidationErrors";
     errors: ErrorsDictionary;

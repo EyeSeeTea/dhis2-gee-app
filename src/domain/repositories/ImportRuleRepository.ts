@@ -18,4 +18,5 @@ export interface ImportRuleRepository {
     getAll(filters?: ImportRuleFilters): Promise<ImportRule[]>;
     deleteById(id: Id): Promise<Either<DeleteByIdError, true>>;
     save(importRule: ImportRule): Promise<Either<SaveError, true>>;
+    saveAll(importRules: ImportRule[]): Promise<Either<SaveError, true>>;
 }
