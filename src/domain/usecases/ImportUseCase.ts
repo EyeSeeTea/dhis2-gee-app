@@ -22,6 +22,7 @@ import { Id } from "../entities/Ref";
 import i18n from "../../webapp/utils/i18n";
 import { AttributeMappingDictionary } from "../entities/Mapping";
 import MappingRepository from "../repositories/MappingRepository";
+import { ImportRule } from "../entities/ImportRule";
 
 export interface ImportUseCaseResult {
     success: boolean;
@@ -50,57 +51,63 @@ export default class ImportUseCase {
                 `importRule with id ${importRuleId} does not exist`
             );
 
-            const orgUnitIds = _.compact(importRule.selectedOUs.map(o => o.split("/").pop()));
-            const orgUnits = await this.orgUnitRepository.getByIds(orgUnitIds);
+            failures = this.validateImportRule(importRule);
 
-            const baseImportConfig: { orgUnits: OrgUnit[]; interval: GeeInterval } = {
-                orgUnits: orgUnits,
-                interval: {
-                    type: "daily",
-                    ...buildPeriod(importRule.periodInformation),
-                },
-            };
-            let importDataValueSet: DataValueSet = { dataValues: [] };
+            if (failures.length === 0) {
+                const orgUnitIds = _.compact(importRule.selectedOUs.map(o => o.split("/").pop()));
+                const orgUnits = await this.orgUnitRepository.getByIds(orgUnitIds);
 
-            const mappings = await this.mappingRepository.getAll(importRule.selectedMappings);
+                const baseImportConfig: { orgUnits: OrgUnit[]; interval: GeeInterval } = {
+                    orgUnits: orgUnits,
+                    interval: {
+                        type: "daily",
+                        ...buildPeriod(importRule.periodInformation),
+                    },
+                };
+                let importDataValueSet: DataValueSet = { dataValues: [] };
 
-            await Promise.all(
-                mappings.map(async selectedMapping => {
-                    try {
-                        const geeDataSet = await this.geeDataSetRepository.getByCode(
-                            selectedMapping.geeImage
-                        );
+                const mappings = await this.mappingRepository.getAll(importRule.selectedMappings);
 
-                        const dataValueSet: DataValueSet = await this.getDataValueSet({
-                            ...baseImportConfig,
-                            geeDataSetId: geeDataSet.imageCollectionId,
-                            attributeIdsMapping: this.getAttributeIdMappings(
-                                selectedMapping.attributeMappingDictionary
-                            ),
-                        });
+                await Promise.all(
+                    mappings.map(async selectedMapping => {
+                        try {
+                            const geeDataSet = await this.geeDataSetRepository.getByCode(
+                                selectedMapping.geeImage
+                            );
 
-                        importDataValueSet = {
-                            dataValues: _.concat(
-                                importDataValueSet.dataValues,
-                                dataValueSet.dataValues
-                            ),
-                        };
-                        messages = [
-                            ...messages,
-                            i18n.t("{{n}} data values from {{name}} google data set.", {
-                                name: geeDataSet.displayName,
-                                n: dataValueSet.dataValues.length,
-                            }),
-                        ];
-                    } catch (err) {
-                        failures = [...failures, err];
-                    }
-                })
-            );
+                            const dataValueSet: DataValueSet = await this.getDataValueSet({
+                                ...baseImportConfig,
+                                geeDataSetId: geeDataSet.imageCollectionId,
+                                attributeIdsMapping: this.getAttributeIdMappings(
+                                    selectedMapping.attributeMappingDictionary
+                                ),
+                            });
 
-            const dataValueSetResponse = await this.dataValueSetRepository.save(importDataValueSet);
+                            importDataValueSet = {
+                                dataValues: _.concat(
+                                    importDataValueSet.dataValues,
+                                    dataValueSet.dataValues
+                                ),
+                            };
+                            messages = [
+                                ...messages,
+                                i18n.t("{{n}} data values from {{name}} google data set.", {
+                                    name: geeDataSet.displayName,
+                                    n: dataValueSet.dataValues.length,
+                                }),
+                            ];
+                        } catch (err) {
+                            failures = [...failures, err];
+                        }
+                    })
+                );
 
-            messages = [...messages, this.getImportCountString(dataValueSetResponse)];
+                const dataValueSetResponse = await this.dataValueSetRepository.save(
+                    importDataValueSet
+                );
+
+                messages = [...messages, this.getImportCountString(dataValueSetResponse)];
+            }
 
             const updatedImportRule = importRule.updateLastExecuted();
             const syncRuleResponse = await this.importRuleRepository.save(updatedImportRule);
@@ -125,6 +132,25 @@ export default class ImportUseCase {
                 failures: [...failures, i18n.t("Import config failed"), err],
             };
         }
+    }
+    validateImportRule(importRule: ImportRule): string[] {
+        const failures: string[] = [];
+
+        if (importRule.selectedOUs.length === 0) {
+            failures.push(
+                i18n.t("Does not exists any selected organisation unit in the import rule")
+            );
+        }
+
+        if (!importRule.periodInformation) {
+            failures.push(i18n.t("Does not exists any selected period in the import rule"));
+        }
+
+        if (importRule.selectedMappings.length === 0) {
+            failures.push(i18n.t("Does not exists any selected mapping in the import rule"));
+        }
+
+        return failures;
     }
 
     private async getDataValueSet<Band extends string>(

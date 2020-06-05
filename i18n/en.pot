@@ -5,8 +5,8 @@ msgstr ""
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1)\n"
-"POT-Creation-Date: 2020-06-05T06:46:48.998Z\n"
-"PO-Revision-Date: 2020-06-05T06:46:48.998Z\n"
+"POT-Creation-Date: 2020-06-05T11:28:36.447Z\n"
+"PO-Revision-Date: 2020-06-05T11:28:36.447Z\n"
 
 msgid "No effective import into DHIS2, file download"
 msgstr ""
@@ -57,6 +57,15 @@ msgid "An error has ocurred updating lastUpdate field of import rule"
 msgstr ""
 
 msgid "Import config failed"
+msgstr ""
+
+msgid "Does not exists any selected organisation unit in the import rule"
+msgstr ""
+
+msgid "Does not exists any selected period in the import rule"
+msgstr ""
+
+msgid "Does not exists any selected mapping in the import rule"
 msgstr ""
 
 msgid "Mapping for attribute {{attr}}"
@@ -211,7 +220,7 @@ msgstr ""
 msgid "Click to show feedback"
 msgstr ""
 
-msgid "Manual Import"
+msgid "On-demand Import"
 msgstr ""
 
 msgid ""
@@ -245,7 +254,7 @@ msgstr ""
 msgid "Import successful \n"
 msgstr ""
 
-msgid "Manual import"
+msgid "On-demand import"
 msgstr ""
 
 msgid "Import Rule"
