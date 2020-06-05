@@ -18,29 +18,24 @@ import { ImportRule, ImportRuleData } from "../../../domain/entities/ImportRule"
 import { FIXED } from "../../../domain/entities/PeriodOption";
 import moment from "moment";
 import { useCompositionRoot } from "../../contexts/app-context";
-import { GetImportRulesUseCase } from "../../../domain/usecases/GetImportRulesUseCase";
-import ImportUseCase from "../../../domain/usecases/ImportUseCase";
 import { Id } from "d2-api";
 import { useGoTo, pageRoutes } from "../root/Root";
-import { DeleteImportRulesUseCase } from "../../../domain/usecases/DeleteImportRulesUseCase";
 import { DeleteByIdError } from "../../../domain/repositories/ImportRuleRepository";
 import { ImportRuleListState, importRuleListInitialState } from "./ImportRulesListState";
+import ImportUseCase from "../../../domain/usecases/ImportUseCase";
 
 const ImportRuleListPage: React.FC = () => {
     const snackbar = useSnackbar();
     const history = useHistory();
     const goTo = useGoTo();
 
-    const compositionRoot = useCompositionRoot();
-    const getImportRulesUseCase = compositionRoot.get(GetImportRulesUseCase);
-    const importUseCase = compositionRoot.get<ImportUseCase>("importUseCase");
-    const downloadUseCase = compositionRoot.get<ImportUseCase>("downloadUseCase");
-    const deleteImportRuleUseCase = compositionRoot.get(DeleteImportRulesUseCase);
+    const importRules = useCompositionRoot().importRules();
+    const geeImport = useCompositionRoot().geeImport();
 
     const [state, setState] = useState<ImportRuleListState>(importRuleListInitialState);
 
     useEffect(() => {
-        getImportRulesUseCase
+        importRules.getAll
             .execute({
                 search: state.search,
                 lastExecuted: state.lastExecutedFilter
@@ -55,7 +50,7 @@ const ImportRuleListPage: React.FC = () => {
                     };
                 });
             });
-    }, [getImportRulesUseCase, state.search, state.lastExecutedFilter, state.objectsTableKey]);
+    }, [importRules.getAll, state.search, state.lastExecutedFilter, state.objectsTableKey]);
 
     const getPeriodText = (importRule: ImportRule) => {
         const formatDate = (date?: Date) => moment(date).format("YYYY-MM-DD");
@@ -95,7 +90,7 @@ const ImportRuleListPage: React.FC = () => {
             isDeleting: true,
         });
 
-        const results = await deleteImportRuleUseCase.execute(state.toDelete);
+        const results = await importRules.delete.execute(state.toDelete);
 
         if (results.failures.length === 0) {
             snackbar.success(i18n.t("Successfully deleted {{success}} import rules", results));
@@ -170,7 +165,7 @@ const ImportRuleListPage: React.FC = () => {
 
     const executeRule = async () => {
         if (state.importRuleToExecute) {
-            await executeOrDownload(state.importRuleToExecute, importUseCase);
+            await executeOrDownload(state.importRuleToExecute, geeImport.import);
             setState({
                 ...state,
                 showImportDialog: false,
@@ -181,7 +176,7 @@ const ImportRuleListPage: React.FC = () => {
 
     const downloadJSON = async (ids: string[]) => {
         const id = ids[0];
-        await executeOrDownload(id, downloadUseCase);
+        await executeOrDownload(id, geeImport.download);
     };
 
     const actions: TableAction<ImportRule>[] = [

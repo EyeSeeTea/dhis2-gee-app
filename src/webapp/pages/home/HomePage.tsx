@@ -18,7 +18,7 @@ const LandingPage: React.FC = () => {
             key: "Main",
             children: [
                 {
-                    name: i18n.t("Manual Import"),
+                    name: i18n.t("On-demand Import"),
                     description: i18n.t(
                         "Manually import gee data values by selecting organisation unit, period and creating o select the mapping/s for gee data sets."
                     ),

@@ -20,11 +20,7 @@ import PeriodSelectorDialog from "../../components/dialogs/PeriodSelectorDialog"
 import { ConfirmationDialog, useSnackbar } from "d2-ui-components";
 import { useHistory, useParams } from "react-router-dom";
 import ImportUseCase from "../../../domain/usecases/ImportUseCase";
-import { GetImportRuleByIdUseCase } from "../../../domain/usecases/GetImportRuleByIdUseCase";
-import {
-    UpdateImportRuleUseCase,
-    UpdateImportRuleError,
-} from "../../../domain/usecases/UpdateImportRuleUseCase";
+import { UpdateImportRuleError } from "../../../domain/usecases/UpdateImportRuleUseCase";
 import { PeriodOption } from "../../../domain/entities/PeriodOption";
 import {
     ImportRuleDetailState,
@@ -33,10 +29,7 @@ import {
 } from "./ImportRuleDetailState";
 import { importRuleOndemandId } from "../../../domain/entities/ImportRule";
 import GeneralInfo from "../../components/import-rule/GeneralInfo";
-import {
-    CreateImportRuleUseCase,
-    CreateImportRuleError,
-} from "../../../domain/usecases/CreateImportRuleUseCase";
+import { CreateImportRuleError } from "../../../domain/usecases/CreateImportRuleUseCase";
 import { getValidationTranslations } from "../../utils/ValidationTranslations";
 
 interface ImportRuleDetailPageParams {
@@ -47,23 +40,18 @@ interface ImportRuleDetailPageParams {
 const ImportRuleDetailPage: React.FC = () => {
     const classes = useStyles();
     const snackbar = useSnackbar();
+    const history = useHistory();
     const { action, id } = useParams() as ImportRuleDetailPageParams;
 
     const [state, setState] = useState<ImportRuleDetailState>(importRuleDetailInitialState);
 
-    const compositionRoot = useCompositionRoot();
-    const importUseCase = compositionRoot.get<ImportUseCase>("importUseCase");
-    const downloadUseCase = compositionRoot.get<ImportUseCase>("downloadUseCase");
-    const getImportRuleByIdUseCase = compositionRoot.get(GetImportRuleByIdUseCase);
-    const createImportRuleUseCase = compositionRoot.get(CreateImportRuleUseCase);
-    const updateImportRuleUseCase = compositionRoot.get(UpdateImportRuleUseCase);
-
-    const history = useHistory();
+    const importRules = useCompositionRoot().importRules();
+    const geeImport = useCompositionRoot().geeImport();
 
     React.useEffect(() => {
         if (action === "edit" || action === "ondemand") {
             const importRuleId = action === "edit" ? id : importRuleOndemandId;
-            getImportRuleByIdUseCase.execute(importRuleId).then(response => {
+            importRules.getById.execute(importRuleId).then(response => {
                 if (response.isDefined()) {
                     const importRule = response.get();
                     setState(state => {
@@ -94,7 +82,7 @@ const ImportRuleDetailPage: React.FC = () => {
                 };
             });
         }
-    }, [getImportRuleByIdUseCase, id, snackbar, history, action]);
+    }, [importRules.getById, id, snackbar, history, action]);
 
     const closeDialog = () => {
         setState({
@@ -124,8 +112,8 @@ const ImportRuleDetailPage: React.FC = () => {
     const save = async (editedImportRule: ImportRuleState) => {
         const saveReponse =
             action === "new"
-                ? await createImportRuleUseCase.execute(editedImportRule)
-                : await updateImportRuleUseCase.execute(editedImportRule);
+                ? await importRules.create.execute(editedImportRule)
+                : await importRules.update.execute(editedImportRule);
 
         saveReponse.fold(
             error => snackbar.error(handleSaveError(error)),
@@ -211,7 +199,7 @@ const ImportRuleDetailPage: React.FC = () => {
     };
 
     const importData = async () => {
-        await executeOrDownload(importUseCase);
+        await executeOrDownload(geeImport.import);
         setState({
             ...state,
             showImportDialog: false,
@@ -219,14 +207,14 @@ const ImportRuleDetailPage: React.FC = () => {
     };
 
     const downloadData = async () => {
-        await executeOrDownload(downloadUseCase);
+        await executeOrDownload(geeImport.download);
     };
 
     return (
         <React.Fragment>
             <PageHeader
                 onBackClick={() => history.goBack()}
-                title={action === "ondemand" ? i18n.t("Manual import") : i18n.t("Import Rule")}
+                title={action === "ondemand" ? i18n.t("On-demand import") : i18n.t("Import Rule")}
             />
 
             <Card className={classes.card}>

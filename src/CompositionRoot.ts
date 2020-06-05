@@ -49,6 +49,29 @@ class CompositionRoot {
         this.dependencies.set(token, value);
     }
 
+    public importRules() {
+        return {
+            getById: this.get(GetImportRuleByIdUseCase),
+            getAll: this.get(GetImportRulesUseCase),
+            create: this.get(CreateImportRuleUseCase),
+            update: this.get(UpdateImportRuleUseCase),
+            delete: this.get(DeleteImportRulesUseCase),
+        };
+    }
+
+    public geeImport() {
+        return {
+            import: this.get<ImportUseCase>("importUseCase"),
+            download: this.get<ImportUseCase>("downloadUseCase"),
+        };
+    }
+
+    public dataElements() {
+        return {
+            getByDataSet: this.get(GetDataElementsUseCase),
+        };
+    }
+
     private initializeDataStore() {
         const dataStore = this.d2Api.dataStore(this.config.data.base.dataStore.namespace);
         this.dependencies.set("dataStore", dataStore);
