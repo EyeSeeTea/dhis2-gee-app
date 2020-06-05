@@ -15,7 +15,7 @@ export interface ImportRuleDetailState {
 
 export type ImportRuleState = ImportRuleWritableData & Pick<ImportRuleProtectedData, "id">;
 
-export const importOnDemandInitialState = {
+export const importRuleDetailInitialState = {
     importRule: {
         id: "",
         name: "",

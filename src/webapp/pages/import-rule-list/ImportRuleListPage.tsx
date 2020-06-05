@@ -14,9 +14,9 @@ import {
 import React, { useEffect, useState } from "react";
 import { useHistory } from "react-router-dom";
 import PageHeader from "../../components/page-header/PageHeader";
-import { ImportRule } from "../../../domain/entities/ImportRule";
+import { ImportRule, ImportRuleData } from "../../../domain/entities/ImportRule";
 import { FIXED } from "../../../domain/entities/PeriodOption";
-import moment, { Moment } from "moment";
+import moment from "moment";
 import { useCompositionRoot } from "../../contexts/app-context";
 import { GetImportRulesUseCase } from "../../../domain/usecases/GetImportRulesUseCase";
 import ImportUseCase from "../../../domain/usecases/ImportUseCase";
@@ -24,8 +24,9 @@ import { Id } from "d2-api";
 import { useGoTo, pageRoutes } from "../root/Root";
 import { DeleteImportRulesUseCase } from "../../../domain/usecases/DeleteImportRulesUseCase";
 import { DeleteByIdError } from "../../../domain/repositories/ImportRuleRepository";
+import { ImportRuleListState, importRuleListInitialState } from "./ImportRulesListState";
 
-const ImportRulesPage: React.FC = () => {
+const ImportRuleListPage: React.FC = () => {
     const snackbar = useSnackbar();
     const history = useHistory();
     const goTo = useGoTo();
@@ -36,26 +37,25 @@ const ImportRulesPage: React.FC = () => {
     const downloadUseCase = compositionRoot.get<ImportUseCase>("downloadUseCase");
     const deleteImportRuleUseCase = compositionRoot.get(DeleteImportRulesUseCase);
 
-    //TODO: Unify to unique state?
-    const [rows, setRows] = useState<ImportRule[]>([]);
-    const [selection, setSelection] = useState<{ id: string }[]>([]);
-    const [toDelete, setToDelete] = useState<string[]>([]);
-    const [search, setSearchFilter] = useState("");
-    const [lastExecutedFilter, setLastExecutedFilter] = useState<Moment | null>(null);
-    const [openImportDialog, setOpenImportDialog] = useState<boolean>(false);
-    const [isImporting, setImporting] = useState<boolean>(false);
-    const [isDeleting, setIsDeleting] = useState<boolean>(false);
-    const [importRuleToExecute, setImportRuleToExecute] = useState<string | undefined>(undefined);
-    const [objectsTableKey, setObjectsTableKey] = useState(new Date().getTime());
+    const [state, setState] = useState<ImportRuleListState>(importRuleListInitialState);
 
     useEffect(() => {
         getImportRulesUseCase
             .execute({
-                search: search,
-                lastExecuted: lastExecutedFilter ? lastExecutedFilter.toDate() : undefined,
+                search: state.search,
+                lastExecuted: state.lastExecutedFilter
+                    ? state.lastExecutedFilter.toDate()
+                    : undefined,
             })
-            .then(setRows);
-    }, [getImportRulesUseCase, search, lastExecutedFilter, objectsTableKey]);
+            .then(importRules => {
+                setState(state => {
+                    return {
+                        ...state,
+                        importRules,
+                    };
+                });
+            });
+    }, [getImportRulesUseCase, state.search, state.lastExecutedFilter, state.objectsTableKey]);
 
     const getPeriodText = (importRule: ImportRule) => {
         const formatDate = (date?: Date) => moment(date).format("YYYY-MM-DD");
@@ -70,7 +70,7 @@ const ImportRulesPage: React.FC = () => {
         }`;
     };
 
-    const columns: TableColumn<ImportRule>[] = [
+    const columns: TableColumn<ImportRuleData>[] = [
         { name: "name", text: i18n.t("Name"), sortable: true },
         { name: "description", text: i18n.t("Description"), sortable: true },
         {
@@ -82,7 +82,7 @@ const ImportRulesPage: React.FC = () => {
         { name: "lastExecuted", text: i18n.t("Last executed"), sortable: true },
     ];
 
-    const details: ObjectsTableDetailField<ImportRule>[] = [
+    const details: ObjectsTableDetailField<ImportRuleData>[] = [
         { name: "name", text: i18n.t("Name") },
         { name: "description", text: i18n.t("Description") },
         { name: "periodInformation", text: i18n.t("Period"), getValue: getPeriodText },
@@ -90,9 +90,12 @@ const ImportRulesPage: React.FC = () => {
     ];
 
     const confirmDelete = async () => {
-        setIsDeleting(true);
+        setState({
+            ...state,
+            isDeleting: true,
+        });
 
-        const results = await deleteImportRuleUseCase.execute(toDelete);
+        const results = await deleteImportRuleUseCase.execute(state.toDelete);
 
         if (results.failures.length === 0) {
             snackbar.success(i18n.t("Successfully deleted {{success}} import rules", results));
@@ -122,10 +125,13 @@ const ImportRulesPage: React.FC = () => {
             snackbar.error(resultWithFailedMessages.join("\n"));
         }
 
-        setIsDeleting(false);
-        setToDelete([]);
-        setSelection([]);
-        setObjectsTableKey(new Date().getTime());
+        setState({
+            ...state,
+            isDeleting: false,
+            toDelete: [],
+            selection: [],
+            objectsTableKey: new Date().getTime(),
+        });
     };
 
     const createRule = () => {
@@ -140,13 +146,20 @@ const ImportRulesPage: React.FC = () => {
     };
 
     const executeOrDownload = async (id: Id, useCase: ImportUseCase) => {
-        setImporting(true);
+        setState({
+            ...state,
+            isImporting: true,
+        });
 
         const result = await useCase.execute(id);
 
         console.log({ result });
-        setImporting(false);
-        setObjectsTableKey(new Date().getTime());
+
+        setState({
+            ...state,
+            isImporting: false,
+            objectsTableKey: new Date().getTime(),
+        });
 
         if (result?.success) {
             snackbar.success(i18n.t("Import successful \n") + result.messages.join("\n"));
@@ -156,10 +169,13 @@ const ImportRulesPage: React.FC = () => {
     };
 
     const executeRule = async () => {
-        if (importRuleToExecute) {
-            await executeOrDownload(importRuleToExecute, importUseCase);
-            setOpenImportDialog(false);
-            setImportRuleToExecute(undefined);
+        if (state.importRuleToExecute) {
+            await executeOrDownload(state.importRuleToExecute, importUseCase);
+            setState({
+                ...state,
+                showImportDialog: false,
+                importRuleToExecute: undefined,
+            });
         }
     };
 
@@ -186,7 +202,11 @@ const ImportRulesPage: React.FC = () => {
             name: "delete",
             text: i18n.t("Delete"),
             multiple: true,
-            onClick: setToDelete,
+            onClick: (ids: string[]) =>
+                setState({
+                    ...state,
+                    toDelete: ids,
+                }),
             icon: <Icon>delete</Icon>,
         },
         {
@@ -194,8 +214,11 @@ const ImportRulesPage: React.FC = () => {
             text: i18n.t("Execute"),
             multiple: false,
             onClick: (ids: string[]) => {
-                setOpenImportDialog(true);
-                setImportRuleToExecute(ids[0]);
+                setState({
+                    ...state,
+                    showImportDialog: true,
+                    importRuleToExecute: ids[0],
+                });
             },
             icon: <Icon>settings_input_antenna</Icon>,
         },
@@ -209,21 +232,27 @@ const ImportRulesPage: React.FC = () => {
     ];
 
     const handleTableChange = (tableState: TableState<ReferenceObject>) => {
-        setSelection(
-            tableState.selection.map(sel => {
+        setState({
+            ...state,
+            selection: tableState.selection.map(sel => {
                 return {
                     id: sel.id,
                 };
-            })
-        );
+            }),
+        });
     };
 
     const filterComponents = (
         <React.Fragment>
             <DatePicker
                 placeholder={i18n.t("Last executed")}
-                value={lastExecutedFilter}
-                onChange={setLastExecutedFilter}
+                value={state.lastExecutedFilter}
+                onChange={lastExecutedFilter =>
+                    setState({
+                        ...state,
+                        lastExecutedFilter,
+                    })
+                }
                 isFilter={true}
             />
         </React.Fragment>
@@ -232,56 +261,73 @@ const ImportRulesPage: React.FC = () => {
     return (
         <React.Fragment>
             <PageHeader title={i18n.t("Import Rules")} onBackClick={() => history.goBack()} />
-            <ObjectsTable<ImportRule>
-                rows={rows}
+            <ObjectsTable<ImportRuleData>
+                rows={state.importRules}
                 columns={columns}
                 details={details}
                 actions={actions}
-                selection={selection}
+                selection={state.selection}
                 onChange={handleTableChange}
                 onActionButtonClick={createRule}
                 searchBoxLabel={i18n.t("Search by name")}
-                onChangeSearch={setSearchFilter}
+                onChangeSearch={(search: string) =>
+                    setState({
+                        ...state,
+                        search,
+                    })
+                }
                 filterComponents={filterComponents}
             />
 
-            {openImportDialog && (
+            {state.showImportDialog && (
                 <ConfirmationDialog
                     isOpen={true}
                     onSave={executeRule}
-                    onCancel={() => (isImporting ? { undefined } : setOpenImportDialog(false))}
+                    onCancel={() =>
+                        state.isImporting
+                            ? { undefined }
+                            : setState({
+                                  ...state,
+                                  showImportDialog: false,
+                              })
+                    }
                     title={i18n.t("New import request")}
                     description={i18n.t(
                         "This operation will collect and import data from Google Earth Engine to the instance. Are you sure you want to proceed?"
                     )}
-                    saveText={isImporting ? i18n.t("Importing...") : i18n.t("Import")}
-                    disableSave={isImporting}
+                    saveText={state.isImporting ? i18n.t("Importing...") : i18n.t("Import")}
+                    disableSave={state.isImporting}
                     cancelText={i18n.t("Cancel")}
                 >
-                    {isImporting && <LinearProgress />}
+                    {state.isImporting && <LinearProgress />}
                 </ConfirmationDialog>
             )}
 
-            {toDelete.length > 0 && (
+            {state.toDelete.length > 0 && (
                 <ConfirmationDialog
                     isOpen={true}
                     onSave={confirmDelete}
-                    onCancel={() => setToDelete([])}
+                    onCancel={() =>
+                        setState({
+                            ...state,
+                            toDelete: [],
+                        })
+                    }
                     title={i18n.t("Delete Rules?")}
                     description={
-                        toDelete
+                        state.toDelete
                             ? i18n.t("Are you sure you want to delete {{count}} rules?", {
-                                  count: toDelete.length,
+                                  count: state.toDelete.length,
                               })
                             : ""
                     }
                     saveText={i18n.t("Ok")}
                 >
-                    {isDeleting && <LinearProgress />}
+                    {state.isDeleting && <LinearProgress />}
                 </ConfirmationDialog>
             )}
         </React.Fragment>
     );
 };
 
-export default ImportRulesPage;
+export default ImportRuleListPage;

@@ -22,7 +22,7 @@ export interface ImportRuleProtectedData {
     lastExecuted?: Date;
 }
 
-type ImportRuleData = ImportRuleWritableData & ImportRuleProtectedData;
+export type ImportRuleData = ImportRuleWritableData & ImportRuleProtectedData;
 
 export class ImportRule {
     public readonly id: Id;

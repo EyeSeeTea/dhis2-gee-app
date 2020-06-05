@@ -2,7 +2,7 @@ import React from "react";
 import { Route, Switch, HashRouter, useHistory, Redirect } from "react-router-dom";
 import MappingCreationPage from "../mappings/edit-mappings/MappingCreationPage";
 import LandingPage from "../home/HomePage";
-import ImportRulesPage from "../import-rules-list/ImportRulesListPage";
+import ImportRuleListPage from "../import-rule-list/ImportRuleListPage";
 import ImportRuleDetailPage from "../import-rule-detail/ImportRuleDetailPage";
 
 export const pageRoutes = {
@@ -50,7 +50,7 @@ const Root = () => {
                 <Route
                     path={pageRoutes.importRules.path}
                     exact
-                    render={() => <ImportRulesPage />}
+                    render={() => <ImportRuleListPage />}
                 />
                 <Route
                     path={pageRoutes.importRulesDetail.path}

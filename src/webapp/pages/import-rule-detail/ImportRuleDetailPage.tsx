@@ -28,7 +28,7 @@ import {
 import { PeriodOption } from "../../../domain/entities/PeriodOption";
 import {
     ImportRuleDetailState,
-    importOnDemandInitialState,
+    importRuleDetailInitialState,
     ImportRuleState,
 } from "./ImportRuleDetailState";
 import { importRuleOndemandId } from "../../../domain/entities/ImportRule";
@@ -49,7 +49,7 @@ const ImportRuleDetailPage: React.FC = () => {
     const snackbar = useSnackbar();
     const { action, id } = useParams() as ImportRuleDetailPageParams;
 
-    const [state, setState] = useState<ImportRuleDetailState>(importOnDemandInitialState);
+    const [state, setState] = useState<ImportRuleDetailState>(importRuleDetailInitialState);
 
     const compositionRoot = useCompositionRoot();
     const importUseCase = compositionRoot.get<ImportUseCase>("importUseCase");
