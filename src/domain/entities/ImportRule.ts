@@ -1,5 +1,8 @@
 import { Id, generateId } from "./Ref";
 import { PeriodOption } from "./PeriodOption";
+import { ValidationErrors, ErrorsDictionary } from "../errors/Generic";
+import { Either } from "../common/Either";
+import { validateRequired } from "../utils/Validations";
 
 export const importRuleDefaultId = "default";
 
@@ -46,13 +49,21 @@ export class ImportRule {
         this.lastExecuted = data.lastExecuted;
     }
 
-    public static createNew(newData: ImportRuleWritableData) {
-        return new ImportRule({
-            ...newData,
-            id: generateId(),
-            created: new Date(),
-            lastUpdated: new Date(),
-        });
+    public static createNew(newData: ImportRuleWritableData): Either<ValidationErrors, ImportRule> {
+        const errors = validate(newData);
+
+        if (Object.keys(errors).length > 0) {
+            return Either.failure({ kind: "ValidationErrors", errors });
+        } else {
+            return Either.Success(
+                new ImportRule({
+                    ...newData,
+                    id: generateId(),
+                    created: new Date(),
+                    lastUpdated: new Date(),
+                })
+            );
+        }
     }
 
     public static createExisted(data: ImportRuleData) {
@@ -63,46 +74,43 @@ export class ImportRule {
         return this.id === importRuleDefaultId;
     }
 
-    public changeMappings(selectedMappings: string[]): ImportRule {
-        const newData = {
-            ...this.data,
-            selectedMappings: selectedMappings,
-        };
-        return new ImportRule(newData).updateLastUpdated();
-    }
+    public update(newData: ImportRuleWritableData): Either<ValidationErrors, ImportRule> {
+        const errors = validate(newData);
 
-    public changeOUs(selectedOUs: string[]): ImportRule {
-        const newData = { ...this.data, selectedOUs: selectedOUs };
-        return new ImportRule(newData);
-    }
-
-    public changePeriod(period: PeriodOption): ImportRule {
-        const newData = { ...this.data, periodInformation: period };
-        return new ImportRule(newData).updateLastUpdated();
-    }
-
-    public changeName(name: string): ImportRule {
-        const newData = { ...this.data, name };
-        return new ImportRule(newData).updateLastUpdated();
-    }
-
-    public changeDescription(description?: string): ImportRule {
-        const newData = { ...this.data, description };
-        return new ImportRule(newData).updateLastUpdated();
-    }
-
-    public changeCode(code?: string): ImportRule {
-        const newData = { ...this.data, code };
-        return new ImportRule(newData).updateLastUpdated();
-    }
-
-    public updateLastUpdated(): ImportRule {
-        const newData = { ...this.data, lastUpdated: new Date() };
-        return new ImportRule(newData);
+        if (Object.keys(errors).length > 0) {
+            return Either.failure({ kind: "ValidationErrors", errors });
+        } else {
+            return Either.Success(
+                new ImportRule({
+                    ...this.data,
+                    name: newData.name,
+                    code: newData.code,
+                    description: newData.description,
+                    selectedOUs: newData.selectedOUs,
+                    periodInformation: newData.periodInformation,
+                    selectedMappings: newData.selectedMappings,
+                }).updateLastUpdated()
+            );
+        }
     }
 
     public updateLastExecuted(): ImportRule {
         const newData = { ...this.data, lastExecuted: new Date() };
         return new ImportRule(newData).updateLastUpdated();
     }
+
+    private updateLastUpdated(): ImportRule {
+        const newData = { ...this.data };
+        return new ImportRule(newData);
+    }
+}
+
+function validate(values: ImportRuleWritableData): ErrorsDictionary {
+    const errors: ErrorsDictionary = {
+        name: validateRequired("name", values.name),
+    };
+
+    Object.keys(errors).forEach((key: string) => errors[key].length === 0 && delete errors[key]);
+
+    return errors;
 }

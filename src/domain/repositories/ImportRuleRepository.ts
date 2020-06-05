@@ -2,24 +2,16 @@ import { ImportRule } from "../entities/ImportRule";
 import { Id } from "../entities/Ref";
 import { Maybe } from "../common/Maybe";
 import { Either } from "../common/Either";
+import { UnexpectedError } from "../errors/Generic";
+import { ImportRuleIdNotFound } from "../errors/ImportRule";
 
 export interface ImportRuleFilters {
     search?: string;
     lastExecuted?: Date;
 }
 
-export type ImportRuleIdNotFound = {
-    kind: "ImportRuleIdNotFound";
-    id: string;
-};
-
-export type UnexpectedError = {
-    kind: "UnexpectedError";
-    error: Error;
-};
-
 export type DeleteByIdError = ImportRuleIdNotFound | UnexpectedError;
-export type SaveError = UnexpectedError | ImportRuleIdNotFound;
+export type SaveError = UnexpectedError;
 
 export interface ImportRuleRepository {
     getById(id: Id): Promise<Maybe<ImportRule>>;

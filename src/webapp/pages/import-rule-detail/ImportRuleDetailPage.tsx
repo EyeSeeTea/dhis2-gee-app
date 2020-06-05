@@ -21,12 +21,19 @@ import { ConfirmationDialog, useSnackbar } from "d2-ui-components";
 import { useHistory, useParams } from "react-router-dom";
 import ImportUseCase from "../../../domain/usecases/ImportUseCase";
 import { GetImportRuleByIdUseCase } from "../../../domain/usecases/GetImportRuleByIdUseCase";
-import { SaveImportRuleUseCase } from "../../../domain/usecases/SaveImportRuleUseCase";
+import {
+    UpdateImportRuleUseCase,
+    UpdateImportRuleError,
+} from "../../../domain/usecases/UpdateImportRuleUseCase";
 import { PeriodOption } from "../../../domain/entities/PeriodOption";
 import { ImportOnDemandState, importOnDemandInitialState, ImportRuleState } from "./ImportState";
-import { SaveError } from "../../../domain/repositories/ImportRuleRepository";
 import { importRuleDefaultId } from "../../../domain/entities/ImportRule";
 import GeneralInfo from "../../components/import-rule/GeneralInfo";
+import {
+    CreateImportRuleUseCase,
+    CreateImportRuleError,
+} from "../../../domain/usecases/CreateImportRuleUseCase";
+import { getValidationTranslations } from "../../utils/ValidationTranslations";
 
 interface ImportRuleDetailPageParams {
     id: string;
@@ -44,7 +51,8 @@ const ImportRuleDetailPage: React.FC = () => {
     const importUseCase = compositionRoot.get<ImportUseCase>("importUseCase");
     const downloadUseCase = compositionRoot.get<ImportUseCase>("downloadUseCase");
     const getImportRuleByIdUseCase = compositionRoot.get(GetImportRuleByIdUseCase);
-    const saveImportRuleUseCase = compositionRoot.get(SaveImportRuleUseCase);
+    const createImportRuleUseCase = compositionRoot.get(CreateImportRuleUseCase);
+    const updateImportRuleUseCase = compositionRoot.get(UpdateImportRuleUseCase);
 
     const history = useHistory();
 
@@ -92,14 +100,14 @@ const ImportRuleDetailPage: React.FC = () => {
         });
     };
 
-    const handleSaveError = (error: SaveError): string => {
+    const handleSaveError = (error: UpdateImportRuleError | CreateImportRuleError): string => {
         switch (error.kind) {
             case "ImportRuleIdNotFound":
                 return i18n.t("Import Rule {{id}} not found", { id });
             case "UnexpectedError":
-                return i18n.t(
-                    "An unexpected error has ocurred updating last changes for on demand import"
-                );
+                return i18n.t("An unexpected error has ocurred saving:") + error.error.message;
+            case "ValidationErrors":
+                return getValidationTranslations(error.errors).join("\n");
         }
     };
 
@@ -110,18 +118,20 @@ const ImportRuleDetailPage: React.FC = () => {
     };
 
     const save = async (editedImportRule: ImportRuleState) => {
-        if (editedImportRule) {
-            const saveReponse = await saveImportRuleUseCase.execute(editedImportRule);
-            saveReponse.fold(
-                error => snackbar.error(handleSaveError(error)),
-                () => {
-                    if (action !== "ondemand") {
-                        history.goBack();
-                        snackbar.success(i18n.t("Success"));
-                    }
+        const saveReponse =
+            action === "new"
+                ? await createImportRuleUseCase.execute(editedImportRule)
+                : await updateImportRuleUseCase.execute(editedImportRule);
+
+        saveReponse.fold(
+            error => snackbar.error(handleSaveError(error)),
+            () => {
+                if (action !== "ondemand") {
+                    history.goBack();
+                    snackbar.success(i18n.t("Success"));
                 }
-            );
-        }
+            }
+        );
     };
 
     const onSelectedMappingsChange = (newSelectedMappings: string[]) => {

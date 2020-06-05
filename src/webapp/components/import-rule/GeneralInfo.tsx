@@ -36,9 +36,7 @@ const GeneralInfoStep: React.FC<GeneralInfoStepProps> = ({ importRule, onChange 
             validators: [
                 {
                     message: i18n.t("Field cannot be blank"),
-                    validator(value: string) {
-                        return Validators.isRequired(value);
-                    },
+                    validator: Validators.isRequired,
                 },
             ],
         },

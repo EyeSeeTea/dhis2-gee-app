@@ -5,8 +5,8 @@ msgstr ""
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1)\n"
-"POT-Creation-Date: 2020-06-04T12:29:28.064Z\n"
-"PO-Revision-Date: 2020-06-04T12:29:28.064Z\n"
+"POT-Creation-Date: 2020-06-05T06:46:48.998Z\n"
+"PO-Revision-Date: 2020-06-05T06:46:48.998Z\n"
 
 msgid "No effective import into DHIS2, file download"
 msgstr ""
@@ -239,24 +239,16 @@ msgstr ""
 msgid "Import Rule {{id}} not found"
 msgstr ""
 
-msgid "An unexpected error has ocurred updating last changes for on demand import"
+msgid "Success"
 msgstr ""
 
 msgid "Import successful \n"
 msgstr ""
 
-msgid "Import"
+msgid "Manual import"
 msgstr ""
 
-msgid "New import request"
-msgstr ""
-
-msgid ""
-"This operation will collect and import data from Google Earth Engine to the "
-"instance. Are you sure you want to proceed?"
-msgstr ""
-
-msgid "Importing..."
+msgid "Import Rule"
 msgstr ""
 
 msgid "Select Organisation Units"
@@ -271,13 +263,18 @@ msgstr ""
 msgid "Download JSON "
 msgstr ""
 
-msgid "Success"
+msgid "New import request"
 msgstr ""
 
-msgid "Manual import"
+msgid ""
+"This operation will collect and import data from Google Earth Engine to the "
+"instance. Are you sure you want to proceed?"
 msgstr ""
 
-msgid "Import Rule"
+msgid "Importing..."
+msgstr ""
+
+msgid "Import"
 msgstr ""
 
 msgid "Last executed"
