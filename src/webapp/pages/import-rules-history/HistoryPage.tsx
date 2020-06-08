@@ -1,4 +1,3 @@
-import i18n from "@dhis2/d2-i18n";
 import DeleteIcon from "@material-ui/icons/Delete";
 import DescriptionIcon from "@material-ui/icons/Description";
 import {
@@ -21,17 +20,7 @@ import { useCompositionRoot } from "../../contexts/app-context";
 import { pageRoutes } from "../root/Root";
 import { DeleteImportSummaryByIdsError } from "../../../domain/repositories/ImportSummaryRepository";
 import { Ref } from "../../../domain/entities/Ref";
-
-const dropdownItems = [
-    {
-        id: "SUCCESS",
-        name: i18n.t("Success"),
-    },
-    {
-        id: "FAILURE",
-        name: i18n.t("Failure"),
-    },
-];
+import i18n from "../../utils/i18n";
 
 const HistoryPage: React.FC = () => {
     const history = useHistory();
@@ -84,7 +73,7 @@ const HistoryPage: React.FC = () => {
                 );
             },
         },
-        { name: "date", text: i18n.t("Timestamp") },
+        { name: "date", text: i18n.t("Date") },
         {
             name: "status",
             text: i18n.t("Status"),
@@ -95,7 +84,7 @@ const HistoryPage: React.FC = () => {
 
     const details: ObjectsTableDetailField<ImportSummaryState>[] = [
         { name: "user", text: i18n.t("User") },
-        { name: "date", text: i18n.t("Timestamp") },
+        { name: "date", text: i18n.t("Date") },
         {
             name: "status",
             text: i18n.t("Status"),
@@ -216,7 +205,7 @@ const HistoryPage: React.FC = () => {
         <React.Fragment>
             <Dropdown
                 key={"status-filter"}
-                items={dropdownItems}
+                items={state.statusFilterItems}
                 onValueChange={value =>
                     setState({
                         ...state,

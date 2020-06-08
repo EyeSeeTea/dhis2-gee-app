@@ -1,5 +1,6 @@
 import { ImportRuleData } from "../../../domain/entities/ImportRule";
 import { ImportSummaryData } from "../../../domain/entities/ImportSummary";
+import i18n from "../../utils/i18n";
 
 export interface HistoryState {
     historyRows: ImportSummaryState[];
@@ -11,6 +12,7 @@ export interface HistoryState {
     importRuleFilter: string;
     isDeleting: boolean;
     objectsTableKey: number;
+    statusFilterItems: { id: string; name: string }[];
 }
 
 export type ImportRuleState = ImportRuleData;
@@ -26,4 +28,14 @@ export const historyInitialState = {
     importRuleFilter: "",
     isDeleting: false,
     objectsTableKey: new Date().getTime(),
+    statusFilterItems: [
+        {
+            id: "SUCCESS",
+            name: i18n.t("Success"),
+        },
+        {
+            id: "FAILURE",
+            name: i18n.t("Failure"),
+        },
+    ],
 };
