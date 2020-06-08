@@ -37,7 +37,7 @@ const LandingPage: React.FC = () => {
                     description: i18n.t(
                         "View and analyse the status and results of the manual import and import rules executions."
                     ),
-                    listAction: () => goTo(pageRoutes.history),
+                    listAction: () => goTo(pageRoutes.importsHistory),
                 },
             ],
         },

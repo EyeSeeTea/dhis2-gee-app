@@ -18,6 +18,8 @@ import MappingD2ApiRepository from "./data/MappingD2ApiRepository";
 import { CreateImportRuleUseCase } from "./domain/usecases/CreateImportRuleUseCase";
 import { DeleteMappingsUseCase } from "./domain/usecases/DeleteMappingsUseCase";
 import ImportSummaryD2ApiRepository from "./data/ImportSummaryD2ApiRepository";
+import { GetImportSummariesUseCase } from "./domain/usecases/GetImportSummariesUseCase";
+import { DeleteImportSummariesUseCase } from "./domain/usecases/DeleteImportSummariesUseCase";
 
 interface Type<T> {
     new (...args: any[]): T;
@@ -40,6 +42,7 @@ class CompositionRoot {
         this.initializeDataStore();
         this.initializeDataElements();
         this.initializeImportRules();
+        this.initializeImportsHistory();
         this.initializeImportAndDownload();
         this.initializeMapping();
     }
@@ -59,6 +62,13 @@ class CompositionRoot {
             create: this.get(CreateImportRuleUseCase),
             update: this.get(UpdateImportRuleUseCase),
             delete: this.get(DeleteImportRulesUseCase),
+        };
+    }
+
+    public importSummaries() {
+        return {
+            getAll: this.get(GetImportSummariesUseCase),
+            delete: this.get(DeleteImportSummariesUseCase),
         };
     }
 
@@ -111,6 +121,20 @@ class CompositionRoot {
         this.dependencies.set(CreateImportRuleUseCase, createImportRuleUseCase);
         this.dependencies.set(UpdateImportRuleUseCase, updateImportRuleUseCase);
         this.dependencies.set(DeleteImportRulesUseCase, deleteImportRulesUseCase);
+    }
+
+    initializeImportsHistory() {
+        const importSummaryRepository = new ImportSummaryD2ApiRepository(
+            this.dependencies.get("dataStore"),
+            this.config.data.base.dataStore.keys.importsHistory
+        );
+        const getImportSummariesUseCase = new GetImportSummariesUseCase(importSummaryRepository);
+        const deleteImportSummariesUseCase = new DeleteImportSummariesUseCase(
+            importSummaryRepository
+        );
+
+        this.dependencies.set(GetImportSummariesUseCase, getImportSummariesUseCase);
+        this.dependencies.set(DeleteImportSummariesUseCase, deleteImportSummariesUseCase);
     }
 
     private initializeImportAndDownload() {

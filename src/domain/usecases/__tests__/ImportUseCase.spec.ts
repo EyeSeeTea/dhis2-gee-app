@@ -164,7 +164,9 @@ function givenADataValueSetRepository(): DataValueSetRepository {
 
 function givenAImportSummaryRepository(): ImportSummaryRepository {
     return {
+        getAll: jest.fn(),
         save: jest.fn(),
+        deleteByIds: jest.fn(),
     };
 }
 

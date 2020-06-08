@@ -4,22 +4,48 @@ import { ImportSummaryStatus, ImportResult, ImportSummary } from "../domain/enti
 import {
     SaveImportSummaryError,
     ImportSummaryRepository,
+    ImportSummaryFilters,
 } from "../domain/repositories/ImportSummaryRepository";
+import { UnexpectedError } from "../domain/errors/Generic";
+import _ from "lodash";
 
 export default class ImportSummaryD2ApiRepository implements ImportSummaryRepository {
     constructor(private dataStore: DataStore, private dataStoreKey: string) {}
 
-    // async getAll(filters?: ImportRuleFilters): Promise<ImportRule[]> {
-    //     const importRulesData = await this.getImportRulesData();
+    async deleteByIds(ids: string[]): Promise<Either<UnexpectedError, true>> {
+        try {
+            const importSummariesData = await this.getImportSummariesData();
 
-    //     const importRules = importRulesData?.map(importRuleData =>
-    //         this.mapToDomain(importRuleData)
-    //     );
+            const newImportSummariesData = importSummariesData.filter(
+                importSummary => !ids.includes(importSummary.id)
+            );
 
-    //     const filteredImportRules = filters ? this.applyFilters(importRules, filters) : importRules;
+            await this.saveImportSummariesData(newImportSummariesData);
 
-    //     return filteredImportRules;
-    // }
+            return Either.Success(true);
+        } catch (e) {
+            return Either.failure({
+                kind: "UnexpectedError",
+                error: e,
+            });
+        }
+    }
+
+    async getAll(filters?: ImportSummaryFilters): Promise<ImportSummary[]> {
+        const importSummariesData = await this.getImportSummariesData();
+
+        const importSummaries = importSummariesData?.map(importRuleData =>
+            this.mapToDomain(importRuleData)
+        );
+
+        const filteredImportSummaries = filters
+            ? this.applyFilters(importSummaries, filters)
+            : importSummaries;
+
+        const sortedData = _.orderBy(filteredImportSummaries, ["date"], ["desc"]);
+
+        return sortedData;
+    }
 
     async save(importSummary: ImportSummary): Promise<Either<SaveImportSummaryError, true>> {
         try {
@@ -44,28 +70,24 @@ export default class ImportSummaryD2ApiRepository implements ImportSummaryReposi
         }
     }
 
-    // private applyFilters(importRules: ImportRule[], filters: ImportRuleFilters): ImportRule[] {
-    //     const { search, lastExecuted } = filters;
+    private applyFilters(
+        importSummaries: ImportSummary[],
+        filters: ImportSummaryFilters
+    ): ImportSummary[] {
+        const { importRule, status } = filters;
 
-    //     const filteredBySearchImportRules = search
-    //         ? importRules.filter(
-    //             importRule =>
-    //                 importRule.name.toLowerCase().includes(search.toLowerCase()) ||
-    //                 importRule.description?.toLowerCase().includes(search.toLowerCase()) ||
-    //                 importRule.code?.toLowerCase().includes(search.toLowerCase())
-    //         )
-    //         : importRules;
+        const filteredByImportRules =
+            importRule && importRule !== ""
+                ? importSummaries.filter(importSummary => importSummary.importRule === importRule)
+                : importSummaries;
 
-    //     const filteredByLastExecuted = lastExecuted
-    //         ? filteredBySearchImportRules.filter(importRule =>
-    //             lastExecuted && importRule.lastExecuted
-    //                 ? moment(lastExecuted).isSameOrBefore(moment(importRule.lastExecuted), "date")
-    //                 : false
-    //         )
-    //         : filteredBySearchImportRules;
+        const filteredByStatus =
+            status && status !== ""
+                ? filteredByImportRules.filter(importSummary => importSummary.status === status)
+                : filteredByImportRules;
 
-    //     return filteredByLastExecuted;
-    // }
+        return filteredByStatus;
+    }
 
     private async getImportSummariesData(): Promise<ImportSummaryDS[]> {
         const data = await this.dataStore.get<ImportSummaryDS[]>(this.dataStoreKey).getData();
@@ -75,6 +97,13 @@ export default class ImportSummaryD2ApiRepository implements ImportSummaryReposi
 
     private async saveImportSummariesData(imporRulesData: ImportSummaryDS[]): Promise<void> {
         this.dataStore.save(this.dataStoreKey, imporRulesData);
+    }
+
+    mapToDomain(importRuleData: ImportSummaryDS): ImportSummary {
+        return ImportSummary.createExisted({
+            ...importRuleData,
+            date: new Date(importRuleData.date),
+        });
     }
 
     private mapToDataStore(importSummary: ImportSummary): ImportSummaryDS {

@@ -15,7 +15,7 @@ interface ImportSummaryInputs {
     result: ImportResult;
 }
 
-interface ImportSummaryData {
+export interface ImportSummaryData {
     readonly id: string;
     readonly date: Date;
     readonly user: string;
@@ -25,7 +25,7 @@ interface ImportSummaryData {
     readonly result: ImportResult;
 }
 
-export class ImportSummary {
+export class ImportSummary implements ImportSummaryData {
     public readonly id: string;
     public readonly date: Date;
     public readonly user: string;

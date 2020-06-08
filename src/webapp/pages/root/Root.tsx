@@ -4,6 +4,7 @@ import MappingCreationPage from "../mappings/edit-mappings/MappingCreationPage";
 import LandingPage from "../home/HomePage";
 import ImportRuleListPage from "../import-rule-list/ImportRuleListPage";
 import ImportRuleDetailPage from "../import-rule-detail/ImportRuleDetailPage";
+import HistoryPage from "../import-rules-history/HistoryPage";
 
 export const pageRoutes = {
     home: { path: "/" },
@@ -18,7 +19,7 @@ export const pageRoutes = {
         path: "/mappings/:id",
         generateUrl: ({ id }: { id: string }) => `/mappings/${id}`,
     },
-    history: { path: "/history" },
+    importsHistory: { path: "/history" },
     notFound: { path: "/not-found" },
 };
 
@@ -68,6 +69,8 @@ const Root = () => {
                         <MappingCreationPage action={"edit"} id={match.params.id} />
                     )}
                 />
+
+                <Route path={pageRoutes.importsHistory.path} render={() => <HistoryPage />} />
 
                 <Redirect to={pageRoutes.notFound.path} />
             </Switch>
