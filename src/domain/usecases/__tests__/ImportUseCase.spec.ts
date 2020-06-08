@@ -126,6 +126,7 @@ function givenAMappingRepository(): MappingRepository {
                 },
             ];
         }),
+        deleteById: jest.fn(),
     };
 }
 
@@ -139,6 +140,7 @@ function givenAImportRuleRepository(): ImportRuleRepository {
         save: jest.fn().mockImplementation(() => {
             return Either.Success(true);
         }),
+        saveAll: jest.fn(),
     };
 }
 
