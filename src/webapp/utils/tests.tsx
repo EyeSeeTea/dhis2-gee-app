@@ -36,6 +36,7 @@ export function getTestConfig() {
                 keys: {
                     mappings: "mappings",
                     importRules: "importRules",
+                    importsHistory: "imports-history",
                     imports: {
                         suffix: "@import",
                     },

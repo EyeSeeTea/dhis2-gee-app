@@ -17,6 +17,7 @@ import { UpdateImportRuleUseCase } from "./domain/usecases/UpdateImportRuleUseCa
 import MappingD2ApiRepository from "./data/MappingD2ApiRepository";
 import { CreateImportRuleUseCase } from "./domain/usecases/CreateImportRuleUseCase";
 import { DeleteMappingsUseCase } from "./domain/usecases/DeleteMappingsUseCase";
+import ImportSummaryD2ApiRepository from "./data/ImportSummaryD2ApiRepository";
 
 interface Type<T> {
     new (...args: any[]): T;
@@ -127,6 +128,10 @@ class CompositionRoot {
         const orgUnitsRepository = new OrgUnitD2ApiRepository(this.d2Api);
         const dataValueSetD2ApiRepository = new DataValueSetD2ApiRepository(this.d2Api);
         const dataValueSetFileRepository = new DataValueSetFileRepository();
+        const importSummaryRepository = new ImportSummaryD2ApiRepository(
+            this.dependencies.get("dataStore"),
+            this.config.data.base.dataStore.keys.importsHistory
+        );
 
         const importUseCase = new ImportUseCase(
             importRuleRepository,
@@ -134,7 +139,8 @@ class CompositionRoot {
             geeDataSetRepository,
             geeDataRepository,
             orgUnitsRepository,
-            dataValueSetD2ApiRepository
+            dataValueSetD2ApiRepository,
+            importSummaryRepository
         );
 
         const downloadUseCase = new ImportUseCase(
@@ -143,7 +149,8 @@ class CompositionRoot {
             geeDataSetRepository,
             geeDataRepository,
             orgUnitsRepository,
-            dataValueSetFileRepository
+            dataValueSetFileRepository,
+            importSummaryRepository
         );
 
         this.dependencies.set("importUseCase", importUseCase);

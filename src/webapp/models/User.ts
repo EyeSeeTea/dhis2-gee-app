@@ -25,7 +25,11 @@ export class User {
         feedbackRole: "Feedback",
     };
 
-    constructor(private data: UserData) {}
+    public readonly username: string;
+
+    constructor(private data: UserData) {
+        this.username = data.username;
+    }
 
     getOrgUnits(): OrganisationUnit[] {
         return this.data.organisationUnits;

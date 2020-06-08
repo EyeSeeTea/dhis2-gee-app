@@ -23,12 +23,12 @@ import i18n from "../../webapp/utils/i18n";
 import { AttributeMappingDictionary } from "../entities/Mapping";
 import MappingRepository from "../repositories/MappingRepository";
 import { ImportRule } from "../entities/ImportRule";
-
-export interface ImportUseCaseResult {
-    success: boolean;
-    failures: string[];
-    messages: string[];
-}
+import { ImportSummary, ImportResult } from "../entities/ImportSummary";
+import {
+    ImportSummaryRepository,
+    SaveImportSummaryError,
+} from "../repositories/ImportSummaryRepository";
+import { Either } from "../common/Either";
 
 export default class ImportUseCase {
     constructor(
@@ -37,11 +37,15 @@ export default class ImportUseCase {
         private geeDataSetRepository: GeeDataSetRepository,
         private geeDataRepository: GeeDataValueSetRepository,
         private orgUnitRepository: OrgUnitRepository,
-        private dataValueSetRepository: DataValueSetRepository
+        private dataValueSetRepository: DataValueSetRepository,
+        private importSummaryRepository: ImportSummaryRepository
     ) {}
 
+    //TODO: pass userid? and retrieve name?
+    // Validate user is not empty?
     public async execute(
-        importRuleId: Id
+        importRuleId: Id,
+        username: string
     ): Promise<{ success: boolean; failures: string[]; messages: string[] }> {
         let failures: string[] = [];
         let messages: string[] = [];
@@ -120,20 +124,29 @@ export default class ImportUseCase {
                 () => failures
             );
 
-            return {
+            const importResult = {
                 success: _.isEmpty(failures) && !_.isEmpty(messages),
                 messages: messages,
                 failures: failures,
             };
+
+            await this.saveImportResult(username, importRuleId, importResult);
+
+            return importResult;
         } catch (err) {
-            return {
+            const importResult = {
                 success: false,
                 messages: messages,
                 failures: [...failures, i18n.t("Import config failed"), err],
             };
+
+            await this.saveImportResult(username, importRuleId, importResult);
+
+            return importResult;
         }
     }
-    validateImportRule(importRule: ImportRule): string[] {
+
+    private validateImportRule(importRule: ImportRule): string[] {
         const failures: string[] = [];
 
         if (importRule.selectedOUs.length === 0) {
@@ -238,6 +251,20 @@ export default class ImportUseCase {
                 ignored: dataValueSetReponse.ignored,
             });
         }
+    }
+
+    private saveImportResult(
+        username: string,
+        importRuleId: string,
+        importResult: ImportResult
+    ): Promise<Either<SaveImportSummaryError, true>> {
+        const importSummary = ImportSummary.createNew({
+            username: username,
+            importRule: importRuleId,
+            result: importResult,
+        });
+
+        return this.importSummaryRepository.save(importSummary);
     }
 }
 
