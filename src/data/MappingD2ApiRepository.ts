@@ -1,7 +1,9 @@
 import DataStore from "d2-api/api/dataStore";
 import { Id } from "d2-api";
 import { Mapping } from "../domain/entities/Mapping";
-import MappingRepository, { DeleteByIdError } from "../domain/repositories/MappingRepository";
+import MappingRepository, {
+    DeleteMappingByIdsError,
+} from "../domain/repositories/MappingRepository";
 import { Either } from "../domain/common/Either";
 
 export default class MappingD2ApiRepository implements MappingRepository {
@@ -17,29 +19,20 @@ export default class MappingD2ApiRepository implements MappingRepository {
         return filteredImportRules;
     }
 
-    async deleteById(id: Id): Promise<Either<DeleteByIdError, true>> {
-        const mappingData = await this.getMappingData();
+    async deleteByIds(ids: string[]): Promise<Either<DeleteMappingByIdsError, true>> {
+        try {
+            const mappingData = await this.getMappingData();
 
-        const mappingToDelete = mappingData.find(mappingData => mappingData.id === id);
+            const newMappingData = mappingData.filter(mapping => !ids.includes(mapping.id));
 
-        if (!mappingToDelete) {
+            await this.saveMappingData(newMappingData);
+
+            return Either.Success(true);
+        } catch (e) {
             return Either.failure({
-                kind: "ItemIdNotFoundError",
-                id: id,
+                kind: "UnexpectedError",
+                error: e,
             });
-        } else {
-            try {
-                const newMappingData = mappingData.filter(data => data.id !== id);
-
-                await this.saveMappingData(newMappingData);
-
-                return Either.Success(true);
-            } catch (e) {
-                return Either.failure({
-                    kind: "UnexpectedError",
-                    error: e,
-                });
-            }
         }
     }
 

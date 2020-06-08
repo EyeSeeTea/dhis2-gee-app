@@ -7,12 +7,11 @@ import {
 } from "../entities/ImportRule";
 import { Either } from "../common/Either";
 import { isValidId } from "../entities/Ref";
-import { ValidationErrors } from "../errors/Generic";
-import { ImportRuleIdNotFound } from "../errors/ImportRule";
+import { ValidationErrors, ItemIdNotFoundError } from "../errors/Generic";
 
 export type UpdateImportRuleRequest = ImportRuleWritableData & Pick<ImportRuleProtectedData, "id">;
 
-export type UpdateImportRuleError = ImportRuleIdNotFound | ValidationErrors | SaveError;
+export type UpdateImportRuleError = ItemIdNotFoundError | ValidationErrors | SaveError;
 
 export class UpdateImportRuleUseCase {
     constructor(private importRuleRepository: ImportRuleRepository) {}
@@ -26,7 +25,7 @@ export class UpdateImportRuleUseCase {
 
         if (importRuleToEdit.isEmpty()) {
             return Either.failure({
-                kind: "ImportRuleIdNotFound",
+                kind: "ItemIdNotFoundError",
                 id: importRuleRequest.id,
             });
         }

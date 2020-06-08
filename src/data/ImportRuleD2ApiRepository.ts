@@ -2,8 +2,8 @@ import moment from "moment";
 import {
     ImportRuleRepository,
     ImportRuleFilters,
-    DeleteByIdError,
     SaveError,
+    DeleteImportRulesByIdError,
 } from "../domain/repositories/ImportRuleRepository";
 import { ImportRule, importRuleOndemandId } from "../domain/entities/ImportRule";
 import DataStore from "d2-api/api/dataStore";
@@ -58,34 +58,6 @@ export default class ImportRuleD2ApiRepository implements ImportRuleRepository {
         const filteredImportRules = filters ? this.applyFilters(importRules, filters) : importRules;
 
         return filteredImportRules;
-    }
-
-    async deleteById(id: Id): Promise<Either<DeleteByIdError, true>> {
-        const importRulesData = await this.getImportRulesData();
-
-        const importRuleToDelete = importRulesData.find(
-            importRulesData => importRulesData.id === id
-        );
-
-        if (!importRuleToDelete) {
-            return Either.failure({
-                kind: "ImportRuleIdNotFound",
-                id: id,
-            });
-        } else {
-            try {
-                const newimportRulesData = importRulesData.filter(data => data.id !== id);
-
-                await this.saveImportRulesData(newimportRulesData);
-
-                return Either.Success(true);
-            } catch (e) {
-                return Either.failure({
-                    kind: "UnexpectedError",
-                    error: e,
-                });
-            }
-        }
     }
 
     async save(importRule: ImportRule): Promise<Either<SaveError, true>> {
@@ -143,6 +115,25 @@ export default class ImportRuleD2ApiRepository implements ImportRuleRepository {
             ];
 
             await this.saveImportRulesData(allDataToSave);
+
+            return Either.Success(true);
+        } catch (e) {
+            return Either.failure({
+                kind: "UnexpectedError",
+                error: e,
+            });
+        }
+    }
+
+    async deleteByIds(ids: string[]): Promise<Either<DeleteImportRulesByIdError, true>> {
+        try {
+            const importRulesData = await this.getImportRulesData();
+
+            const newImportRulesData = importRulesData.filter(
+                importSummary => !ids.includes(importSummary.id)
+            );
+
+            await this.saveImportRulesData(newImportRulesData);
 
             return Either.Success(true);
         } catch (e) {

@@ -1,26 +1,15 @@
-import { ImportRuleRepository, DeleteByIdError } from "../repositories/ImportRuleRepository";
+import {
+    ImportRuleRepository,
+    DeleteImportRulesByIdError,
+} from "../repositories/ImportRuleRepository";
 import { Id } from "../entities/Ref";
-
-export interface DeleteImportRulesResult {
-    success: number;
-    failures: DeleteByIdError[];
-}
+import { Either } from "../common/Either";
 
 export class DeleteImportRulesUseCase {
     constructor(private importRuleRepository: ImportRuleRepository) {}
 
-    async execute(ids: Id[]): Promise<DeleteImportRulesResult> {
-        const deletedIds: Id[] = [];
-        const failures: DeleteByIdError[] = [];
-
-        for (const id of ids) {
-            const result = await this.importRuleRepository.deleteById(id);
-            result.fold(
-                error => failures.push(error),
-                () => deletedIds.push(id)
-            );
-        }
-
-        return { success: deletedIds.length, failures };
+    async execute(ids: Id[]): Promise<Either<DeleteImportRulesByIdError, true>> {
+        const result = await this.importRuleRepository.deleteByIds(ids);
+        return result;
     }
 }

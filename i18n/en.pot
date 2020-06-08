@@ -289,11 +289,10 @@ msgstr ""
 msgid "Last executed"
 msgstr ""
 
-msgid "Successfully deleted {{success}} import rules"
-msgstr ""
-
-msgid "An error has ocurred deleting import rules"
-msgstr ""
+msgid "Successfully delete {{count}} import rules"
+msgid_plural "Successfully delete {{count}} import rules"
+msgstr[0] ""
+msgstr[1] ""
 
 msgid "Details"
 msgstr ""
@@ -368,11 +367,10 @@ msgstr ""
 msgid "Created"
 msgstr ""
 
-msgid "Successfully deleted {{success}} mappings"
-msgstr ""
-
-msgid "An error has ocurred deleting mappings"
-msgstr ""
+msgid "Successfully delete {{count}} mappings"
+msgid_plural "Successfully delete {{count}} mappings"
+msgstr[0] ""
+msgstr[1] ""
 
 msgid "Delete mapping"
 msgstr ""

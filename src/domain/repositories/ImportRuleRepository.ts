@@ -3,20 +3,19 @@ import { Id } from "../entities/Ref";
 import { Maybe } from "../common/Maybe";
 import { Either } from "../common/Either";
 import { UnexpectedError } from "../errors/Generic";
-import { ImportRuleIdNotFound } from "../errors/ImportRule";
 
 export interface ImportRuleFilters {
     search?: string;
     lastExecuted?: Date;
 }
 
-export type DeleteByIdError = ImportRuleIdNotFound | UnexpectedError;
+export type DeleteImportRulesByIdError = UnexpectedError;
 export type SaveError = UnexpectedError;
 
 export interface ImportRuleRepository {
     getById(id: Id): Promise<Maybe<ImportRule>>;
     getAll(filters?: ImportRuleFilters): Promise<ImportRule[]>;
-    deleteById(id: Id): Promise<Either<DeleteByIdError, true>>;
+    deleteByIds(ids: Id[]): Promise<Either<DeleteImportRulesByIdError, true>>;
     save(importRule: ImportRule): Promise<Either<SaveError, true>>;
     saveAll(importRules: ImportRule[]): Promise<Either<SaveError, true>>;
 }

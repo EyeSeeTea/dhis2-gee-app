@@ -95,7 +95,7 @@ const ImportRuleDetailPage: React.FC = () => {
 
     const handleSaveError = (error: UpdateImportRuleError | CreateImportRuleError): string => {
         switch (error.kind) {
-            case "ImportRuleIdNotFound":
+            case "ItemIdNotFoundError":
                 return i18n.t("Import Rule {{id}} not found", { id });
             case "UnexpectedError":
                 return i18n.t("An unexpected error has ocurred saving:") + error.error.message;

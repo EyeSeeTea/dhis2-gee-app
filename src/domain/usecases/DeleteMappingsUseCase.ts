@@ -1,13 +1,8 @@
 import { ImportRuleRepository } from "../repositories/ImportRuleRepository";
 import { Id } from "../entities/Ref";
-import MappingRepository, { DeleteByIdError } from "../repositories/MappingRepository";
+import MappingRepository, { DeleteMappingByIdsError } from "../repositories/MappingRepository";
 import { Either } from "../common/Either";
 import { UnexpectedError } from "../errors/Generic";
-
-export interface DeleteMappingsResult {
-    success: number;
-    failures: DeleteByIdError[];
-}
 
 export class DeleteMappingsUseCase {
     constructor(
@@ -15,41 +10,31 @@ export class DeleteMappingsUseCase {
         private importRuleRepository: ImportRuleRepository
     ) {}
 
-    async execute(ids: Id[]): Promise<DeleteMappingsResult> {
-        const deletedIds: Id[] = [];
-        const failures: DeleteByIdError[] = [];
+    async execute(ids: Id[]): Promise<Either<DeleteMappingByIdsError, true>> {
+        const relatedImportRulesResult = await this.updateRelatedImportRules(ids);
 
-        //TODO: create deleteAll in repository
-        for (const id of ids) {
-            const relatedImportRuleResult = await this.updateRelatedImportRules(id);
-
-            if (relatedImportRuleResult.isSuccess) {
-                const result = await this.mappingRepository.deleteById(id);
-
-                result.fold(
-                    error => failures.push(error),
-                    () => deletedIds.push(id)
-                );
-            } else {
-                failures.push(relatedImportRuleResult.value as UnexpectedError);
-            }
+        if (relatedImportRulesResult.isSuccess()) {
+            return await this.mappingRepository.deleteByIds(ids);
+        } else {
+            return Either.failure({
+                kind: "UnexpectedError",
+                error: new Error("An error has ocurred removing mapping from related import rules"),
+            });
         }
-
-        return { success: deletedIds.length, failures };
     }
 
     private async updateRelatedImportRules(
-        mappingIdToDelete: string
+        mappingIdsToDelete: Id[]
     ): Promise<Either<UnexpectedError, true>> {
         const importRules = await this.importRuleRepository.getAll();
 
         const importRulesWithMappingIdTodelete = importRules.filter(importRule =>
-            importRule.selectedMappings.includes(mappingIdToDelete)
+            importRule.selectedMappings.some(mappingId => mappingIdsToDelete.includes(mappingId))
         );
 
         const editedImportRules = importRulesWithMappingIdTodelete.map(importRule => {
             const newSelectedMappings = importRule.selectedMappings.filter(
-                mappingId => mappingId !== mappingIdToDelete
+                mappingId => !mappingIdsToDelete.includes(mappingId)
             );
 
             return importRule.updateSelectedMapping(newSelectedMappings);

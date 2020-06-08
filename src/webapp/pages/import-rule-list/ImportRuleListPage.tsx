@@ -20,9 +20,9 @@ import moment from "moment";
 import { useCompositionRoot, useCurrentUser } from "../../contexts/app-context";
 import { Id } from "d2-api";
 import { useGoTo, pageRoutes } from "../root/Root";
-import { DeleteByIdError } from "../../../domain/repositories/ImportRuleRepository";
 import { ImportRuleListState, importRuleListInitialState } from "./ImportRulesListState";
 import ImportUseCase from "../../../domain/usecases/ImportUseCase";
+import { DeleteImportRulesByIdError } from "../../../domain/repositories/ImportRuleRepository";
 
 const ImportRuleListPage: React.FC = () => {
     const snackbar = useSnackbar();
@@ -67,15 +67,15 @@ const ImportRuleListPage: React.FC = () => {
     };
 
     const columns: TableColumn<ImportRuleData>[] = [
-        { name: "name", text: i18n.t("Name"), sortable: true },
-        { name: "description", text: i18n.t("Description"), sortable: true },
+        { name: "name", text: i18n.t("Name"), sortable: false },
+        { name: "description", text: i18n.t("Description"), sortable: false },
         {
             name: "periodInformation",
             text: i18n.t("Period"),
-            sortable: true,
+            sortable: false,
             getValue: getPeriodText,
         },
-        { name: "lastExecuted", text: i18n.t("Last executed"), sortable: true },
+        { name: "lastExecuted", text: i18n.t("Last executed"), sortable: false },
     ];
 
     const details: ObjectsTableDetailField<ImportRuleData>[] = [
@@ -91,35 +91,27 @@ const ImportRuleListPage: React.FC = () => {
             isDeleting: true,
         });
 
+        const handleFailure = (failure: DeleteImportRulesByIdError): string => {
+            switch (failure.kind) {
+                case "UnexpectedError":
+                    return (
+                        i18n.t("An unexpected error has ocurred deleting import rules: ") +
+                        failure.error.message
+                    );
+            }
+        };
+
         const results = await importRules.delete.execute(state.toDelete);
 
-        if (results.failures.length === 0) {
-            snackbar.success(i18n.t("Successfully deleted {{success}} import rules", results));
-        } else {
-            const handleFailure = (failure: DeleteByIdError): string => {
-                switch (failure.kind) {
-                    case "ImportRuleIdNotFound":
-                        return i18n.t("Import rule does not exists: ") + failure.id;
-                    case "UnexpectedError":
-                        return (
-                            i18n.t("An unexpected error has ocurred deleting import rule: ") +
-                            failure.error.message
-                        );
-                }
-            };
-
-            const failedMessages = results.failures.map(handleFailure);
-
-            const resultSummary: string[] = [
-                i18n.t("An error has ocurred deleting import rules"),
-                i18n.t("Successfully import rule deleted: ") + results.success,
-                i18n.t("failed import rule  deleted: ") + results.failures,
-            ];
-
-            const resultWithFailedMessages = [...resultSummary, ...failedMessages];
-
-            snackbar.error(resultWithFailedMessages.join("\n"));
-        }
+        results.fold(
+            error => snackbar.error(handleFailure(error)),
+            () =>
+                snackbar.success(
+                    i18n.t("Successfully delete {{count}} import rules", {
+                        count: state.toDelete.length,
+                    })
+                )
+        );
 
         setState({
             ...state,
