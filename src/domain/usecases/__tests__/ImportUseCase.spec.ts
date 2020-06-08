@@ -126,7 +126,7 @@ function givenAMappingRepository(): MappingRepository {
                 },
             ];
         }),
-        deleteById: jest.fn(),
+        deleteByIds: jest.fn(),
     };
 }
 

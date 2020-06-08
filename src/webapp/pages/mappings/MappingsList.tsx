@@ -17,7 +17,7 @@ import { useAppContext, useCompositionRoot } from "../../contexts/app-context";
 import { makeStyles } from "@material-ui/styles";
 import { Theme, createStyles, LinearProgress, Icon, Box, Fab } from "@material-ui/core";
 import { useGoTo, GoTo, pageRoutes } from "../root/Root";
-import { DeleteByIdError } from "../../../domain/repositories/MappingRepository";
+import { DeleteMappingByIdsError } from "../../../domain/repositories/MappingRepository";
 
 type ContextualAction = "details" | "edit" | "delete";
 
@@ -140,36 +140,29 @@ const MappingsList: React.FC<MappingsListProps> = props => {
 
         setDeleting(true);
 
+        const handleFailure = (failure: DeleteMappingByIdsError): string => {
+            switch (failure.kind) {
+                case "UnexpectedError":
+                    return (
+                        i18n.t("An unexpected error has ocurred deleting mappings: ") +
+                        failure.error.message
+                    );
+            }
+        };
+
         const results = await mapping.delete.execute(mappingIdsToDelete);
 
-        if (results.failures.length === 0) {
-            snackbar.success(i18n.t("Successfully deleted {{success}} mappings", results));
-            onDeleteMappings(mappingIdsToDelete ?? []);
-        } else {
-            const handleFailure = (failure: DeleteByIdError): string => {
-                switch (failure.kind) {
-                    case "ItemIdNotFoundError":
-                        return i18n.t("Mapping does not exists: ") + failure.id;
-                    case "UnexpectedError":
-                        return (
-                            i18n.t("An unexpected error has ocurred deleting mapping: ") +
-                            failure.error.message
-                        );
-                }
-            };
-
-            const failedMessages = results.failures.map(handleFailure);
-
-            const resultSummary: string[] = [
-                i18n.t("An error has ocurred deleting mappings"),
-                i18n.t("Successfully mappings deleted: ") + results.success,
-                i18n.t("failed mappings deleted: ") + results.failures,
-            ];
-
-            const resultWithFailedMessages = [...resultSummary, ...failedMessages];
-
-            snackbar.error(resultWithFailedMessages.join("\n"));
-        }
+        results.fold(
+            error => snackbar.error(handleFailure(error)),
+            () => {
+                onDeleteMappings(mappingIdsToDelete ?? []);
+                snackbar.success(
+                    i18n.t("Successfully delete {{count}} mappings", {
+                        count: mappingIdsToDelete.length,
+                    })
+                );
+            }
+        );
 
         setDeleting(false);
         setMappingIdsToDelete(undefined);

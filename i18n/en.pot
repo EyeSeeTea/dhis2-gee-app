@@ -5,8 +5,8 @@ msgstr ""
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1)\n"
-"POT-Creation-Date: 2020-06-08T13:14:41.114Z\n"
-"PO-Revision-Date: 2020-06-08T13:14:41.114Z\n"
+"POT-Creation-Date: 2020-06-08T13:46:53.635Z\n"
+"PO-Revision-Date: 2020-06-08T13:46:53.635Z\n"
 
 msgid "No effective import into DHIS2, file download"
 msgstr ""
@@ -289,8 +289,10 @@ msgstr ""
 msgid "Last executed"
 msgstr ""
 
-msgid "Successfully import histories"
-msgstr ""
+msgid "Successfully delete {{count}} import rules"
+msgid_plural "Successfully delete {{count}} import rules"
+msgstr[0] ""
+msgstr[1] ""
 
 msgid "Details"
 msgstr ""
@@ -325,12 +327,6 @@ msgid "Dataset id"
 msgstr ""
 
 msgid "Created"
-msgstr ""
-
-msgid "Successfully deleted {{success}} mappings"
-msgstr ""
-
-msgid "An error has ocurred deleting mappings"
 msgstr ""
 
 msgid "Delete mapping"
