@@ -136,7 +136,7 @@ function givenAImportRuleRepository(): ImportRuleRepository {
             return Maybe.fromValue(defaultImportRule);
         }),
         getAll: jest.fn(),
-        deleteById: jest.fn(),
+        deleteByIds: jest.fn(),
         save: jest.fn().mockImplementation(() => {
             return Either.Success(true);
         }),
