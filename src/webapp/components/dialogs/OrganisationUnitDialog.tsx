@@ -2,7 +2,7 @@ import React from "react";
 import { OrgUnitsSelector, ConfirmationDialog } from "d2-ui-components";
 import { useAppContext } from "../../contexts/app-context";
 import { DialogContent } from "@material-ui/core";
-import i18n from "../../locales";
+import i18n from "@dhis2/d2-i18n";
 
 interface OUDialogProps {
     selectedOUs: string[];

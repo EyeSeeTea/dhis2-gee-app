@@ -1,5 +1,5 @@
 import React from "react";
-import i18n from "../../locales";
+import i18n from "@dhis2/d2-i18n";
 import { useSnackbar, MultiSelector, OrgUnitsSelector } from "d2-ui-components";
 import { Id } from "d2-api";
 import { useAppContext } from "../../contexts/app-context";

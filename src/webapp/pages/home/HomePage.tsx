@@ -1,7 +1,7 @@
 import React from "react";
 import { MenuCardProps } from "../../components/landing/MenuCard";
 import { Landing } from "../../components/landing/Landing";
-import i18n from "../../locales";
+import i18n from "@dhis2/d2-i18n";
 import { useGoTo, pageRoutes } from "../root/Root";
 
 const LandingPage: React.FC = () => {

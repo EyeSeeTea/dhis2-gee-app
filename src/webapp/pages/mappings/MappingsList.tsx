@@ -12,7 +12,7 @@ import {
 } from "d2-ui-components";
 import AddIcon from "@material-ui/icons/Add";
 import Mapping from "../../models/Mapping";
-import i18n from "../../locales";
+import i18n from "@dhis2/d2-i18n";
 import { useAppContext, useCompositionRoot } from "../../contexts/app-context";
 import { makeStyles } from "@material-ui/styles";
 import { Theme, createStyles, LinearProgress, Icon, Box, Fab } from "@material-ui/core";

@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import i18n from "../../locales";
+import i18n from "@dhis2/d2-i18n";
 import { useCompositionRoot, useCurrentUser } from "../../contexts/app-context";
 import { makeStyles } from "@material-ui/styles";
 import PageHeader from "../../components/page-header/PageHeader";

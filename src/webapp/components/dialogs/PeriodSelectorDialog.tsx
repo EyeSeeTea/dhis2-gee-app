@@ -1,7 +1,7 @@
 import React from "react";
 import { DatePicker, ConfirmationDialog } from "d2-ui-components";
 import { DialogContent } from "@material-ui/core";
-import i18n from "../../locales";
+import i18n from "@dhis2/d2-i18n";
 import Dropdown from "../dropdown/Dropdown";
 import { availablePeriods, PeriodOption, PeriodId } from "../../../domain/entities/PeriodOption";
 

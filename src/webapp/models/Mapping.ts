@@ -1,6 +1,6 @@
 import { Id, D2Api } from "d2-api";
 import _ from "lodash";
-import i18n from "../locales";
+import i18n from "@dhis2/d2-i18n";
 import { TablePagination } from "d2-ui-components";
 import { Config } from "./Config";
 import { getDataStore } from "../utils/dhis2";
