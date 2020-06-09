@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: i18next-conv\n"
-"POT-Creation-Date: 2020-06-08T11:52:43.671Z\n"
+"POT-Creation-Date: 2020-06-08T14:54:05.975Z\n"
 "PO-Revision-Date: 2018-10-25T09:02:35.143Z\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -323,13 +323,10 @@ msgid_plural "Are you sure you want to delete {{count}} rules?"
 msgstr[0] ""
 msgstr[1] ""
 
-msgid "Failure"
-msgstr ""
-
 msgid "(on-demand import)"
 msgstr ""
 
-msgid "Timestamp"
+msgid "Date"
 msgstr ""
 
 msgid "Status"
@@ -360,6 +357,9 @@ msgid "Are you sure you want to delete {{count}} import histories?"
 msgid_plural "Are you sure you want to delete {{count}} import histories?"
 msgstr[0] ""
 msgstr[1] ""
+
+msgid "Failure"
+msgstr ""
 
 msgid "Dataset id"
 msgstr ""

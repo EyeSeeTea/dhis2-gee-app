@@ -40,6 +40,7 @@ export class ImportSummary implements ImportSummaryData {
         this.user = this.data.user;
         this.status = this.data.status;
         this.importRule = this.data.importRule;
+        this.importRuleLabel = this.data.importRuleLabel;
         this.result = this.data.result;
     }
 

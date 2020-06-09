@@ -53,7 +53,7 @@ describe("ImportUseCase", () => {
     });
 });
 
-export {};
+export { };
 
 function givenAGeeDataSetRepository(): GeeDataSetRepository {
     return {
@@ -166,6 +166,7 @@ function givenAImportSummaryRepository(): ImportSummaryRepository {
     return {
         getAll: jest.fn(),
         save: jest.fn(),
+        saveAll: jest.fn(),
         deleteByIds: jest.fn(),
     };
 }

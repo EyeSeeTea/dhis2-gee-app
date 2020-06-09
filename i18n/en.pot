@@ -5,8 +5,8 @@ msgstr ""
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1)\n"
-"POT-Creation-Date: 2020-06-08T11:52:43.671Z\n"
-"PO-Revision-Date: 2020-06-08T11:52:43.671Z\n"
+"POT-Creation-Date: 2020-06-08T14:54:05.975Z\n"
+"PO-Revision-Date: 2020-06-08T14:54:05.975Z\n"
 
 msgid "No effective import into DHIS2, file download"
 msgstr ""
@@ -323,13 +323,10 @@ msgid_plural "Are you sure you want to delete {{count}} rules?"
 msgstr[0] ""
 msgstr[1] ""
 
-msgid "Failure"
-msgstr ""
-
 msgid "(on-demand import)"
 msgstr ""
 
-msgid "Timestamp"
+msgid "Date"
 msgstr ""
 
 msgid "Status"
@@ -360,6 +357,9 @@ msgid "Are you sure you want to delete {{count}} import histories?"
 msgid_plural "Are you sure you want to delete {{count}} import histories?"
 msgstr[0] ""
 msgstr[1] ""
+
+msgid "Failure"
+msgstr ""
 
 msgid "Dataset id"
 msgstr ""

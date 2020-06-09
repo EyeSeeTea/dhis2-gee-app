@@ -14,5 +14,6 @@ export type DeleteImportSummaryByIdsError = UnexpectedError;
 export interface ImportSummaryRepository {
     getAll(filters?: ImportSummaryFilters): Promise<ImportSummary[]>;
     save(importSummary: ImportSummary): Promise<Either<SaveImportSummaryError, true>>;
+    saveAll(importSummary: ImportSummary[]): Promise<Either<SaveImportSummaryError, true>>;
     deleteByIds(ids: Id[]): Promise<Either<DeleteImportSummaryByIdsError, true>>;
 }

@@ -70,6 +70,46 @@ export default class ImportSummaryD2ApiRepository implements ImportSummaryReposi
         }
     }
 
+    async saveAll(importSummaries: ImportSummary[]): Promise<Either<SaveImportSummaryError, true>> {
+        try {
+            const existedImportSummariesData = await this.getImportSummariesData();
+
+            const importSummariesDataToSave = importSummaries.map(importSummary =>
+                this.mapToDataStore(importSummary)
+            );
+
+            const existedImportSummariesDataIds = existedImportSummariesData.map(data => data.id);
+
+            const editedImportRulesDataToSave = importSummariesDataToSave.filter(
+                importSummaryDataToSave =>
+                    existedImportSummariesDataIds.includes(importSummaryDataToSave.id)
+            );
+
+            const newImportSummariesDataToSave = importSummariesDataToSave.filter(
+                importSummaryDataToSave =>
+                    !existedImportSummariesDataIds.includes(importSummaryDataToSave.id)
+            );
+
+            const allDataToSave = [
+                ...existedImportSummariesData.map(
+                    existed =>
+                        editedImportRulesDataToSave.find(edited => edited.id === existed.id) ||
+                        existed
+                ),
+                ...newImportSummariesDataToSave,
+            ];
+
+            await this.saveImportSummariesData(allDataToSave);
+
+            return Either.Success(true);
+        } catch (e) {
+            return Either.failure({
+                kind: "UnexpectedError",
+                error: e,
+            });
+        }
+    }
+
     private applyFilters(
         importSummaries: ImportSummary[],
         filters: ImportSummaryFilters

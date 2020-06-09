@@ -27,7 +27,7 @@ interface Type<T> {
 
 export type NamedToken = "importUseCase" | "downloadUseCase";
 
-type PrivateNamedToken = "dataStore" | "importRuleRepository";
+type PrivateNamedToken = "dataStore" | "importRuleRepository" | "importSummaryRepository";
 
 type Token<T> = Type<T> | NamedToken | PrivateNamedToken;
 
@@ -41,8 +41,8 @@ class CompositionRoot {
 
         this.initializeDataStore();
         this.initializeDataElements();
-        this.initializeImportRules();
         this.initializeImportsHistory();
+        this.initializeImportRules();
         this.initializeImportAndDownload();
         this.initializeMapping();
     }
@@ -114,7 +114,13 @@ class CompositionRoot {
         const getImportRulesUseCase = new GetImportRulesUseCase(importRuleRepository);
         const createImportRuleUseCase = new CreateImportRuleUseCase(importRuleRepository);
         const updateImportRuleUseCase = new UpdateImportRuleUseCase(importRuleRepository);
-        const deleteImportRulesUseCase = new DeleteImportRulesUseCase(importRuleRepository);
+
+        const importSummaryRepository = this.dependencies.get("importSummaryRepository");
+
+        const deleteImportRulesUseCase = new DeleteImportRulesUseCase(
+            importRuleRepository,
+            importSummaryRepository
+        );
 
         this.dependencies.set(GetImportRuleByIdUseCase, getImportRuleById);
         this.dependencies.set(GetImportRulesUseCase, getImportRulesUseCase);
@@ -128,6 +134,8 @@ class CompositionRoot {
             this.dependencies.get("dataStore"),
             this.config.data.base.dataStore.keys.importsHistory
         );
+        this.dependencies.set("importSummaryRepository", importSummaryRepository);
+
         const getImportSummariesUseCase = new GetImportSummariesUseCase(importSummaryRepository);
         const deleteImportSummariesUseCase = new DeleteImportSummariesUseCase(
             importSummaryRepository
