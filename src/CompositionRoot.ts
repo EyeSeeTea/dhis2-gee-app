@@ -20,6 +20,7 @@ import { DeleteMappingsUseCase } from "./domain/usecases/DeleteMappingsUseCase";
 import ImportSummaryD2ApiRepository from "./data/ImportSummaryD2ApiRepository";
 import { GetImportSummariesUseCase } from "./domain/usecases/GetImportSummariesUseCase";
 import { DeleteImportSummariesUseCase } from "./domain/usecases/DeleteImportSummariesUseCase";
+import { GetOrgUnitsWithCoordinatesUseCase } from "./domain/usecases/GetOrgUnitsWithCoordinatesUseCase";
 
 interface Type<T> {
     new (...args: any[]): T;
@@ -40,6 +41,7 @@ class CompositionRoot {
         this.d2Api = new D2ApiDefault({ baseUrl });
 
         this.initializeDataStore();
+        this.initializeOrgUnits();
         this.initializeDataElements();
         this.initializeImportsHistory();
         this.initializeImportRules();
@@ -85,6 +87,12 @@ class CompositionRoot {
         };
     }
 
+    public orgUnits() {
+        return {
+            getWithCoordinates: this.get(GetOrgUnitsWithCoordinatesUseCase),
+        };
+    }
+
     public mapping() {
         return {
             delete: this.get(DeleteMappingsUseCase),
@@ -100,6 +108,14 @@ class CompositionRoot {
         const dataElementsRepository = new DataElementD2ApiRepository(this.d2Api);
         const getDataElementsUseCase = new GetDataElementsUseCase(dataElementsRepository);
         this.dependencies.set(GetDataElementsUseCase, getDataElementsUseCase);
+    }
+
+    private initializeOrgUnits() {
+        const orgUnitRepository = new OrgUnitD2ApiRepository(this.d2Api);
+        const getOrgUnitsWithCoordinatesUseCase = new GetOrgUnitsWithCoordinatesUseCase(
+            orgUnitRepository
+        );
+        this.dependencies.set(GetOrgUnitsWithCoordinatesUseCase, getOrgUnitsWithCoordinatesUseCase);
     }
 
     private initializeImportRules() {

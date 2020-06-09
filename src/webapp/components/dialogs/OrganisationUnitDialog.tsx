@@ -1,6 +1,6 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { OrgUnitsSelector, ConfirmationDialog } from "d2-ui-components";
-import { useAppContext } from "../../contexts/app-context";
+import { useAppContext, useCompositionRoot } from "../../contexts/app-context";
 import { DialogContent } from "@material-ui/core";
 import i18n from "@dhis2/d2-i18n";
 
@@ -14,6 +14,14 @@ const OUDialog: React.FC<OUDialogProps> = props => {
     const { selectedOUs, onCancel, onSave } = props;
     const { api } = useAppContext();
     const [selectedOrgs, setSelectedOrgs] = React.useState<string[]>(selectedOUs);
+    const [selectablesOrgs, setSelectablesOrgs] = React.useState<string[]>([]);
+    const orgUnits = useCompositionRoot().orgUnits();
+
+    useEffect(() => {
+        orgUnits.getWithCoordinates.execute().then(orgUnits => {
+            setSelectablesOrgs(orgUnits.map(ou => ou.id));
+        });
+    }, [orgUnits.getWithCoordinates]);
 
     const controls = {
         filterByLevel: true,
@@ -40,6 +48,7 @@ const OUDialog: React.FC<OUDialogProps> = props => {
                         controls={controls}
                         onChange={setSelectedOrgs}
                         selected={selectedOUs ? selectedOrgs : []}
+                        selectableIds={selectablesOrgs}
                     />
                 </DialogContent>
             </ConfirmationDialog>
