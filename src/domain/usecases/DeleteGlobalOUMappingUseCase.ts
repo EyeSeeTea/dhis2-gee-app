@@ -9,6 +9,6 @@ export class DeleteGlobalOUMappingUseCase {
     constructor(private globalOUMappingRepository: GlobalOUMappingRepository) {}
 
     async execute(orgUnitIds: Id[]): Promise<Either<DeleteGlobalOUMappingError, true>> {
-        return this.globalOUMappingRepository.DeleteByOrgUnitIds(orgUnitIds);
+        return this.globalOUMappingRepository.deleteByOrgUnitIds(orgUnitIds);
     }
 }

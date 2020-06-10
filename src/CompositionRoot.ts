@@ -25,6 +25,7 @@ import { CreateGlobalOUMappingUseCase } from "./domain/usecases/CreateGlobalOUMa
 import { GetGlobalOUMappingByMappingIdUseCase } from "./domain/usecases/GetGlobalOUMappingByMappingIdUseCase";
 import GlobalOUMappingD2ApiRepository from "./data/GlobalOUMappingD2ApiRepository";
 import { DeleteGlobalOUMappingUseCase } from "./domain/usecases/DeleteGlobalOUMappingUseCase";
+import { GlobalOUMappingRepository } from "./domain/repositories/GlobalOUMappingRepository";
 
 interface Type<T> {
     new (...args: any[]): T;
@@ -32,7 +33,11 @@ interface Type<T> {
 
 export type NamedToken = "importUseCase" | "downloadUseCase";
 
-type PrivateNamedToken = "dataStore" | "importRuleRepository" | "importSummaryRepository";
+type PrivateNamedToken =
+    | "dataStore"
+    | "importRuleRepository"
+    | "importSummaryRepository"
+    | "globalOUMappingRepository";
 
 type Token<T> = Type<T> | NamedToken | PrivateNamedToken;
 
@@ -159,19 +164,21 @@ class CompositionRoot {
     }
 
     initializeGlobalOUMappings() {
-        const globalOrgUnitMappingRepository = new GlobalOUMappingD2ApiRepository(
+        const globalOUMappingRepository = new GlobalOUMappingD2ApiRepository(
             this.dependencies.get("dataStore"),
             this.config.data.base.dataStore.keys.globalOUMapping
         );
 
+        this.dependencies.set("globalOUMappingRepository", globalOUMappingRepository);
+
         const createGlobalOrgUnitMappingUseCase = new CreateGlobalOUMappingUseCase(
-            globalOrgUnitMappingRepository
+            globalOUMappingRepository
         );
         const getGlobalOUMappingByMappingIdUseCase = new GetGlobalOUMappingByMappingIdUseCase(
-            globalOrgUnitMappingRepository
+            globalOUMappingRepository
         );
         const deleteGlobalOUMappingUseCase = new DeleteGlobalOUMappingUseCase(
-            globalOrgUnitMappingRepository
+            globalOUMappingRepository
         );
 
         this.dependencies.set(CreateGlobalOUMappingUseCase, createGlobalOrgUnitMappingUseCase);
@@ -252,9 +259,14 @@ class CompositionRoot {
             "importRuleRepository"
         ) as ImportRuleRepository;
 
+        const globalOrgUnitMappingRepository = this.dependencies.get(
+            "globalOUMappingRepository"
+        ) as GlobalOUMappingRepository;
+
         const deleteMappingsUseCase = new DeleteMappingsUseCase(
             mappingRepository,
-            importRuleRepository
+            importRuleRepository,
+            globalOrgUnitMappingRepository
         );
 
         this.dependencies.set(DeleteMappingsUseCase, deleteMappingsUseCase);

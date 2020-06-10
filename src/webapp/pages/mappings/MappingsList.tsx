@@ -276,7 +276,7 @@ const MappingsList: React.FC<MappingsListProps> = props => {
                     onCancel={isDeleting ? undefined : closeDeleteDialog}
                     title={i18n.t("Delete mapping")}
                     description={i18n.t(
-                        "This operation will delete ({{n}}) mappings and remove it as selected in related import rules. This operation cannot be undone. Are you sure you want to proceed?",
+                        "This operation will delete ({{n}}) mappings and remove related global organisation unit mapping and remove it as selected in related import rules. This operation cannot be undone. Are you sure you want to proceed?",
                         { n: mappingIdsToDelete.length }
                     )}
                     saveText={isDeleting ? i18n.t("Deleting...") : i18n.t("Proceed")}

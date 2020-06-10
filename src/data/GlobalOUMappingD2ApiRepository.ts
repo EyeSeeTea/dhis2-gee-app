@@ -55,13 +55,11 @@ export default class GlobalOUMappingD2ApiRepository implements GlobalOUMappingRe
         }
     }
 
-    async DeleteByOrgUnitIds(orgUnitIds: Id[]): Promise<Either<DeleteGlobalOUMappingError, true>> {
+    async deleteByOrgUnitIds(orgUnitIds: Id[]): Promise<Either<DeleteGlobalOUMappingError, true>> {
         try {
             const globalOrgUnitMappings = await this.getGlobalOrgUnitMappingsData();
 
-            const globalOrgUnitMappingsFiltered: GlobalOUMapping = Object.entries(
-                globalOrgUnitMappings
-            )
+            const globalOrgUnitMappingsFiltered = Object.entries(globalOrgUnitMappings)
                 .filter(([k]) => !orgUnitIds.includes(k))
                 .reduce((acc, [k, v]) => {
                     return { ...acc, [k]: v };
@@ -77,14 +75,12 @@ export default class GlobalOUMappingD2ApiRepository implements GlobalOUMappingRe
             });
         }
     }
-    async DeleteByMappingId(mappingId: Id): Promise<Either<DeleteGlobalOUMappingError, true>> {
+    async deleteByMappingIds(mappingIds: Id[]): Promise<Either<DeleteGlobalOUMappingError, true>> {
         try {
             const globalOrgUnitMappings = await this.getGlobalOrgUnitMappingsData();
 
-            const globalOrgUnitMappingsFiltered: GlobalOUMapping = Object.entries(
-                globalOrgUnitMappings
-            )
-                .filter(([, v]) => v.mappingId !== mappingId)
+            const globalOrgUnitMappingsFiltered = Object.entries(globalOrgUnitMappings)
+                .filter(([, v]) => !mappingIds.includes(v.mappingId))
                 .reduce((acc, [k, v]) => {
                     return { ...acc, [k]: v };
                 }, {});
