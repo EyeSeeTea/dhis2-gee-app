@@ -53,7 +53,7 @@ describe("ImportUseCase", () => {
     });
 });
 
-export { };
+export {};
 
 function givenAGeeDataSetRepository(): GeeDataSetRepository {
     return {
@@ -87,7 +87,7 @@ function givenAOrgUnitRepository(): OrgUnitRepository {
                 { id: "WFAboRxdVjA", coordinates: "[-2.708309,6.675618]", featureType: "POINT" },
             ];
         }),
-        getAllWithCoordinates: jest.fn()
+        getAllWithCoordinates: jest.fn(),
     };
 }
 

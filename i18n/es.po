@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: i18next-conv\n"
-"POT-Creation-Date: 2020-06-09T08:29:33.063Z\n"
+"POT-Creation-Date: 2020-06-10T05:53:56.379Z\n"
 "PO-Revision-Date: 2018-10-25T09:02:35.143Z\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -370,10 +370,16 @@ msgstr ""
 msgid "Created"
 msgstr ""
 
+msgid "Assign organisation unit"
+msgstr ""
+
 msgid "Successfully delete {{count}} mappings"
 msgid_plural "Successfully delete {{count}} mappings"
 msgstr[0] ""
 msgstr[1] ""
+
+msgid "Organisation unit assignment success"
+msgstr ""
 
 msgid "Delete mapping"
 msgstr ""

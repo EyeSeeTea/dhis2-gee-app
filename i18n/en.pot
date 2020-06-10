@@ -5,8 +5,8 @@ msgstr ""
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1)\n"
-"POT-Creation-Date: 2020-06-09T08:29:33.063Z\n"
-"PO-Revision-Date: 2020-06-09T08:29:33.063Z\n"
+"POT-Creation-Date: 2020-06-10T05:53:56.379Z\n"
+"PO-Revision-Date: 2020-06-10T05:53:56.379Z\n"
 
 msgid "No effective import into DHIS2, file download"
 msgstr ""
@@ -370,10 +370,16 @@ msgstr ""
 msgid "Created"
 msgstr ""
 
+msgid "Assign organisation unit"
+msgstr ""
+
 msgid "Successfully delete {{count}} mappings"
 msgid_plural "Successfully delete {{count}} mappings"
 msgstr[0] ""
 msgstr[1] ""
+
+msgid "Organisation unit assignment success"
+msgstr ""
 
 msgid "Delete mapping"
 msgstr ""

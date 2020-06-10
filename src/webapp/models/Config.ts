@@ -15,6 +15,7 @@ const baseConfig = {
             imports: {
                 suffix: "@import",
             },
+            globalOUMapping: "globalOUMapping",
         },
     },
     googleDatasets: {
