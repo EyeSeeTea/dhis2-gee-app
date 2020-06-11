@@ -2,34 +2,34 @@ import { Either } from "../common/Either";
 import Mexp from "math-expression-evaluator";
 import { UnexpectedError } from "../errors/Generic";
 
-export interface InvalidMathExpression {
-    kind: "InvalidMathExpression";
+export interface InvalidTransformExpression {
+    kind: "InvalidTransformExpression";
 }
 
-export interface InvalidEmptyMathExpression {
-    kind: "InvalidEmptyMathExpression";
+export interface InvalidEmptyTransformExpression {
+    kind: "InvalidEmptyTransformExpression";
 }
 
-export type MathExpressionError =
-    | InvalidMathExpression
-    | InvalidEmptyMathExpression
+export type TransformExpressionError =
+    | InvalidTransformExpression
+    | InvalidEmptyTransformExpression
     | UnexpectedError;
 
-export type EvalMathExpressionError = UnexpectedError;
+export type EvalTransformExpressionError = UnexpectedError;
 
-export const mathExpressionToken = "#{input}";
+export const trasnformExpressionToken = "#{input}";
 
-export class MathExpression {
+export class TransformExpression {
     private constructor(public value: string) {}
 
-    public static create(formula: string): Either<MathExpressionError, MathExpression> {
+    public static create(formula: string): Either<TransformExpressionError, TransformExpression> {
         try {
             if (!formula && formula.trim().length === 0) {
-                return Either.failure({ kind: "InvalidEmptyMathExpression" });
+                return Either.failure({ kind: "InvalidEmptyTransformExpression" });
             } else if (!this.isValid(formula)) {
-                return Either.failure({ kind: "InvalidMathExpression" });
+                return Either.failure({ kind: "InvalidTransformExpression" });
             } else {
-                return Either.Success(new MathExpression(formula.trim()));
+                return Either.Success(new TransformExpression(formula.trim()));
             }
         } catch (e) {
             return Either.failure({
@@ -49,10 +49,10 @@ export class MathExpression {
     }
 }
 
-export const evalMathExpression = (
-    formula: MathExpression,
+export const evalTransformExpression = (
+    formula: TransformExpression,
     inputValue: number
-): Either<EvalMathExpressionError, number> => {
+): Either<EvalTransformExpressionError, number> => {
     try {
         const result = evalRawMathExpression(formula.value, inputValue);
 
@@ -69,12 +69,12 @@ function evalRawMathExpression(expression: string, inputValue: number): number {
     Mexp.addToken([
         {
             type: 3,
-            token: mathExpressionToken,
-            show: mathExpressionToken,
+            token: trasnformExpressionToken,
+            show: trasnformExpressionToken,
             preced: 0,
-            value: mathExpressionToken,
+            value: trasnformExpressionToken,
         },
     ]);
 
-    return +Mexp.eval(expression, { [mathExpressionToken]: inputValue });
+    return +Mexp.eval(expression, { [trasnformExpressionToken]: inputValue });
 }

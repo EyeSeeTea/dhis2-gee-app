@@ -1,38 +1,42 @@
-import { MathExpression, evalMathExpression, mathExpressionToken } from "../MathExpression";
+import {
+    TransformExpression,
+    evalTransformExpression,
+    trasnformExpressionToken,
+} from "../TransformExpression";
 
-const fahrenheitToCelsius = `(${mathExpressionToken} - 32 ) * 5/9`;
-const celsiusToFahrenheit = `(${mathExpressionToken} * 9/5) + 32`;
+const fahrenheitToCelsius = `(${trasnformExpressionToken} - 32 ) * 5/9`;
+const celsiusToFahrenheit = `(${trasnformExpressionToken} * 9/5) + 32`;
 
-describe("MathExpression", () => {
-    describe("MathExpression.create", () => {
+describe("TransformExpression", () => {
+    describe("TransformExpression.create", () => {
         it("should return empty error", async () => {
-            const creationResult = MathExpression.create("");
+            const creationResult = TransformExpression.create("");
 
             expect(creationResult.isFailure()).toBeTruthy();
         });
         it("should return invalid math expression error if input variable in wrong", async () => {
-            const creationResult = MathExpression.create("(#{wronginput}×9/5)+32");
+            const creationResult = TransformExpression.create("(#{wronginput}×9/5)+32");
 
             expect(creationResult.isFailure()).toBeTruthy();
         });
         it("should return invalid  math expression error exists unexpected tokens", async () => {
-            const creationResult = MathExpression.create("(ffffff×9/5)+32");
+            const creationResult = TransformExpression.create("(ffffff×9/5)+32");
 
             expect(creationResult.isFailure()).toBeTruthy();
         });
         it("should return math expression", async () => {
-            const creationResult = MathExpression.create(fahrenheitToCelsius);
+            const creationResult = TransformExpression.create(fahrenheitToCelsius);
 
             expect(creationResult.isSuccess()).toBeTruthy();
         });
     });
-    describe("evalMathExpression", () => {
+    describe("evalTransformExpression", () => {
         it("should return unexpected error if formula contains input variable and its value is not a number", async () => {});
         it("should return expected number for fahrenheit->celsius formula", async () => {
             const geeValue = 75.2;
 
-            const result = MathExpression.create(fahrenheitToCelsius).flatMap(formula =>
-                evalMathExpression(formula, geeValue)
+            const result = TransformExpression.create(fahrenheitToCelsius).flatMap(formula =>
+                evalTransformExpression(formula, geeValue)
             );
 
             result.fold(
@@ -46,8 +50,8 @@ describe("MathExpression", () => {
         it("should return expected number for celsius->fahrenheit formula", async () => {
             const geeValue = 24;
 
-            const result = MathExpression.create(celsiusToFahrenheit).flatMap(formula =>
-                evalMathExpression(formula, geeValue)
+            const result = TransformExpression.create(celsiusToFahrenheit).flatMap(formula =>
+                evalTransformExpression(formula, geeValue)
             );
 
             result.fold(
