@@ -157,7 +157,13 @@ export const geeDataSets: { [name: string]: any } = {
         displayName: "Yearly Water Classification History",
         description: "JRC Yearly Water Classification History, v1.1",
         pointer: "JRC/GSW1_1/YearlyHistory",
-        bands: [{ name: "waterClass", units: "", description: "Classification of the seasonality of water throughout the year." }],
+        bands: [
+            {
+                name: "waterClass",
+                units: "",
+                description: "Classification of the seasonality of water throughout the year.",
+            },
+        ],
         doc: "https://developers.google.com/earth-engine/datasets/catalog/JRC_GSW1_1_YearlyHistory",
     },
 };
