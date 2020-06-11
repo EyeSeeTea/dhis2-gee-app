@@ -5,8 +5,8 @@ msgstr ""
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1)\n"
-"POT-Creation-Date: 2020-06-11T09:55:23.923Z\n"
-"PO-Revision-Date: 2020-06-11T09:55:23.923Z\n"
+"POT-Creation-Date: 2020-06-11T15:30:20.488Z\n"
+"PO-Revision-Date: 2020-06-11T15:30:20.488Z\n"
 
 msgid "No effective import into DHIS2, file download"
 msgstr ""
@@ -146,16 +146,19 @@ msgstr ""
 msgid "<No value>"
 msgstr ""
 
+msgid "Description"
+msgstr ""
+
+msgid "Bands"
+msgstr ""
+
 msgid "Details"
 msgstr ""
 
-msgid "Gee data sets"
+msgid "Select G.E.E dataset"
 msgstr ""
 
 msgid "Field cannot be blank"
-msgstr ""
-
-msgid "Description"
 msgstr ""
 
 msgid "Add"

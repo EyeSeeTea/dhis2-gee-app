@@ -3,7 +3,7 @@ export type GeeDataSet = {
     displayName: string;
     description: string;
     imageCollectionId: string;
-    bands: string[];
+    bands: GeeBand[];
     doc: string;
 };
 

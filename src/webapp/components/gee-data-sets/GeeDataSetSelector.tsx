@@ -5,6 +5,7 @@ import {
     FormControl,
     MuiThemeProvider,
     createMuiTheme,
+    Typography,
 } from "@material-ui/core";
 
 import React, { useState, useEffect, useRef } from "react";
@@ -50,10 +51,45 @@ const GeeDataSetSelector: React.FC<GeeDataSetSelectorProps> = ({
             name: "displayName",
             text: i18n.t("Name"),
         },
+        {
+            name: "description",
+            text: i18n.t("Description"),
+        },
+        {
+            name: "bands",
+            text: i18n.t("Bands"),
+            getValue: (dataSet: GeeDataSet) => dataSet.bands.map(band => band.name).join(", "),
+        },
     ];
 
     const details: ObjectsTableDetailField<GeeDataSet>[] = [
         { name: "displayName", text: i18n.t("Name") },
+        {
+            name: "description",
+            text: i18n.t("Description"),
+        },
+        {
+            name: "bands",
+            text: i18n.t("Bands"),
+            /*eslint-disable*/
+            getValue: (dataSet: GeeDataSet) => {
+                return (
+                    <ul style={{ paddingLeft: 18 }}>
+                        {dataSet.bands.map(band => {
+                            return (
+                                <li key={band.name}>
+                                    <Typography variant="subtitle1">{band.name}</Typography>
+                                    <Typography variant="subtitle1">
+                                        {`units: ${band.units}`}
+                                    </Typography>
+                                    <Typography variant="subtitle1">{band.description}</Typography>
+                                </li>
+                            );
+                        })}
+                    </ul>
+                );
+            },
+        },
     ];
 
     const actions: TableAction<GeeDataSet>[] = [
@@ -67,7 +103,6 @@ const GeeDataSetSelector: React.FC<GeeDataSetSelectorProps> = ({
 
                 if (selectedDataSet && inputRef.current) {
                     setNativeValue(inputRef.current, selectedDataSet.id);
-                    inputRef.current.dispatchEvent(new Event("change", { bubbles: true }));
                     inputRef.current.dispatchEvent(new Event("input", { bubbles: true }));
 
                     setOpen(false);
@@ -82,6 +117,7 @@ const GeeDataSetSelector: React.FC<GeeDataSetSelectorProps> = ({
     ];
 
     const setNativeValue = (element: HTMLInputElement, value: string) => {
+        /* eslint-disable @typescript-eslint/no-non-null-assertion */
         const valueSetter = Object.getOwnPropertyDescriptor(element, "value")!!.set;
         const prototype = Object.getPrototypeOf(element);
         const prototypeValueSetter = Object.getOwnPropertyDescriptor(prototype, "value")!!.set;
@@ -109,7 +145,7 @@ const GeeDataSetSelector: React.FC<GeeDataSetSelectorProps> = ({
                 />
                 <ConfirmationDialog
                     open={open}
-                    title={i18n.t("Gee data sets")}
+                    title={i18n.t("Select G.E.E dataset")}
                     onCancel={() => setOpen(false)}
                     maxWidth={"lg"}
                     fullWidth={true}
