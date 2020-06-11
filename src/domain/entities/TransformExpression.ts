@@ -56,7 +56,14 @@ export const evalTransformExpression = (
     try {
         const result = evalRawMathExpression(formula.value, inputValue);
 
-        return Either.Success(result);
+        return isNaN(result)
+            ? Either.failure({
+                  kind: "UnexpectedError",
+                  error: new Error(
+                      `Unexpected invalid NaN result applying expression ${formula.value} to value ${inputValue}`
+                  ),
+              })
+            : Either.Success(result);
     } catch (e) {
         return Either.failure({
             kind: "UnexpectedError",

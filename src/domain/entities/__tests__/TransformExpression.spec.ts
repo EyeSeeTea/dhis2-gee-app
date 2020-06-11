@@ -31,7 +31,21 @@ describe("TransformExpression", () => {
         });
     });
     describe("evalTransformExpression", () => {
-        it("should return unexpected error if formula contains input variable and its value is not a number", async () => {});
+        it("should return unexpected error if formula contains input variable and its value is not a number", async () => {
+            const geeValue = "WrongTextValue";
+
+            const result = TransformExpression.create(fahrenheitToCelsius).flatMap(formula =>
+                evalTransformExpression(formula, +geeValue)
+            );
+
+            result.fold(
+                error => expect(error).toBeTruthy(),
+                () =>
+                    fail(
+                        `Should fail evaluating math expression ${fahrenheitToCelsius} with geeValue ${geeValue} but success`
+                    )
+            );
+        });
         it("should return expected number for fahrenheit->celsius formula", async () => {
             const geeValue = 75.2;
 
