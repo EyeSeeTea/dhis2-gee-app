@@ -1,11 +1,11 @@
 import { D2Api } from "d2-api";
 import _ from "lodash";
-import i18n from "@dhis2/d2-i18n";
 import { Config } from "./Config";
 import { getDataStore } from "../utils/dhis2";
 import { Validation } from "../../types/validations";
 import { AttributeMappingDictionary } from "./Mapping";
 import DataElement from "../../domain/entities/DataElement";
+import i18n from "../utils/i18n";
 
 export interface AttributeMappingData {
     id: string;
@@ -14,6 +14,7 @@ export interface AttributeMappingData {
     dataElementId?: string;
     dataElementCode?: string;
     dataElementName?: string;
+    transformExpression?: string;
 }
 
 export type AttributeMappingField = keyof AttributeMappingData;
@@ -38,6 +39,7 @@ class AttributeMapping {
         dataElementId: i18n.t("Data element id"),
         dataElementCode: i18n.t("Data element code"),
         dataElementName: i18n.t("Data element name"),
+        transformExpression: i18n.t("Transform expression"),
     };
 
     static getFieldName(field: AttributeMappingField): string {
