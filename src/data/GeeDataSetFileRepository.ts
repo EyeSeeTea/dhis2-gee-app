@@ -6,7 +6,7 @@ export class GeeDataSetFileRepository implements GeeDataSetRepository {
     async getAll(): Promise<GeeDataSet[]> {
         const dataSetData = geeDataSets;
 
-        const dataSets = Object.keys(dataSetData).map(code => this.mapToDomain(code, dataSetData));
+        const dataSets = Object.keys(dataSetData).map(code => this.mapToDomain(code, dataSetData[code]));
 
         return dataSets;
     }
@@ -19,7 +19,7 @@ export class GeeDataSetFileRepository implements GeeDataSetRepository {
 
     private mapToDomain(code: string, dataSetData: any): GeeDataSet {
         return {
-            code,
+            id: code,
             displayName: dataSetData["displayName"],
             description: dataSetData["description"],
             imageCollectionId: dataSetData["pointer"],

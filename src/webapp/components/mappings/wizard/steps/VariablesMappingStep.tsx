@@ -7,6 +7,7 @@ import AttributeMappingTable from "../../../attribute-mapping/AttributeMappingTa
 class VariablesMappingStep extends React.Component<StepProps> {
     render() {
         const { config, mapping, onChange } = this.props;
+        debugger;
         const bands = config.data.base.googleDatasets[mapping.geeImage]["bands"].map(
             (band: any) => band.name
         );

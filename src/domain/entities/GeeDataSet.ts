@@ -1,5 +1,5 @@
 export type GeeDataSet = {
-    code: string;
+    id: string;
     displayName: string;
     description: string;
     imageCollectionId: string;
