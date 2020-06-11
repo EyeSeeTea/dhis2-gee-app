@@ -1,5 +1,11 @@
 import i18n from "@dhis2/d2-i18n";
-import { DialogContent, makeStyles, Theme } from "@material-ui/core";
+import {
+    DialogContent,
+    TextField,
+    FormControl,
+    MuiThemeProvider,
+    createMuiTheme,
+} from "@material-ui/core";
 
 import React, { useState, useEffect, useRef } from "react";
 import { GeeDataSet } from "../../../domain/entities/GeeDataSet";
@@ -11,9 +17,6 @@ import {
     ConfirmationDialog,
     ObjectsTable,
 } from "d2-ui-components";
-
-/* eslint-disable @typescript-eslint/no-var-requires */
-const { TextField } = require("@dhis2/d2-ui-core");
 
 export interface DropdownOption {
     id: string;
@@ -34,9 +37,9 @@ const GeeDataSetSelector: React.FC<GeeDataSetSelectorProps> = ({
     const [rows, setRows] = useState<GeeDataSet[]>([]);
     const [open, setOpen] = useState<boolean>(false);
     const inputRef = useRef<HTMLInputElement>(null);
-    const [fieldValue, setFieldValue] = useState(value);
     const geeDataSets = useCompositionRoot().geeDataSets();
-    const classes = useStyles();
+
+    const materialTheme = getMaterialTheme();
 
     useEffect(() => {
         geeDataSets.getAll.execute().then(setRows);
@@ -62,15 +65,10 @@ const GeeDataSetSelector: React.FC<GeeDataSetSelectorProps> = ({
             onClick: (ids: string[]) => {
                 const selectedDataSet = rows.find(row => row.id === ids[0]);
 
-                if (selectedDataSet && inputRef) {
-                    setFieldValue(selectedDataSet.id);
-
-                    debugger;
-
-                    if (inputRef.current) {
-                        inputRef.current.dispatchEvent(new Event("change", { bubbles: true }));
-                        inputRef.current.dispatchEvent(new Event("input", { bubbles: true }));
-                    }
+                if (selectedDataSet && inputRef.current) {
+                    setNativeValue(inputRef.current, selectedDataSet.id);
+                    inputRef.current.dispatchEvent(new Event("change", { bubbles: true }));
+                    inputRef.current.dispatchEvent(new Event("input", { bubbles: true }));
 
                     setOpen(false);
                 }
@@ -83,58 +81,75 @@ const GeeDataSetSelector: React.FC<GeeDataSetSelectorProps> = ({
         },
     ];
 
-    const handleChange = (event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-        debugger;
-        if (onChange) {
-            onChange(event);
+    const setNativeValue = (element: HTMLInputElement, value: string) => {
+        const valueSetter = Object.getOwnPropertyDescriptor(element, "value")!!.set;
+        const prototype = Object.getPrototypeOf(element);
+        const prototypeValueSetter = Object.getOwnPropertyDescriptor(prototype, "value")!!.set;
+
+        if (valueSetter && valueSetter !== prototypeValueSetter) {
+            prototypeValueSetter!!.call(element, value);
+        } else {
+            valueSetter!!.call(element, value);
         }
     };
 
-    //const materialTheme = getMaterialTheme();
     return (
-        <React.Fragment>
-            <TextField
-                inputProps={{
-                    readOnly: Boolean(true),
-                    disabled: Boolean(true),
-                }}
-                className={classes.textField}
-                onClick={() => setOpen(true)}
-                //disabled={true}
-                floatingLabelText={floatingLabelText}
-                onChange={handleChange}
-                value={fieldValue}
-                ref={inputRef}
-            />
-            <ConfirmationDialog
-                open={open}
-                title={i18n.t("Gee data sets")}
-                onCancel={() => setOpen(false)}
-                maxWidth={"lg"}
-                fullWidth={true}
-                disableSave={false}
-                cancelText={i18n.t("Cancel")}
-            >
-                <DialogContent>
-                    <ObjectsTable<GeeDataSet>
-                        forceSelectionColumn={false}
-                        rows={rows}
-                        actions={actions}
-                        details={details}
-                        columns={columns}
-                        searchBoxLabel={i18n.t("Search by name / code")}
-                    />
-                </DialogContent>
-            </ConfirmationDialog>
-        </React.Fragment>
+        <MuiThemeProvider theme={materialTheme}>
+            <FormControl>
+                <TextField
+                    inputProps={{
+                        readOnly: Boolean(true),
+                        disabled: Boolean(true),
+                    }}
+                    onClick={() => setOpen(true)}
+                    label={floatingLabelText}
+                    onChange={onChange}
+                    value={value}
+                    inputRef={inputRef}
+                />
+                <ConfirmationDialog
+                    open={open}
+                    title={i18n.t("Gee data sets")}
+                    onCancel={() => setOpen(false)}
+                    maxWidth={"lg"}
+                    fullWidth={true}
+                    disableSave={false}
+                    cancelText={i18n.t("Cancel")}
+                >
+                    <DialogContent>
+                        <ObjectsTable<GeeDataSet>
+                            forceSelectionColumn={false}
+                            rows={rows}
+                            actions={actions}
+                            details={details}
+                            columns={columns}
+                            searchBoxLabel={i18n.t("Search by name / code")}
+                        />
+                    </DialogContent>
+                </ConfirmationDialog>
+            </FormControl>
+        </MuiThemeProvider>
     );
 };
 
 export default GeeDataSetSelector;
 
-const useStyles = makeStyles((theme: Theme) => ({
-    textField: {
-        marginTop: theme.spacing(2),
-        width: "33%",
-    },
-}));
+const getMaterialTheme = () =>
+    createMuiTheme({
+        overrides: {
+            MuiFormLabel: {
+                root: {
+                    color: "#aaaaaa",
+                    "&$focused": {
+                        color: "#aaaaaa",
+                    },
+                },
+            },
+            MuiTextField: {
+                root: {
+                    marginTop: 20,
+                    minWidth: 250,
+                },
+            },
+        },
+    });
