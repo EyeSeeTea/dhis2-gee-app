@@ -1,6 +1,7 @@
 import i18n from "@dhis2/d2-i18n";
-import { DialogContent, TextField } from "@material-ui/core";
-import React, { useState, useEffect } from "react";
+import { DialogContent, makeStyles, Theme } from "@material-ui/core";
+
+import React, { useState, useEffect, useRef } from "react";
 import { GeeDataSet } from "../../../domain/entities/GeeDataSet";
 import { useCompositionRoot } from "../../contexts/app-context";
 import {
@@ -11,6 +12,9 @@ import {
     ObjectsTable,
 } from "d2-ui-components";
 
+/* eslint-disable @typescript-eslint/no-var-requires */
+const { TextField } = require("@dhis2/d2-ui-core");
+
 export interface DropdownOption {
     id: string;
     name: string;
@@ -18,15 +22,21 @@ export interface DropdownOption {
 
 interface GeeDataSetSelectorProps {
     value: string;
-    label: string;
+    floatingLabelText: string;
     onChange?: (event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => void;
 }
 
-const GeeDataSetSelector: React.FC<GeeDataSetSelectorProps> = ({ onChange, label, value }) => {
+const GeeDataSetSelector: React.FC<GeeDataSetSelectorProps> = ({
+    onChange,
+    floatingLabelText,
+    value,
+}) => {
     const [rows, setRows] = useState<GeeDataSet[]>([]);
     const [open, setOpen] = useState<boolean>(false);
-    const [inputElement, setInputElement] = useState<HTMLDivElement | null>(null);
+    const inputRef = useRef<HTMLInputElement>(null);
+    const [fieldValue, setFieldValue] = useState(value);
     const geeDataSets = useCompositionRoot().geeDataSets();
+    const classes = useStyles();
 
     useEffect(() => {
         geeDataSets.getAll.execute().then(setRows);
@@ -52,10 +62,16 @@ const GeeDataSetSelector: React.FC<GeeDataSetSelectorProps> = ({ onChange, label
             onClick: (ids: string[]) => {
                 const selectedDataSet = rows.find(row => row.id === ids[0]);
 
-                if (selectedDataSet && inputElement) {
+                if (selectedDataSet && inputRef) {
+                    setFieldValue(selectedDataSet.id);
+
                     debugger;
-                    setNativeValue(inputElement, selectedDataSet.id);
-                    inputElement.dispatchEvent(new Event("input", { bubbles: true }));
+
+                    if (inputRef.current) {
+                        inputRef.current.dispatchEvent(new Event("change", { bubbles: true }));
+                        inputRef.current.dispatchEvent(new Event("input", { bubbles: true }));
+                    }
+
                     setOpen(false);
                 }
             },
@@ -66,18 +82,6 @@ const GeeDataSetSelector: React.FC<GeeDataSetSelectorProps> = ({ onChange, label
             multiple: false,
         },
     ];
-
-    const setNativeValue = (element: HTMLDivElement, value: string) => {
-        const valueSetter = Object.getOwnPropertyDescriptor(element, "value")!!.set;
-        const prototype = Object.getPrototypeOf(element);
-        const prototypeValueSetter = Object.getOwnPropertyDescriptor(prototype, "value")!!.set;
-
-        if (valueSetter && valueSetter !== prototypeValueSetter) {
-            prototypeValueSetter!!.call(element, value);
-        } else {
-            valueSetter!!.call(element, value);
-        }
-    };
 
     const handleChange = (event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
         debugger;
@@ -90,12 +94,17 @@ const GeeDataSetSelector: React.FC<GeeDataSetSelectorProps> = ({ onChange, label
     return (
         <React.Fragment>
             <TextField
+                inputProps={{
+                    readOnly: Boolean(true),
+                    disabled: Boolean(true),
+                }}
+                className={classes.textField}
                 onClick={() => setOpen(true)}
-                disabled={true}
-                label={label}
+                //disabled={true}
+                floatingLabelText={floatingLabelText}
                 onChange={handleChange}
-                value={value}
-                ref={input => setInputElement(input)}
+                value={fieldValue}
+                ref={inputRef}
             />
             <ConfirmationDialog
                 open={open}
@@ -108,10 +117,10 @@ const GeeDataSetSelector: React.FC<GeeDataSetSelectorProps> = ({ onChange, label
             >
                 <DialogContent>
                     <ObjectsTable<GeeDataSet>
+                        forceSelectionColumn={false}
                         rows={rows}
                         actions={actions}
                         details={details}
-                        forceSelectionColumn={true}
                         columns={columns}
                         searchBoxLabel={i18n.t("Search by name / code")}
                     />
@@ -122,3 +131,10 @@ const GeeDataSetSelector: React.FC<GeeDataSetSelectorProps> = ({ onChange, label
 };
 
 export default GeeDataSetSelector;
+
+const useStyles = makeStyles((theme: Theme) => ({
+    textField: {
+        marginTop: theme.spacing(2),
+        width: "33%",
+    },
+}));
