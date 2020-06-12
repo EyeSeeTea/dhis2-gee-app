@@ -5,8 +5,8 @@ msgstr ""
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1)\n"
-"POT-Creation-Date: 2020-06-12T09:34:16.908Z\n"
-"PO-Revision-Date: 2020-06-12T09:34:16.908Z\n"
+"POT-Creation-Date: 2020-06-12T11:35:34.013Z\n"
+"PO-Revision-Date: 2020-06-12T11:35:34.013Z\n"
 
 msgid "No effective import into DHIS2, file download"
 msgstr ""
@@ -250,6 +250,14 @@ msgstr ""
 msgid "Click to show feedback"
 msgstr ""
 
+msgid "On-demand Global Import"
+msgstr ""
+
+msgid ""
+"Manually import gee data values by selecting organisation unit, period, the "
+"assigned mapping to organisation unit or default mapping will be used."
+msgstr ""
+
 msgid "On-demand Import"
 msgstr ""
 
@@ -394,10 +402,19 @@ msgstr ""
 msgid "Dataset id"
 msgstr ""
 
+msgid "Default"
+msgstr ""
+
 msgid "Created"
 msgstr ""
 
 msgid "Assign organisation unit"
+msgstr ""
+
+msgid "Set as default"
+msgstr ""
+
+msgid "Successfully mapping set as default"
 msgstr ""
 
 msgid "Successfully delete {{count}} mappings"

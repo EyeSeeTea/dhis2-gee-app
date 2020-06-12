@@ -9,7 +9,7 @@ import {
 import { GlobalOUMapping } from "../domain/entities/GlobalOUMapping";
 
 export default class GlobalOUMappingD2ApiRepository implements GlobalOUMappingRepository {
-    constructor(private dataStore: DataStore, private dataStoreKey: string) { }
+    constructor(private dataStore: DataStore, private dataStoreKey: string) {}
 
     async get(): Promise<GlobalOUMapping> {
         const globalOrgUnitMappings = await this.getGlobalOrgUnitMappingsData();

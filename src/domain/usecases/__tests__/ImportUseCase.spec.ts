@@ -189,6 +189,7 @@ function givenAMappingRepository(
                 },
             ];
         }),
+        saveAll: jest.fn(),
         deleteByIds: jest.fn(),
     };
 }

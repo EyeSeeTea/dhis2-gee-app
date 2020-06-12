@@ -30,9 +30,10 @@ import { GeeDataSetRepository } from "./domain/repositories/GeeDataSetRepository
 import { GetGeeDataSetsUseCase } from "./domain/usecases/GetGeeDataSetsUseCase";
 import { GetGlobalOUMappingsUseCase } from "./domain/usecases/GetGlobalOUMappingsUseCase";
 import { GetDefaultMappingUseCase } from "./domain/usecases/GetDefaultMappingUseCase";
+import { SetAsDefaultMappingUseCase } from "./domain/usecases/SetAsDefaultMappingUseCase";
 
 interface Type<T> {
-    new(...args: any[]): T;
+    new (...args: any[]): T;
 }
 
 export type NamedToken = "importUseCase" | "downloadUseCase";
@@ -127,6 +128,7 @@ class CompositionRoot {
     public mapping() {
         return {
             getDefault: this.get(GetDefaultMappingUseCase),
+            setAsDefault: this.get(SetAsDefaultMappingUseCase),
             delete: this.get(DeleteMappingsUseCase),
         };
     }
@@ -294,6 +296,7 @@ class CompositionRoot {
         ) as GlobalOUMappingRepository;
 
         const getDefaultMappingUseCase = new GetDefaultMappingUseCase(mappingRepository);
+        const setAsDefaultMappingUseCase = new SetAsDefaultMappingUseCase(mappingRepository);
 
         const deleteMappingsUseCase = new DeleteMappingsUseCase(
             mappingRepository,
@@ -302,6 +305,7 @@ class CompositionRoot {
         );
 
         this.dependencies.set(GetDefaultMappingUseCase, getDefaultMappingUseCase);
+        this.dependencies.set(SetAsDefaultMappingUseCase, setAsDefaultMappingUseCase);
         this.dependencies.set(DeleteMappingsUseCase, deleteMappingsUseCase);
     }
 }

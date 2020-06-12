@@ -7,9 +7,10 @@ import MappingRepository, {
 import { Either } from "../domain/common/Either";
 import _ from "lodash";
 import { TransformExpression } from "../domain/entities/TransformExpression";
+import { UnexpectedError } from "../domain/errors/Generic";
 
 export default class MappingD2ApiRepository implements MappingRepository {
-    constructor(private dataStore: DataStore, private dataStoreKey: string) { }
+    constructor(private dataStore: DataStore, private dataStoreKey: string) {}
 
     async getAll(ids?: Id[]): Promise<Mapping[]> {
         const mappingData = await this.getMappingData();
@@ -28,6 +29,41 @@ export default class MappingD2ApiRepository implements MappingRepository {
             const newMappingData = mappingData.filter(mapping => !ids.includes(mapping.id));
 
             await this.saveMappingData(newMappingData);
+
+            return Either.Success(true);
+        } catch (e) {
+            return Either.failure({
+                kind: "UnexpectedError",
+                error: e,
+            });
+        }
+    }
+
+    async saveAll(mappings: Mapping[]): Promise<Either<UnexpectedError, true>> {
+        try {
+            const mappingToSave = mappings.map(importRule => this.mapToDataStore(importRule));
+
+            const existedMappingData = await this.getMappingData();
+            const existedMappingDataIds = existedMappingData.map(data => data.id);
+
+            const existedImportRulesDataToSave = mappingToSave.filter(mappingDataToSave =>
+                existedMappingDataIds.includes(mappingDataToSave.id)
+            );
+
+            const newImportRulesDataToSave = mappingToSave.filter(
+                mappingDataToSave => !existedMappingDataIds.includes(mappingDataToSave.id)
+            );
+
+            const allDataToSave = [
+                ...existedMappingData.map(
+                    existed =>
+                        existedImportRulesDataToSave.find(updated => updated.id === existed.id) ||
+                        existed
+                ),
+                ...newImportRulesDataToSave,
+            ];
+
+            await this.saveMappingData(allDataToSave);
 
             return Either.Success(true);
         } catch (e) {
@@ -62,18 +98,33 @@ export default class MappingD2ApiRepository implements MappingRepository {
                 .mapValues(attributeMapping => {
                     const transformExpresion = attributeMapping.transformExpression
                         ? TransformExpression.create(attributeMapping.transformExpression).fold(
-                            () => {
-                                throw new Error(
-                                    "Unexpected invalid transform espression in the data store"
-                                );
-                            },
-                            espression => espression
-                        )
+                              () => {
+                                  throw new Error(
+                                      "Unexpected invalid transform espression in the data store"
+                                  );
+                              },
+                              espression => espression
+                          )
                         : undefined;
 
                     return {
                         ...attributeMapping,
                         transformExpression: transformExpresion,
+                    };
+                })
+                .value(),
+        };
+    }
+
+    private mapToDataStore(mapping: Mapping): MappingDS {
+        return {
+            ...mapping,
+            created: mapping.created.toISOString(),
+            attributeMappingDictionary: _(mapping.attributeMappingDictionary)
+                .mapValues(attributeMapping => {
+                    return {
+                        ...attributeMapping,
+                        transformExpression: attributeMapping.transformExpression?.value,
                     };
                 })
                 .value(),

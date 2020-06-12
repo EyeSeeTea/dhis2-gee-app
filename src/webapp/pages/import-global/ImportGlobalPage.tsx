@@ -63,7 +63,7 @@ const ImportGlobalPage: React.FC = () => {
         const selectedOUMappings = selectedOU.map(path => {
             const globalMappingId =
                 state.globalOUMappings[path.split("/").pop() || ""]?.mappingId ??
-                state.defaultMapping;
+                state.defaultMapping?.id;
             return { orgUnitPath: path, mappingId: globalMappingId };
         });
 
