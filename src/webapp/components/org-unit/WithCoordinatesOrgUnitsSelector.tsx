@@ -4,22 +4,24 @@ import { useAppContext, useCompositionRoot } from "../../contexts/app-context";
 
 interface OUDialogProps {
     selected: string[];
+    selectableIds?: string[];
     onChange: (selectedOrgUnits: string[]) => void;
     fullWidth?: boolean;
 }
 
 const WithCoordinatesOrgUnitsSelector: React.FC<OUDialogProps> = ({
     selected,
+    selectableIds,
     onChange,
     fullWidth = false,
 }) => {
     const { api } = useAppContext();
-    const [selectablesOrgs, setSelectablesOrgs] = React.useState<string[]>([]);
+    const [orgUnitsWithCoordinates, setOrgUnitsWithCoordinates] = React.useState<string[]>([]);
     const orgUnits = useCompositionRoot().orgUnits();
 
     useEffect(() => {
         orgUnits.getWithCoordinates.execute().then(orgUnits => {
-            setSelectablesOrgs(orgUnits.map(ou => ou.id));
+            setOrgUnitsWithCoordinates(orgUnits.map(ou => ou.id));
         });
     }, [orgUnits.getWithCoordinates]);
 
@@ -37,7 +39,7 @@ const WithCoordinatesOrgUnitsSelector: React.FC<OUDialogProps> = ({
             controls={controls}
             onChange={onChange}
             selected={selected}
-            selectableIds={selectablesOrgs}
+            selectableIds={selectableIds ?? orgUnitsWithCoordinates}
         />
     );
 };
