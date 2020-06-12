@@ -9,7 +9,7 @@ import _ from "lodash";
 import { TransformExpression } from "../domain/entities/TransformExpression";
 
 export default class MappingD2ApiRepository implements MappingRepository {
-    constructor(private dataStore: DataStore, private dataStoreKey: string) {}
+    constructor(private dataStore: DataStore, private dataStoreKey: string) { }
 
     async getAll(ids?: Id[]): Promise<Mapping[]> {
         const mappingData = await this.getMappingData();
@@ -57,17 +57,18 @@ export default class MappingD2ApiRepository implements MappingRepository {
         return {
             ...mappingData,
             created: new Date(mappingData.created),
+            isDefault: mappingData.isDefault ?? false,
             attributeMappingDictionary: _(mappingData.attributeMappingDictionary)
                 .mapValues(attributeMapping => {
                     const transformExpresion = attributeMapping.transformExpression
                         ? TransformExpression.create(attributeMapping.transformExpression).fold(
-                              () => {
-                                  throw new Error(
-                                      "Unexpected invalid transform espression in the data store"
-                                  );
-                              },
-                              espression => espression
-                          )
+                            () => {
+                                throw new Error(
+                                    "Unexpected invalid transform espression in the data store"
+                                );
+                            },
+                            espression => espression
+                        )
                         : undefined;
 
                     return {
@@ -89,6 +90,7 @@ export interface MappingDS {
     geeImage: string;
     created: string;
     attributeMappingDictionary: AttributeMappingDictionaryDS;
+    isDefault: boolean;
 }
 
 export interface AttributeMappingDictionaryDS {

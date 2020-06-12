@@ -7,7 +7,7 @@ export interface ImportGlobalState {
     isImporting: boolean;
     selectedOUMappings: { orgUnitPath: string; mappingId: string }[];
     selectedPeriod: PeriodOption;
-    globalOUMapping: GlobalOUMapping;
+    globalOUMappings: GlobalOUMapping;
     defaultMapping?: Mapping;
 }
 
@@ -16,6 +16,6 @@ export const ImportGlobalStateInitialState = {
     isImporting: false,
     selectedOUMappings: [],
     selectedPeriod: defaultPeriod,
-    globalOUMapping: {},
+    globalOUMappings: {},
     defaultMapping: undefined,
 };

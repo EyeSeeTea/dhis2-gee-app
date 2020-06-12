@@ -11,7 +11,7 @@ import { useAppContext } from "../../contexts/app-context";
 export const pageRoutes = {
     home: { path: "/" },
     importRules: { path: "/import-rules" },
-    importGlobal: { path: "/import" },
+    importGlobal: { path: "/global-import" },
     importRulesDetail: {
         path: "/import-rules/:action(new|edit|ondemand)/:id?",
         generateUrl: ({ id, action }: { id?: string; action: "new" | "edit" | "ondemand" }) =>

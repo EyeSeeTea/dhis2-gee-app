@@ -5,9 +5,8 @@ import { GlobalOUMapping } from "../entities/GlobalOUMapping";
 
 export type SaveGlobalOUMappingError = UnexpectedError;
 export type DeleteGlobalOUMappingError = UnexpectedError;
-
 export interface GlobalOUMappingRepository {
-    get(orgUnitId: Id): Promise<GlobalOUMapping>;
+    get(): Promise<GlobalOUMapping>;
     getByMappingId(mappingId: Id): Promise<GlobalOUMapping>;
     deleteByOrgUnitIds(orgUnitIds: Id[]): Promise<Either<DeleteGlobalOUMappingError, true>>;
     deleteByMappingIds(mappingIds: Id[]): Promise<Either<DeleteGlobalOUMappingError, true>>;

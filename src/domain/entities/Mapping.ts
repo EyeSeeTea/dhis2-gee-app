@@ -10,6 +10,7 @@ export interface Mapping {
     geeImage: string;
     created: Date;
     attributeMappingDictionary: AttributeMappingDictionary;
+    isDefault: boolean;
 }
 
 export interface AttributeMappingDictionary {

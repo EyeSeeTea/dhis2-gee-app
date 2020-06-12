@@ -40,24 +40,50 @@ const ImportGlobalPage: React.FC = () => {
     const [state, setState] = useState<ImportGlobalState>(ImportGlobalStateInitialState);
 
     const geeImport = useCompositionRoot().geeImport();
+    const globalOUMapping = useCompositionRoot().globalOUMapping();
+    const mapping = useCompositionRoot().mapping();
 
     useEffect(() => {
-        //TODO: retrieve globalOUMappings
-    }, []);
+        globalOUMapping.get.execute().then(result =>
+            setState(state => {
+                return { ...state, globalOUMappings: result };
+            })
+        );
+    }, [globalOUMapping.get]);
 
     useEffect(() => {
-        //TODO: retrieve default mapping
-    }, []);
+        mapping.getDefault.execute().then(defaultMapping => {
+            setState(state => {
+                return { ...state, defaultMapping };
+            });
+        });
+    }, [mapping.getDefault]);
 
     const onChangeSelectedOU = (selectedOU: string[]) => {
         const selectedOUMappings = selectedOU.map(path => {
-            return { orgUnitPath: path, mappingId: "" };
+            const globalMappingId =
+                state.globalOUMappings[path.split("/").pop() || ""]?.mappingId ??
+                state.defaultMapping;
+            return { orgUnitPath: path, mappingId: globalMappingId };
         });
 
         setState({
             ...state,
             selectedOUMappings,
         });
+    };
+
+    const selectableIds = () => {
+        const anySelectableIds: string[] = [];
+        const eitherSelectableIds = undefined;
+
+        if (state.globalOUMappings || state.defaultMapping) {
+            return state.globalOUMappings && !state.defaultMapping
+                ? Object.keys(state.globalOUMappings)
+                : eitherSelectableIds;
+        } else {
+            return anySelectableIds;
+        }
     };
 
     const executeOrDownload = async (useCase: ImportUseCase) => {
@@ -108,6 +134,7 @@ const ImportGlobalPage: React.FC = () => {
                     <Box display="flex" flexDirection="Row">
                         <Box width="70%">
                             <WithCoordinatesOrgUnitsSelector
+                                selectableIds={selectableIds()}
                                 selected={state.selectedOUMappings.map(
                                     oumapping => oumapping.orgUnitPath
                                 )}
