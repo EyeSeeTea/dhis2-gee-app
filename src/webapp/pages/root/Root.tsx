@@ -5,10 +5,13 @@ import LandingPage from "../home/HomePage";
 import ImportRuleListPage from "../import-rule-list/ImportRuleListPage";
 import ImportRuleDetailPage from "../import-rule-detail/ImportRuleDetailPage";
 import HistoryPage from "../import-rules-history/HistoryPage";
+import ImportGlobalPage from "../import-global/ImportGlobalPage";
+import { useAppContext } from "../../contexts/app-context";
 
 export const pageRoutes = {
     home: { path: "/" },
     importRules: { path: "/import-rules" },
+    importGlobal: { path: "/import" },
     importRulesDetail: {
         path: "/import-rules/:action(new|edit|ondemand)/:id?",
         generateUrl: ({ id, action }: { id?: string; action: "new" | "edit" | "ondemand" }) =>
@@ -43,10 +46,20 @@ export function useGoTo() {
 }
 
 const Root = () => {
+    const { isAdmin } = useAppContext();
+
     return (
         <HashRouter>
             <Switch>
-                <Route path={pageRoutes.home.path} exact render={() => <LandingPage />} />
+                <Route
+                    path={pageRoutes.home.path}
+                    exact
+                    render={() =>
+                        isAdmin ? <LandingPage /> : <Redirect to={pageRoutes.importGlobal.path} />
+                    }
+                />
+
+                <Route path={pageRoutes.importGlobal.path} render={() => <ImportGlobalPage />} />
 
                 <Route
                     path={pageRoutes.importRules.path}
