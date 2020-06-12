@@ -84,7 +84,14 @@ const App = () => {
             const compositionRoot = new CompositionRoot(baseUrl, config);
 
             configI18n(data.userSettings);
-            const appContext: AppContext = { d2, api, config, currentUser, compositionRoot };
+            const appContext: AppContext = {
+                d2,
+                api,
+                config,
+                currentUser,
+                compositionRoot,
+                isAdmin: true,
+            };
             setAppContext(appContext);
             // Google Earth Engine must be defined globally in window (as var 'ee') to work
             Object.assign(window, { app: appContext, ee });
