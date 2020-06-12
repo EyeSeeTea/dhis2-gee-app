@@ -19,72 +19,74 @@ import { trasnformExpressionToken, TransformExpression } from "../../entities/Tr
 //TODO: add test import summary
 
 describe("ImportUseCase", () => {
-    it("should import expected data value set and return expected message", async () => {
-        const ImportRuleRepository = givenAImportRuleRepository();
-        const mappingRepository = givenAMappingRepository();
-        const geeDataSetRepository = givenAGeeDataSetRepository();
-        const geeDataRepository = givenAGeeDataValueSetRepository();
-        const orgUnitRepository = givenAOrgUnitRepository();
-        const dataValueSetRepository = givenADataValueSetRepository();
-        const importSummaryRepository = givenAImportSummaryRepository();
+    describe("executeImportRule", () => {
+        it("should import expected data value set and return expected message", async () => {
+            const ImportRuleRepository = givenAImportRuleRepository();
+            const mappingRepository = givenAMappingRepository();
+            const geeDataSetRepository = givenAGeeDataSetRepository();
+            const geeDataRepository = givenAGeeDataValueSetRepository();
+            const orgUnitRepository = givenAOrgUnitRepository();
+            const dataValueSetRepository = givenADataValueSetRepository();
+            const importSummaryRepository = givenAImportSummaryRepository();
 
-        const importUseCase = new ImportUseCase(
-            ImportRuleRepository,
-            mappingRepository,
-            geeDataSetRepository,
-            geeDataRepository,
-            orgUnitRepository,
-            dataValueSetRepository,
-            importSummaryRepository
-        );
+            const importUseCase = new ImportUseCase(
+                ImportRuleRepository,
+                mappingRepository,
+                geeDataSetRepository,
+                geeDataRepository,
+                orgUnitRepository,
+                dataValueSetRepository,
+                importSummaryRepository
+            );
 
-        const result = await importUseCase.execute(defaultImportRule.id, "fakeUser");
+            const result = await importUseCase.executeImportRule(defaultImportRule.id, "fakeUser");
 
-        const expectedDataValueSet = givenAnExpectedDataValueSet();
+            const expectedDataValueSet = givenAnExpectedDataValueSet();
 
-        expect(dataValueSetRepository.save).toBeCalledWith(expectedDataValueSet);
-        expect(result).toEqual({
-            failures: [],
-            messages: [
-                "6 data values from ERA5 - DAILY google data set.",
-                "Imported: 6 - updated: 0 - ignored: 0",
-            ],
-            success: true,
+            expect(dataValueSetRepository.save).toBeCalledWith(expectedDataValueSet);
+            expect(result).toEqual({
+                failures: [],
+                messages: [
+                    "6 data values from ERA5 - DAILY google data set.",
+                    "Imported: 6 - updated: 0 - ignored: 0",
+                ],
+                success: true,
+            });
         });
-    });
-    it("should import expected data value set applying transforms", async () => {
-        const transformExpression = "#{input} - 273.15";
+        it("should import expected data value set applying transforms", async () => {
+            const transformExpression = "#{input} - 273.15";
 
-        const ImportRuleRepository = givenAImportRuleRepository();
-        const mappingRepository = givenAMappingRepository(transformExpression);
-        const geeDataSetRepository = givenAGeeDataSetRepository();
-        const geeDataRepository = givenAGeeDataValueSetRepository();
-        const orgUnitRepository = givenAOrgUnitRepository();
-        const dataValueSetRepository = givenADataValueSetRepository();
-        const importSummaryRepository = givenAImportSummaryRepository();
+            const ImportRuleRepository = givenAImportRuleRepository();
+            const mappingRepository = givenAMappingRepository(transformExpression);
+            const geeDataSetRepository = givenAGeeDataSetRepository();
+            const geeDataRepository = givenAGeeDataValueSetRepository();
+            const orgUnitRepository = givenAOrgUnitRepository();
+            const dataValueSetRepository = givenADataValueSetRepository();
+            const importSummaryRepository = givenAImportSummaryRepository();
 
-        const importUseCase = new ImportUseCase(
-            ImportRuleRepository,
-            mappingRepository,
-            geeDataSetRepository,
-            geeDataRepository,
-            orgUnitRepository,
-            dataValueSetRepository,
-            importSummaryRepository
-        );
+            const importUseCase = new ImportUseCase(
+                ImportRuleRepository,
+                mappingRepository,
+                geeDataSetRepository,
+                geeDataRepository,
+                orgUnitRepository,
+                dataValueSetRepository,
+                importSummaryRepository
+            );
 
-        const result = await importUseCase.execute(defaultImportRule.id, "fakeUser");
+            const result = await importUseCase.executeImportRule(defaultImportRule.id, "fakeUser");
 
-        const expectedDataValueSet = givenAnExpectedDataValueSet(transformExpression);
+            const expectedDataValueSet = givenAnExpectedDataValueSet(transformExpression);
 
-        expect(dataValueSetRepository.save).toBeCalledWith(expectedDataValueSet);
-        expect(result).toEqual({
-            failures: [],
-            messages: [
-                "6 data values from ERA5 - DAILY google data set.",
-                "Imported: 6 - updated: 0 - ignored: 0",
-            ],
-            success: true,
+            expect(dataValueSetRepository.save).toBeCalledWith(expectedDataValueSet);
+            expect(result).toEqual({
+                failures: [],
+                messages: [
+                    "6 data values from ERA5 - DAILY google data set.",
+                    "Imported: 6 - updated: 0 - ignored: 0",
+                ],
+                success: true,
+            });
         });
     });
 });
