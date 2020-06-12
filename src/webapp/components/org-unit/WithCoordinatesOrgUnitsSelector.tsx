@@ -5,10 +5,14 @@ import { useAppContext, useCompositionRoot } from "../../contexts/app-context";
 interface OUDialogProps {
     selected: string[];
     onChange: (selectedOrgUnits: string[]) => void;
+    fullWidth?: boolean;
 }
 
-const WithCoordinatesOrgUnitsSelector: React.FC<OUDialogProps> = props => {
-    const { selected, onChange } = props;
+const WithCoordinatesOrgUnitsSelector: React.FC<OUDialogProps> = ({
+    selected,
+    onChange,
+    fullWidth = false,
+}) => {
     const { api } = useAppContext();
     const [selectablesOrgs, setSelectablesOrgs] = React.useState<string[]>([]);
     const orgUnits = useCompositionRoot().orgUnits();
@@ -29,7 +33,7 @@ const WithCoordinatesOrgUnitsSelector: React.FC<OUDialogProps> = props => {
         <OrgUnitsSelector
             api={api}
             typeInput="checkbox"
-            fullWidth={true}
+            fullWidth={fullWidth}
             controls={controls}
             onChange={onChange}
             selected={selected}

@@ -3,19 +3,19 @@ import { DatePicker } from "d2-ui-components";
 import i18n from "@dhis2/d2-i18n";
 import Dropdown from "../dropdown/Dropdown";
 import { availablePeriods, PeriodOption } from "../../../domain/entities/PeriodOption";
+import { Box } from "@material-ui/core";
 
 interface PeriodSelectorProps {
+    className?: string | undefined;
     selectedPeriod: PeriodOption | undefined;
     onChange: (period: PeriodOption) => void;
 }
 
-const PeriodSelector: React.FC<PeriodSelectorProps> = props => {
-    const { selectedPeriod, onChange } = props;
-
+const PeriodSelector: React.FC<PeriodSelectorProps> = ({ selectedPeriod, onChange, className }) => {
     const periodItems = Object.values(availablePeriods);
 
     return (
-        <React.Fragment>
+        <Box display="flex" flexDirection="column" alignItems="center" className={className}>
             <Dropdown
                 label={i18n.t("Period")}
                 items={periodItems}
@@ -38,7 +38,7 @@ const PeriodSelector: React.FC<PeriodSelectorProps> = props => {
                     />
                 </div>
             )}
-        </React.Fragment>
+        </Box>
     );
 };
 

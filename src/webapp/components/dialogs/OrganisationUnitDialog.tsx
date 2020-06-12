@@ -29,6 +29,7 @@ const OUDialog: React.FC<OUDialogProps> = props => {
                     <WithCoordinatesOrgUnitsSelector
                         onChange={setSelectedOrgs}
                         selected={selectedOUs ? selectedOrgs : []}
+                        fullWidth={true}
                     />
                 </DialogContent>
             </ConfirmationDialog>

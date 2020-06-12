@@ -32,7 +32,7 @@ const PeriodSelectorDialog: React.FC<PeriodSelectorDialogProps> = props => {
                 onSave={currentPeriod ? onSaveClicked : undefined}
                 onCancel={onCancel}
                 saveText={i18n.t("Save")}
-                maxWidth={"lg"}
+                maxWidth={"xs"}
                 fullWidth={true}
             >
                 <DialogContent>
