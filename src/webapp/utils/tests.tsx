@@ -42,6 +42,7 @@ export function getTestConfig() {
                         suffix: "@import",
                     },
                     globalOUMapping: "globalOUMapping",
+                    geeDataSets: "geeDataSets",
                 },
             },
             googleDatasets: geeDataSets,

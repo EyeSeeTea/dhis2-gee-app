@@ -5,8 +5,8 @@ msgstr ""
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1)\n"
-"POT-Creation-Date: 2020-06-15T04:58:49.104Z\n"
-"PO-Revision-Date: 2020-06-15T04:58:49.104Z\n"
+"POT-Creation-Date: 2020-06-15T10:42:53.656Z\n"
+"PO-Revision-Date: 2020-06-15T10:42:53.656Z\n"
 
 msgid "No effective import into DHIS2, file download"
 msgstr ""
@@ -140,7 +140,16 @@ msgstr ""
 msgid "<No value>"
 msgstr ""
 
+msgid "Id"
+msgstr ""
+
 msgid "Description"
+msgstr ""
+
+msgid "Cadence"
+msgstr ""
+
+msgid "Link"
 msgstr ""
 
 msgid "Bands"
@@ -212,9 +221,6 @@ msgstr ""
 msgid ""
 "You are about to exit. All your changes will be lost. Are you sure you want "
 "to proceed?"
-msgstr ""
-
-msgid "Id"
 msgstr ""
 
 msgid "Comment"

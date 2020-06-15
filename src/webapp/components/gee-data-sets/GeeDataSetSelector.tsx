@@ -48,17 +48,25 @@ const GeeDataSetSelector: React.FC<GeeDataSetSelectorProps> = ({
 
     const columns: TableColumn<GeeDataSet>[] = [
         {
+            name: "id",
+            hidden: true,
+            text: i18n.t("Id"),
+        },
+        {
             name: "displayName",
             text: i18n.t("Name"),
         },
         {
             name: "description",
             text: i18n.t("Description"),
+            getValue: (dataSet: GeeDataSet) =>
+                dataSet.description.length > 300
+                    ? dataSet.description.substring(0, 300) + " ..."
+                    : dataSet.description,
         },
         {
-            name: "bands",
-            text: i18n.t("Bands"),
-            getValue: (dataSet: GeeDataSet) => dataSet.bands.map(band => band.name).join(", "),
+            name: "cadence",
+            text: i18n.t("Cadence"),
         },
     ];
 
@@ -69,23 +77,32 @@ const GeeDataSetSelector: React.FC<GeeDataSetSelectorProps> = ({
             text: i18n.t("Description"),
         },
         {
+            name: "doc",
+            text: i18n.t("Link"),
+        },
+        {
             name: "bands",
             text: i18n.t("Bands"),
             /*eslint-disable*/
             getValue: (dataSet: GeeDataSet) => {
                 return (
                     <ul style={{ paddingLeft: 18 }}>
-                        {dataSet.bands.map(band => {
-                            return (
-                                <li key={band.name}>
-                                    <Typography variant="subtitle1">{band.name}</Typography>
-                                    <Typography variant="subtitle1">
-                                        {`units: ${band.units}`}
-                                    </Typography>
-                                    <Typography variant="subtitle1">{band.description}</Typography>
-                                </li>
-                            );
-                        })}
+                        {dataSet.bands &&
+                            dataSet.bands.map(band => {
+                                return (
+                                    <li key={band.name}>
+                                        <Typography variant="subtitle1">{band.name}</Typography>
+                                        {band.units && (
+                                            <Typography variant="subtitle1">
+                                                {`units: ${band.units}`}
+                                            </Typography>
+                                        )}
+                                        <Typography variant="subtitle1">
+                                            {band.description}
+                                        </Typography>
+                                    </li>
+                                );
+                            })}
                     </ul>
                 );
             },

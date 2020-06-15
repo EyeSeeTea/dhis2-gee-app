@@ -6,7 +6,7 @@ import { Config } from "./webapp/models/Config";
 import { GeeDataEarthEngineRepository } from "./data/GeeDataValueSetApiRepository";
 import OrgUnitD2ApiRepository from "./data/OrgUnitD2ApiRepository";
 import DataValueSetD2ApiRepository from "./data/DataValueSetD2ApiRepository";
-import { GeeDataSetFileRepository } from "./data/GeeDataSetFileRepository";
+import { GeeDataSetFileRepository } from "./data/GeeDataSetD2ApiRepository";
 import DataValueSetFileRepository from "./data/DataValueSetFileRepository";
 import ImportRuleD2ApiRepository from "./data/ImportRuleD2ApiRepository";
 import { GetImportRulesUseCase } from "./domain/usecases/GetImportRulesUseCase";
@@ -55,8 +55,8 @@ class CompositionRoot {
     constructor(baseUrl: string, private config: Config) {
         this.d2Api = new D2ApiDefault({ baseUrl });
 
-        this.initializeGeeDataSet();
         this.initializeDataStore();
+        this.initializeGeeDataSet();
         this.initializeGlobalOUMappings();
         this.initializeOrgUnits();
         this.initializeDataElements();
@@ -134,7 +134,10 @@ class CompositionRoot {
     }
 
     private initializeGeeDataSet() {
-        const geeDataSetRepository = new GeeDataSetFileRepository();
+        const geeDataSetRepository = new GeeDataSetFileRepository(
+            this.dependencies.get("dataStore"),
+            this.config.data.base.dataStore.keys.geeDataSets
+        );
         this.dependencies.set("geeDataSetRepository", geeDataSetRepository);
 
         const getGeeDataSetsUseCase = new GetGeeDataSetsUseCase(geeDataSetRepository);

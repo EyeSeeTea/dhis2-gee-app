@@ -40,7 +40,7 @@ export default class ImportUseCase {
         private orgUnitRepository: OrgUnitRepository,
         private dataValueSetRepository: DataValueSetRepository,
         private importSummaryRepository: ImportSummaryRepository
-    ) {}
+    ) { }
 
     //TODO: pass userid? and retrieve name?
     // Validate user is not empty?
@@ -83,21 +83,21 @@ export default class ImportUseCase {
         const results =
             orgUnitMappingPairs.length > 0
                 ? await promiseMap(orgUnitMappingPairs, async orgUnitMappingPair => {
-                      return this.execute([orgUnitMappingPair.orgUnitPath], period, [
-                          orgUnitMappingPair.mappingId,
-                      ]);
-                  })
+                    return this.execute([orgUnitMappingPair.orgUnitPath], period, [
+                        orgUnitMappingPair.mappingId,
+                    ]);
+                })
                 : [
-                      {
-                          success: false,
-                          failures: [
-                              i18n.t(
-                                  "Does not exists any selected organisation unit to execute global import rule"
-                              ),
-                          ],
-                          messages: [],
-                      },
-                  ];
+                    {
+                        success: false,
+                        failures: [
+                            i18n.t(
+                                "Does not exists any selected organisation unit to execute global import rule"
+                            ),
+                        ],
+                        messages: [],
+                    },
+                ];
 
         const importResult = results.reduce(
             (acc, result) => {
@@ -148,9 +148,9 @@ export default class ImportUseCase {
                 await Promise.all(
                     mappings.map(async selectedMapping => {
                         try {
-                            const geeDataSet = await this.geeDataSetRepository.getByCode(
-                                selectedMapping.geeImage
-                            );
+                            const geeDataSet = (
+                                await this.geeDataSetRepository.getById(selectedMapping.geeImage)
+                            ).getOrThrow();
 
                             const dataValueSet: DataValueSet = await this.getDataValueSet({
                                 ...baseImportConfig,
@@ -167,7 +167,7 @@ export default class ImportUseCase {
                             messages = [
                                 ...messages,
                                 i18n.t("{{n}} data values from {{name}} google data set.", {
-                                    name: geeDataSet.displayName,
+                                    name: geeDataSet.id,
                                     n: dataValueSet.dataValues.length,
                                 }),
                             ];
