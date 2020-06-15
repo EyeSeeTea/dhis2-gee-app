@@ -40,7 +40,7 @@ export default class ImportUseCase {
         private orgUnitRepository: OrgUnitRepository,
         private dataValueSetRepository: DataValueSetRepository,
         private importSummaryRepository: ImportSummaryRepository
-    ) { }
+    ) {}
 
     //TODO: pass userid? and retrieve name?
     // Validate user is not empty?
@@ -83,21 +83,21 @@ export default class ImportUseCase {
         const results =
             orgUnitMappingPairs.length > 0
                 ? await promiseMap(orgUnitMappingPairs, async orgUnitMappingPair => {
-                    return this.execute([orgUnitMappingPair.orgUnitPath], period, [
-                        orgUnitMappingPair.mappingId,
-                    ]);
-                })
+                      return this.execute([orgUnitMappingPair.orgUnitPath], period, [
+                          orgUnitMappingPair.mappingId,
+                      ]);
+                  })
                 : [
-                    {
-                        success: false,
-                        failures: [
-                            i18n.t(
-                                "Does not exists any selected organisation unit to execute global import rule"
-                            ),
-                        ],
-                        messages: [],
-                    },
-                ];
+                      {
+                          success: false,
+                          failures: [
+                              i18n.t(
+                                  "Does not exists any selected organisation unit to execute global import rule"
+                              ),
+                          ],
+                          messages: [],
+                      },
+                  ];
 
         const importResult = results.reduce(
             (acc, result) => {

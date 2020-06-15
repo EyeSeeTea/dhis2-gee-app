@@ -1,4 +1,7 @@
-import { GeeDataSetRepository } from "../domain/repositories/GeeDataSetRepository";
+import {
+    GeeDataSetRepository,
+    GeeDataSetsFilter,
+} from "../domain/repositories/GeeDataSetRepository";
 import { GeeDataSet } from "../domain/entities/GeeDataSet";
 import axios from "axios";
 import DataStore from "d2-api/api/dataStore";
@@ -10,12 +13,26 @@ const geeDataSetCatalog = "https://earthengine-stac.storage.googleapis.com/catal
 export class GeeDataSetFileRepository implements GeeDataSetRepository {
     private cachedGeeDataSets: GeeDataSetsCache | undefined;
 
-    constructor(private dataStore: DataStore, private dataStoreKey: string) { }
+    constructor(private dataStore: DataStore, private dataStoreKey: string) {}
 
-    async getAll(): Promise<GeeDataSet[]> {
+    async getAll(filter?: GeeDataSetsFilter): Promise<GeeDataSet[]> {
         const dataSets = await this.getDataSets();
-        console.log("getAll", dataSets);
-        return dataSets;
+
+        const filteredDataSets = dataSets
+            .filter(dataSet => {
+                return filter && filter.search
+                    ? dataSet.imageCollectionId
+                          .toLowerCase()
+                          .includes(filter.search.toLowerCase()) ||
+                          dataSet.description.toLowerCase().includes(filter.search.toLowerCase()) ||
+                          dataSet.displayName.toLowerCase().includes(filter.search.toLowerCase()) ||
+                          dataSet.keywords.includes(filter.search.toLowerCase())
+                    : true;
+            })
+            .filter(dataSet =>
+                filter && filter.cadence ? dataSet.cadence === filter.cadence : true
+            );
+        return filteredDataSets;
     }
 
     async getById(id: string): Promise<Maybe<GeeDataSet>> {
@@ -29,22 +46,16 @@ export class GeeDataSetFileRepository implements GeeDataSetRepository {
         if (this.cachedGeeDataSets) {
             return this.cachedGeeDataSets.dataSets;
         } else {
-            console.log("loadDataSets");
             const dataSets = await this.getDatasetsFromDataStore();
-            console.log({ dataSets });
 
             if (dataSets && moment(new Date()).diff(moment(dataSets.lastUpdated), "days") < 7) {
-                console.log("cached datasets from data store is valid");
                 this.cachedGeeDataSets = dataSets;
 
                 return this.cachedGeeDataSets.dataSets;
             } else {
-                console.log("getDatasetsFromGeeCatalog");
                 const dataSets = await this.getDatasetsFromGeeCatalog();
 
                 await this.saveDatasetsInDataStore(dataSets);
-
-                console.log({ dataSets });
 
                 this.cachedGeeDataSets = dataSets;
 
@@ -87,12 +98,12 @@ export class GeeDataSetFileRepository implements GeeDataSetRepository {
             cadence: data.properties["gee:cadence"],
             bands: data.properties["eo:bands"]
                 ? data.properties["eo:bands"].map((band: any) => {
-                    return {
-                        name: band.name,
-                        units: band["gee:unit"],
-                        description: band.description,
-                    };
-                })
+                      return {
+                          name: band.name,
+                          units: band["gee:unit"],
+                          description: band.description,
+                      };
+                  })
                 : undefined,
             keywords: data.keywords,
         };
