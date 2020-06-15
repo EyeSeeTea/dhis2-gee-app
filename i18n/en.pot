@@ -5,8 +5,8 @@ msgstr ""
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1)\n"
-"POT-Creation-Date: 2020-06-12T11:35:34.013Z\n"
-"PO-Revision-Date: 2020-06-12T11:35:34.013Z\n"
+"POT-Creation-Date: 2020-06-15T04:58:49.104Z\n"
+"PO-Revision-Date: 2020-06-15T04:58:49.104Z\n"
 
 msgid "No effective import into DHIS2, file download"
 msgstr ""
@@ -447,6 +447,12 @@ msgid "New mapping"
 msgstr ""
 
 msgid "Edit mapping"
+msgstr ""
+
+msgid "You either tried some shady route or you came here by mistake."
+msgstr ""
+
+msgid "Back to Home"
 msgstr ""
 
 msgid "Field {{field}} cannot be blank"

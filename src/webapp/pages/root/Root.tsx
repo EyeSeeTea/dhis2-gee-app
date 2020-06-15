@@ -7,6 +7,8 @@ import ImportRuleDetailPage from "../import-rule-detail/ImportRuleDetailPage";
 import HistoryPage from "../import-rules-history/HistoryPage";
 import ImportGlobalPage from "../import-global/ImportGlobalPage";
 import { useAppContext } from "../../contexts/app-context";
+import AdminRoute from "../../components/routes/AdminRoute";
+import NotFoundPage from "../not-found/NotFoundPage";
 
 export const pageRoutes = {
     home: { path: "/" },
@@ -61,29 +63,31 @@ const Root = () => {
 
                 <Route path={pageRoutes.importGlobal.path} render={() => <ImportGlobalPage />} />
 
-                <Route
+                <Route path={pageRoutes.notFound.path} render={() => <NotFoundPage />} />
+
+                <AdminRoute
                     path={pageRoutes.importRules.path}
                     exact
                     render={() => <ImportRuleListPage />}
                 />
-                <Route
+                <AdminRoute
                     path={pageRoutes.importRulesDetail.path}
                     exact
                     render={() => <ImportRuleDetailPage />}
                 />
 
-                <Route
+                <AdminRoute
                     path={pageRoutes.mappingsNew.path}
                     render={() => <MappingCreationPage action={"new"} />}
                 />
-                <Route
+                <AdminRoute
                     path={pageRoutes.mappingsEdit.path}
                     render={({ match }) => (
                         <MappingCreationPage action={"edit"} id={match.params.id} />
                     )}
                 />
 
-                <Route path={pageRoutes.importsHistory.path} render={() => <HistoryPage />} />
+                <AdminRoute path={pageRoutes.importsHistory.path} render={() => <HistoryPage />} />
 
                 <Redirect to={pageRoutes.notFound.path} />
             </Switch>

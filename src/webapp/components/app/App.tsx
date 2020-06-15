@@ -83,6 +83,10 @@ const App = () => {
 
             const compositionRoot = new CompositionRoot(baseUrl, config);
 
+            const dataImporter: boolean = process.env.REACT_APP_DATA_IMPORTER
+                ? process.env.REACT_APP_DATA_IMPORTER === "true"
+                : false;
+
             configI18n(data.userSettings);
             const appContext: AppContext = {
                 d2,
@@ -90,7 +94,7 @@ const App = () => {
                 config,
                 currentUser,
                 compositionRoot,
-                isAdmin: true,
+                isAdmin: !dataImporter,
             };
             setAppContext(appContext);
             // Google Earth Engine must be defined globally in window (as var 'ee') to work

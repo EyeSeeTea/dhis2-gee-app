@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: i18next-conv\n"
-"POT-Creation-Date: 2020-06-12T11:35:34.013Z\n"
+"POT-Creation-Date: 2020-06-15T04:58:49.104Z\n"
 "PO-Revision-Date: 2018-10-25T09:02:35.143Z\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -448,6 +448,12 @@ msgid "New mapping"
 msgstr ""
 
 msgid "Edit mapping"
+msgstr ""
+
+msgid "You either tried some shady route or you came here by mistake."
+msgstr ""
+
+msgid "Back to Home"
 msgstr ""
 
 msgid "Field {{field}} cannot be blank"
