@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import _ from "lodash";
 import { StepProps } from "../MappingWizard";
 import { makeStyles, Button, LinearProgress } from "@material-ui/core";
@@ -6,14 +6,23 @@ import i18n from "@dhis2/d2-i18n";
 import Mapping from "../../../../models/Mapping";
 import { useSnackbar } from "d2-ui-components";
 import { useHistory } from "react-router-dom";
+import { useCompositionRoot } from "../../../../contexts/app-context";
+import { GeeDataSet } from "../../../../../domain/entities/GeeDataSet";
 
 const SummaryStep: React.FC<StepProps> = props => {
     const { api, config, mapping, onCancel } = props;
     const history = useHistory();
     const snackbar = useSnackbar();
     const classes = useStyles();
+    const geeDataSets = useCompositionRoot().geeDataSets();
+
+    const [dataSets, setDataSets] = useState<GeeDataSet[]>([]);
 
     const [isSaving, setSaving] = useState(false);
+
+    useEffect(() => {
+        geeDataSets.getAll.execute().then(setDataSets);
+    }, [geeDataSets.getAll]);
 
     async function save() {
         try {
@@ -49,7 +58,9 @@ const SummaryStep: React.FC<StepProps> = props => {
                     <LiEntry
                         label={Mapping.getFieldName("geeImage")}
                         value={
-                            _(config.data.base.googleDatasets).get(mapping.geeImage)["displayName"]
+                            dataSets.find(ds => ds.id === mapping.geeImage)
+                                ? dataSets.find(ds => ds.id === mapping.geeImage)?.displayName
+                                : ""
                         }
                     />
                     <LiEntry

@@ -31,6 +31,7 @@ import { GetGeeDataSetsUseCase } from "./domain/usecases/GetGeeDataSetsUseCase";
 import { GetGlobalOUMappingsUseCase } from "./domain/usecases/GetGlobalOUMappingsUseCase";
 import { GetDefaultMappingUseCase } from "./domain/usecases/GetDefaultMappingUseCase";
 import { SetAsDefaultMappingUseCase } from "./domain/usecases/SetAsDefaultMappingUseCase";
+import { GetGeeDataSetByIdUseCase } from "./domain/usecases/GetGeeDataSetByIdUseCase";
 
 interface Type<T> {
     new (...args: any[]): T;
@@ -76,6 +77,7 @@ class CompositionRoot {
 
     public geeDataSets() {
         return {
+            getById: this.get(GetGeeDataSetByIdUseCase),
             getAll: this.get(GetGeeDataSetsUseCase),
         };
     }
@@ -141,7 +143,10 @@ class CompositionRoot {
         this.dependencies.set("geeDataSetRepository", geeDataSetRepository);
 
         const getGeeDataSetsUseCase = new GetGeeDataSetsUseCase(geeDataSetRepository);
+        const getGeeDataSetByIdUseCase = new GetGeeDataSetByIdUseCase(geeDataSetRepository);
+
         this.dependencies.set(GetGeeDataSetsUseCase, getGeeDataSetsUseCase);
+        this.dependencies.set(GetGeeDataSetByIdUseCase, getGeeDataSetByIdUseCase);
     }
 
     private initializeDataStore() {

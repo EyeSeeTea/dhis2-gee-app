@@ -1,5 +1,4 @@
 import { D2Api, MetadataPick } from "d2-api";
-import { geeDataSets } from "../../data/GeeDataSets";
 
 const baseConfig = {
     // Add here static configuration
@@ -20,7 +19,6 @@ const baseConfig = {
             geeDataSets: "geeDataSets",
         },
     },
-    googleDatasets: geeDataSets,
 };
 
 export type BaseConfig = typeof baseConfig;

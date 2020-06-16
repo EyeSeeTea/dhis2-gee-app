@@ -19,6 +19,7 @@ export class GeeDataSetFileRepository implements GeeDataSetRepository {
         const dataSets = await this.getDataSets();
 
         const filteredDataSets = dataSets
+            .filter(dataSet => dataSet.type === "image_collection")
             .filter(dataSet => {
                 return filter && filter.search
                     ? dataSet.imageCollectionId
@@ -88,8 +89,10 @@ export class GeeDataSetFileRepository implements GeeDataSetRepository {
 
         const data = response.data;
 
+        const id = data.id.replace(new RegExp("/", "g"), "-");
+
         const geeDataset = {
-            id: data.id.replace("/", "-"),
+            id: id,
             imageCollectionId: data.id,
             displayName: data.title,
             type: data.properties["gee:type"],

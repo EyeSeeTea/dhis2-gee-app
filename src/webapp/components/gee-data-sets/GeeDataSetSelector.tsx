@@ -94,10 +94,19 @@ const GeeDataSetSelector: React.FC<GeeDataSetSelectorProps> = ({
             name: "cadence",
             text: i18n.t("Cadence"),
         },
+        {
+            name: "type",
+            text: i18n.t("Type"),
+            hidden: true,
+        },
     ];
 
     const details: ObjectsTableDetailField<GeeDataSet>[] = [
         { name: "displayName", text: i18n.t("Name") },
+        {
+            name: "type",
+            text: i18n.t("Type"),
+        },
         {
             name: "description",
             text: i18n.t("Description"),

@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: i18next-conv\n"
-"POT-Creation-Date: 2020-06-15T10:42:53.656Z\n"
+"POT-Creation-Date: 2020-06-15T11:31:52.621Z\n"
 "PO-Revision-Date: 2018-10-25T09:02:35.143Z\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -141,7 +141,19 @@ msgstr ""
 msgid "<No value>"
 msgstr ""
 
+msgid "Year"
+msgstr ""
+
+msgid "Day"
+msgstr ""
+
+msgid "Month"
+msgstr ""
+
 msgid "Id"
+msgstr ""
+
+msgid "Image Collection Id"
 msgstr ""
 
 msgid "Description"
@@ -156,10 +168,16 @@ msgstr ""
 msgid "Bands"
 msgstr ""
 
+msgid "Keywords"
+msgstr ""
+
 msgid "Details"
 msgstr ""
 
 msgid "Select G.E.E dataset"
+msgstr ""
+
+msgid "Search"
 msgstr ""
 
 msgid "Field cannot be blank"
