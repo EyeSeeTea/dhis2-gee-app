@@ -299,7 +299,7 @@ export default class ImportUseCase {
                             dataElement: dataElementId,
                             value: numberResult.toString(),
                             orgUnit: orgUnitId,
-                            period: date.format("YYYYMMDD"), // Assume periodType="DAILY"
+                            period: date.format("YYYYMMDD"),
                         };
                     }
                 );
@@ -308,7 +308,7 @@ export default class ImportUseCase {
                     dataElement: mapping.dataElementId,
                     value: formattedValue,
                     orgUnit: orgUnitId,
-                    period: date.format("YYYYMMDD"), // Assume periodType="DAILY"
+                    period: date.format("YYYYMMDD"),
                 };
             }
         }

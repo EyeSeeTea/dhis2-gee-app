@@ -3,9 +3,10 @@ import moment, { Moment } from "moment";
 import ee, {
     GeometryPoint,
     GeometryPolygon,
-    ImageCollection,
     InfoDataRowBase,
     InfoData,
+    Image,
+    Region,
 } from "@google/earthengine";
 import {
     GeeDataValueSetRepository,
@@ -24,7 +25,7 @@ export interface GeeCredentials {
 }
 
 export class GeeDataEarthEngineRepository implements GeeDataValueSetRepository {
-    constructor(private d2Api: D2Api) {}
+    constructor(private d2Api: D2Api) { }
 
     async getData<Band extends string>(
         options: GeeDataFilters<Band>
@@ -36,15 +37,46 @@ export class GeeDataEarthEngineRepository implements GeeDataValueSetRepository {
         const endDate = this.getDayString(interval.end); // last day is not included
         const engineGeometry = this.getGeometry(geometry);
 
-        const imageCollection = new ee.ImageCollection(id);
-        console.log("ee.getImageCollection", { id, bands, startDate, endDate, geometry, scale });
+        if (geometry.type === "point") {
+            return await this.retrieveByPoint<Band>(
+                id,
+                bands,
+                startDate,
+                endDate,
+                geometry,
+                engineGeometry,
+                scale
+            );
+        } else {
+            return await this.retrieveByPolygon<Band>(
+                id,
+                bands,
+                startDate,
+                endDate,
+                geometry,
+                engineGeometry
+            );
+        }
+    }
 
-        const rows = await this.getInfo(
-            imageCollection
-                .select(bands)
-                .filterDate(startDate, endDate)
-                .getRegion(engineGeometry, scale)
-        );
+    private async retrieveByPoint<Band extends string>(
+        id: string,
+        bands: Band[],
+        startDate: string,
+        endDate: string,
+        geometry: GeeGeometry,
+        engineGeometry: object,
+        scale: number
+    ): Promise<GeeDataValueSet<Band>> {
+        const imageCollection = new ee.ImageCollection(id)
+            .select(bands)
+            .filterDate(startDate, endDate);
+
+        const region = imageCollection.getRegion(engineGeometry, scale);
+
+        console.log("ee.Region", { id, bands, startDate, endDate, engineGeometry, scale });
+
+        const rows = await this.getInfo(region);
 
         const header = rows[0];
         if (!header) throw new Error("Header not found in response");
@@ -55,11 +87,51 @@ export class GeeDataEarthEngineRepository implements GeeDataValueSetRepository {
 
         const items = _(rows)
             .drop(1)
-            .flatMap(row => this.getGeeItemsFromApiRow(bands, row))
+            .flatMap(row => this.getGeeItemsFromApiRow(bands, row, geometry))
             .value();
 
         console.log({ rows, items });
         return items;
+    }
+
+    private async retrieveByPolygon<Band extends string>(
+        id: string,
+        bands: Band[],
+        startDate: string,
+        endDate: string,
+        geometry: GeeGeometry,
+        engineGeometry: object
+    ): Promise<GeeDataValueSet<Band>> {
+        const imageCollection = new ee.ImageCollection(id)
+            .select(bands)
+            .filterDate(startDate, endDate);
+
+        const reducedCollection = imageCollection.map((image: Image) => {
+            const dictionary = image.reduceRegion({
+                reducer: ee.Reducer.mean(),
+                geometry: engineGeometry,
+                bestEffort: true,
+            });
+
+            return ee.Image(image.setMulti(dictionary));
+        });
+
+        const collectionData = reducedCollection.getInfo();
+
+        const result = _(bands).flatMap((band: Band) => {
+            return collectionData.features.map(feature => {
+                const dataValue = {
+                    band,
+                    value: feature.properties[band],
+                    geometry: geometry,
+                    periodId: feature.properties["system:index"],
+                    date: moment(feature.properties["system:time_start"]),
+                };
+                return dataValue;
+            });
+        }).value();
+
+        return result;
     }
 
     private async initializeEngine() {
@@ -91,11 +163,15 @@ export class GeeDataEarthEngineRepository implements GeeDataValueSetRepository {
         }
     }
 
-    private getGeeItemsFromApiRow<Band>(bands: Band[], row: any[]): GeeDataValue<Band>[] {
-        const [periodId, lon, lat, time] = _.take(row, 4) as InfoDataRowBase;
+    private getGeeItemsFromApiRow<Band>(
+        bands: Band[],
+        row: any[],
+        geometry: GeeGeometry
+    ): GeeDataValue<Band>[] {
+        const [periodId, , , time] = _.take(row, 4) as InfoDataRowBase;
         const values = _.drop(row, 4) as number[];
         const date = moment(time);
-        const baseItem = { periodId, date, lat, lon };
+        const baseItem = { periodId, date, geometry };
 
         return _(bands)
             .zip(values)
@@ -104,9 +180,9 @@ export class GeeDataEarthEngineRepository implements GeeDataValueSetRepository {
             .value();
     }
 
-    private async getInfo(imageCollection: ImageCollection): Promise<InfoData> {
+    private async getInfo(region: Region): Promise<InfoData> {
         return new Promise<InfoData>((resolve, reject) => {
-            imageCollection.getInfo((data, error) => {
+            region.getInfo((data, error) => {
                 if (error) {
                     reject(error);
                 } else if (data) {
