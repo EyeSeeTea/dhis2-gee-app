@@ -274,8 +274,8 @@ const HistoryPage: React.FC = () => {
                     onCancel={() => setState({ ...state, toDelete: [] })}
                     title={i18n.t("Delete import histories?")}
                     description={i18n.t(
-                        "Are you sure you want to delete {{count}} import histories?",
-                        { count: state.toDelete.length }
+                        "Are you sure you want to delete {{deleteCount}} import histories?",
+                        { deleteCount: state.toDelete.length }
                     )}
                     saveText={i18n.t("Ok")}
                 >

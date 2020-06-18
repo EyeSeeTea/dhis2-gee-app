@@ -242,8 +242,8 @@ const MappingsList: React.FC<MappingsListProps> = props => {
             () => {
                 onDeleteMappings(mappingIdsToDelete ?? []);
                 snackbar.success(
-                    i18n.t("Successfully delete {{count}} mappings", {
-                        count: mappingIdsToDelete.length,
+                    i18n.t("Successfully delete {{deleteCount}} mappings", {
+                        deleteCount: mappingIdsToDelete.length,
                     })
                 );
             }

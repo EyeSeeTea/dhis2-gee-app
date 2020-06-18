@@ -107,8 +107,8 @@ const ImportRuleListPage: React.FC = () => {
             error => snackbar.error(handleFailure(error)),
             () =>
                 snackbar.success(
-                    i18n.t("Successfully delete {{count}} import rules", {
-                        count: state.toDelete.length,
+                    i18n.t("Successfully delete {{deleteCount}} import rules", {
+                        deleteCount: state.toDelete.length,
                     })
                 )
         );
@@ -304,8 +304,8 @@ const ImportRuleListPage: React.FC = () => {
                     title={i18n.t("Delete Rules?")}
                     description={
                         state.toDelete
-                            ? i18n.t("Are you sure you want to delete {{count}} rules?", {
-                                  count: state.toDelete.length,
+                            ? i18n.t("Are you sure you want to delete {{deleteCount}} rules?", {
+                                  deleteCount: state.toDelete.length,
                               })
                             : ""
                     }
