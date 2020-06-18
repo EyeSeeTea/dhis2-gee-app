@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from "react";
-import i18n from "@dhis2/d2-i18n";
 import { useCompositionRoot, useCurrentUser, useAppContext } from "../../contexts/app-context";
 import { makeStyles } from "@material-ui/styles";
 import GetAppIcon from "@material-ui/icons/GetApp";
@@ -13,6 +12,7 @@ import WithCoordinatesOrgUnitsSelector from "../../components/org-unit/WithCoord
 import PeriodSelector from "../../components/period/PeriodSelector";
 import { PeriodOption } from "../../../domain/entities/PeriodOption";
 import { ImportGlobalState, ImportGlobalStateInitialState } from "./ImportGlobalState";
+import i18n from "../../utils/i18n";
 
 const useStyles = makeStyles((theme: Theme) => ({
     card: {
@@ -104,9 +104,9 @@ const ImportGlobalPage: React.FC = () => {
         });
 
         if (result?.success) {
-            snackbar.success(i18n.t("Import successful \n") + result.messages.join("\n"));
+            snackbar.success(i18n.t("Import successful") + result.messages.join("\n"));
         } else {
-            snackbar.error(i18n.t("Import failed: \n") + result.failures.join("\n"));
+            snackbar.error(i18n.t("Import failed") + "\n" + result.failures.join("\n"));
         }
     };
 

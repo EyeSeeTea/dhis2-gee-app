@@ -12,7 +12,6 @@ import {
 } from "d2-ui-components";
 import AddIcon from "@material-ui/icons/Add";
 import Mapping from "../../models/Mapping";
-import i18n from "@dhis2/d2-i18n";
 import { useAppContext, useCompositionRoot } from "../../contexts/app-context";
 import { makeStyles } from "@material-ui/styles";
 import { Theme, createStyles, LinearProgress, Icon, Box, Fab } from "@material-ui/core";
@@ -25,6 +24,7 @@ import {
 } from "../../../domain/repositories/GlobalOUMappingRepository";
 import { Id } from "../../../domain/entities/Ref";
 import { Checkbox } from "material-ui";
+import i18n from "../../utils/i18n";
 
 type ContextualAction = "details" | "edit" | "delete" | "assignOU" | "setAsDefault";
 
@@ -148,7 +148,7 @@ const MappingsList: React.FC<MappingsListProps> = props => {
             switch (failure.kind) {
                 case "UnexpectedError":
                     return (
-                        i18n.t("An unexpected error has ocurred setting mappings as default: ") +
+                        i18n.t("An unexpected error has ocurred setting mappings as default ") +
                         failure.error.message
                     );
             }
@@ -229,7 +229,7 @@ const MappingsList: React.FC<MappingsListProps> = props => {
             switch (failure.kind) {
                 case "UnexpectedError":
                     return (
-                        i18n.t("An unexpected error has ocurred deleting mappings: ") +
+                        i18n.t("An unexpected error has ocurred deleting mappings. ") +
                         failure.error.message
                     );
             }
@@ -304,7 +304,7 @@ const MappingsList: React.FC<MappingsListProps> = props => {
                 case "UnexpectedError":
                     return (
                         i18n.t(
-                            "An unexpected error has ocurred updating organisation unit assigment: "
+                            "An unexpected error has ocurred updating organisation unit assigment. "
                         ) + failure.error.message
                     );
             }

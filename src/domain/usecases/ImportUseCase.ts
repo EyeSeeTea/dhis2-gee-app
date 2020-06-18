@@ -318,7 +318,7 @@ export default class ImportUseCase {
         if (typeof dataValueSetReponse == "string") {
             return dataValueSetReponse;
         } else {
-            return i18n.t("Imported: {{imported}} - updated: {{updated}} - ignored: {{ignored}}", {
+            return i18n.t("Imported {{imported}} - updated {{updated}} - ignored {{ignored}}", {
                 imported: dataValueSetReponse.imported,
                 updated: dataValueSetReponse.updated,
                 ignored: dataValueSetReponse.ignored,

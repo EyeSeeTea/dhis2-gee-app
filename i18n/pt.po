@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: i18next-conv\n"
-"POT-Creation-Date: 2020-06-18T12:00:48.717Z\n"
+"POT-Creation-Date: 2020-06-18T14:19:25.035Z\n"
 "PO-Revision-Date: 2020-06-16T05:53:00.829Z\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -80,6 +80,9 @@ msgstr "Não existe nenhum mapeamento selecionado na regra de importação"
 
 msgid "Unexpected error has ocurred apply transform expression"
 msgstr "Ocorreu um erro inesperado aplicar expressão de transformação"
+
+msgid "Imported {{imported}} - updated {{updated}} - ignored {{ignored}}"
+msgstr ""
 
 msgid "Mapping for attribute {{attr}}"
 msgstr "Mapeando para o atributo {{attr}"
@@ -242,6 +245,9 @@ msgstr "A expressão não é válida"
 msgid "Transform expression for attribute {{attr}}"
 msgstr "Transformar expressão para o atributo {{attr}}"
 
+msgid "Variable"
+msgstr ""
+
 msgid "Cancel?"
 msgstr "Cancelar?"
 
@@ -329,8 +335,13 @@ msgstr ""
 "Exibir e analisar o status e os resultados da importação e importação "
 "manualexecuta execuções."
 
-msgid "Import successful \n"
+#, fuzzy
+msgid "Import successful"
 msgstr "Importar com sucesso \n"
+
+#, fuzzy
+msgid "Import failed"
+msgstr "Falha na importação da configuração"
 
 msgid "Import"
 msgstr "Importar"
@@ -374,6 +385,10 @@ msgstr "Selecionar período"
 
 msgid "Last executed"
 msgstr "Última execução"
+
+#, fuzzy
+msgid "An unexpected error has ocurred deleting import rules. "
+msgstr "Ocorreu um erro inesperado aplicar expressão de transformação"
 
 msgid "Successfully delete {{deleteCount}} import rules"
 msgstr "Exclua com êxito {{deleteCount}} regras de importação"
@@ -423,6 +438,10 @@ msgstr "Editar {{name}}"
 msgid "View result"
 msgstr "Ver resultado"
 
+#, fuzzy
+msgid "An unexpected error has ocurred deleting import history. "
+msgstr "Ocorreu um erro inesperado aplicar expressão de transformação"
+
 msgid "Successfully import histories"
 msgstr "Importar históricos com sucesso"
 
@@ -458,11 +477,23 @@ msgstr "Atribuir unidade organizacional"
 msgid "Set as default"
 msgstr "Definir como padrão"
 
+#, fuzzy
+msgid "An unexpected error has ocurred setting mappings as default "
+msgstr "Ocorreu um erro inesperado aplicar expressão de transformação"
+
 msgid "Successfully mapping set as default"
 msgstr "Mapeamento definido com êxito como padrão"
 
+#, fuzzy
+msgid "An unexpected error has ocurred deleting mappings. "
+msgstr "Ocorreu um erro inesperado aplicar expressão de transformação"
+
 msgid "Successfully delete {{deleteCount}} mappings"
 msgstr "Exclua com êxito {{deleteCount}} regras de importação"
+
+#, fuzzy
+msgid "An unexpected error has ocurred updating organisation unit assigment. "
+msgstr "Ocorreu um erro inesperado aplicar expressão de transformação"
 
 msgid "Organisation unit assignment success"
 msgstr "Sucesso da atribuição da unidade organizacional"
@@ -494,6 +525,9 @@ msgstr "Novo mapeamento"
 
 msgid "Edit mapping"
 msgstr "Editar mapeamento"
+
+msgid "404, The page you are looking for isn’t here"
+msgstr ""
 
 msgid "You either tried some shady route or you came here by mistake."
 msgstr "Você tentou alguma rota sombria ou veio aqui por engano."

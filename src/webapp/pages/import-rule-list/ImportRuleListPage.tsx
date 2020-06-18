@@ -1,4 +1,3 @@
-import i18n from "@dhis2/d2-i18n";
 import { Icon, LinearProgress } from "@material-ui/core";
 import {
     ConfirmationDialog,
@@ -23,6 +22,7 @@ import { useGoTo, pageRoutes } from "../root/Root";
 import { ImportRuleListState, importRuleListInitialState } from "./ImportRulesListState";
 import ImportUseCase from "../../../domain/usecases/ImportUseCase";
 import { DeleteImportRulesByIdError } from "../../../domain/repositories/ImportRuleRepository";
+import i18n from "../../utils/i18n";
 
 const ImportRuleListPage: React.FC = () => {
     const snackbar = useSnackbar();
@@ -95,7 +95,7 @@ const ImportRuleListPage: React.FC = () => {
             switch (failure.kind) {
                 case "UnexpectedError":
                     return (
-                        i18n.t("An unexpected error has ocurred deleting import rules: ") +
+                        i18n.t("An unexpected error has ocurred deleting import rules. ") +
                         failure.error.message
                     );
             }
@@ -150,9 +150,9 @@ const ImportRuleListPage: React.FC = () => {
         });
 
         if (result?.success) {
-            snackbar.success(i18n.t("Import successful \n") + result.messages.join("\n"));
+            snackbar.success(i18n.t("Import successful") + result.messages.join("\n"));
         } else {
-            snackbar.error(i18n.t("Import failed: \n") + result.failures.join("\n"));
+            snackbar.error(i18n.t("Import failed") + "\n" + result.failures.join("\n"));
         }
     };
 

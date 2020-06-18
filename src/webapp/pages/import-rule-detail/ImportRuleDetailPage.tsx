@@ -1,5 +1,4 @@
 import React, { useState } from "react";
-import i18n from "@dhis2/d2-i18n";
 import { useCompositionRoot, useCurrentUser } from "../../contexts/app-context";
 import { makeStyles } from "@material-ui/styles";
 import PageHeader from "../../components/page-header/PageHeader";
@@ -31,6 +30,7 @@ import { importRuleOndemandId } from "../../../domain/entities/ImportRule";
 import GeneralInfo from "../../components/import-rule/GeneralInfo";
 import { CreateImportRuleError } from "../../../domain/usecases/CreateImportRuleUseCase";
 import { getValidationTranslations } from "../../utils/ValidationTranslations";
+import i18n from "../../utils/i18n";
 
 interface ImportRuleDetailPageParams {
     id: string;
@@ -192,9 +192,9 @@ const ImportRuleDetailPage: React.FC = () => {
         });
 
         if (result?.success) {
-            snackbar.success(i18n.t("Import successful \n") + result.messages.join("\n"));
+            snackbar.success(i18n.t("Import successful") + result.messages.join("\n"));
         } else {
-            snackbar.error(i18n.t("Import failed: \n") + result.failures.join("\n"));
+            snackbar.error(i18n.t("Import failed") + "\n" + result.failures.join("\n"));
         }
     };
 
