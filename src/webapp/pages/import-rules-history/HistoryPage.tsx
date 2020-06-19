@@ -129,7 +129,7 @@ const HistoryPage: React.FC = () => {
 
         if (importSummary.result.success) {
             snackbar.success(
-                i18n.t("Import successful") + importSummary.result.messages.join("\n"),
+                i18n.t("Import successful") + "\n" + importSummary.result.messages.join("\n"),
                 { autoHideDuration: null }
             );
         } else {
