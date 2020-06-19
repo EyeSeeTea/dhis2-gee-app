@@ -253,15 +253,13 @@ export default class ImportUseCase {
     }
 
     private mapOrgUnitToGeeGeometry(orgUnit: OrgUnit): GeeGeometry | undefined {
-        const coordinates = orgUnit.coordinates ? JSON.parse(orgUnit.coordinates) : null;
-        if (!coordinates) return;
+        if (!orgUnit.geometry) return;
 
-        switch (orgUnit.featureType) {
-            case "POINT":
-                return { type: "point", coordinates };
-            case "POLYGON":
-            case "MULTI_POLYGON":
-                return { type: "multi-polygon", polygonCoordinates: coordinates };
+        switch (orgUnit.geometry.type) {
+            case "Point":
+                return { type: "point", coordinates: orgUnit.geometry.coordinates };
+            case "Polygon":
+                return { type: "multi-polygon", polygonCoordinates: orgUnit.geometry.coordinates };
             default:
                 return;
         }
