@@ -91,7 +91,7 @@ describe("ImportUseCase", () => {
     });
 });
 
-export { };
+export {};
 
 function givenAGeeDataSetRepository(): GeeDataSetRepository {
     return {
@@ -176,7 +176,10 @@ function givenAOrgUnitRepository(): OrgUnitRepository {
     return {
         getByIds: jest.fn().mockImplementation(() => {
             return [
-                { id: "WFAboRxdVjA", geometry: { type: "Point", coordinates: [-2.708309, 6.675618] } },
+                {
+                    id: "WFAboRxdVjA",
+                    geometry: { type: "Point", coordinates: [-2.708309, 6.675618] },
+                },
             ];
         }),
         getAllWithCoordinates: jest.fn(),

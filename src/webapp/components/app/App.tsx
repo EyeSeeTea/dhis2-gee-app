@@ -81,7 +81,9 @@ const App = () => {
                 User.getCurrent(api),
             ]);
 
-            const compositionRoot = new CompositionRoot(baseUrl, config);
+            const version = (await api.system.info.getData()).version;
+
+            const compositionRoot = new CompositionRoot(api, version, config);
 
             const dataImporter: boolean = process.env.REACT_APP_DATA_IMPORTER
                 ? process.env.REACT_APP_DATA_IMPORTER === "true"
