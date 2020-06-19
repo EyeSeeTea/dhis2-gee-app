@@ -150,7 +150,7 @@ const ImportRuleListPage: React.FC = () => {
         });
 
         if (result?.success) {
-            snackbar.success(i18n.t("Import successful") + result.messages.join("\n"));
+            snackbar.success(i18n.t("Import successful") + "\n" + result.messages.join("\n"));
         } else {
             snackbar.error(i18n.t("Import failed") + "\n" + result.failures.join("\n"));
         }
