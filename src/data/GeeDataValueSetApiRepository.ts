@@ -25,7 +25,7 @@ export interface GeeCredentials {
 }
 
 export class GeeDataEarthEngineRepository implements GeeDataValueSetRepository {
-    constructor(private d2Api: D2Api) { }
+    constructor(private d2Api: D2Api) {}
 
     async getData<Band extends string>(
         options: GeeDataFilters<Band>
@@ -118,18 +118,20 @@ export class GeeDataEarthEngineRepository implements GeeDataValueSetRepository {
 
         const collectionData = reducedCollection.getInfo();
 
-        const result = _(bands).flatMap((band: Band) => {
-            return collectionData.features.map(feature => {
-                const dataValue = {
-                    band,
-                    value: feature.properties[band],
-                    geometry: geometry,
-                    periodId: feature.properties["system:index"],
-                    date: moment(feature.properties["system:time_start"]),
-                };
-                return dataValue;
-            });
-        }).value();
+        const result = _(bands)
+            .flatMap((band: Band) => {
+                return collectionData.features.map(feature => {
+                    const dataValue = {
+                        band,
+                        value: feature.properties[band],
+                        geometry: geometry,
+                        periodId: feature.properties["system:index"],
+                        date: moment(feature.properties["system:time_start"]),
+                    };
+                    return dataValue;
+                });
+            })
+            .value();
 
         return result;
     }
