@@ -30,6 +30,8 @@ import {
 import { Either } from "../common/Either";
 import { evalTransformExpression } from "../entities/TransformExpression";
 import { PeriodOption } from "../entities/PeriodOption";
+import { Moment } from "moment";
+import { GeeDataSet } from "../entities/GeeDataSet";
 
 export default class ImportUseCase {
     constructor(
@@ -137,7 +139,6 @@ export default class ImportUseCase {
                 const baseImportConfig: { orgUnits: OrgUnit[]; interval: GeeInterval } = {
                     orgUnits: orgUnits,
                     interval: {
-                        type: "daily",
                         ...buildPeriod(period),
                     },
                 };
@@ -152,11 +153,14 @@ export default class ImportUseCase {
                                 await this.geeDataSetRepository.getById(selectedMapping.geeImage)
                             ).getOrThrow();
 
-                            const dataValueSet: DataValueSet = await this.getDataValueSet({
-                                ...baseImportConfig,
-                                geeDataSetId: geeDataSet.imageCollectionId,
-                                attributeIdsMapping: selectedMapping.attributeMappingDictionary,
-                            });
+                            const dataValueSet: DataValueSet = await this.getDataValueSet(
+                                geeDataSet,
+                                {
+                                    ...baseImportConfig,
+                                    geeDataSetId: geeDataSet.imageCollectionId,
+                                    attributeIdsMapping: selectedMapping.attributeMappingDictionary,
+                                }
+                            );
 
                             importDataValueSet = {
                                 dataValues: _.concat(
@@ -223,6 +227,7 @@ export default class ImportUseCase {
     }
 
     private async getDataValueSet<Band extends string>(
+        geeDataSet: GeeDataSet,
         options: GetDataValueSetOptions<Band>
     ): Promise<DataValueSet> {
         const { geeDataRepository } = this;
@@ -244,7 +249,14 @@ export default class ImportUseCase {
             const geeData = await geeDataRepository.getData(options);
 
             return _(geeData)
-                .map(item => this.mapGeeDataValueToDataValue(item, orgUnit.id, attributeIdsMapping))
+                .map(item =>
+                    this.mapGeeDataValueToDataValue(
+                        item,
+                        orgUnit.id,
+                        attributeIdsMapping,
+                        geeDataSet
+                    )
+                )
                 .compact()
                 .value();
         });
@@ -270,7 +282,8 @@ export default class ImportUseCase {
     private mapGeeDataValueToDataValue<Band extends string>(
         item: GeeDataValue<Band>,
         orgUnitId: string,
-        mappingDicc: AttributeMappingDictionary
+        mappingDicc: AttributeMappingDictionary,
+        geeDataSet: GeeDataSet
     ): DataValue | undefined {
         const { date, band, value } = item;
         const mapping = mappingDicc[band];
@@ -299,7 +312,7 @@ export default class ImportUseCase {
                             dataElement: dataElementId,
                             value: numberResult.toString(),
                             orgUnit: orgUnitId,
-                            period: date.format("YYYYMMDD"),
+                            period: this.getFormatedPeriod(date, geeDataSet),
                         };
                     }
                 );
@@ -308,9 +321,19 @@ export default class ImportUseCase {
                     dataElement: mapping.dataElementId,
                     value: formattedValue,
                     orgUnit: orgUnitId,
-                    period: date.format("YYYYMMDD"),
+                    period: this.getFormatedPeriod(date, geeDataSet),
                 };
             }
+        }
+    }
+
+    private getFormatedPeriod(date: Moment, geeDataSet: GeeDataSet) {
+        if (geeDataSet.cadence?.includes("year")) {
+            return date.format("YYYY");
+        } else if (geeDataSet.cadence?.includes("month")) {
+            return date.format("YYYYMM");
+        } else {
+            return date.format("YYYYMMDD");
         }
     }
 
