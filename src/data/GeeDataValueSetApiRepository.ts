@@ -32,7 +32,7 @@ export interface GeeCredentials {
 }
 
 export class GeeDataEarthEngineRepository implements GeeDataValueSetRepository {
-    constructor(private d2Api: D2Api) { }
+    constructor(private d2Api: D2Api) {}
 
     async getData<Band extends string>(
         options: GeeDataFilters<Band>
