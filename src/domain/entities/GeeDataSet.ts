@@ -15,3 +15,5 @@ export type GeeBand = {
     units: string;
     description: string;
 };
+
+export type Cadence = "day" | "month" | "year";
