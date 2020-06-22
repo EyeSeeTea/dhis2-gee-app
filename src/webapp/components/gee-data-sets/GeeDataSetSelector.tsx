@@ -10,7 +10,7 @@ import {
 } from "@material-ui/core";
 
 import React, { useState, useEffect, useRef } from "react";
-import { GeeDataSet } from "../../../domain/entities/GeeDataSet";
+import { GeeDataSet, Cadence } from "../../../domain/entities/GeeDataSet";
 import { useCompositionRoot } from "../../contexts/app-context";
 import {
     TableColumn,
@@ -43,7 +43,7 @@ const GeeDataSetSelector: React.FC<GeeDataSetSelectorProps> = ({
     const [searchFilter, setSearchFilter] = useState<string>("");
     const [cadenceFilter, setCadenceFilter] = useState<string>("");
 
-    const [cadenceFilterOptions] = useState<{ id: string; name: string }[]>([
+    const [cadenceFilterOptions] = useState<{ id: Cadence; name: string }[]>([
         {
             id: "year",
             name: i18n.t("Year"),
