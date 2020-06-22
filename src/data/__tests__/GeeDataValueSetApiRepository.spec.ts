@@ -34,7 +34,7 @@ describe("GeeDataEarthEngineRepository", () => {
                     "mean_2m_air_temperature",
                 ],
                 geometry: { type: "point", coordinates: [3000, 5000] },
-                interval: { type: "daily", start: moment("2000-12-01"), end: moment("2000-12-31") },
+                interval: { start: moment("2000-12-01"), end: moment("2000-12-31") },
             };
             const result = await geeDataRepository.getData(filters);
 
@@ -58,7 +58,7 @@ describe("GeeDataEarthEngineRepository", () => {
     });
 });
 
-export {};
+export { };
 
 function givenAGeeImageCollection() {
     const mockedImageCollectionFunctions = {

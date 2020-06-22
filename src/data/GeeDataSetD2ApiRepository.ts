@@ -31,7 +31,7 @@ export class GeeDataSetFileRepository implements GeeDataSetRepository {
                     : true;
             })
             .filter(dataSet =>
-                filter && filter.cadence ? dataSet.cadence === filter.cadence : true
+                filter && filter.cadence ? dataSet.cadence?.includes(filter.cadence) : true
             );
         return filteredDataSets;
     }
