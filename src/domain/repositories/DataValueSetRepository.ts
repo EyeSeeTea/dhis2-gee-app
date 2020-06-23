@@ -1,10 +1,14 @@
 import { DataValueSet } from "../entities/DataValueSet";
 
 interface Dhis2Reponse {
-    imported: number;
-    updated: number;
-    ignored: number;
-    deleted: number;
+    status: "SUCCESS" | "ERROR" | "WARNING";
+    description: string;
+    importCount: {
+        imported: number;
+        updated: number;
+        ignored: number;
+        deleted: number;
+    };
 }
 
 type FileResponse = string;

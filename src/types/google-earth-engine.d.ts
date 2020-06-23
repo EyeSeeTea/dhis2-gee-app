@@ -16,7 +16,7 @@ declare module "@google/earthengine" {
         constructor(dataSetId: string);
         select(bands: string[]): this;
         filterDate(startDate: string, endDater: string): this;
-        getInfo(): DataSetInfoData;
+        getInfo(onFinish: (data?: DataSetInfoData, error?: string) => void): void;
         map(image: any): this;
         getRegion(geometry: GeometryInstance, scale: number): Region;
     }
@@ -54,7 +54,7 @@ declare module "@google/earthengine" {
     declare type Reducer<Input, Output> = (input: Input) => Output;
 
     export var Reducer: { [name: string]: Reducer } = {
-        median = () => {},
+        median = () => { },
     };
 
     // [periodId, lon, lat, time, ...number]
