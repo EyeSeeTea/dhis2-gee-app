@@ -185,7 +185,15 @@ export default class ImportUseCase {
                     importDataValueSet
                 );
 
-                messages = [...messages, this.getImportCountString(dataValueSetResponse)];
+                const dataValueSetMessages = this.getMessagesFromDataValueSetReponse(
+                    dataValueSetResponse
+                );
+                messages = dataValueSetMessages ? [...messages, dataValueSetMessages] : messages;
+
+                const dataValueSetFailures = this.getFailuresFromDataValueSetReponse(
+                    dataValueSetResponse
+                );
+                failures = dataValueSetFailures ? [...failures, dataValueSetFailures] : failures;
             }
 
             const importResult = {
@@ -335,16 +343,28 @@ export default class ImportUseCase {
         }
     }
 
-    private getImportCountString(dataValueSetReponse: SaveDataValueSetReponse): string {
-        if (typeof dataValueSetReponse == "string") {
+    private getMessagesFromDataValueSetReponse(
+        dataValueSetReponse: SaveDataValueSetReponse
+    ): string {
+        if (typeof dataValueSetReponse === "string") {
             return dataValueSetReponse;
         } else {
-            return i18n.t("Imported {{imported}} - updated {{updated}} - ignored {{ignored}}", {
-                imported: dataValueSetReponse.imported,
-                updated: dataValueSetReponse.updated,
-                ignored: dataValueSetReponse.ignored,
-            });
+            return dataValueSetReponse.status !== "ERROR"
+                ? i18n.t("Imported {{imported}} - updated {{updated}} - ignored {{ignored}}", {
+                      imported: dataValueSetReponse.importCount.imported,
+                      updated: dataValueSetReponse.importCount.updated,
+                      ignored: dataValueSetReponse.importCount.ignored,
+                  })
+                : "";
         }
+    }
+
+    private getFailuresFromDataValueSetReponse(
+        dataValueSetReponse: SaveDataValueSetReponse
+    ): string {
+        return typeof dataValueSetReponse !== "string" && dataValueSetReponse.status === "ERROR"
+            ? dataValueSetReponse.description
+            : "";
     }
 
     private saveImportResult(

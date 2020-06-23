@@ -268,10 +268,14 @@ function givenADataValueSetRepository(): DataValueSetRepository {
     return {
         save: jest.fn().mockImplementation(() => {
             return {
-                imported: 6,
-                updated: 0,
-                ignored: 0,
-                deleted: 0,
+                status: "SUCCESS",
+                description: "Import Success",
+                importCount: {
+                    imported: 6,
+                    updated: 0,
+                    ignored: 0,
+                    deleted: 0,
+                },
             };
         }),
     };
