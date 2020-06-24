@@ -29,6 +29,7 @@ import {
     SaveImportSummaryError,
 } from "../repositories/ImportSummaryRepository";
 import { Either } from "../common/Either";
+import { evalTransformExpression } from "../entities/TransformExpression";
 
 export default class ImportUseCase {
     constructor(
@@ -82,9 +83,7 @@ export default class ImportUseCase {
                             const dataValueSet: DataValueSet = await this.getDataValueSet({
                                 ...baseImportConfig,
                                 geeDataSetId: geeDataSet.imageCollectionId,
-                                attributeIdsMapping: this.getAttributeIdMappings(
-                                    selectedMapping.attributeMappingDictionary
-                                ),
+                                attributeIdsMapping: selectedMapping.attributeMappingDictionary,
                             });
 
                             importDataValueSet = {
@@ -212,31 +211,48 @@ export default class ImportUseCase {
     private mapGeeDataValueToDataValue<Band extends string>(
         item: GeeDataValue<Band>,
         orgUnitId: string,
-        mapping: Record<Band, DataElementId>
+        mappingDicc: AttributeMappingDictionary
     ): DataValue | undefined {
         const { date, band, value } = item;
-        const dataElementId = mapping[band];
+        const mapping = mappingDicc[band];
 
-        if (!dataElementId) {
+        if (!mapping.dataElementId) {
             console.error(`Band not found in mapping: ${band}`);
             return;
         } else {
-            return {
-                dataElement: dataElementId,
-                value: value.toFixed(18),
-                orgUnit: orgUnitId,
-                period: date.format("YYYYMMDD"), // Assume periodType="DAILY"
-            };
-        }
-    }
+            const formattedValue = value.toFixed(18);
+            const dataElementId: string = mapping.dataElementId;
 
-    private getAttributeIdMappings(
-        attributeMappingsDictionary: AttributeMappingDictionary
-    ): Record<string, string> {
-        const bandDeMappings = _.mapValues(attributeMappingsDictionary, m => {
-            return m.dataElementId ?? "";
-        });
-        return bandDeMappings;
+            if (mapping.transformExpression) {
+                const mappedValueResult = evalTransformExpression(
+                    mapping.transformExpression,
+                    +formattedValue
+                );
+
+                return mappedValueResult.fold(
+                    () => {
+                        throw new Error(
+                            i18n.t("Unexpected error has ocurred apply transform expression")
+                        );
+                    },
+                    numberResult => {
+                        return {
+                            dataElement: dataElementId,
+                            value: numberResult.toString(),
+                            orgUnit: orgUnitId,
+                            period: date.format("YYYYMMDD"), // Assume periodType="DAILY"
+                        };
+                    }
+                );
+            } else {
+                return {
+                    dataElement: mapping.dataElementId,
+                    value: formattedValue,
+                    orgUnit: orgUnitId,
+                    period: date.format("YYYYMMDD"), // Assume periodType="DAILY"
+                };
+            }
+        }
     }
 
     private getImportCountString(dataValueSetReponse: SaveDataValueSetReponse): string {
@@ -270,7 +286,7 @@ type DataElementId = string;
 
 interface GetDataValueSetOptions<Band extends string> {
     geeDataSetId: GeeDataSetId;
-    attributeIdsMapping: Record<Band, DataElementId>;
+    attributeIdsMapping: AttributeMappingDictionary;
     orgUnits: OrgUnit[];
     interval: GeeInterval;
     scale?: number;

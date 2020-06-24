@@ -1948,6 +1948,11 @@
     "@types/react" "*"
     "@types/react-addons-linked-state-mixin" "*"
 
+"@types/math-expression-evaluator@^1.2.0":
+  version "1.2.0"
+  resolved "https://registry.yarnpkg.com/@types/math-expression-evaluator/-/math-expression-evaluator-1.2.0.tgz#e061c7df5a54dfbdb6ef64735ede0a6a361bc9a8"
+  integrity sha512-vpigE82yKFHZO50AVQ88JSU4ABZYuX/lzPGhKhebFMfFQGjLifE1a9uy/M66nLhO/vxegsefn6pkysSUTdiDjg==
+
 "@types/md5@^2.1.33":
   version "2.1.33"
   resolved "https://registry.npmjs.org/@types/md5/-/md5-2.1.33.tgz#8c8dba30df4ad0e92296424f08c4898dd808e8df"
@@ -9713,6 +9718,11 @@ material-ui@^0.20.0:
     recompose "^0.26.0"
     simple-assign "^0.1.0"
     warning "^3.0.0"
+
+math-expression-evaluator@^1.2.22:
+  version "1.2.22"
+  resolved "https://registry.yarnpkg.com/math-expression-evaluator/-/math-expression-evaluator-1.2.22.tgz#c14dcb3d8b4d150e5dcea9c68c8dad80309b0d5e"
+  integrity sha512-L0j0tFVZBQQLeEjmWOvDLoRciIY8gQGWahvkztXUal8jH8R5Rlqo9GCvgqvXcy9LQhEWdQCVvzqAbxgYNt4blQ==
 
 math-random@^1.0.1:
   version "1.0.4"

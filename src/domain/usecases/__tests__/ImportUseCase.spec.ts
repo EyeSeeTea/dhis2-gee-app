@@ -14,6 +14,7 @@ import { Either } from "../../common/Either";
 import { ImportRule } from "../../entities/ImportRule";
 import MappingRepository from "../../repositories/MappingRepository";
 import { ImportSummaryRepository } from "../../repositories/ImportSummaryRepository";
+import { trasnformExpressionToken, TransformExpression } from "../../entities/TransformExpression";
 
 //TODO: add test import summary
 
@@ -40,6 +41,41 @@ describe("ImportUseCase", () => {
         const result = await importUseCase.execute(defaultImportRule.id, "fakeUser");
 
         const expectedDataValueSet = givenAnExpectedDataValueSet();
+
+        expect(dataValueSetRepository.save).toBeCalledWith(expectedDataValueSet);
+        expect(result).toEqual({
+            failures: [],
+            messages: [
+                "6 data values from ERA5 - DAILY google data set.",
+                "Imported: 6 - updated: 0 - ignored: 0",
+            ],
+            success: true,
+        });
+    });
+    it("should import expected data value set applying transforms", async () => {
+        const transformExpression = "#{input} - 273.15";
+
+        const ImportRuleRepository = givenAImportRuleRepository();
+        const mappingRepository = givenAMappingRepository(transformExpression);
+        const geeDataSetRepository = givenAGeeDataSetRepository();
+        const geeDataRepository = givenAGeeDataValueSetRepository();
+        const orgUnitRepository = givenAOrgUnitRepository();
+        const dataValueSetRepository = givenADataValueSetRepository();
+        const importSummaryRepository = givenAImportSummaryRepository();
+
+        const importUseCase = new ImportUseCase(
+            ImportRuleRepository,
+            mappingRepository,
+            geeDataSetRepository,
+            geeDataRepository,
+            orgUnitRepository,
+            dataValueSetRepository,
+            importSummaryRepository
+        );
+
+        const result = await importUseCase.execute(defaultImportRule.id, "fakeUser");
+
+        const expectedDataValueSet = givenAnExpectedDataValueSet(transformExpression);
 
         expect(dataValueSetRepository.save).toBeCalledWith(expectedDataValueSet);
         expect(result).toEqual({
@@ -91,7 +127,22 @@ function givenAOrgUnitRepository(): OrgUnitRepository {
     };
 }
 
-function givenAMappingRepository(): MappingRepository {
+function givenAMappingRepository(
+    trasformExpresion: string | undefined = undefined
+): MappingRepository {
+    const getTrasformExpresion = (trasformExpresion: string | undefined) => {
+        if (!trasformExpresion) {
+            return trasformExpresion;
+        } else {
+            const expressionResult = TransformExpression.create(trasformExpresion);
+
+            return expressionResult.fold(
+                () => undefined,
+                expressionOK => expressionOK
+            );
+        }
+    };
+
     return {
         getAll: jest.fn().mockImplementation(() => {
             return [
@@ -110,6 +161,7 @@ function givenAMappingRepository(): MappingRepository {
                             dataElementName: "CC - Temperature min",
                             dataElementCode: "CC - Temperature min",
                             comment: "",
+                            transformExpression: getTrasformExpresion(trasformExpresion),
                         },
                         maximum_2m_air_temperature: {
                             id: "maximum_2m_air_temperature",
@@ -118,6 +170,7 @@ function givenAMappingRepository(): MappingRepository {
                             dataElementName: "CC - Temperature max",
                             dataElementCode: "CC - Temperature max",
                             comment: "",
+                            transformExpression: getTrasformExpresion(trasformExpresion),
                         },
                         mean_2m_air_temperature: {
                             id: "mean_2m_air_temperature",
@@ -126,6 +179,7 @@ function givenAMappingRepository(): MappingRepository {
                             dataElementName: "CC - Temperature",
                             dataElementCode: "CC - Temperature",
                             comment: "",
+                            transformExpression: getTrasformExpresion(trasformExpresion),
                         },
                     },
                     created: new Date(),
@@ -229,44 +283,53 @@ function givenAGeeDataValueSetRepository(): GeeDataValueSetRepository {
     };
 }
 
-function givenAnExpectedDataValueSet(): DataValueSet {
+function givenAnExpectedDataValueSet(
+    trasnformExpression: string | undefined = undefined
+): DataValueSet {
+    /* eslint no-eval: 0 */
+    const getValue = (value: string) => {
+        return trasnformExpression
+            ? eval(trasnformExpression.replace(trasnformExpressionToken, value)).toString()
+            : value;
+    };
+
     const dataValueSet = {
         dataValues: [
             {
                 dataElement: "klaKtwaWAvG",
                 orgUnit: "WFAboRxdVjA",
                 period: "20180101",
-                value: "294.757934570312500000",
+                value: getValue("294.757934570312500000"),
             },
             {
                 dataElement: "c24Y5UNjXyj",
                 orgUnit: "WFAboRxdVjA",
                 period: "20180101",
-                value: "308.136077880859375000",
+                value: getValue("308.136077880859375000"),
             },
             {
                 dataElement: "RSJpUZqMoxC",
                 orgUnit: "WFAboRxdVjA",
                 period: "20180101",
-                value: "300.814178466796875000",
+                value: getValue("300.814178466796875000"),
             },
             {
                 dataElement: "klaKtwaWAvG",
                 orgUnit: "WFAboRxdVjA",
                 period: "20180102",
-                value: "294.919311523437500000",
+                value: getValue("294.919311523437500000"),
             },
             {
                 dataElement: "c24Y5UNjXyj",
                 orgUnit: "WFAboRxdVjA",
                 period: "20180102",
-                value: "306.922637939453125000",
+                value: getValue("306.922637939453125000"),
             },
             {
                 dataElement: "RSJpUZqMoxC",
                 orgUnit: "WFAboRxdVjA",
                 period: "20180102",
-                value: "300.292205810546875000",
+                value: getValue("300.292205810546875000"),
             },
         ],
     };
