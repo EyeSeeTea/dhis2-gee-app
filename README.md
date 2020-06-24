@@ -52,8 +52,18 @@ Cypress Dashboard: https://dashboard.cypress.io/projects/49be3z
 
 ## Build app ZIP
 
+This project can generate two app zips.
+
+To generate the admin app:
+
 ```
 $ yarn build-webapp
+```
+
+To generate the importer app:
+
+```
+$ yarn build-importer
 ```
 
 ## Some development tips
