@@ -162,7 +162,7 @@ const ImportRuleDetailPage: React.FC = () => {
         setState(newState);
     };
 
-    const onPeriodSelectionSave = (newPeriod: PeriodOption) => {
+    const onPeriodSelectionSave = (newPeriod?: PeriodOption) => {
         const newState = {
             ...state,
             importRule: {

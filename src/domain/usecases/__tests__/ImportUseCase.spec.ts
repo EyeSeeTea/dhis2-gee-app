@@ -176,7 +176,10 @@ function givenAOrgUnitRepository(): OrgUnitRepository {
     return {
         getByIds: jest.fn().mockImplementation(() => {
             return [
-                { id: "WFAboRxdVjA", coordinates: "[-2.708309,6.675618]", featureType: "POINT" },
+                {
+                    id: "WFAboRxdVjA",
+                    geometry: { type: "Point", coordinates: [-2.708309, 6.675618] },
+                },
             ];
         }),
         getAllWithCoordinates: jest.fn(),
@@ -265,10 +268,14 @@ function givenADataValueSetRepository(): DataValueSetRepository {
     return {
         save: jest.fn().mockImplementation(() => {
             return {
-                imported: 6,
-                updated: 0,
-                ignored: 0,
-                deleted: 0,
+                status: "SUCCESS",
+                description: "Import Success",
+                importCount: {
+                    imported: 6,
+                    updated: 0,
+                    ignored: 0,
+                    deleted: 0,
+                },
             };
         }),
     };

@@ -7,6 +7,8 @@ import {
     InfoData,
     Image,
     Region,
+    ImageCollection,
+    DataSetInfoData,
 } from "@google/earthengine";
 import {
     GeeDataValueSetRepository,
@@ -125,7 +127,7 @@ export class GeeDataEarthEngineRepository implements GeeDataValueSetRepository {
             return ee.Image(image.setMulti(dictionary));
         });
 
-        const collectionData = reducedCollection.getInfo();
+        const collectionData = await this.getCollectionInfo(reducedCollection);
 
         const result = _(bands)
             .flatMap((band: Band) => {
@@ -194,6 +196,20 @@ export class GeeDataEarthEngineRepository implements GeeDataValueSetRepository {
     private async getInfo(region: Region): Promise<InfoData> {
         return new Promise<InfoData>((resolve, reject) => {
             region.getInfo((data, error) => {
+                if (error) {
+                    reject(error);
+                } else if (data) {
+                    resolve(data);
+                } else {
+                    throw new Error("[getInfo] Error: No data or error");
+                }
+            });
+        });
+    }
+
+    private async getCollectionInfo(image: ImageCollection): Promise<DataSetInfoData> {
+        return new Promise<DataSetInfoData>((resolve, reject) => {
+            image.getInfo((data, error) => {
                 if (error) {
                     reject(error);
                 } else if (data) {

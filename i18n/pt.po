@@ -56,8 +56,8 @@ msgstr "{{name}} (excluído)"
 msgid "An error has ocurred updating lastUpdate field of import rule"
 msgstr "Ocorreu um erro ao atualizar o campo lastUpdate da regra de importação"
 
-msgid ""
-"Does not exists any selected organisation unit to execute global import rule"
+#, fuzzy
+msgid "No organisation unit selected as global for the import rule"
 msgstr ""
 "Não existe nenhuma unidade organizacional selecionada para executar a regra "
 "de importação globa"
@@ -68,15 +68,17 @@ msgstr "{{n}} valores de dados do {{name}} conjunto de dados do google."
 msgid "Import config failed"
 msgstr "Falha na importação da configuração"
 
-msgid "Does not exists any selected organisation unit in the import rule"
-msgstr ""
-"Não existe nenhuma unidade organizacional selecionada na regra de importação"
-
-msgid "Does not exists any selected period in the import rule"
+#, fuzzy
+msgid "No organisation unit selected in the import rule"
 msgstr "Não existe nenhum período selecionado na regra de importação"
 
-msgid "Does not exists any selected mapping in the import rule"
-msgstr "Não existe nenhum mapeamento selecionado na regra de importação"
+#, fuzzy
+msgid "No period selected in the import rule"
+msgstr "Não existe nenhum período selecionado na regra de importação"
+
+#, fuzzy
+msgid "No mapping selected in the import rule"
+msgstr "Não existe nenhum período selecionado na regra de importação"
 
 msgid "Unexpected error has ocurred apply transform expression"
 msgstr "Ocorreu um erro inesperado aplicar expressão de transformação"
@@ -537,14 +539,3 @@ msgstr "Você precisa selecionar pelo menos um {{element}}"
 
 msgid "Start and end dates are not a valid period"
 msgstr "As datas de início e término não são um período válido"
-
-#~ msgid "On-demand Global Import"
-#~ msgstr "Importação global sob demanda"
-
-#~ msgid ""
-#~ "Manually import gee data values by selecting organisation unit, period, "
-#~ "the assigned mapping to organisation unit or default mapping will be used."
-#~ msgstr ""
-#~ "Importe manualmente os valores de dados Gee selecionando unidade "
-#~ "organizacional, período, oo mapeamento atribuído à unidade da organização "
-#~ "ou mapeamento padrão será usado."

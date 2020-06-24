@@ -6,21 +6,30 @@ class DataElementD2ApiRepository implements DataElementRepository {
     constructor(private d2Api: D2Api) {}
 
     async getByDataSet(dataSetId: Id): Promise<DataElement[]> {
-        const { objects } = await this.d2Api.models.dataElements
+        const { objects } = await this.d2Api.models.dataSets
             .get({
                 paging: false,
                 fields: {
                     id: true,
-                    name: true,
-                    code: true,
+                    dataSetElements: {
+                        dataElement: {
+                            id: true,
+                            name: true,
+                            code: true,
+                        },
+                    },
                 },
                 filter: {
-                    "dataSetElements.dataSet.id": { eq: dataSetId },
+                    id: { eq: dataSetId },
                 },
             })
             .getData();
 
-        return objects.map(o => o as DataElement);
+        if (objects.length === 0) {
+            return [];
+        } else {
+            return objects[0].dataSetElements.map(dse => dse.dataElement);
+        }
     }
 }
 

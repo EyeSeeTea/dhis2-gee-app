@@ -54,8 +54,8 @@ export default class ImportUseCase {
 
         const importResult = await this.execute(
             importRule.selectedOUs,
-            importRule.periodInformation,
-            importRule.selectedMappings
+            importRule.selectedMappings,
+            importRule.periodInformation
         );
 
         const updatedImportRule = importRule.updateLastExecuted();
@@ -85,17 +85,17 @@ export default class ImportUseCase {
         const results =
             orgUnitMappingPairs.length > 0
                 ? await promiseMap(orgUnitMappingPairs, async orgUnitMappingPair => {
-                      return this.execute([orgUnitMappingPair.orgUnitPath], period, [
-                          orgUnitMappingPair.mappingId,
-                      ]);
+                      return this.execute(
+                          [orgUnitMappingPair.orgUnitPath],
+                          [orgUnitMappingPair.mappingId],
+                          period
+                      );
                   })
                 : [
                       {
                           success: false,
                           failures: [
-                              i18n.t(
-                                  "Does not exists any selected organisation unit to execute global import rule"
-                              ),
+                              i18n.t("No organisation unit selected as global for the import rule"),
                           ],
                           messages: [],
                       },
@@ -124,15 +124,15 @@ export default class ImportUseCase {
 
     public async execute(
         orgUnitPaths: string[],
-        period: PeriodOption,
-        mappingIds: string[]
+        mappingIds: string[],
+        period?: PeriodOption
     ): Promise<ImportResult> {
         let failures: string[] = [];
         let messages: string[] = [];
         try {
-            failures = this.validateInputs(orgUnitPaths, period, mappingIds);
+            failures = this.validateInputs(orgUnitPaths, mappingIds, period);
 
-            if (failures.length === 0) {
+            if (failures.length === 0 && period) {
                 const orgUnitIds = _.compact(orgUnitPaths.map(o => o.split("/").pop()));
                 const orgUnits = await this.orgUnitRepository.getByIds(orgUnitIds);
 
@@ -185,7 +185,15 @@ export default class ImportUseCase {
                     importDataValueSet
                 );
 
-                messages = [...messages, this.getImportCountString(dataValueSetResponse)];
+                const dataValueSetMessages = this.getMessagesFromDataValueSetReponse(
+                    dataValueSetResponse
+                );
+                messages = dataValueSetMessages ? [...messages, dataValueSetMessages] : messages;
+
+                const dataValueSetFailures = this.getFailuresFromDataValueSetReponse(
+                    dataValueSetResponse
+                );
+                failures = dataValueSetFailures ? [...failures, dataValueSetFailures] : failures;
             }
 
             const importResult = {
@@ -206,21 +214,23 @@ export default class ImportUseCase {
         }
     }
 
-    private validateInputs(orgUnits: string[], period: PeriodOption, mappings: string[]): string[] {
+    private validateInputs(
+        orgUnits: string[],
+        mappings: string[],
+        period?: PeriodOption
+    ): string[] {
         const failures: string[] = [];
 
         if (orgUnits.length === 0) {
-            failures.push(
-                i18n.t("Does not exists any selected organisation unit in the import rule")
-            );
+            failures.push(i18n.t("No organisation unit selected in the import rule"));
         }
 
         if (!period) {
-            failures.push(i18n.t("Does not exists any selected period in the import rule"));
+            failures.push(i18n.t("No period selected in the import rule"));
         }
 
         if (mappings.length === 0) {
-            failures.push(i18n.t("Does not exists any selected mapping in the import rule"));
+            failures.push(i18n.t("No mapping selected in the import rule"));
         }
 
         return failures;
@@ -265,15 +275,13 @@ export default class ImportUseCase {
     }
 
     private mapOrgUnitToGeeGeometry(orgUnit: OrgUnit): GeeGeometry | undefined {
-        const coordinates = orgUnit.coordinates ? JSON.parse(orgUnit.coordinates) : null;
-        if (!coordinates) return;
+        if (!orgUnit.geometry) return;
 
-        switch (orgUnit.featureType) {
-            case "POINT":
-                return { type: "point", coordinates };
-            case "POLYGON":
-            case "MULTI_POLYGON":
-                return { type: "multi-polygon", polygonCoordinates: coordinates };
+        switch (orgUnit.geometry.type) {
+            case "Point":
+                return { type: "point", coordinates: orgUnit.geometry.coordinates };
+            case "Polygon":
+                return { type: "multi-polygon", polygonCoordinates: orgUnit.geometry.coordinates };
             default:
                 return;
         }
@@ -337,16 +345,28 @@ export default class ImportUseCase {
         }
     }
 
-    private getImportCountString(dataValueSetReponse: SaveDataValueSetReponse): string {
-        if (typeof dataValueSetReponse == "string") {
+    private getMessagesFromDataValueSetReponse(
+        dataValueSetReponse: SaveDataValueSetReponse
+    ): string {
+        if (typeof dataValueSetReponse === "string") {
             return dataValueSetReponse;
         } else {
-            return i18n.t("Imported {{imported}} - updated {{updated}} - ignored {{ignored}}", {
-                imported: dataValueSetReponse.imported,
-                updated: dataValueSetReponse.updated,
-                ignored: dataValueSetReponse.ignored,
-            });
+            return dataValueSetReponse.status !== "ERROR"
+                ? i18n.t("Imported {{imported}} - updated {{updated}} - ignored {{ignored}}", {
+                      imported: dataValueSetReponse.importCount.imported,
+                      updated: dataValueSetReponse.importCount.updated,
+                      ignored: dataValueSetReponse.importCount.ignored,
+                  })
+                : "";
         }
+    }
+
+    private getFailuresFromDataValueSetReponse(
+        dataValueSetReponse: SaveDataValueSetReponse
+    ): string {
+        return typeof dataValueSetReponse !== "string" && dataValueSetReponse.status === "ERROR"
+            ? dataValueSetReponse.description
+            : "";
     }
 
     private saveImportResult(
