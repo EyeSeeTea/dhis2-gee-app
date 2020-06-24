@@ -21,8 +21,18 @@ import { AppContext } from "../../contexts/app-context";
 import { Config } from "../../models/Config";
 import { User } from "../../models/User";
 import { LinearProgress } from "@material-ui/core";
-import ee from "@google/earthengine";
 import CompositionRoot from "../../../CompositionRoot";
+
+// -- TODO: gee static ------
+// import ee from "@google/earthengine";
+
+declare global {
+    interface Window {
+        ee: any;
+    }
+}
+const ee = window.ee || {};
+//---------------------
 
 type D2 = object;
 

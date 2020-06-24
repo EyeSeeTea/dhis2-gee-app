@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: i18next-conv\n"
-"POT-Creation-Date: 2020-06-10T05:53:56.379Z\n"
+"POT-Creation-Date: 2020-06-10T08:56:49.910Z\n"
 "PO-Revision-Date: 2018-10-25T09:02:35.143Z\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -62,13 +62,13 @@ msgstr ""
 msgid "Import config failed"
 msgstr ""
 
-msgid "Does not exists any selected organisation unit in the import rule"
+msgid "No organisation unit selection in the import rule"
 msgstr ""
 
-msgid "Does not exists any selected period in the import rule"
+msgid "No period selection in the import rule"
 msgstr ""
 
-msgid "Does not exists any selected mapping in the import rule"
+msgid "No mapping selection in the import rule"
 msgstr ""
 
 msgid "Mapping for attribute {{attr}}"
@@ -385,9 +385,9 @@ msgid "Delete mapping"
 msgstr ""
 
 msgid ""
-"This operation will delete ({{n}}) mappings and remove it as selected in "
-"related import rules. This operation cannot be undone. Are you sure you want "
-"to proceed?"
+"This operation will delete ({{n}}) mappings and remove related global "
+"organisation unit mapping and remove it as selected in related import rules. "
+"This operation cannot be undone. Are you sure you want to proceed?"
 msgstr ""
 
 msgid "Deleting..."
