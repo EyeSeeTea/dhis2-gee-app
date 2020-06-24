@@ -1,6 +1,6 @@
-import { Id } from "../entities/ReferenceObject";
+import { Id } from "../entities/Ref";
 import { OrgUnit } from "../entities/OrgUnit";
 
 export default interface OrgUnitRepository {
-    getByIds(ids: Id[]): Promise<OrgUnit[]>
-} 
+    getByIds(ids: Id[]): Promise<OrgUnit[]>;
+}

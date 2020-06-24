@@ -5,89 +5,120 @@ import {
     GeeDataValueSetRepository,
     GeeGeometry,
     GeeDataSetId,
-    GeeDataFilters
+    GeeDataFilters,
 } from "../repositories/GeeDataValueSetRepository";
 import { OrgUnit } from "../entities/OrgUnit";
 import { DataValueSet, DataValue } from "../entities/DataValueSet";
 import OrgUnitRepository from "../repositories/OrgUnitRepository";
 import { GeeDataValue } from "../entities/GeeDataValueSet";
 import { promiseMap, buildPeriod } from "../utils";
-import { ImportRule, AttributeMappingDictionary } from "../entities/ImportRule";
-import DataValueSetRepository, { SaveDataValueSetReponse } from "../repositories/DataValueSetRepository";
+import DataValueSetRepository, {
+    SaveDataValueSetReponse,
+} from "../repositories/DataValueSetRepository";
 import { GeeDataSetRepository } from "../repositories/GeeDataSetRepository";
+import { ImportRuleRepository } from "../repositories/ImportRuleRepository";
+import { Id } from "../entities/Ref";
 
 import i18n from "../../webapp/utils/i18n";
+import { AttributeMappingDictionary } from "../entities/Mapping";
+import MappingRepository from "../repositories/MappingRepository";
+import { ImportRule } from "../entities/ImportRule";
 
 export interface ImportUseCaseResult {
-    success: boolean; failures: string[]; messages: string[]
+    success: boolean;
+    failures: string[];
+    messages: string[];
 }
 
-//TODO: this use case is the old run method in old import model
-// little a little we are going to refactoring this use case
-// creating adapters that invoke it until the usecase has not
-// webapp and infrastructure dependencies
 export default class ImportUseCase {
     constructor(
+        private importRuleRepository: ImportRuleRepository,
+        private mappingRepository: MappingRepository,
         private geeDataSetRepository: GeeDataSetRepository,
         private geeDataRepository: GeeDataValueSetRepository,
         private orgUnitRepository: OrgUnitRepository,
-        private dataValueSetRepository: DataValueSetRepository) { }
+        private dataValueSetRepository: DataValueSetRepository
+    ) {}
 
     public async execute(
-        importRule: ImportRule
+        importRuleId: Id
     ): Promise<{ success: boolean; failures: string[]; messages: string[] }> {
         let failures: string[] = [];
         let messages: string[] = [];
         try {
-
-            const orgUnitIds = _.compact(importRule.selectedOUs.map(o => o.split("/").pop()));
-            const orgUnits = await this.orgUnitRepository.getByIds(orgUnitIds);
-
-            const baseImportConfig: { orgUnits: OrgUnit[]; interval: GeeInterval } = {
-                //orgUnits: [{ id: "IyO9ICB0WIn" }, { id: "xloTsC6lk5Q" }],
-                orgUnits: orgUnits,
-                interval: {
-                    type: "daily",
-                    ...buildPeriod(importRule.periodInformation),
-                },
-            };
-            let importDataValueSet: DataValueSet = { dataValues: [] };
-
-            await Promise.all(
-                importRule.selectedMappings.map(async selectedMapping => {
-                    try {
-
-                        const geeDataSet = await this.geeDataSetRepository.getByCode(selectedMapping.geeImage);
-
-                        const dataValueSet: DataValueSet = await this.getDataValueSet({
-                            ...baseImportConfig,
-                            geeDataSetId: geeDataSet.imageCollectionId,
-                            attributeIdsMapping: this.getAttributeIdMappings(
-                                selectedMapping.attributeMappingDictionary
-                            ),
-                        });
-
-                        importDataValueSet = {
-                            dataValues: _.concat(
-                                importDataValueSet.dataValues,
-                                dataValueSet.dataValues
-                            ),
-                        };
-                        messages = [
-                            ...messages,
-                            i18n.t("{{n}} data values from {{name}} google data set.", {
-                                name: geeDataSet.displayName,
-                                n: dataValueSet.dataValues.length,
-                            }),
-                        ];
-                    } catch (err) {
-                        failures = [...failures, err];
-                    }
-                })
+            const importRuleResult = await this.importRuleRepository.getById(importRuleId);
+            const importRule = importRuleResult.getOrThrow(
+                `importRule with id ${importRuleId} does not exist`
             );
 
-            const response = await this.dataValueSetRepository.save(importDataValueSet);
-            messages = [...messages, this.getImportCountString(response)];
+            failures = this.validateImportRule(importRule);
+
+            if (failures.length === 0) {
+                const orgUnitIds = _.compact(importRule.selectedOUs.map(o => o.split("/").pop()));
+                const orgUnits = await this.orgUnitRepository.getByIds(orgUnitIds);
+
+                const baseImportConfig: { orgUnits: OrgUnit[]; interval: GeeInterval } = {
+                    orgUnits: orgUnits,
+                    interval: {
+                        type: "daily",
+                        ...buildPeriod(importRule.periodInformation),
+                    },
+                };
+                let importDataValueSet: DataValueSet = { dataValues: [] };
+
+                const mappings = await this.mappingRepository.getAll(importRule.selectedMappings);
+
+                await Promise.all(
+                    mappings.map(async selectedMapping => {
+                        try {
+                            const geeDataSet = await this.geeDataSetRepository.getByCode(
+                                selectedMapping.geeImage
+                            );
+
+                            const dataValueSet: DataValueSet = await this.getDataValueSet({
+                                ...baseImportConfig,
+                                geeDataSetId: geeDataSet.imageCollectionId,
+                                attributeIdsMapping: this.getAttributeIdMappings(
+                                    selectedMapping.attributeMappingDictionary
+                                ),
+                            });
+
+                            importDataValueSet = {
+                                dataValues: _.concat(
+                                    importDataValueSet.dataValues,
+                                    dataValueSet.dataValues
+                                ),
+                            };
+                            messages = [
+                                ...messages,
+                                i18n.t("{{n}} data values from {{name}} google data set.", {
+                                    name: geeDataSet.displayName,
+                                    n: dataValueSet.dataValues.length,
+                                }),
+                            ];
+                        } catch (err) {
+                            failures = [...failures, err];
+                        }
+                    })
+                );
+
+                const dataValueSetResponse = await this.dataValueSetRepository.save(
+                    importDataValueSet
+                );
+
+                messages = [...messages, this.getImportCountString(dataValueSetResponse)];
+            }
+
+            const updatedImportRule = importRule.updateLastExecuted();
+            const syncRuleResponse = await this.importRuleRepository.save(updatedImportRule);
+
+            failures = syncRuleResponse.fold(
+                () => [
+                    ...failures,
+                    i18n.t("An error has ocurred updating lastUpdate field of import rule"),
+                ],
+                () => failures
+            );
 
             return {
                 success: _.isEmpty(failures) && !_.isEmpty(messages),
@@ -102,6 +133,25 @@ export default class ImportUseCase {
             };
         }
     }
+    validateImportRule(importRule: ImportRule): string[] {
+        const failures: string[] = [];
+
+        if (importRule.selectedOUs.length === 0) {
+            failures.push(
+                i18n.t("No organisation unit selection in the import rule")
+            );
+        }
+
+        if (!importRule.periodInformation) {
+            failures.push(i18n.t("No period selection in the import rule"));
+        }
+
+        if (importRule.selectedMappings.length === 0) {
+            failures.push(i18n.t("No mapping selection in the import rule"));
+        }
+
+        return failures;
+    }
 
     private async getDataValueSet<Band extends string>(
         options: GetDataValueSetOptions<Band>
@@ -109,7 +159,7 @@ export default class ImportUseCase {
         const { geeDataRepository } = this;
         const { geeDataSetId, orgUnits, attributeIdsMapping, interval, scale } = options;
 
-        const dataValuesList = await promiseMap(orgUnits, async (orgUnit) => {
+        const dataValuesList = await promiseMap(orgUnits, async orgUnit => {
             const geometry = this.mapOrgUnitToGeeGeometry(orgUnit);
 
             if (!geometry) return [];
@@ -124,8 +174,10 @@ export default class ImportUseCase {
 
             const geeData = await geeDataRepository.getData(options);
 
-            return _(geeData).map(item =>
-                this.mapGeeDataValueToDataValue(item, orgUnit.id, attributeIdsMapping)).compact().value()
+            return _(geeData)
+                .map(item => this.mapGeeDataValueToDataValue(item, orgUnit.id, attributeIdsMapping))
+                .compact()
+                .value();
         });
 
         return { dataValues: _.flatten(dataValuesList) };
@@ -147,9 +199,10 @@ export default class ImportUseCase {
     }
 
     private mapGeeDataValueToDataValue<Band extends string>(
-        item: GeeDataValue<Band>, orgUnitId: string,
-        mapping: Record<Band, DataElementId>): DataValue | undefined {
-
+        item: GeeDataValue<Band>,
+        orgUnitId: string,
+        mapping: Record<Band, DataElementId>
+    ): DataValue | undefined {
         const { date, band, value } = item;
         const dataElementId = mapping[band];
 

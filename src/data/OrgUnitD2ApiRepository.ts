@@ -3,7 +3,7 @@ import { D2Api, Id } from "d2-api";
 import { OrgUnit } from "../domain/entities/OrgUnit";
 
 class OrgUnitD2ApiRepository implements OrgUnitRepository {
-    constructor(private d2Api: D2Api) { }
+    constructor(private d2Api: D2Api) {}
 
     async getByIds(ids: Id[]): Promise<OrgUnit[]> {
         const { objects } = await this.d2Api.models.organisationUnits
@@ -15,7 +15,7 @@ class OrgUnitD2ApiRepository implements OrgUnitRepository {
                     coordinates: true,
                 },
                 filter: {
-                    "id": { in: ids },
+                    id: { in: ids },
                 },
             })
             .getData();

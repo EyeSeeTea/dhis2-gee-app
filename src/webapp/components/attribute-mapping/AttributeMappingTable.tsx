@@ -1,6 +1,5 @@
 import i18n from "@dhis2/d2-i18n";
 import { Icon, IconButton, makeStyles, Tooltip, Typography } from "@material-ui/core";
-import { D2Api } from "d2-api";
 import {
     TableAction,
     TableColumn,
@@ -41,14 +40,12 @@ interface AttributeMappingConfig {
 }
 
 export interface AttributeMappingTableProps {
-    api: D2Api;
     mapping: Mapping;
     onChange(newMapping: Mapping): void;
     availableBands: string[];
 }
 
 export default function AttributeMappingTable({
-    api,
     mapping,
     onChange,
     availableBands,
@@ -238,7 +235,6 @@ export default function AttributeMappingTable({
 
             {!!newMappingConfig && (
                 <AttributeMappingDialog
-                    api={api}
                     params={newMappingConfig}
                     onMappingChange={onMappingChange}
                     onClose={closeAttributeMappingDialog}

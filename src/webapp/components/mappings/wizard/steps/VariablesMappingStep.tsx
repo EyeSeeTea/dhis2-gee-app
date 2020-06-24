@@ -7,12 +7,11 @@ import AttributeMappingTable from "../../../attribute-mapping/AttributeMappingTa
 
 class VariablesMappingStep extends React.Component<StepProps> {
     render() {
-        const { api, config, mapping, onChange } = this.props;
+        const { config, mapping, onChange } = this.props;
         return (
             <Card>
                 <CardContent>
                     <AttributeMappingTable
-                        api={api}
                         mapping={mapping}
                         onChange={onChange}
                         availableBands={

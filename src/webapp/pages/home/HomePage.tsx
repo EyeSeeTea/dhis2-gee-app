@@ -18,18 +18,18 @@ const LandingPage: React.FC = () => {
             key: "Main",
             children: [
                 {
-                    name: i18n.t("Manual Import"),
+                    name: i18n.t("On-demand Import"),
                     description: i18n.t(
                         "Manually import gee data values by selecting organisation unit, period and creating o select the mapping/s for gee data sets."
                     ),
-                    listAction: () => goTo(pageRoutes.import),
+                    listAction: () => goTo(pageRoutes.importRulesDetail, { action: "ondemand" }),
                 },
                 {
                     name: i18n.t("Import rules"),
                     description: i18n.t(
                         "Create, modify, delete, execute import rules for gee data values selecting organisation unit, period and creating o select the mapping/s for gee data sets. "
                     ),
-                    addAction: () => goTo(pageRoutes.importRulesNew),
+                    addAction: () => goTo(pageRoutes.importRulesDetail, { action: "new" }),
                     listAction: () => goTo(pageRoutes.importRules),
                 },
                 {

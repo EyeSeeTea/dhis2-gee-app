@@ -1,20 +1,25 @@
 import React from "react";
-import { Route, Switch, HashRouter, useHistory } from "react-router-dom";
-import ImportDetail from "../import/ImportDetail";
+import { Route, Switch, HashRouter, useHistory, Redirect } from "react-router-dom";
 import MappingCreationPage from "../mappings/edit-mappings/MappingCreationPage";
 import LandingPage from "../home/HomePage";
+import ImportRuleListPage from "../import-rule-list/ImportRuleListPage";
+import ImportRuleDetailPage from "../import-rule-detail/ImportRuleDetailPage";
 
 export const pageRoutes = {
     home: { path: "/" },
-    import: { path: "/import" },
     importRules: { path: "/import-rules" },
-    importRulesNew: { path: "/import-rules/new" },
+    importRulesDetail: {
+        path: "/import-rules/:action(new|edit|ondemand)/:id?",
+        generateUrl: ({ id, action }: { id?: string; action: "new" | "edit" | "ondemand" }) =>
+            `/import-rules/${action}${id ? "/" + id : ""}`,
+    },
     mappingsNew: { path: "/mappings/new" },
     mappingsEdit: {
         path: "/mappings/:id",
         generateUrl: ({ id }: { id: string }) => `/mappings/${id}`,
     },
     history: { path: "/history" },
+    notFound: { path: "/not-found" },
 };
 
 interface PageRoute {
@@ -43,8 +48,14 @@ const Root = () => {
                 <Route path={pageRoutes.home.path} exact render={() => <LandingPage />} />
 
                 <Route
-                    path={pageRoutes.import.path}
-                    render={() => <ImportDetail prefix="default" />}
+                    path={pageRoutes.importRules.path}
+                    exact
+                    render={() => <ImportRuleListPage />}
+                />
+                <Route
+                    path={pageRoutes.importRulesDetail.path}
+                    exact
+                    render={() => <ImportRuleDetailPage />}
                 />
 
                 <Route
@@ -57,6 +68,8 @@ const Root = () => {
                         <MappingCreationPage action={"edit"} id={match.params.id} />
                     )}
                 />
+
+                <Redirect to={pageRoutes.notFound.path} />
             </Switch>
         </HashRouter>
     );

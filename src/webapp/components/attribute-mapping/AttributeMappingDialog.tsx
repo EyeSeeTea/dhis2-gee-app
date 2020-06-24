@@ -3,11 +3,9 @@ import DialogContent from "@material-ui/core/DialogContent";
 import { ConfirmationDialog } from "d2-ui-components";
 import React, { useEffect, useState, useCallback } from "react";
 import DataElementsTable from "../data-elements/DataElementsTable";
-
-import { D2Api } from "d2-api";
 import AttributeMapping from "../../models/AttributeMapping";
 import DataElement from "../../../domain/entities/DataElement";
-import { useCompositionRootContext } from "../../contexts/app-context";
+import { useCompositionRoot } from "../../contexts/app-context";
 
 export interface AttributeMappingDialogConfig {
     dataset: string;
@@ -15,25 +13,24 @@ export interface AttributeMappingDialogConfig {
 }
 
 export interface AttributeMappingDialogProps {
-    api: D2Api;
     params: AttributeMappingDialogConfig;
     onMappingChange: (newMapping: AttributeMapping) => void;
     onClose: () => void;
 }
 
 const AttributeMappingDialog: React.FC<AttributeMappingDialogProps> = ({
-    api,
     params,
     onMappingChange,
     onClose,
 }) => {
     const { dataset, attributeMapping } = params;
     const [rows, setRows] = useState<DataElement[]>([]);
-    const dataElements = useCompositionRootContext().dataElements;
+
+    const dataElements = useCompositionRoot().dataElements();
 
     useEffect(() => {
-        dataElements.get(dataset).then(setRows);
-    }, [dataElements, dataset]);
+        dataElements.getByDataSet.execute(dataset).then(setRows);
+    }, [dataElements.getByDataSet, dataset]);
 
     const onSelectedDataElement = useCallback(
         (dataElement: DataElement) => {

@@ -5,12 +5,12 @@ import {
     GeometryPolygon,
     ImageCollection,
     InfoDataRowBase,
-    InfoData
+    InfoData,
 } from "@google/earthengine";
 import {
     GeeDataValueSetRepository,
     GeeDataFilters,
-    GeeGeometry
+    GeeGeometry,
 } from "../domain/repositories/GeeDataValueSetRepository";
 import { GeeDataValueSet, GeeDataValue } from "../domain/entities/GeeDataValueSet";
 import { D2Api } from "d2-api";
@@ -26,16 +26,18 @@ const ee = window.ee || {};
 
 type Geometry = GeometryPoint | GeometryPolygon;
 
-export interface geeCredentials {
+export interface GeeCredentials {
     client_id: string;
     access_token: string;
     expires_in: number;
 }
 
 export class GeeDataEarthEngineRepository implements GeeDataValueSetRepository {
-    constructor(private d2Api: D2Api) { }
+    constructor(private d2Api: D2Api) {}
 
-    async getData<Band extends string>(options: GeeDataFilters<Band>): Promise<GeeDataValueSet<Band>> {
+    async getData<Band extends string>(
+        options: GeeDataFilters<Band>
+    ): Promise<GeeDataValueSet<Band>> {
         await this.initializeEngine();
 
         const { id, bands, geometry, interval, scale = 30 } = options;
@@ -70,7 +72,7 @@ export class GeeDataEarthEngineRepository implements GeeDataValueSetRepository {
     }
 
     private async initializeEngine() {
-        const credentials = await this.d2Api.get<geeCredentials>("/tokens/google").getData();
+        const credentials = await this.d2Api.get<GeeCredentials>("/tokens/google").getData();
 
         ee.data.setAuthToken(
             credentials.client_id,
@@ -125,5 +127,3 @@ export class GeeDataEarthEngineRepository implements GeeDataValueSetRepository {
         });
     }
 }
-
-

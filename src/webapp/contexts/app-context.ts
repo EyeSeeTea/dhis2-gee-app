@@ -9,7 +9,7 @@ export interface AppContext {
     d2: object;
     config: Config;
     currentUser: User;
-    compositionRoot: CompositionRoot
+    compositionRoot: CompositionRoot;
 }
 
 export const AppContext = React.createContext<AppContext | null>(null);
@@ -23,7 +23,7 @@ export function useAppContext() {
     }
 }
 
-export function useCompositionRootContext() {
+export function useCompositionRoot() {
     const context = useContext(AppContext);
     if (context) {
         return context.compositionRoot;
