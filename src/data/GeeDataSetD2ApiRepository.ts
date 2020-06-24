@@ -25,7 +25,6 @@ export class GeeDataSetFileRepository implements GeeDataSetRepository {
                     ? dataSet.imageCollectionId
                           .toLowerCase()
                           .includes(filter.search.toLowerCase()) ||
-                          dataSet.description.toLowerCase().includes(filter.search.toLowerCase()) ||
                           dataSet.displayName.toLowerCase().includes(filter.search.toLowerCase()) ||
                           dataSet.keywords.includes(filter.search.toLowerCase())
                     : true;
