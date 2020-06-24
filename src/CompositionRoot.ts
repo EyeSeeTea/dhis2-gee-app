@@ -1,10 +1,10 @@
-import { D2Api, D2ApiDefault } from "d2-api";
+import { D2Api } from "d2-api";
 import DataElementD2ApiRepository from "./data/DataElementD2ApiRepository";
 import { GetDataElementsUseCase } from "./domain/usecases/GetDataElementsUseCase";
 import ImportUseCase from "./domain/usecases/ImportUseCase";
 import { Config } from "./webapp/models/Config";
 import { GeeDataEarthEngineRepository } from "./data/GeeDataValueSetApiRepository";
-import OrgUnitD2ApiRepository from "./data/OrgUnitD2ApiRepository";
+import OrgUnitOldD2ApiRepository from "./data/OrgUnitOldD2ApiRepository";
 import DataValueSetD2ApiRepository from "./data/DataValueSetD2ApiRepository";
 import { GeeDataSetFileRepository } from "./data/GeeDataSetD2ApiRepository";
 import DataValueSetFileRepository from "./data/DataValueSetFileRepository";
@@ -32,6 +32,8 @@ import { GetGlobalOUMappingsUseCase } from "./domain/usecases/GetGlobalOUMapping
 import { GetDefaultMappingUseCase } from "./domain/usecases/GetDefaultMappingUseCase";
 import { SetAsDefaultMappingUseCase } from "./domain/usecases/SetAsDefaultMappingUseCase";
 import { GetGeeDataSetByIdUseCase } from "./domain/usecases/GetGeeDataSetByIdUseCase";
+import OrgUnitD2ApiRepository from "./data/OrgUnitD2ApiRepository";
+import OrgUnitRepository from "./domain/repositories/OrgUnitRepository";
 
 interface Type<T> {
     new (...args: any[]): T;
@@ -44,17 +46,17 @@ type PrivateNamedToken =
     | "importRuleRepository"
     | "importSummaryRepository"
     | "globalOUMappingRepository"
-    | "geeDataSetRepository";
+    | "geeDataSetRepository"
+    | "orgUnitRepository";
 
 type Token<T> = Type<T> | NamedToken | PrivateNamedToken;
 
 class CompositionRoot {
-    private d2Api: D2Api;
-
     private dependencies = new Map<Token<any>, any>();
+    private apiVersion: number;
 
-    constructor(baseUrl: string, private config: Config) {
-        this.d2Api = new D2ApiDefault({ baseUrl });
+    constructor(private d2Api: D2Api, d2Version: string, private config: Config) {
+        this.apiVersion = +d2Version.split(".")[1];
 
         this.initializeDataStore();
         this.initializeGeeDataSet();
@@ -161,7 +163,12 @@ class CompositionRoot {
     }
 
     private initializeOrgUnits() {
-        const orgUnitRepository = new OrgUnitD2ApiRepository(this.d2Api);
+        const orgUnitRepository =
+            this.apiVersion < 32
+                ? new OrgUnitOldD2ApiRepository(this.d2Api)
+                : new OrgUnitD2ApiRepository(this.d2Api);
+
+        this.dependencies.set("orgUnitRepository", orgUnitRepository);
         const getOrgUnitsWithCoordinatesUseCase = new GetOrgUnitsWithCoordinatesUseCase(
             orgUnitRepository
         );
@@ -256,8 +263,9 @@ class CompositionRoot {
             "geeDataSetRepository"
         ) as GeeDataSetRepository;
 
+        const orgUnitsRepository = this.dependencies.get("orgUnitRepository") as OrgUnitRepository;
+
         const geeDataRepository = new GeeDataEarthEngineRepository(this.d2Api);
-        const orgUnitsRepository = new OrgUnitD2ApiRepository(this.d2Api);
         const dataValueSetD2ApiRepository = new DataValueSetD2ApiRepository(this.d2Api);
         const dataValueSetFileRepository = new DataValueSetFileRepository();
         const importSummaryRepository = new ImportSummaryD2ApiRepository(

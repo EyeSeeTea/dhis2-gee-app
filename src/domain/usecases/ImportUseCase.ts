@@ -185,7 +185,15 @@ export default class ImportUseCase {
                     importDataValueSet
                 );
 
-                messages = [...messages, this.getImportCountString(dataValueSetResponse)];
+                const dataValueSetMessages = this.getMessagesFromDataValueSetReponse(
+                    dataValueSetResponse
+                );
+                messages = dataValueSetMessages ? [...messages, dataValueSetMessages] : messages;
+
+                const dataValueSetFailures = this.getFailuresFromDataValueSetReponse(
+                    dataValueSetResponse
+                );
+                failures = dataValueSetFailures ? [...failures, dataValueSetFailures] : failures;
             }
 
             const importResult = {
@@ -265,15 +273,13 @@ export default class ImportUseCase {
     }
 
     private mapOrgUnitToGeeGeometry(orgUnit: OrgUnit): GeeGeometry | undefined {
-        const coordinates = orgUnit.coordinates ? JSON.parse(orgUnit.coordinates) : null;
-        if (!coordinates) return;
+        if (!orgUnit.geometry) return;
 
-        switch (orgUnit.featureType) {
-            case "POINT":
-                return { type: "point", coordinates };
-            case "POLYGON":
-            case "MULTI_POLYGON":
-                return { type: "multi-polygon", polygonCoordinates: coordinates };
+        switch (orgUnit.geometry.type) {
+            case "Point":
+                return { type: "point", coordinates: orgUnit.geometry.coordinates };
+            case "Polygon":
+                return { type: "multi-polygon", polygonCoordinates: orgUnit.geometry.coordinates };
             default:
                 return;
         }
@@ -337,16 +343,28 @@ export default class ImportUseCase {
         }
     }
 
-    private getImportCountString(dataValueSetReponse: SaveDataValueSetReponse): string {
-        if (typeof dataValueSetReponse == "string") {
+    private getMessagesFromDataValueSetReponse(
+        dataValueSetReponse: SaveDataValueSetReponse
+    ): string {
+        if (typeof dataValueSetReponse === "string") {
             return dataValueSetReponse;
         } else {
-            return i18n.t("Imported: {{imported}} - updated: {{updated}} - ignored: {{ignored}}", {
-                imported: dataValueSetReponse.imported,
-                updated: dataValueSetReponse.updated,
-                ignored: dataValueSetReponse.ignored,
-            });
+            return dataValueSetReponse.status !== "ERROR"
+                ? i18n.t("Imported {{imported}} - updated {{updated}} - ignored {{ignored}}", {
+                      imported: dataValueSetReponse.importCount.imported,
+                      updated: dataValueSetReponse.importCount.updated,
+                      ignored: dataValueSetReponse.importCount.ignored,
+                  })
+                : "";
         }
+    }
+
+    private getFailuresFromDataValueSetReponse(
+        dataValueSetReponse: SaveDataValueSetReponse
+    ): string {
+        return typeof dataValueSetReponse !== "string" && dataValueSetReponse.status === "ERROR"
+            ? dataValueSetReponse.description
+            : "";
     }
 
     private saveImportResult(
