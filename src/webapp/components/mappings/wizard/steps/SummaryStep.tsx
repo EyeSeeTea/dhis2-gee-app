@@ -4,12 +4,12 @@ import { StepProps } from "../MappingWizard";
 import { makeStyles, Button, LinearProgress } from "@material-ui/core";
 import i18n from "../../../../locales";
 import Mapping from "../../../../models/Mapping";
-import { useGoTo } from "../../../../../router";
 import { useSnackbar } from "d2-ui-components";
+import { useHistory } from "react-router-dom";
 
 const SummaryStep: React.FC<StepProps> = props => {
     const { api, config, mapping, onCancel } = props;
-    const goTo = useGoTo();
+    const history = useHistory();
     const snackbar = useSnackbar();
     const classes = useStyles();
 
@@ -20,7 +20,8 @@ const SummaryStep: React.FC<StepProps> = props => {
             setSaving(true);
             await mapping.save(api, config);
             setSaving(false);
-            goTo("imports");
+
+            history.goBack();
             snackbar.success(`${i18n.t("Mapping saved:")} ${mapping.name}`);
         } catch (err) {
             setSaving(false);
