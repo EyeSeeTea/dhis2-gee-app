@@ -42,6 +42,7 @@ const GeeDataSetSelector: React.FC<GeeDataSetSelectorProps> = ({
     const [open, setOpen] = useState<boolean>(false);
     const [searchFilter, setSearchFilter] = useState<string>("");
     const [cadenceFilter, setCadenceFilter] = useState<string>("");
+    const [objectsTableKey, setObjectsTableKey] = useState<number>(new Date().getTime());
 
     const [cadenceFilterOptions] = useState<{ id: Cadence; name: string }[]>([
         {
@@ -65,7 +66,7 @@ const GeeDataSetSelector: React.FC<GeeDataSetSelectorProps> = ({
 
     useEffect(() => {
         geeDataSets.getAll.execute({ search: searchFilter, cadence: cadenceFilter }).then(setRows);
-    }, [geeDataSets.getAll, searchFilter, cadenceFilter]);
+    }, [geeDataSets.getAll, searchFilter, cadenceFilter, objectsTableKey]);
 
     const columns: TableColumn<GeeDataSet>[] = [
         {
@@ -216,8 +217,13 @@ const GeeDataSetSelector: React.FC<GeeDataSetSelectorProps> = ({
                 <ConfirmationDialog
                     open={open}
                     title={i18n.t("Select G.E.E dataset")}
-                    onCancel={() => setOpen(false)}
-                    maxWidth={"lg"}
+                    onCancel={() => {
+                        setCadenceFilter("");
+                        setSearchFilter("");
+                        setObjectsTableKey(new Date().getTime());
+                        setOpen(false);
+                    }}
+                    maxWidth={"xl"}
                     fullWidth={true}
                     disableSave={false}
                     cancelText={i18n.t("Cancel")}
