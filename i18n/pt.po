@@ -308,7 +308,7 @@ msgid ""
 msgstr ""
 "Criar, modificar, excluir, executar regras de importação para valores de dados gee selecionando"
 "unidade organizacional, período e criação o selecione o (s) mapeamento (s) para dados Gee"
-"conjuntos".
+"conjuntos"
 
 msgid "History"
 msgstr "Histórico"
@@ -321,7 +321,7 @@ msgstr ""
 "executa execuções."
 
 msgid "Import successful \n"
-msgstr "Importar com sucesso \ n"
+msgstr "Importar com sucesso \n"
 
 msgid "Import"
 msgstr "Importar"
