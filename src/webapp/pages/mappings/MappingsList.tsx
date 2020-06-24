@@ -18,8 +18,13 @@ import { makeStyles } from "@material-ui/styles";
 import { Theme, createStyles, LinearProgress, Icon, Box, Fab } from "@material-ui/core";
 import { useGoTo, GoTo, pageRoutes } from "../root/Root";
 import { DeleteMappingByIdsError } from "../../../domain/repositories/MappingRepository";
+import OUDialog from "../../components/dialogs/OrganisationUnitDialog";
+import {
+    SaveGlobalOUMappingError,
+    DeleteGlobalOUMappingError,
+} from "../../../domain/repositories/GlobalOUMappingRepository";
 
-type ContextualAction = "details" | "edit" | "delete";
+type ContextualAction = "details" | "edit" | "delete" | "assignOU";
 
 interface MappingsListProps {
     header?: string;
@@ -35,7 +40,8 @@ const mouseActionsMapping: MouseActionsMapping = {
 
 function getComponentConfig(
     goTo: GoTo,
-    setMappingIdsToDelete: (state: React.SetStateAction<string[] | undefined>) => void
+    setMappingIdsToDelete: (state: React.SetStateAction<string[] | undefined>) => void,
+    setMappingIdToAssignOUs: (state: React.SetStateAction<string | undefined>) => void
 ) {
     const initialPagination = {
         page: 1,
@@ -81,8 +87,16 @@ function getComponentConfig(
             primary: true,
             onClick: setMappingIdsToDelete,
         },
+        assignOU: {
+            name: "assignOU",
+            text: i18n.t("Assign organisation unit"),
+            icon: <Icon>open_in_new</Icon>,
+            multiple: false,
+            primary: false,
+            onClick: (ids: string[]) => setMappingIdToAssignOUs(ids[0]),
+        },
     };
-    const actions = [allActions.details, allActions.edit, allActions.delete];
+    const actions = [allActions.details, allActions.edit, allActions.delete, allActions.assignOU];
 
     return { columns, initialSorting, details, actions, initialPagination };
 }
@@ -95,8 +109,13 @@ const MappingsList: React.FC<MappingsListProps> = props => {
     const snackbar = useSnackbar();
     const { header, selectedMappings, onSelectionChange, onDeleteMappings } = props;
     const [mappingIdsToDelete, setMappingIdsToDelete] = useState<string[] | undefined>(undefined);
+    const [mappingIdToAssignOUs, setMappingIdToAssignOUs] = useState<string | undefined>(undefined);
+    const [selectedOrgUnitsByMapping, setSelectedOrgUnitsByMapping] = useState<
+        string[] | undefined
+    >([]);
+
     const componentConfig = React.useMemo(() => {
-        return getComponentConfig(goTo, setMappingIdsToDelete);
+        return getComponentConfig(goTo, setMappingIdsToDelete, setMappingIdToAssignOUs);
     }, [goTo, setMappingIdsToDelete]);
 
     const classes = useStyles();
@@ -108,6 +127,7 @@ const MappingsList: React.FC<MappingsListProps> = props => {
     const [objectsTableKey] = useState(() => new Date().getTime());
 
     const mapping = useCompositionRoot().mapping();
+    const globalOUMapping = useCompositionRoot().globalOUMapping();
 
     const selection = useMemo(() => {
         return rows
@@ -119,6 +139,18 @@ const MappingsList: React.FC<MappingsListProps> = props => {
         getMappings(sorting, { page: 1 });
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [sorting]);
+
+    useEffect(() => {
+        if (mappingIdToAssignOUs) {
+            globalOUMapping.getByMappingId.execute(mappingIdToAssignOUs).then(globalOUMappings => {
+                setSelectedOrgUnitsByMapping(
+                    Object.values(globalOUMappings).map(v => v.orgUnitPath)
+                );
+            });
+        } else {
+            setSelectedOrgUnitsByMapping(undefined);
+        }
+    }, [mappingIdToAssignOUs, globalOUMapping.getByMappingId]);
 
     async function getMappings(
         sorting: TableSorting<Mapping>,
@@ -180,6 +212,61 @@ const MappingsList: React.FC<MappingsListProps> = props => {
         },
         [rows, onSelectionChange]
     );
+
+    const closeOUDialog = () => {
+        setMappingIdToAssignOUs(undefined);
+    };
+
+    const createGlobalOUMappings = async (newOrgUnitsPaths: string[]) => {
+        const globalOUMappingsToCreate = newOrgUnitsPaths.reduce((acc, ouPath) => {
+            return { ...acc, [ouPath]: mappingIdToAssignOUs };
+        }, {});
+
+        return globalOUMapping.create.execute(globalOUMappingsToCreate);
+    };
+
+    const deleteGlobalOUMappings = async (newOrgUnitsId: string[]) => {
+        const selectedOrgUnitIdsByMapping = _.compact(
+            (selectedOrgUnitsByMapping || []).map(o => o.split("/").pop())
+        );
+        const orgUnitToDeleteFromGlobalMapping = selectedOrgUnitIdsByMapping.filter(
+            ou => !newOrgUnitsId.includes(ou)
+        );
+
+        return globalOUMapping.delete.execute(orgUnitToDeleteFromGlobalMapping);
+    };
+
+    const onSelectedOUsSave = async (newSelectedOUs: string[]) => {
+        const orgUnitIds = _.compact(newSelectedOUs.map(o => o.split("/").pop()));
+
+        const createResult = await createGlobalOUMappings(newSelectedOUs);
+        const deleteResult = await deleteGlobalOUMappings(orgUnitIds);
+
+        const finalResult = createResult.flatMap(() => deleteResult);
+
+        const handleFailure = (
+            failure: SaveGlobalOUMappingError | DeleteGlobalOUMappingError
+        ): string => {
+            switch (failure.kind) {
+                case "UnexpectedError":
+                    return (
+                        i18n.t(
+                            "An unexpected error has ocurred updating organisation unit assigment: "
+                        ) + failure.error.message
+                    );
+            }
+        };
+
+        finalResult.fold(
+            error => snackbar.error(handleFailure(error)),
+            () => {
+                snackbar.success(i18n.t("Organisation unit assignment success"));
+            }
+        );
+
+        setMappingIdToAssignOUs(undefined);
+    };
+
     return (
         <div>
             {mappingIdsToDelete && (
@@ -189,7 +276,7 @@ const MappingsList: React.FC<MappingsListProps> = props => {
                     onCancel={isDeleting ? undefined : closeDeleteDialog}
                     title={i18n.t("Delete mapping")}
                     description={i18n.t(
-                        "This operation will delete ({{n}}) mappings and remove it as selected in related import rules. This operation cannot be undone. Are you sure you want to proceed?",
+                        "This operation will delete ({{n}}) mappings and remove related global organisation unit mapping and remove it as selected in related import rules. This operation cannot be undone. Are you sure you want to proceed?",
                         { n: mappingIdsToDelete.length }
                     )}
                     saveText={isDeleting ? i18n.t("Deleting...") : i18n.t("Proceed")}
@@ -227,6 +314,14 @@ const MappingsList: React.FC<MappingsListProps> = props => {
                         }
                     />
                 </Box>
+            )}
+
+            {mappingIdToAssignOUs && selectedOrgUnitsByMapping && (
+                <OUDialog
+                    selectedOUs={selectedOrgUnitsByMapping}
+                    onCancel={closeOUDialog}
+                    onSave={onSelectedOUsSave}
+                />
             )}
         </div>
     );

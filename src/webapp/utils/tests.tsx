@@ -40,6 +40,7 @@ export function getTestConfig() {
                     imports: {
                         suffix: "@import",
                     },
+                    globalOUMapping: "globalOUMapping",
                 },
             },
             googleDatasets: {

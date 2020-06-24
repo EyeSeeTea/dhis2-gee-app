@@ -87,6 +87,7 @@ function givenAOrgUnitRepository(): OrgUnitRepository {
                 { id: "WFAboRxdVjA", coordinates: "[-2.708309,6.675618]", featureType: "POINT" },
             ];
         }),
+        getAllWithCoordinates: jest.fn(),
     };
 }
 

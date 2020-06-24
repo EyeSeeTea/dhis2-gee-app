@@ -22,6 +22,20 @@ class OrgUnitD2ApiRepository implements OrgUnitRepository {
 
         return objects.map(o => o as OrgUnit);
     }
+
+    async getAllWithCoordinates(): Promise<OrgUnit[]> {
+        //TODO: use this.d2Api.models.organisationUnits when !null operator filter
+        //may be provided
+        const response = await this.d2Api
+            .get<{ organisationUnits: OrgUnit[] }>("/organisationUnits", {
+                paging: false,
+                fields: "id,featureType,coordinates",
+                filter: "coordinates:!null",
+            })
+            .getData();
+
+        return response.organisationUnits;
+    }
 }
 
 export default OrgUnitD2ApiRepository;

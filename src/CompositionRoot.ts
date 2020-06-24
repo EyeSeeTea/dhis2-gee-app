@@ -20,6 +20,12 @@ import { DeleteMappingsUseCase } from "./domain/usecases/DeleteMappingsUseCase";
 import ImportSummaryD2ApiRepository from "./data/ImportSummaryD2ApiRepository";
 import { GetImportSummariesUseCase } from "./domain/usecases/GetImportSummariesUseCase";
 import { DeleteImportSummariesUseCase } from "./domain/usecases/DeleteImportSummariesUseCase";
+import { GetOrgUnitsWithCoordinatesUseCase } from "./domain/usecases/GetOrgUnitsWithCoordinatesUseCase";
+import { CreateGlobalOUMappingUseCase } from "./domain/usecases/CreateGlobalOUMappingUseCase";
+import { GetGlobalOUMappingByMappingIdUseCase } from "./domain/usecases/GetGlobalOUMappingByMappingIdUseCase";
+import GlobalOUMappingD2ApiRepository from "./data/GlobalOUMappingD2ApiRepository";
+import { DeleteGlobalOUMappingUseCase } from "./domain/usecases/DeleteGlobalOUMappingUseCase";
+import { GlobalOUMappingRepository } from "./domain/repositories/GlobalOUMappingRepository";
 
 interface Type<T> {
     new (...args: any[]): T;
@@ -27,7 +33,11 @@ interface Type<T> {
 
 export type NamedToken = "importUseCase" | "downloadUseCase";
 
-type PrivateNamedToken = "dataStore" | "importRuleRepository" | "importSummaryRepository";
+type PrivateNamedToken =
+    | "dataStore"
+    | "importRuleRepository"
+    | "importSummaryRepository"
+    | "globalOUMappingRepository";
 
 type Token<T> = Type<T> | NamedToken | PrivateNamedToken;
 
@@ -40,6 +50,8 @@ class CompositionRoot {
         this.d2Api = new D2ApiDefault({ baseUrl });
 
         this.initializeDataStore();
+        this.initializeGlobalOUMappings();
+        this.initializeOrgUnits();
         this.initializeDataElements();
         this.initializeImportsHistory();
         this.initializeImportRules();
@@ -85,6 +97,20 @@ class CompositionRoot {
         };
     }
 
+    public orgUnits() {
+        return {
+            getWithCoordinates: this.get(GetOrgUnitsWithCoordinatesUseCase),
+        };
+    }
+
+    public globalOUMapping() {
+        return {
+            getByMappingId: this.get(GetGlobalOUMappingByMappingIdUseCase),
+            create: this.get(CreateGlobalOUMappingUseCase),
+            delete: this.get(DeleteGlobalOUMappingUseCase),
+        };
+    }
+
     public mapping() {
         return {
             delete: this.get(DeleteMappingsUseCase),
@@ -100,6 +126,14 @@ class CompositionRoot {
         const dataElementsRepository = new DataElementD2ApiRepository(this.d2Api);
         const getDataElementsUseCase = new GetDataElementsUseCase(dataElementsRepository);
         this.dependencies.set(GetDataElementsUseCase, getDataElementsUseCase);
+    }
+
+    private initializeOrgUnits() {
+        const orgUnitRepository = new OrgUnitD2ApiRepository(this.d2Api);
+        const getOrgUnitsWithCoordinatesUseCase = new GetOrgUnitsWithCoordinatesUseCase(
+            orgUnitRepository
+        );
+        this.dependencies.set(GetOrgUnitsWithCoordinatesUseCase, getOrgUnitsWithCoordinatesUseCase);
     }
 
     private initializeImportRules() {
@@ -127,6 +161,32 @@ class CompositionRoot {
         this.dependencies.set(CreateImportRuleUseCase, createImportRuleUseCase);
         this.dependencies.set(UpdateImportRuleUseCase, updateImportRuleUseCase);
         this.dependencies.set(DeleteImportRulesUseCase, deleteImportRulesUseCase);
+    }
+
+    initializeGlobalOUMappings() {
+        const globalOUMappingRepository = new GlobalOUMappingD2ApiRepository(
+            this.dependencies.get("dataStore"),
+            this.config.data.base.dataStore.keys.globalOUMapping
+        );
+
+        this.dependencies.set("globalOUMappingRepository", globalOUMappingRepository);
+
+        const createGlobalOrgUnitMappingUseCase = new CreateGlobalOUMappingUseCase(
+            globalOUMappingRepository
+        );
+        const getGlobalOUMappingByMappingIdUseCase = new GetGlobalOUMappingByMappingIdUseCase(
+            globalOUMappingRepository
+        );
+        const deleteGlobalOUMappingUseCase = new DeleteGlobalOUMappingUseCase(
+            globalOUMappingRepository
+        );
+
+        this.dependencies.set(CreateGlobalOUMappingUseCase, createGlobalOrgUnitMappingUseCase);
+        this.dependencies.set(
+            GetGlobalOUMappingByMappingIdUseCase,
+            getGlobalOUMappingByMappingIdUseCase
+        );
+        this.dependencies.set(DeleteGlobalOUMappingUseCase, deleteGlobalOUMappingUseCase);
     }
 
     initializeImportsHistory() {
@@ -199,9 +259,14 @@ class CompositionRoot {
             "importRuleRepository"
         ) as ImportRuleRepository;
 
+        const globalOrgUnitMappingRepository = this.dependencies.get(
+            "globalOUMappingRepository"
+        ) as GlobalOUMappingRepository;
+
         const deleteMappingsUseCase = new DeleteMappingsUseCase(
             mappingRepository,
-            importRuleRepository
+            importRuleRepository,
+            globalOrgUnitMappingRepository
         );
 
         this.dependencies.set(DeleteMappingsUseCase, deleteMappingsUseCase);

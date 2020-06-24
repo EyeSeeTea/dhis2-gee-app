@@ -3,17 +3,22 @@ import { Id } from "../entities/Ref";
 import MappingRepository, { DeleteMappingByIdsError } from "../repositories/MappingRepository";
 import { Either } from "../common/Either";
 import { UnexpectedError } from "../errors/Generic";
+import { GlobalOUMappingRepository } from "../repositories/GlobalOUMappingRepository";
 
 export class DeleteMappingsUseCase {
     constructor(
         private mappingRepository: MappingRepository,
-        private importRuleRepository: ImportRuleRepository
+        private importRuleRepository: ImportRuleRepository,
+        private globalOUMappingRepository: GlobalOUMappingRepository
     ) {}
 
     async execute(ids: Id[]): Promise<Either<DeleteMappingByIdsError, true>> {
         const relatedImportRulesResult = await this.updateRelatedImportRules(ids);
+        const relatedGlobalOUMappingResult = await this.globalOUMappingRepository.deleteByMappingIds(
+            ids
+        );
 
-        if (relatedImportRulesResult.isSuccess()) {
+        if (relatedImportRulesResult.flatMap(() => relatedGlobalOUMappingResult).isSuccess()) {
             return await this.mappingRepository.deleteByIds(ids);
         } else {
             return Either.failure({
