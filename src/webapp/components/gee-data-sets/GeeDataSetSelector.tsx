@@ -42,6 +42,7 @@ const GeeDataSetSelector: React.FC<GeeDataSetSelectorProps> = ({
     const [open, setOpen] = useState<boolean>(false);
     const [searchFilter, setSearchFilter] = useState<string>("");
     const [cadenceFilter, setCadenceFilter] = useState<string>("");
+    const [objectsTableKey, setObjectsTableKey] = useState<number>(new Date().getTime());
 
     const [cadenceFilterOptions] = useState<{ id: Cadence; name: string }[]>([
         {
@@ -65,7 +66,7 @@ const GeeDataSetSelector: React.FC<GeeDataSetSelectorProps> = ({
 
     useEffect(() => {
         geeDataSets.getAll.execute({ search: searchFilter, cadence: cadenceFilter }).then(setRows);
-    }, [geeDataSets.getAll, searchFilter, cadenceFilter]);
+    }, [geeDataSets.getAll, searchFilter, cadenceFilter, objectsTableKey]);
 
     const columns: TableColumn<GeeDataSet>[] = [
         {
@@ -219,7 +220,7 @@ const GeeDataSetSelector: React.FC<GeeDataSetSelectorProps> = ({
                     onCancel={() => {
                         setCadenceFilter("");
                         setSearchFilter("");
-                        setRows([]);
+                        setObjectsTableKey(new Date().getTime());
                         setOpen(false);
                     }}
                     maxWidth={"xl"}
