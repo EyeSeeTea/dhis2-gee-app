@@ -21,7 +21,6 @@ const PeriodSelector: React.FC<PeriodSelectorProps> = ({ selectedPeriod, onChang
                 items={periodItems}
                 value={selectedPeriod?.id || ""}
                 onValueChange={(value: string) => onChange(availablePeriods[value])}
-                hideEmpty={true}
             />
 
             {selectedPeriod && selectedPeriod.id === "FIXED" && (

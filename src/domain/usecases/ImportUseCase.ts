@@ -54,8 +54,8 @@ export default class ImportUseCase {
 
         const importResult = await this.execute(
             importRule.selectedOUs,
-            importRule.periodInformation,
-            importRule.selectedMappings
+            importRule.selectedMappings,
+            importRule.periodInformation
         );
 
         const updatedImportRule = importRule.updateLastExecuted();
@@ -85,17 +85,17 @@ export default class ImportUseCase {
         const results =
             orgUnitMappingPairs.length > 0
                 ? await promiseMap(orgUnitMappingPairs, async orgUnitMappingPair => {
-                      return this.execute([orgUnitMappingPair.orgUnitPath], period, [
-                          orgUnitMappingPair.mappingId,
-                      ]);
+                      return this.execute(
+                          [orgUnitMappingPair.orgUnitPath],
+                          [orgUnitMappingPair.mappingId],
+                          period
+                      );
                   })
                 : [
                       {
                           success: false,
                           failures: [
-                              i18n.t(
-                                  "Does not exists any selected organisation unit to execute global import rule"
-                              ),
+                              i18n.t("No organisation unit selected as global for the import rule"),
                           ],
                           messages: [],
                       },
@@ -124,15 +124,15 @@ export default class ImportUseCase {
 
     public async execute(
         orgUnitPaths: string[],
-        period: PeriodOption,
-        mappingIds: string[]
+        mappingIds: string[],
+        period?: PeriodOption
     ): Promise<ImportResult> {
         let failures: string[] = [];
         let messages: string[] = [];
         try {
-            failures = this.validateInputs(orgUnitPaths, period, mappingIds);
+            failures = this.validateInputs(orgUnitPaths, mappingIds, period);
 
-            if (failures.length === 0) {
+            if (failures.length === 0 && period) {
                 const orgUnitIds = _.compact(orgUnitPaths.map(o => o.split("/").pop()));
                 const orgUnits = await this.orgUnitRepository.getByIds(orgUnitIds);
 
@@ -214,21 +214,23 @@ export default class ImportUseCase {
         }
     }
 
-    private validateInputs(orgUnits: string[], period: PeriodOption, mappings: string[]): string[] {
+    private validateInputs(
+        orgUnits: string[],
+        mappings: string[],
+        period?: PeriodOption
+    ): string[] {
         const failures: string[] = [];
 
         if (orgUnits.length === 0) {
-            failures.push(
-                i18n.t("Does not exists any selected organisation unit in the import rule")
-            );
+            failures.push(i18n.t("No organisation unit selected in the import rule"));
         }
 
         if (!period) {
-            failures.push(i18n.t("Does not exists any selected period in the import rule"));
+            failures.push(i18n.t("No period selected in the import rule"));
         }
 
         if (mappings.length === 0) {
-            failures.push(i18n.t("Does not exists any selected mapping in the import rule"));
+            failures.push(i18n.t("No mapping selected in the import rule"));
         }
 
         return failures;

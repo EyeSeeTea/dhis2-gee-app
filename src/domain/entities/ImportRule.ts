@@ -11,7 +11,7 @@ export interface ImportRuleWritableData {
     code?: string;
     description?: string;
     selectedOUs: string[];
-    periodInformation: PeriodOption;
+    periodInformation?: PeriodOption;
     selectedMappings: string[];
 }
 
@@ -30,7 +30,7 @@ export class ImportRule {
     public readonly code?: string;
     public readonly description?: string;
     public readonly selectedOUs: string[];
-    public readonly periodInformation: PeriodOption;
+    public readonly periodInformation?: PeriodOption;
     public readonly selectedMappings: string[];
     public readonly created: Date;
     public readonly lastUpdated: Date;

@@ -1,4 +1,3 @@
-import { defaultPeriod } from "../../../domain/entities/PeriodOption";
 import {
     ImportRuleWritableData,
     ImportRuleProtectedData,
@@ -22,7 +21,7 @@ export const importRuleDetailInitialState = {
         code: "",
         description: "",
         selectedOUs: [],
-        periodInformation: defaultPeriod,
+        periodInformation: undefined,
         selectedMappings: [],
     },
     showOUDialog: false,

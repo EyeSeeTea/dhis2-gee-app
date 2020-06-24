@@ -18,13 +18,6 @@ const LandingPage: React.FC = () => {
             key: "Main",
             children: [
                 {
-                    name: i18n.t("On-demand Global Import"),
-                    description: i18n.t(
-                        "Manually import gee data values by selecting organisation unit, period, the assigned mapping to organisation unit or default mapping will be used."
-                    ),
-                    listAction: () => goTo(pageRoutes.importGlobal),
-                },
-                {
                     name: i18n.t("On-demand Import"),
                     description: i18n.t(
                         "Manually import gee data values by selecting organisation unit, period and creating o select the mapping/s for gee data sets."
