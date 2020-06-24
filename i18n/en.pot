@@ -5,8 +5,8 @@ msgstr ""
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1)\n"
-"POT-Creation-Date: 2020-06-16T05:53:00.829Z\n"
-"PO-Revision-Date: 2020-06-16T05:53:00.829Z\n"
+"POT-Creation-Date: 2020-06-18T14:19:25.035Z\n"
+"PO-Revision-Date: 2020-06-18T14:19:25.035Z\n"
 
 msgid "No effective import into DHIS2, file download"
 msgstr ""
@@ -75,6 +75,9 @@ msgid "Does not exists any selected mapping in the import rule"
 msgstr ""
 
 msgid "Unexpected error has ocurred apply transform expression"
+msgstr ""
+
+msgid "Imported {{imported}} - updated {{updated}} - ignored {{ignored}}"
 msgstr ""
 
 msgid "Mapping for attribute {{attr}}"
@@ -236,6 +239,9 @@ msgstr ""
 msgid "Transform expression for attribute {{attr}}"
 msgstr ""
 
+msgid "Variable"
+msgstr ""
+
 msgid "Cancel?"
 msgstr ""
 
@@ -310,7 +316,10 @@ msgid ""
 "rules executions."
 msgstr ""
 
-msgid "Import successful \n"
+msgid "Import successful"
+msgstr ""
+
+msgid "Import failed"
 msgstr ""
 
 msgid "Import"
@@ -354,10 +363,11 @@ msgstr ""
 msgid "Last executed"
 msgstr ""
 
-msgid "Successfully delete {{count}} import rules"
-msgid_plural "Successfully delete {{count}} import rules"
-msgstr[0] ""
-msgstr[1] ""
+msgid "An unexpected error has ocurred deleting import rules. "
+msgstr ""
+
+msgid "Successfully delete {{deleteCount}} import rules"
+msgstr ""
 
 msgid "Edit"
 msgstr ""
@@ -380,10 +390,8 @@ msgstr ""
 msgid "Delete Rules?"
 msgstr ""
 
-msgid "Are you sure you want to delete {{count}} rules?"
-msgid_plural "Are you sure you want to delete {{count}} rules?"
-msgstr[0] ""
-msgstr[1] ""
+msgid "Are you sure you want to delete {{deleteCount}} rules?"
+msgstr ""
 
 msgid "(on-demand global mapping import)"
 msgstr ""
@@ -406,6 +414,9 @@ msgstr ""
 msgid "View result"
 msgstr ""
 
+msgid "An unexpected error has ocurred deleting import history. "
+msgstr ""
+
 msgid "Successfully import histories"
 msgstr ""
 
@@ -418,10 +429,8 @@ msgstr ""
 msgid "Delete import histories?"
 msgstr ""
 
-msgid "Are you sure you want to delete {{count}} import histories?"
-msgid_plural "Are you sure you want to delete {{count}} import histories?"
-msgstr[0] ""
-msgstr[1] ""
+msgid "Are you sure you want to delete {{deleteCount}} import histories?"
+msgstr ""
 
 msgid "Failure"
 msgstr ""
@@ -441,13 +450,20 @@ msgstr ""
 msgid "Set as default"
 msgstr ""
 
+msgid "An unexpected error has ocurred setting mappings as default "
+msgstr ""
+
 msgid "Successfully mapping set as default"
 msgstr ""
 
-msgid "Successfully delete {{count}} mappings"
-msgid_plural "Successfully delete {{count}} mappings"
-msgstr[0] ""
-msgstr[1] ""
+msgid "An unexpected error has ocurred deleting mappings. "
+msgstr ""
+
+msgid "Successfully delete {{deleteCount}} mappings"
+msgstr ""
+
+msgid "An unexpected error has ocurred updating organisation unit assigment. "
+msgstr ""
 
 msgid "Organisation unit assignment success"
 msgstr ""
@@ -474,6 +490,9 @@ msgid "New mapping"
 msgstr ""
 
 msgid "Edit mapping"
+msgstr ""
+
+msgid "404, The page you are looking for isn’t here"
 msgstr ""
 
 msgid "You either tried some shady route or you came here by mistake."

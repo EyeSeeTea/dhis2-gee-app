@@ -129,13 +129,16 @@ const HistoryPage: React.FC = () => {
 
         if (importSummary.result.success) {
             snackbar.success(
-                i18n.t("Import successful \n") + importSummary.result.messages.join("\n"),
+                i18n.t("Import successful") + "\n" + importSummary.result.messages.join("\n"),
                 { autoHideDuration: null }
             );
         } else {
-            snackbar.error(i18n.t("Import failed: \n") + importSummary.result.failures.join("\n"), {
-                autoHideDuration: null,
-            });
+            snackbar.error(
+                i18n.t("Import failed") + "\n" + importSummary.result.failures.join("\n"),
+                {
+                    autoHideDuration: null,
+                }
+            );
         }
     };
 
@@ -172,7 +175,7 @@ const HistoryPage: React.FC = () => {
             switch (failure.kind) {
                 case "UnexpectedError":
                     return (
-                        i18n.t("An unexpected error has ocurred deleting import history: ") +
+                        i18n.t("An unexpected error has ocurred deleting import history. ") +
                         failure.error.message
                     );
             }
@@ -274,8 +277,8 @@ const HistoryPage: React.FC = () => {
                     onCancel={() => setState({ ...state, toDelete: [] })}
                     title={i18n.t("Delete import histories?")}
                     description={i18n.t(
-                        "Are you sure you want to delete {{count}} import histories?",
-                        { count: state.toDelete.length }
+                        "Are you sure you want to delete {{deleteCount}} import histories?",
+                        { deleteCount: state.toDelete.length }
                     )}
                     saveText={i18n.t("Ok")}
                 >

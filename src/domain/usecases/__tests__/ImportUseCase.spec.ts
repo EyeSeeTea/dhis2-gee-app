@@ -48,7 +48,7 @@ describe("ImportUseCase", () => {
                 failures: [],
                 messages: [
                     "6 data values from ECMWF-ERA5-DAILY google data set.",
-                    "Imported: 6 - updated: 0 - ignored: 0",
+                    "Imported 6 - updated 0 - ignored 0",
                 ],
                 success: true,
             });
@@ -83,7 +83,7 @@ describe("ImportUseCase", () => {
                 failures: [],
                 messages: [
                     "6 data values from ECMWF-ERA5-DAILY google data set.",
-                    "Imported: 6 - updated: 0 - ignored: 0",
+                    "Imported 6 - updated 0 - ignored 0",
                 ],
                 success: true,
             });
