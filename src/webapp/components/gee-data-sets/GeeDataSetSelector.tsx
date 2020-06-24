@@ -217,7 +217,7 @@ const GeeDataSetSelector: React.FC<GeeDataSetSelectorProps> = ({
                     open={open}
                     title={i18n.t("Select G.E.E dataset")}
                     onCancel={() => setOpen(false)}
-                    maxWidth={"lg"}
+                    maxWidth={"xl"}
                     fullWidth={true}
                     disableSave={false}
                     cancelText={i18n.t("Cancel")}
