@@ -32,7 +32,7 @@ export class DeleteImportRulesUseCase {
     ): Promise<Either<UnexpectedError, true>> {
         const importSummaries = await this.importSummaryRepository.getAll();
 
-        const importSummariesWithRulesIdTodelete = importSummaries.filter(
+        const importSummariesWithRulesIdTodelete = importSummaries.items.filter(
             importSummary =>
                 importSummary.importRule && importRulesIdToDelete.includes(importSummary.importRule)
         );

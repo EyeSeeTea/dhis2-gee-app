@@ -8,6 +8,7 @@ import {
 } from "../domain/repositories/ImportSummaryRepository";
 import { UnexpectedError } from "../domain/errors/Generic";
 import _ from "lodash";
+import { Page } from "../domain/common/Pagination";
 
 export default class ImportSummaryD2ApiRepository implements ImportSummaryRepository {
     constructor(private dataStore: DataStore, private dataStoreKey: string) {}
@@ -31,7 +32,8 @@ export default class ImportSummaryD2ApiRepository implements ImportSummaryReposi
         }
     }
 
-    async getAll(filters?: ImportSummaryFilters): Promise<ImportSummary[]> {
+    async getAll(filters?: ImportSummaryFilters): Promise<Page<ImportSummary>> {
+        console.log({ filters });
         const importSummariesData = await this.getImportSummariesData();
 
         const importSummaries = importSummariesData?.map(importRuleData =>
@@ -42,9 +44,25 @@ export default class ImportSummaryD2ApiRepository implements ImportSummaryReposi
             ? this.applyFilters(importSummaries, filters)
             : importSummaries;
 
-        const sortedData = _.orderBy(filteredImportSummaries, ["date"], ["desc"]);
+        const sortedData = filters?.sorting
+            ? _.orderBy(filteredImportSummaries, [filters?.sorting.field], [filters?.sorting.order])
+            : _.orderBy(filteredImportSummaries, ["date"], ["desc"]);
 
-        return sortedData;
+        const totalItems = sortedData.length;
+        const firstItem = filters?.pagination
+            ? (filters.pagination.page - 1) * filters.pagination.pageSize
+            : 0;
+        const lastItem = filters?.pagination ? firstItem + filters.pagination.pageSize : totalItems;
+        const items = _.slice(sortedData, firstItem, lastItem);
+
+        return {
+            items: items,
+            pager: {
+                page: filters?.pagination?.page ?? 1,
+                pageSize: filters?.pagination?.pageSize ?? totalItems,
+                totalItems: totalItems,
+            },
+        };
     }
 
     async save(importSummary: ImportSummary): Promise<Either<SaveImportSummaryError, true>> {

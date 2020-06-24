@@ -129,7 +129,7 @@ export class GeeDataEarthEngineRepository implements GeeDataValueSetRepository {
 
         const result = _(bands)
             .flatMap((band: Band) => {
-                return collectionData.features.map((feature:any) => {
+                return collectionData.features.map((feature: any) => {
                     const dataValue = {
                         band,
                         value: feature.properties[band],
