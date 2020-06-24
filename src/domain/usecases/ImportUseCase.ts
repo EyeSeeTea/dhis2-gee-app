@@ -30,6 +30,8 @@ import {
 import { Either } from "../common/Either";
 import { evalTransformExpression } from "../entities/TransformExpression";
 import { PeriodOption } from "../entities/PeriodOption";
+import { Moment } from "moment";
+import { GeeDataSet } from "../entities/GeeDataSet";
 
 export default class ImportUseCase {
     constructor(
@@ -137,7 +139,6 @@ export default class ImportUseCase {
                 const baseImportConfig: { orgUnits: OrgUnit[]; interval: GeeInterval } = {
                     orgUnits: orgUnits,
                     interval: {
-                        type: "daily",
                         ...buildPeriod(period),
                     },
                 };
@@ -148,15 +149,18 @@ export default class ImportUseCase {
                 await Promise.all(
                     mappings.map(async selectedMapping => {
                         try {
-                            const geeDataSet = await this.geeDataSetRepository.getByCode(
-                                selectedMapping.geeImage
-                            );
+                            const geeDataSet = (
+                                await this.geeDataSetRepository.getById(selectedMapping.geeImage)
+                            ).getOrThrow();
 
-                            const dataValueSet: DataValueSet = await this.getDataValueSet({
-                                ...baseImportConfig,
-                                geeDataSetId: geeDataSet.imageCollectionId,
-                                attributeIdsMapping: selectedMapping.attributeMappingDictionary,
-                            });
+                            const dataValueSet: DataValueSet = await this.getDataValueSet(
+                                geeDataSet,
+                                {
+                                    ...baseImportConfig,
+                                    geeDataSetId: geeDataSet.imageCollectionId,
+                                    attributeIdsMapping: selectedMapping.attributeMappingDictionary,
+                                }
+                            );
 
                             importDataValueSet = {
                                 dataValues: _.concat(
@@ -167,7 +171,7 @@ export default class ImportUseCase {
                             messages = [
                                 ...messages,
                                 i18n.t("{{n}} data values from {{name}} google data set.", {
-                                    name: geeDataSet.displayName,
+                                    name: geeDataSet.id,
                                     n: dataValueSet.dataValues.length,
                                 }),
                             ];
@@ -181,7 +185,15 @@ export default class ImportUseCase {
                     importDataValueSet
                 );
 
-                messages = [...messages, this.getImportCountString(dataValueSetResponse)];
+                const dataValueSetMessages = this.getMessagesFromDataValueSetReponse(
+                    dataValueSetResponse
+                );
+                messages = dataValueSetMessages ? [...messages, dataValueSetMessages] : messages;
+
+                const dataValueSetFailures = this.getFailuresFromDataValueSetReponse(
+                    dataValueSetResponse
+                );
+                failures = dataValueSetFailures ? [...failures, dataValueSetFailures] : failures;
             }
 
             const importResult = {
@@ -223,6 +235,7 @@ export default class ImportUseCase {
     }
 
     private async getDataValueSet<Band extends string>(
+        geeDataSet: GeeDataSet,
         options: GetDataValueSetOptions<Band>
     ): Promise<DataValueSet> {
         const { geeDataRepository } = this;
@@ -244,7 +257,14 @@ export default class ImportUseCase {
             const geeData = await geeDataRepository.getData(options);
 
             return _(geeData)
-                .map(item => this.mapGeeDataValueToDataValue(item, orgUnit.id, attributeIdsMapping))
+                .map(item =>
+                    this.mapGeeDataValueToDataValue(
+                        item,
+                        orgUnit.id,
+                        attributeIdsMapping,
+                        geeDataSet
+                    )
+                )
                 .compact()
                 .value();
         });
@@ -253,15 +273,13 @@ export default class ImportUseCase {
     }
 
     private mapOrgUnitToGeeGeometry(orgUnit: OrgUnit): GeeGeometry | undefined {
-        const coordinates = orgUnit.coordinates ? JSON.parse(orgUnit.coordinates) : null;
-        if (!coordinates) return;
+        if (!orgUnit.geometry) return;
 
-        switch (orgUnit.featureType) {
-            case "POINT":
-                return { type: "point", coordinates };
-            case "POLYGON":
-            case "MULTI_POLYGON":
-                return { type: "multi-polygon", polygonCoordinates: coordinates };
+        switch (orgUnit.geometry.type) {
+            case "Point":
+                return { type: "point", coordinates: orgUnit.geometry.coordinates };
+            case "Polygon":
+                return { type: "multi-polygon", polygonCoordinates: orgUnit.geometry.coordinates };
             default:
                 return;
         }
@@ -270,7 +288,8 @@ export default class ImportUseCase {
     private mapGeeDataValueToDataValue<Band extends string>(
         item: GeeDataValue<Band>,
         orgUnitId: string,
-        mappingDicc: AttributeMappingDictionary
+        mappingDicc: AttributeMappingDictionary,
+        geeDataSet: GeeDataSet
     ): DataValue | undefined {
         const { date, band, value } = item;
         const mapping = mappingDicc[band];
@@ -299,7 +318,7 @@ export default class ImportUseCase {
                             dataElement: dataElementId,
                             value: numberResult.toString(),
                             orgUnit: orgUnitId,
-                            period: date.format("YYYYMMDD"), // Assume periodType="DAILY"
+                            period: this.getFormatedPeriod(date, geeDataSet),
                         };
                     }
                 );
@@ -308,22 +327,44 @@ export default class ImportUseCase {
                     dataElement: mapping.dataElementId,
                     value: formattedValue,
                     orgUnit: orgUnitId,
-                    period: date.format("YYYYMMDD"), // Assume periodType="DAILY"
+                    period: this.getFormatedPeriod(date, geeDataSet),
                 };
             }
         }
     }
 
-    private getImportCountString(dataValueSetReponse: SaveDataValueSetReponse): string {
-        if (typeof dataValueSetReponse == "string") {
+    private getFormatedPeriod(date: Moment, geeDataSet: GeeDataSet) {
+        if (geeDataSet.cadence?.includes("year")) {
+            return date.format("YYYY");
+        } else if (geeDataSet.cadence?.includes("month")) {
+            return date.format("YYYYMM");
+        } else {
+            return date.format("YYYYMMDD");
+        }
+    }
+
+    private getMessagesFromDataValueSetReponse(
+        dataValueSetReponse: SaveDataValueSetReponse
+    ): string {
+        if (typeof dataValueSetReponse === "string") {
             return dataValueSetReponse;
         } else {
-            return i18n.t("Imported: {{imported}} - updated: {{updated}} - ignored: {{ignored}}", {
-                imported: dataValueSetReponse.imported,
-                updated: dataValueSetReponse.updated,
-                ignored: dataValueSetReponse.ignored,
-            });
+            return dataValueSetReponse.status !== "ERROR"
+                ? i18n.t("Imported {{imported}} - updated {{updated}} - ignored {{ignored}}", {
+                      imported: dataValueSetReponse.importCount.imported,
+                      updated: dataValueSetReponse.importCount.updated,
+                      ignored: dataValueSetReponse.importCount.ignored,
+                  })
+                : "";
         }
+    }
+
+    private getFailuresFromDataValueSetReponse(
+        dataValueSetReponse: SaveDataValueSetReponse
+    ): string {
+        return typeof dataValueSetReponse !== "string" && dataValueSetReponse.status === "ERROR"
+            ? dataValueSetReponse.description
+            : "";
     }
 
     private saveImportResult(

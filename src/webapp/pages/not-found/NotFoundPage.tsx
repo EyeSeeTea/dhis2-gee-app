@@ -28,7 +28,7 @@ const NotFoundPage: React.FC = () => {
                     alignItems="center"
                 >
                     <Typography variant="h5">
-                        {i18n.t("404: The page you are looking for isn’t here")}
+                        {i18n.t("404, The page you are looking for isn’t here")}
                     </Typography>
                     <Typography variant="h6">
                         {i18n.t("You either tried some shady route or you came here by mistake.")}

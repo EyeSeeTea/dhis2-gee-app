@@ -31,7 +31,7 @@ class GeneralInfoStep extends React.Component<StepProps> {
     };
 
     render() {
-        const { config, mapping, dataSets } = this.props;
+        const { mapping, dataSets } = this.props;
         const fields = [
             getTextField("name", mapping.name, {
                 validators: [validators.presence],
@@ -46,10 +46,6 @@ class GeneralInfoStep extends React.Component<StepProps> {
                 validators: [validators.presence],
                 props: {
                     floatingLabelText: Mapping.getFieldName("geeImage") + " (*)",
-                    menuItems: _(config.data.base.googleDatasets)
-                        .mapValues((value, key) => ({ ...value, id: key }))
-                        .values()
-                        .value(),
                     style: { marginTop: 20 },
                 },
             }),

@@ -1,10 +1,10 @@
-import { GeeDataSetRepository } from "../repositories/GeeDataSetRepository";
+import { GeeDataSetRepository, GeeDataSetsFilter } from "../repositories/GeeDataSetRepository";
 import { GeeDataSet } from "../entities/GeeDataSet";
 
 export class GetGeeDataSetsUseCase {
     constructor(private geeDataSetRepository: GeeDataSetRepository) {}
 
-    execute(): Promise<GeeDataSet[]> {
-        return this.geeDataSetRepository.getAll();
+    execute(filter?: GeeDataSetsFilter): Promise<GeeDataSet[]> {
+        return this.geeDataSetRepository.getAll(filter);
     }
 }

@@ -1,4 +1,3 @@
-import i18n from "@dhis2/d2-i18n";
 import DialogContent from "@material-ui/core/DialogContent";
 import { ConfirmationDialog, useSnackbar } from "d2-ui-components";
 import React, { useState } from "react";
@@ -8,6 +7,7 @@ import {
     TransformExpression,
     trasnformExpressionToken,
 } from "../../../domain/entities/TransformExpression";
+import i18n from "../../utils/i18n";
 
 export interface AttributeMappingDialogProps {
     attributeMapping: AttributeMapping;
@@ -91,7 +91,7 @@ const TransformExpressionDialog: React.FC<AttributeMappingDialogProps> = ({
                             alignItems="center"
                             justifyContent="center"
                         >
-                            <span>{i18n.t("Variable: ")} </span>
+                            <span>{i18n.t("Variable") + ": "} </span>
                             <Button
                                 color="primary"
                                 onClick={onTokenClick}
