@@ -5,8 +5,8 @@ msgstr ""
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1)\n"
-"POT-Creation-Date: 2020-06-16T05:53:00.829Z\n"
-"PO-Revision-Date: 2020-06-16T05:53:00.829Z\n"
+"POT-Creation-Date: 2020-06-24T17:58:29.618Z\n"
+"PO-Revision-Date: 2020-06-24T17:58:29.618Z\n"
 
 msgid "No effective import into DHIS2, file download"
 msgstr ""
@@ -56,7 +56,7 @@ msgstr ""
 msgid "An error has ocurred updating lastUpdate field of import rule"
 msgstr ""
 
-msgid "Does not exists any selected organisation unit to execute global import rule"
+msgid "No organisation unit selected as global for the import rule"
 msgstr ""
 
 msgid "{{n}} data values from {{name}} google data set."
@@ -65,13 +65,13 @@ msgstr ""
 msgid "Import config failed"
 msgstr ""
 
-msgid "Does not exists any selected organisation unit in the import rule"
+msgid "No organisation unit selected in the import rule"
 msgstr ""
 
-msgid "Does not exists any selected period in the import rule"
+msgid "No period selected in the import rule"
 msgstr ""
 
-msgid "Does not exists any selected mapping in the import rule"
+msgid "No mapping selected in the import rule"
 msgstr ""
 
 msgid "Unexpected error has ocurred apply transform expression"

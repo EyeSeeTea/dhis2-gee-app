@@ -95,9 +95,7 @@ export default class ImportUseCase {
                       {
                           success: false,
                           failures: [
-                              i18n.t(
-                                  "No organisation unit selected as global for the import rule"
-                              ),
+                              i18n.t("No organisation unit selected as global for the import rule"),
                           ],
                           messages: [],
                       },
@@ -224,9 +222,7 @@ export default class ImportUseCase {
         const failures: string[] = [];
 
         if (orgUnits.length === 0) {
-            failures.push(
-                i18n.t("No organisation unit selected in the import rule")
-            );
+            failures.push(i18n.t("No organisation unit selected in the import rule"));
         }
 
         if (!period) {
