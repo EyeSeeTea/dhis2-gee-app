@@ -216,7 +216,12 @@ const GeeDataSetSelector: React.FC<GeeDataSetSelectorProps> = ({
                 <ConfirmationDialog
                     open={open}
                     title={i18n.t("Select G.E.E dataset")}
-                    onCancel={() => setOpen(false)}
+                    onCancel={() => {
+                        setCadenceFilter("");
+                        setSearchFilter("");
+                        setRows([]);
+                        setOpen(false);
+                    }}
                     maxWidth={"xl"}
                     fullWidth={true}
                     disableSave={false}
