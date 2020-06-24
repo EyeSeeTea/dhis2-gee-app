@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: i18next-conv\n"
-"POT-Creation-Date: 2020-06-18T14:19:25.035Z\n"
+"POT-Creation-Date: 2020-06-24T17:30:02.417Z\n"
 "PO-Revision-Date: 2020-06-16T05:53:00.829Z\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -291,17 +291,6 @@ msgstr "Mapeamento do Google Band com Data Element.q"
 msgid "Click to show feedback"
 msgstr "Clique para mostrar comentários"
 
-msgid "On-demand Global Import"
-msgstr "Importação global sob demanda"
-
-msgid ""
-"Manually import gee data values by selecting organisation unit, period, the "
-"assigned mapping to organisation unit or default mapping will be used."
-msgstr ""
-"Importe manualmente os valores de dados Gee selecionando unidade "
-"organizacional, período, oo mapeamento atribuído à unidade da organização ou "
-"mapeamento padrão será usado."
-
 msgid "On-demand Import"
 msgstr "Importação sob demanda"
 
@@ -548,3 +537,14 @@ msgstr "Você precisa selecionar pelo menos um {{element}}"
 
 msgid "Start and end dates are not a valid period"
 msgstr "As datas de início e término não são um período válido"
+
+#~ msgid "On-demand Global Import"
+#~ msgstr "Importação global sob demanda"
+
+#~ msgid ""
+#~ "Manually import gee data values by selecting organisation unit, period, "
+#~ "the assigned mapping to organisation unit or default mapping will be used."
+#~ msgstr ""
+#~ "Importe manualmente os valores de dados Gee selecionando unidade "
+#~ "organizacional, período, oo mapeamento atribuído à unidade da organização "
+#~ "ou mapeamento padrão será usado."
