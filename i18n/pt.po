@@ -323,7 +323,7 @@ msgid ""
 msgstr ""
 "Criar, modificar, excluir, executar regras de importação para valores de "
 "dados gee selecionandounidade organizacional, período e criação o selecione "
-"o (s) mapeamento (s) para dados Geeconjuntos."
+"o (s) mapeamento (s) para dados Geeconjuntos"
 
 msgid "History"
 msgstr "Histórico"
@@ -391,7 +391,7 @@ msgid "An unexpected error has ocurred deleting import rules. "
 msgstr "Ocorreu um erro inesperado aplicar expressão de transformação"
 
 msgid "Successfully delete {{deleteCount}} import rules"
-msgstr "Exclua com êxito {{deleteCount}} regras de importação"
+msgstr ""
 
 msgid "Edit"
 msgstr "Editar"
@@ -414,8 +414,10 @@ msgstr "Procurar por nome"
 msgid "Delete Rules?"
 msgstr "Excluir regras?"
 
+#, fuzzy
 msgid "Are you sure you want to delete {{deleteCount}} rules?"
-msgstr "Tem certeza de que deseja excluir as regras do {{deleteCount}}?"
+msgstr ""
+"Tem certeza de que deseja desativar o mapeamento para atributos {{total}}?"
 
 msgid "(on-demand global mapping import)"
 msgstr "(importação de mapeamento global sob demanda)"
@@ -454,10 +456,10 @@ msgstr "Histórico de importações"
 msgid "Delete import histories?"
 msgstr "Excluir histórico de importação?"
 
+#, fuzzy
 msgid "Are you sure you want to delete {{deleteCount}} import histories?"
 msgstr ""
-"Tem certeza de que deseja excluir os históricos de importação do "
-"{{deleteCount}}?"
+"Tem certeza de que deseja desativar o mapeamento para atributos {{total}}?"
 
 msgid "Failure"
 msgstr "Falha"
@@ -489,7 +491,7 @@ msgid "An unexpected error has ocurred deleting mappings. "
 msgstr "Ocorreu um erro inesperado aplicar expressão de transformação"
 
 msgid "Successfully delete {{deleteCount}} mappings"
-msgstr "Exclua com êxito {{deleteCount}} regras de importação"
+msgstr ""
 
 #, fuzzy
 msgid "An unexpected error has ocurred updating organisation unit assigment. "

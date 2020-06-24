@@ -1,6 +1,6 @@
 import _ from "lodash";
 import moment, { Moment } from "moment";
-import ee, {
+import {
     GeometryPoint,
     GeometryPolygon,
     InfoDataRowBase,
@@ -17,6 +17,15 @@ import {
 } from "../domain/repositories/GeeDataValueSetRepository";
 import { GeeDataValueSet, GeeDataValue } from "../domain/entities/GeeDataValueSet";
 import { D2Api } from "d2-api";
+
+// -- TODO: gee static ------
+declare global {
+    interface Window {
+        ee: any;
+    }
+}
+const ee = window.ee || {};
+//---------------------
 
 type Geometry = GeometryPoint | GeometryPolygon;
 
@@ -122,7 +131,7 @@ export class GeeDataEarthEngineRepository implements GeeDataValueSetRepository {
 
         const result = _(bands)
             .flatMap((band: Band) => {
-                return collectionData.features.map(feature => {
+                return collectionData.features.map((feature: any) => {
                     const dataValue = {
                         band,
                         value: feature.properties[band],
