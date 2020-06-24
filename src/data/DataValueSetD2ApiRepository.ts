@@ -10,7 +10,7 @@ class DataValueSetD2ApiRepository implements DataValueSetRepository {
     async save(dataValueSet: DataValueSet): Promise<SaveDataValueSetReponse> {
         const res = await this.d2Api.dataValues.postSet({}, dataValueSet).getData();
 
-        return res.importCount;
+        return res;
     }
 }
 
