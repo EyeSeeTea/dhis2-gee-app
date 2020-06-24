@@ -1,6 +1,6 @@
 import _ from "lodash";
 import moment, { Moment } from "moment";
-import ee, {
+import {
     GeometryPoint,
     GeometryPolygon,
     ImageCollection,
@@ -14,6 +14,15 @@ import {
 } from "../domain/repositories/GeeDataValueSetRepository";
 import { GeeDataValueSet, GeeDataValue } from "../domain/entities/GeeDataValueSet";
 import { D2Api } from "d2-api";
+
+// -- TODO: gee static ------
+declare global {
+    interface Window {
+        ee: any;
+    }
+}
+const ee = window.ee || {};
+//---------------------
 
 type Geometry = GeometryPoint | GeometryPolygon;
 
