@@ -1,5 +1,4 @@
 import React from "react";
-import _ from "lodash";
 import { Card, CardContent } from "@material-ui/core";
 
 import { StepProps } from "../MappingWizard";
@@ -8,15 +7,16 @@ import AttributeMappingTable from "../../../attribute-mapping/AttributeMappingTa
 class VariablesMappingStep extends React.Component<StepProps> {
     render() {
         const { config, mapping, onChange } = this.props;
+        const bands = config.data.base.googleDatasets[mapping.geeImage]["bands"].map(
+            (band: any) => band.name
+        );
         return (
             <Card>
                 <CardContent>
                     <AttributeMappingTable
                         mapping={mapping}
                         onChange={onChange}
-                        availableBands={
-                            _(config.data.base.googleDatasets).get(mapping.geeImage)["bands"]
-                        }
+                        availableBands={bands}
                     />
                 </CardContent>
             </Card>

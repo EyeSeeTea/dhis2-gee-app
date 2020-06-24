@@ -93,6 +93,7 @@ export {};
 
 function givenAGeeDataSetRepository(): GeeDataSetRepository {
     return {
+        getAll: jest.fn(),
         getByCode: jest.fn().mockImplementation(() => {
             return {
                 code: "era5Daily",
