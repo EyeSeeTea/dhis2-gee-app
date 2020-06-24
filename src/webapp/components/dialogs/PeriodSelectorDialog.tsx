@@ -8,7 +8,7 @@ import PeriodSelector from "../period/PeriodSelector";
 interface PeriodSelectorDialogProps {
     periodInformation: PeriodOption | undefined;
     onCancel(): void;
-    onSave: (periodInformation: PeriodOption) => void;
+    onSave: (periodInformation?: PeriodOption) => void;
 }
 
 const PeriodSelectorDialog: React.FC<PeriodSelectorDialogProps> = props => {
@@ -19,9 +19,7 @@ const PeriodSelectorDialog: React.FC<PeriodSelectorDialogProps> = props => {
     );
 
     const onSaveClicked = () => {
-        if (currentPeriod) {
-            onSave(currentPeriod);
-        }
+        onSave(currentPeriod);
     };
 
     return (
@@ -29,7 +27,7 @@ const PeriodSelectorDialog: React.FC<PeriodSelectorDialogProps> = props => {
             <ConfirmationDialog
                 isOpen={true}
                 title={i18n.t("Select period interval")}
-                onSave={currentPeriod ? onSaveClicked : undefined}
+                onSave={onSaveClicked}
                 onCancel={onCancel}
                 saveText={i18n.t("Save")}
                 maxWidth={"xs"}

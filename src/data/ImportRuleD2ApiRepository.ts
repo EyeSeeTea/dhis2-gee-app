@@ -209,16 +209,18 @@ export default class ImportRuleD2ApiRepository implements ImportRuleRepository {
             lastExecuted: importRuleData.lastExecuted
                 ? new Date(importRuleData.lastExecuted)
                 : undefined,
-            periodInformation: {
-                ...importRuleData.periodInformation,
-                id: importRuleData.periodInformation.id as PeriodId,
-                startDate: importRuleData.periodInformation.startDate
-                    ? new Date(importRuleData.periodInformation.startDate)
-                    : undefined,
-                endDate: importRuleData.periodInformation.endDate
-                    ? new Date(importRuleData.periodInformation.endDate)
-                    : undefined,
-            },
+            periodInformation: importRuleData.periodInformation
+                ? {
+                      ...importRuleData.periodInformation,
+                      id: importRuleData.periodInformation?.id as PeriodId,
+                      startDate: importRuleData.periodInformation?.startDate
+                          ? new Date(importRuleData.periodInformation.startDate)
+                          : undefined,
+                      endDate: importRuleData.periodInformation?.endDate
+                          ? new Date(importRuleData.periodInformation.endDate)
+                          : undefined,
+                  }
+                : undefined,
         });
     }
 
@@ -229,15 +231,17 @@ export default class ImportRuleD2ApiRepository implements ImportRuleRepository {
             code: importRule.code,
             description: importRule.description,
             selectedOUs: importRule.selectedOUs,
-            periodInformation: {
-                ...importRule.periodInformation,
-                startDate: importRule.periodInformation.startDate
-                    ? importRule.periodInformation.startDate.toISOString()
-                    : undefined,
-                endDate: importRule.periodInformation.endDate
-                    ? importRule.periodInformation.endDate.toISOString()
-                    : undefined,
-            },
+            periodInformation: importRule.periodInformation
+                ? {
+                      ...importRule.periodInformation,
+                      startDate: importRule.periodInformation?.startDate
+                          ? importRule.periodInformation.startDate.toISOString()
+                          : undefined,
+                      endDate: importRule.periodInformation?.endDate
+                          ? importRule.periodInformation.endDate.toISOString()
+                          : undefined,
+                  }
+                : undefined,
             selectedMappings: importRule.selectedMappings,
             created: importRule.created.toISOString(),
             lastUpdated: importRule.lastUpdated.toISOString(),
@@ -254,7 +258,7 @@ interface ImportRuleDS {
     code?: string;
     description?: string;
     selectedOUs: string[];
-    periodInformation: PeriodOptionDS;
+    periodInformation?: PeriodOptionDS;
     selectedMappings: string[];
     created: string;
     lastUpdated: string;
