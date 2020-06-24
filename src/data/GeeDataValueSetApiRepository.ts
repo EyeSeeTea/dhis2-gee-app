@@ -144,7 +144,7 @@ export class GeeDataEarthEngineRepository implements GeeDataValueSetRepository {
             })
             .value();
 
-        return result;
+        return result.filter(dataValue => dataValue.value);
     }
 
     private async initializeEngine() {
