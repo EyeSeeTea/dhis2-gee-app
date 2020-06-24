@@ -150,9 +150,7 @@ export default class ImportUseCase {
         const failures: string[] = [];
 
         if (importRule.selectedOUs.length === 0) {
-            failures.push(
-                i18n.t("No organisation unit selection in the import rule")
-            );
+            failures.push(i18n.t("No organisation unit selection in the import rule"));
         }
 
         if (!importRule.periodInformation) {

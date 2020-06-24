@@ -53,7 +53,7 @@ describe("ImportUseCase", () => {
     });
 });
 
-export { };
+export {};
 
 function givenAGeeDataSetRepository(): GeeDataSetRepository {
     return {
