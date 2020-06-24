@@ -42,7 +42,7 @@ export default class ImportUseCase {
         private orgUnitRepository: OrgUnitRepository,
         private dataValueSetRepository: DataValueSetRepository,
         private importSummaryRepository: ImportSummaryRepository
-    ) { }
+    ) {}
 
     //TODO: pass userid? and retrieve name?
     // Validate user is not empty?
@@ -85,21 +85,23 @@ export default class ImportUseCase {
         const results =
             orgUnitMappingPairs.length > 0
                 ? await promiseMap(orgUnitMappingPairs, async orgUnitMappingPair => {
-                    return this.execute([orgUnitMappingPair.orgUnitPath], [
-                        orgUnitMappingPair.mappingId,
-                    ], period);
-                })
+                      return this.execute(
+                          [orgUnitMappingPair.orgUnitPath],
+                          [orgUnitMappingPair.mappingId],
+                          period
+                      );
+                  })
                 : [
-                    {
-                        success: false,
-                        failures: [
-                            i18n.t(
-                                "Does not exists any selected organisation unit to execute global import rule"
-                            ),
-                        ],
-                        messages: [],
-                    },
-                ];
+                      {
+                          success: false,
+                          failures: [
+                              i18n.t(
+                                  "No organisation unit selected as global for the import rule"
+                              ),
+                          ],
+                          messages: [],
+                      },
+                  ];
 
         const importResult = results.reduce(
             (acc, result) => {
@@ -125,7 +127,7 @@ export default class ImportUseCase {
     public async execute(
         orgUnitPaths: string[],
         mappingIds: string[],
-        period?: PeriodOption,
+        period?: PeriodOption
     ): Promise<ImportResult> {
         let failures: string[] = [];
         let messages: string[] = [];
@@ -214,21 +216,25 @@ export default class ImportUseCase {
         }
     }
 
-    private validateInputs(orgUnits: string[], mappings: string[], period?: PeriodOption): string[] {
+    private validateInputs(
+        orgUnits: string[],
+        mappings: string[],
+        period?: PeriodOption
+    ): string[] {
         const failures: string[] = [];
 
         if (orgUnits.length === 0) {
             failures.push(
-                i18n.t("Does not exists any selected organisation unit in the import rule")
+                i18n.t("No organisation unit selected in the import rule")
             );
         }
 
         if (!period) {
-            failures.push(i18n.t("Does not exists any selected period in the import rule"));
+            failures.push(i18n.t("No period selected in the import rule"));
         }
 
         if (mappings.length === 0) {
-            failures.push(i18n.t("Does not exists any selected mapping in the import rule"));
+            failures.push(i18n.t("No mapping selected in the import rule"));
         }
 
         return failures;
