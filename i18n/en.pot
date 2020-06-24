@@ -5,8 +5,8 @@ msgstr ""
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1)\n"
-"POT-Creation-Date: 2020-06-08T14:09:32.829Z\n"
-"PO-Revision-Date: 2020-06-08T14:09:32.829Z\n"
+"POT-Creation-Date: 2020-06-24T12:31:28.299Z\n"
+"PO-Revision-Date: 2020-06-24T12:31:28.299Z\n"
 
 msgid "No effective import into DHIS2, file download"
 msgstr ""
@@ -59,13 +59,13 @@ msgstr ""
 msgid "Import config failed"
 msgstr ""
 
-msgid "No organisation unit selected in the import rule"
+msgid "No organisation unit selection in the import rule"
 msgstr ""
 
-msgid "No period selected in the import rule"
+msgid "No period selection in the import rule"
 msgstr ""
 
-msgid "No mapping selected in the import rule"
+msgid "No mapping selection in the import rule"
 msgstr ""
 
 msgid "Mapping for attribute {{attr}}"
