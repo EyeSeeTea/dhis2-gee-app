@@ -62,13 +62,13 @@ msgstr ""
 msgid "Import config failed"
 msgstr ""
 
-msgid "Does not exists any selected organisation unit in the import rule"
+msgid "No organisation unit selection in the import rule"
 msgstr ""
 
-msgid "Does not exists any selected period in the import rule"
+msgid "No period selection in the import rule"
 msgstr ""
 
-msgid "Does not exists any selected mapping in the import rule"
+msgid "No mapping selection in the import rule"
 msgstr ""
 
 msgid "Unexpected error has ocurred apply transform expression"
