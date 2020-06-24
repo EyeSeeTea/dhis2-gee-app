@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: i18next-conv\n"
-"POT-Creation-Date: 2020-06-24T12:31:28.299Z\n"
+"POT-Creation-Date: 2020-06-24T12:48:39.256Z\n"
 "PO-Revision-Date: 2018-10-25T09:02:35.143Z\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -48,6 +48,9 @@ msgid "Last quarter"
 msgstr ""
 
 msgid "Last year"
+msgstr ""
+
+msgid "{{name}} (deleted)"
 msgstr ""
 
 msgid "{{n}} data values from {{name}} google data set."
@@ -322,6 +325,44 @@ msgid "Are you sure you want to delete {{count}} rules?"
 msgid_plural "Are you sure you want to delete {{count}} rules?"
 msgstr[0] ""
 msgstr[1] ""
+
+msgid "(on-demand import)"
+msgstr ""
+
+msgid "Date"
+msgstr ""
+
+msgid "Status"
+msgstr ""
+
+msgid "User"
+msgstr ""
+
+msgid "Edit {{name}}"
+msgstr ""
+
+msgid "View result"
+msgstr ""
+
+msgid "Successfully import histories"
+msgstr ""
+
+msgid "Import status"
+msgstr ""
+
+msgid "Imports History"
+msgstr ""
+
+msgid "Delete import histories?"
+msgstr ""
+
+msgid "Are you sure you want to delete {{count}} import histories?"
+msgid_plural "Are you sure you want to delete {{count}} import histories?"
+msgstr[0] ""
+msgstr[1] ""
+
+msgid "Failure"
+msgstr ""
 
 msgid "Dataset id"
 msgstr ""

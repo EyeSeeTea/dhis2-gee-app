@@ -155,7 +155,7 @@ export default class ImportRuleD2ApiRepository implements ImportRuleRepository {
     }
 
     private applyFilters(importRules: ImportRule[], filters: ImportRuleFilters): ImportRule[] {
-        const { search, lastExecuted } = filters;
+        const { search, lastExecuted, ids } = filters;
 
         const filteredBySearchImportRules = search
             ? importRules.filter(
@@ -174,7 +174,11 @@ export default class ImportRuleD2ApiRepository implements ImportRuleRepository {
               )
             : filteredBySearchImportRules;
 
-        return filteredByLastExecuted;
+        const filteredByIds = ids
+            ? filteredByLastExecuted.filter(importRule => ids.includes(importRule.id))
+            : filteredByLastExecuted;
+
+        return filteredByIds;
     }
 
     private async getImportRulesData(): Promise<ImportRuleDS[]> {

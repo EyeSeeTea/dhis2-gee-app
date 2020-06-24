@@ -5,6 +5,7 @@ import { Either } from "../common/Either";
 import { UnexpectedError } from "../errors/Generic";
 
 export interface ImportRuleFilters {
+    ids?: Id[];
     search?: string;
     lastExecuted?: Date;
 }

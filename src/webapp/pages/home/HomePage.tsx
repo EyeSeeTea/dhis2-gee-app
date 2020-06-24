@@ -1,7 +1,7 @@
 import React from "react";
 import { MenuCardProps } from "../../components/landing/MenuCard";
 import { Landing } from "../../components/landing/Landing";
-import i18n from "../../locales";
+import i18n from "@dhis2/d2-i18n";
 import { useGoTo, pageRoutes } from "../root/Root";
 
 const LandingPage: React.FC = () => {
@@ -37,7 +37,7 @@ const LandingPage: React.FC = () => {
                     description: i18n.t(
                         "View and analyse the status and results of the manual import and import rules executions."
                     ),
-                    listAction: () => goTo(pageRoutes.history),
+                    listAction: () => goTo(pageRoutes.importsHistory),
                 },
             ],
         },

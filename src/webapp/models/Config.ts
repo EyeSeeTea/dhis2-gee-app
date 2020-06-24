@@ -11,6 +11,7 @@ const baseConfig = {
         keys: {
             mappings: "mappings",
             importRules: "import-rules",
+            importsHistory: "imports-history",
             imports: {
                 suffix: "@import",
             },

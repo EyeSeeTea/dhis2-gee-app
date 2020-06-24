@@ -1,6 +1,6 @@
 import React, { useState } from "react";
-import i18n from "../../locales";
-import { useCompositionRoot } from "../../contexts/app-context";
+import i18n from "@dhis2/d2-i18n";
+import { useCompositionRoot, useCurrentUser } from "../../contexts/app-context";
 import { makeStyles } from "@material-ui/styles";
 import PageHeader from "../../components/page-header/PageHeader";
 import MappingsList from "../mappings/MappingsList";
@@ -42,6 +42,7 @@ const ImportRuleDetailPage: React.FC = () => {
     const snackbar = useSnackbar();
     const history = useHistory();
     const { action, id } = useParams() as ImportRuleDetailPageParams;
+    const currentUser = useCurrentUser();
 
     const [state, setState] = useState<ImportRuleDetailState>(importRuleDetailInitialState);
 
@@ -181,7 +182,7 @@ const ImportRuleDetailPage: React.FC = () => {
             isImporting: true,
         });
 
-        const result = await useCase.execute(state.importRule.id);
+        const result = await useCase.execute(state.importRule.id, currentUser.username);
 
         console.log({ result });
 

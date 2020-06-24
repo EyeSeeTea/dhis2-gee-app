@@ -5,7 +5,7 @@ import ReactDOM from "react-dom";
 import { Provider } from "@dhis2/app-runtime";
 
 import App from "./webapp/components/app/App";
-import "./webapp/locales";
+import "./locales";
 
 async function getBaseUrl() {
     if (process.env.NODE_ENV === "development") {

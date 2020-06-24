@@ -13,6 +13,9 @@ import { Maybe } from "../../common/Maybe";
 import { Either } from "../../common/Either";
 import { ImportRule } from "../../entities/ImportRule";
 import MappingRepository from "../../repositories/MappingRepository";
+import { ImportSummaryRepository } from "../../repositories/ImportSummaryRepository";
+
+//TODO: add test import summary
 
 describe("ImportUseCase", () => {
     it("should import expected data value set and return expected message", async () => {
@@ -22,6 +25,7 @@ describe("ImportUseCase", () => {
         const geeDataRepository = givenAGeeDataValueSetRepository();
         const orgUnitRepository = givenAOrgUnitRepository();
         const dataValueSetRepository = givenADataValueSetRepository();
+        const importSummaryRepository = givenAImportSummaryRepository();
 
         const importUseCase = new ImportUseCase(
             ImportRuleRepository,
@@ -29,10 +33,11 @@ describe("ImportUseCase", () => {
             geeDataSetRepository,
             geeDataRepository,
             orgUnitRepository,
-            dataValueSetRepository
+            dataValueSetRepository,
+            importSummaryRepository
         );
 
-        const result = await importUseCase.execute(defaultImportRule.id);
+        const result = await importUseCase.execute(defaultImportRule.id, "fakeUser");
 
         const expectedDataValueSet = givenAnExpectedDataValueSet();
 
@@ -154,6 +159,15 @@ function givenADataValueSetRepository(): DataValueSetRepository {
                 deleted: 0,
             };
         }),
+    };
+}
+
+function givenAImportSummaryRepository(): ImportSummaryRepository {
+    return {
+        getAll: jest.fn(),
+        save: jest.fn(),
+        saveAll: jest.fn(),
+        deleteByIds: jest.fn(),
     };
 }
 

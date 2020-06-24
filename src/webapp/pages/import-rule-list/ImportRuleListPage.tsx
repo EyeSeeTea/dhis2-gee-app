@@ -17,7 +17,7 @@ import PageHeader from "../../components/page-header/PageHeader";
 import { ImportRule, ImportRuleData } from "../../../domain/entities/ImportRule";
 import { FIXED } from "../../../domain/entities/PeriodOption";
 import moment from "moment";
-import { useCompositionRoot } from "../../contexts/app-context";
+import { useCompositionRoot, useCurrentUser } from "../../contexts/app-context";
 import { Id } from "d2-api";
 import { useGoTo, pageRoutes } from "../root/Root";
 import { ImportRuleListState, importRuleListInitialState } from "./ImportRulesListState";
@@ -28,6 +28,7 @@ const ImportRuleListPage: React.FC = () => {
     const snackbar = useSnackbar();
     const history = useHistory();
     const goTo = useGoTo();
+    const currentUser = useCurrentUser();
 
     const importRules = useCompositionRoot().importRules();
     const geeImport = useCompositionRoot().geeImport();
@@ -138,7 +139,7 @@ const ImportRuleListPage: React.FC = () => {
             isImporting: true,
         });
 
-        const result = await useCase.execute(id);
+        const result = await useCase.execute(id, currentUser.username);
 
         console.log({ result });
 

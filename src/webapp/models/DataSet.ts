@@ -1,5 +1,5 @@
 import { Id, D2Api } from "d2-api";
-import i18n from "../locales";
+import i18n from "@dhis2/d2-i18n";
 import { TablePagination } from "d2-ui-components";
 
 export interface DataSetData {

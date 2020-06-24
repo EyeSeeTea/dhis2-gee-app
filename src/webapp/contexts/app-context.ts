@@ -31,3 +31,12 @@ export function useCompositionRoot() {
         throw new Error("Context not found");
     }
 }
+
+export function useCurrentUser() {
+    const context = useContext(AppContext);
+    if (context) {
+        return context.currentUser;
+    } else {
+        throw new Error("Context not found");
+    }
+}

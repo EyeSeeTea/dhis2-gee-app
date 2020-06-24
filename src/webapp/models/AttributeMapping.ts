@@ -1,6 +1,6 @@
 import { D2Api } from "d2-api";
 import _ from "lodash";
-import i18n from "../locales";
+import i18n from "@dhis2/d2-i18n";
 import { Config } from "./Config";
 import { getDataStore } from "../utils/dhis2";
 import { Validation } from "../../types/validations";
