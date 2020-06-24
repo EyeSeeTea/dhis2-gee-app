@@ -56,14 +56,16 @@ const ImportRuleListPage: React.FC = () => {
     const getPeriodText = (importRule: ImportRule) => {
         const formatDate = (date?: Date) => moment(date).format("YYYY-MM-DD");
 
-        return `${importRule.periodInformation.name}
+        return importRule.periodInformation
+            ? `${importRule.periodInformation.name}
         ${
             importRule.periodInformation.id === FIXED.id
                 ? `- start: ${formatDate(
                       importRule.periodInformation.startDate
                   )} - end: ${formatDate(importRule.periodInformation.endDate)}`
                 : ""
-        }`;
+        }`
+            : "";
     };
 
     const columns: TableColumn<ImportRuleData>[] = [

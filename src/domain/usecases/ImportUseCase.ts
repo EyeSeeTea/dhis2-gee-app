@@ -40,7 +40,7 @@ export default class ImportUseCase {
         private orgUnitRepository: OrgUnitRepository,
         private dataValueSetRepository: DataValueSetRepository,
         private importSummaryRepository: ImportSummaryRepository
-    ) {}
+    ) { }
 
     //TODO: pass userid? and retrieve name?
     // Validate user is not empty?
@@ -58,7 +58,7 @@ export default class ImportUseCase {
 
             failures = this.validateImportRule(importRule);
 
-            if (failures.length === 0) {
+            if (failures.length === 0 && importRule.periodInformation) {
                 const orgUnitIds = _.compact(importRule.selectedOUs.map(o => o.split("/").pop()));
                 const orgUnits = await this.orgUnitRepository.getByIds(orgUnitIds);
 
