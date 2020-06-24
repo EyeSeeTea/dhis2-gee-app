@@ -80,9 +80,9 @@ $ yarn build-importer
 -   `src/locales`: Auto-generated, don't change nor add to version control.
 -   `cypress/integration/`: Contains the integration Cypress tests.
 
-## i18n
+### i18n
 
-### Update an existing language
+#### Update an existing language
 
 ```
 $ yarn update-po
@@ -90,7 +90,7 @@ $ yarn update-po
 $ yarn localize
 ```
 
-### Create a new language
+#### Create a new language
 
 ```
 $ cp i18n/en.pot i18n/es.po
