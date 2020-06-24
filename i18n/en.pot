@@ -5,8 +5,8 @@ msgstr ""
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1)\n"
-"POT-Creation-Date: 2020-06-24T17:58:29.618Z\n"
-"PO-Revision-Date: 2020-06-24T17:58:29.618Z\n"
+"POT-Creation-Date: 2020-06-24T17:30:02.417Z\n"
+"PO-Revision-Date: 2020-06-24T17:30:02.417Z\n"
 
 msgid "No effective import into DHIS2, file download"
 msgstr ""
@@ -281,14 +281,6 @@ msgid "Google Band mapping with Data Element.q"
 msgstr ""
 
 msgid "Click to show feedback"
-msgstr ""
-
-msgid "On-demand Global Import"
-msgstr ""
-
-msgid ""
-"Manually import gee data values by selecting organisation unit, period, the "
-"assigned mapping to organisation unit or default mapping will be used."
 msgstr ""
 
 msgid "On-demand Import"

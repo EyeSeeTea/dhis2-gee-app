@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: i18next-conv\n"
-"POT-Creation-Date: 2020-06-24T17:58:29.618Z\n"
+"POT-Creation-Date: 2020-06-24T17:30:02.417Z\n"
 "PO-Revision-Date: 2018-10-25T09:02:35.143Z\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -282,14 +282,6 @@ msgstr ""
 
 msgid "Click to show feedback"
 msgstr "Pinche para ver feedback"
-
-msgid "On-demand Global Import"
-msgstr ""
-
-msgid ""
-"Manually import gee data values by selecting organisation unit, period, the "
-"assigned mapping to organisation unit or default mapping will be used."
-msgstr ""
 
 msgid "On-demand Import"
 msgstr ""
