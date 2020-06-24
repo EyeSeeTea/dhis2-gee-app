@@ -54,7 +54,7 @@ declare module "@google/earthengine" {
     declare type Reducer<Input, Output> = (input: Input) => Output;
 
     export var Reducer: { [name: string]: Reducer } = {
-        median = () => { },
+        median = () => {},
     };
 
     // [periodId, lon, lat, time, ...number]
