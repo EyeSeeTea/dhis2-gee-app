@@ -7,7 +7,7 @@ export type GeeGeometry =
 
 export type GeeDataSetId = string;
 export type GeeCoordinates = [number, number];
-export type GeeInterval = { type: "daily"; start: Moment; end: Moment };
+export type GeeInterval = { start: Moment; end: Moment };
 
 export interface GeeDataFilters<Band> {
     id: GeeDataSetId;

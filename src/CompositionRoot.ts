@@ -6,7 +6,7 @@ import { Config } from "./webapp/models/Config";
 import { GeeDataEarthEngineRepository } from "./data/GeeDataValueSetApiRepository";
 import OrgUnitD2ApiRepository from "./data/OrgUnitD2ApiRepository";
 import DataValueSetD2ApiRepository from "./data/DataValueSetD2ApiRepository";
-import { GeeDataSetConfigRepository } from "./data/GeeDataSetConfigRepository";
+import { GeeDataSetFileRepository } from "./data/GeeDataSetD2ApiRepository";
 import DataValueSetFileRepository from "./data/DataValueSetFileRepository";
 import ImportRuleD2ApiRepository from "./data/ImportRuleD2ApiRepository";
 import { GetImportRulesUseCase } from "./domain/usecases/GetImportRulesUseCase";
@@ -21,6 +21,17 @@ import ImportSummaryD2ApiRepository from "./data/ImportSummaryD2ApiRepository";
 import { GetImportSummariesUseCase } from "./domain/usecases/GetImportSummariesUseCase";
 import { DeleteImportSummariesUseCase } from "./domain/usecases/DeleteImportSummariesUseCase";
 import { GetOrgUnitsWithCoordinatesUseCase } from "./domain/usecases/GetOrgUnitsWithCoordinatesUseCase";
+import { CreateGlobalOUMappingUseCase } from "./domain/usecases/CreateGlobalOUMappingUseCase";
+import { GetGlobalOUMappingByMappingIdUseCase } from "./domain/usecases/GetGlobalOUMappingByMappingIdUseCase";
+import GlobalOUMappingD2ApiRepository from "./data/GlobalOUMappingD2ApiRepository";
+import { DeleteGlobalOUMappingUseCase } from "./domain/usecases/DeleteGlobalOUMappingUseCase";
+import { GlobalOUMappingRepository } from "./domain/repositories/GlobalOUMappingRepository";
+import { GeeDataSetRepository } from "./domain/repositories/GeeDataSetRepository";
+import { GetGeeDataSetsUseCase } from "./domain/usecases/GetGeeDataSetsUseCase";
+import { GetGlobalOUMappingsUseCase } from "./domain/usecases/GetGlobalOUMappingsUseCase";
+import { GetDefaultMappingUseCase } from "./domain/usecases/GetDefaultMappingUseCase";
+import { SetAsDefaultMappingUseCase } from "./domain/usecases/SetAsDefaultMappingUseCase";
+import { GetGeeDataSetByIdUseCase } from "./domain/usecases/GetGeeDataSetByIdUseCase";
 
 interface Type<T> {
     new (...args: any[]): T;
@@ -28,7 +39,12 @@ interface Type<T> {
 
 export type NamedToken = "importUseCase" | "downloadUseCase";
 
-type PrivateNamedToken = "dataStore" | "importRuleRepository" | "importSummaryRepository";
+type PrivateNamedToken =
+    | "dataStore"
+    | "importRuleRepository"
+    | "importSummaryRepository"
+    | "globalOUMappingRepository"
+    | "geeDataSetRepository";
 
 type Token<T> = Type<T> | NamedToken | PrivateNamedToken;
 
@@ -41,6 +57,8 @@ class CompositionRoot {
         this.d2Api = new D2ApiDefault({ baseUrl });
 
         this.initializeDataStore();
+        this.initializeGeeDataSet();
+        this.initializeGlobalOUMappings();
         this.initializeOrgUnits();
         this.initializeDataElements();
         this.initializeImportsHistory();
@@ -55,6 +73,13 @@ class CompositionRoot {
 
     public bind<T>(token: Type<T> | NamedToken, value: T) {
         this.dependencies.set(token, value);
+    }
+
+    public geeDataSets() {
+        return {
+            getById: this.get(GetGeeDataSetByIdUseCase),
+            getAll: this.get(GetGeeDataSetsUseCase),
+        };
     }
 
     public importRules() {
@@ -93,10 +118,35 @@ class CompositionRoot {
         };
     }
 
+    public globalOUMapping() {
+        return {
+            get: this.get(GetGlobalOUMappingsUseCase),
+            getByMappingId: this.get(GetGlobalOUMappingByMappingIdUseCase),
+            create: this.get(CreateGlobalOUMappingUseCase),
+            delete: this.get(DeleteGlobalOUMappingUseCase),
+        };
+    }
+
     public mapping() {
         return {
+            getDefault: this.get(GetDefaultMappingUseCase),
+            setAsDefault: this.get(SetAsDefaultMappingUseCase),
             delete: this.get(DeleteMappingsUseCase),
         };
+    }
+
+    private initializeGeeDataSet() {
+        const geeDataSetRepository = new GeeDataSetFileRepository(
+            this.dependencies.get("dataStore"),
+            this.config.data.base.dataStore.keys.geeDataSets
+        );
+        this.dependencies.set("geeDataSetRepository", geeDataSetRepository);
+
+        const getGeeDataSetsUseCase = new GetGeeDataSetsUseCase(geeDataSetRepository);
+        const getGeeDataSetByIdUseCase = new GetGeeDataSetByIdUseCase(geeDataSetRepository);
+
+        this.dependencies.set(GetGeeDataSetsUseCase, getGeeDataSetsUseCase);
+        this.dependencies.set(GetGeeDataSetByIdUseCase, getGeeDataSetByIdUseCase);
     }
 
     private initializeDataStore() {
@@ -145,6 +195,37 @@ class CompositionRoot {
         this.dependencies.set(DeleteImportRulesUseCase, deleteImportRulesUseCase);
     }
 
+    initializeGlobalOUMappings() {
+        const globalOUMappingRepository = new GlobalOUMappingD2ApiRepository(
+            this.dependencies.get("dataStore"),
+            this.config.data.base.dataStore.keys.globalOUMapping
+        );
+
+        this.dependencies.set("globalOUMappingRepository", globalOUMappingRepository);
+
+        const getGlobalOUMappingsUseCase = new GetGlobalOUMappingsUseCase(
+            globalOUMappingRepository
+        );
+
+        const createGlobalOrgUnitMappingUseCase = new CreateGlobalOUMappingUseCase(
+            globalOUMappingRepository
+        );
+        const getGlobalOUMappingByMappingIdUseCase = new GetGlobalOUMappingByMappingIdUseCase(
+            globalOUMappingRepository
+        );
+        const deleteGlobalOUMappingUseCase = new DeleteGlobalOUMappingUseCase(
+            globalOUMappingRepository
+        );
+
+        this.dependencies.set(GetGlobalOUMappingsUseCase, getGlobalOUMappingsUseCase);
+        this.dependencies.set(CreateGlobalOUMappingUseCase, createGlobalOrgUnitMappingUseCase);
+        this.dependencies.set(
+            GetGlobalOUMappingByMappingIdUseCase,
+            getGlobalOUMappingByMappingIdUseCase
+        );
+        this.dependencies.set(DeleteGlobalOUMappingUseCase, deleteGlobalOUMappingUseCase);
+    }
+
     initializeImportsHistory() {
         const importSummaryRepository = new ImportSummaryD2ApiRepository(
             this.dependencies.get("dataStore"),
@@ -171,7 +252,10 @@ class CompositionRoot {
             this.config.data.base.dataStore.keys.mappings
         );
 
-        const geeDataSetRepository = new GeeDataSetConfigRepository(this.config);
+        const geeDataSetRepository = this.dependencies.get(
+            "geeDataSetRepository"
+        ) as GeeDataSetRepository;
+
         const geeDataRepository = new GeeDataEarthEngineRepository(this.d2Api);
         const orgUnitsRepository = new OrgUnitD2ApiRepository(this.d2Api);
         const dataValueSetD2ApiRepository = new DataValueSetD2ApiRepository(this.d2Api);
@@ -215,11 +299,21 @@ class CompositionRoot {
             "importRuleRepository"
         ) as ImportRuleRepository;
 
+        const globalOrgUnitMappingRepository = this.dependencies.get(
+            "globalOUMappingRepository"
+        ) as GlobalOUMappingRepository;
+
+        const getDefaultMappingUseCase = new GetDefaultMappingUseCase(mappingRepository);
+        const setAsDefaultMappingUseCase = new SetAsDefaultMappingUseCase(mappingRepository);
+
         const deleteMappingsUseCase = new DeleteMappingsUseCase(
             mappingRepository,
-            importRuleRepository
+            importRuleRepository,
+            globalOrgUnitMappingRepository
         );
 
+        this.dependencies.set(GetDefaultMappingUseCase, getDefaultMappingUseCase);
+        this.dependencies.set(SetAsDefaultMappingUseCase, setAsDefaultMappingUseCase);
         this.dependencies.set(DeleteMappingsUseCase, deleteMappingsUseCase);
     }
 }

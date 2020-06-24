@@ -1,4 +1,5 @@
 import { Id } from "./Ref";
+import { TransformExpression } from "./TransformExpression";
 
 export interface Mapping {
     id: Id;
@@ -9,6 +10,7 @@ export interface Mapping {
     geeImage: string;
     created: Date;
     attributeMappingDictionary: AttributeMappingDictionary;
+    isDefault: boolean;
 }
 
 export interface AttributeMappingDictionary {
@@ -22,4 +24,5 @@ export interface AttributeMapping {
     dataElementId?: string;
     dataElementCode?: string;
     dataElementName?: string;
+    transformExpression?: TransformExpression;
 }

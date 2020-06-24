@@ -11,7 +11,7 @@ export interface ImportResult {
 
 interface ImportSummaryInputs {
     username?: string;
-    importRule: Id;
+    importRule?: Id;
     result: ImportResult;
 }
 

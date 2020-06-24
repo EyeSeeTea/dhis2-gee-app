@@ -93,8 +93,19 @@ const App = () => {
 
             const compositionRoot = new CompositionRoot(baseUrl, config);
 
+            const dataImporter: boolean = process.env.REACT_APP_DATA_IMPORTER
+                ? process.env.REACT_APP_DATA_IMPORTER === "true"
+                : false;
+
             configI18n(data.userSettings);
-            const appContext: AppContext = { d2, api, config, currentUser, compositionRoot };
+            const appContext: AppContext = {
+                d2,
+                api,
+                config,
+                currentUser,
+                compositionRoot,
+                isAdmin: !dataImporter,
+            };
             setAppContext(appContext);
             // Google Earth Engine must be defined globally in window (as var 'ee') to work
             Object.assign(window, { app: appContext, ee });
@@ -129,7 +140,9 @@ const App = () => {
             <MuiThemeProvider theme={muiTheme}>
                 <OldMuiThemeProvider muiTheme={muiThemeLegacy}>
                     <SnackbarProvider>
-                        <HeaderBar appName={"Google Earth Engine Connector"} />
+                        <HeaderBar
+                            appName={appContext.isAdmin ? "GEE App" : "GEE Data Importer App"}
+                        />
 
                         <div id="app" className="content">
                             <AppContext.Provider value={appContext}>

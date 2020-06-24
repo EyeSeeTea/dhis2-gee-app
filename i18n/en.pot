@@ -5,8 +5,8 @@ msgstr ""
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1)\n"
-"POT-Creation-Date: 2020-06-09T08:29:33.063Z\n"
-"PO-Revision-Date: 2020-06-09T08:29:33.063Z\n"
+"POT-Creation-Date: 2020-06-18T14:19:25.035Z\n"
+"PO-Revision-Date: 2020-06-18T14:19:25.035Z\n"
 
 msgid "No effective import into DHIS2, file download"
 msgstr ""
@@ -53,22 +53,31 @@ msgstr ""
 msgid "{{name}} (deleted)"
 msgstr ""
 
-msgid "{{n}} data values from {{name}} google data set."
+msgid "An error has ocurred updating lastUpdate field of import rule"
 msgstr ""
 
-msgid "An error has ocurred updating lastUpdate field of import rule"
+msgid "Does not exists any selected organisation unit to execute global import rule"
+msgstr ""
+
+msgid "{{n}} data values from {{name}} google data set."
 msgstr ""
 
 msgid "Import config failed"
 msgstr ""
 
-msgid "No organisation unit selection in the import rule"
+msgid "Does not exists any selected organisation unit in the import rule"
 msgstr ""
 
-msgid "No period selection in the import rule"
+msgid "Does not exists any selected period in the import rule"
 msgstr ""
 
-msgid "No mapping selection in the import rule"
+msgid "Does not exists any selected mapping in the import rule"
+msgstr ""
+
+msgid "Unexpected error has ocurred apply transform expression"
+msgstr ""
+
+msgid "Imported {{imported}} - updated {{updated}} - ignored {{ignored}}"
 msgstr ""
 
 msgid "Mapping for attribute {{attr}}"
@@ -101,6 +110,12 @@ msgstr ""
 msgid "Mapped Code"
 msgstr ""
 
+msgid "Transform expression"
+msgstr ""
+
+msgid "Set transform expression"
+msgstr ""
+
 msgid "Ok"
 msgstr ""
 
@@ -125,22 +140,52 @@ msgstr ""
 msgid "Select period interval"
 msgstr ""
 
-msgid "Period"
-msgstr ""
-
-msgid "Start date"
-msgstr ""
-
-msgid "End date"
-msgstr ""
-
 msgid "<No value>"
 msgstr ""
 
-msgid "Field cannot be blank"
+msgid "Year"
+msgstr ""
+
+msgid "Day"
+msgstr ""
+
+msgid "Month"
+msgstr ""
+
+msgid "Id"
+msgstr ""
+
+msgid "Image Collection Id"
 msgstr ""
 
 msgid "Description"
+msgstr ""
+
+msgid "Cadence"
+msgstr ""
+
+msgid "Type"
+msgstr ""
+
+msgid "Link"
+msgstr ""
+
+msgid "Bands"
+msgstr ""
+
+msgid "Keywords"
+msgstr ""
+
+msgid "Details"
+msgstr ""
+
+msgid "Select G.E.E dataset"
+msgstr ""
+
+msgid "Search"
+msgstr ""
+
+msgid "Field cannot be blank"
 msgstr ""
 
 msgid "Add"
@@ -179,15 +224,30 @@ msgstr ""
 msgid "Back"
 msgstr ""
 
+msgid "Period"
+msgstr ""
+
+msgid "Start date"
+msgstr ""
+
+msgid "End date"
+msgstr ""
+
+msgid "The expression is not valid"
+msgstr ""
+
+msgid "Transform expression for attribute {{attr}}"
+msgstr ""
+
+msgid "Variable"
+msgstr ""
+
 msgid "Cancel?"
 msgstr ""
 
 msgid ""
 "You are about to exit. All your changes will be lost. Are you sure you want "
 "to proceed?"
-msgstr ""
-
-msgid "Id"
 msgstr ""
 
 msgid "Comment"
@@ -223,6 +283,14 @@ msgstr ""
 msgid "Click to show feedback"
 msgstr ""
 
+msgid "On-demand Global Import"
+msgstr ""
+
+msgid ""
+"Manually import gee data values by selecting organisation unit, period, the "
+"assigned mapping to organisation unit or default mapping will be used."
+msgstr ""
+
 msgid "On-demand Import"
 msgstr ""
 
@@ -248,25 +316,13 @@ msgid ""
 "rules executions."
 msgstr ""
 
-msgid "Import Rule {{id}} not found"
+msgid "Import successful"
 msgstr ""
 
-msgid "Success"
+msgid "Import failed"
 msgstr ""
 
-msgid "Import successful \n"
-msgstr ""
-
-msgid "On-demand import"
-msgstr ""
-
-msgid "Import Rule"
-msgstr ""
-
-msgid "Select Organisation Units"
-msgstr ""
-
-msgid "Select Period"
+msgid "Import"
 msgstr ""
 
 msgid "Import to DHIS2 "
@@ -286,18 +342,31 @@ msgstr ""
 msgid "Importing..."
 msgstr ""
 
-msgid "Import"
+msgid "Import Rule {{id}} not found"
+msgstr ""
+
+msgid "Success"
+msgstr ""
+
+msgid "On-demand import"
+msgstr ""
+
+msgid "Import Rule"
+msgstr ""
+
+msgid "Select Organisation Units"
+msgstr ""
+
+msgid "Select Period"
 msgstr ""
 
 msgid "Last executed"
 msgstr ""
 
-msgid "Successfully delete {{count}} import rules"
-msgid_plural "Successfully delete {{count}} import rules"
-msgstr[0] ""
-msgstr[1] ""
+msgid "An unexpected error has ocurred deleting import rules. "
+msgstr ""
 
-msgid "Details"
+msgid "Successfully delete {{deleteCount}} import rules"
 msgstr ""
 
 msgid "Edit"
@@ -321,10 +390,11 @@ msgstr ""
 msgid "Delete Rules?"
 msgstr ""
 
-msgid "Are you sure you want to delete {{count}} rules?"
-msgid_plural "Are you sure you want to delete {{count}} rules?"
-msgstr[0] ""
-msgstr[1] ""
+msgid "Are you sure you want to delete {{deleteCount}} rules?"
+msgstr ""
+
+msgid "(on-demand global mapping import)"
+msgstr ""
 
 msgid "(on-demand import)"
 msgstr ""
@@ -344,6 +414,9 @@ msgstr ""
 msgid "View result"
 msgstr ""
 
+msgid "An unexpected error has ocurred deleting import history. "
+msgstr ""
+
 msgid "Successfully import histories"
 msgstr ""
 
@@ -356,10 +429,8 @@ msgstr ""
 msgid "Delete import histories?"
 msgstr ""
 
-msgid "Are you sure you want to delete {{count}} import histories?"
-msgid_plural "Are you sure you want to delete {{count}} import histories?"
-msgstr[0] ""
-msgstr[1] ""
+msgid "Are you sure you want to delete {{deleteCount}} import histories?"
+msgstr ""
 
 msgid "Failure"
 msgstr ""
@@ -367,21 +438,43 @@ msgstr ""
 msgid "Dataset id"
 msgstr ""
 
+msgid "Default"
+msgstr ""
+
 msgid "Created"
 msgstr ""
 
-msgid "Successfully delete {{count}} mappings"
-msgid_plural "Successfully delete {{count}} mappings"
-msgstr[0] ""
-msgstr[1] ""
+msgid "Assign organisation unit"
+msgstr ""
+
+msgid "Set as default"
+msgstr ""
+
+msgid "An unexpected error has ocurred setting mappings as default "
+msgstr ""
+
+msgid "Successfully mapping set as default"
+msgstr ""
+
+msgid "An unexpected error has ocurred deleting mappings. "
+msgstr ""
+
+msgid "Successfully delete {{deleteCount}} mappings"
+msgstr ""
+
+msgid "An unexpected error has ocurred updating organisation unit assigment. "
+msgstr ""
+
+msgid "Organisation unit assignment success"
+msgstr ""
 
 msgid "Delete mapping"
 msgstr ""
 
 msgid ""
-"This operation will delete ({{n}}) mappings and remove it as selected in "
-"related import rules. This operation cannot be undone. Are you sure you "
-"want to proceed?"
+"This operation will delete ({{n}}) mappings and remove related global "
+"organisation unit mapping and remove it as selected in related import "
+"rules. This operation cannot be undone. Are you sure you want to proceed?"
 msgstr ""
 
 msgid "Deleting..."
@@ -397,6 +490,15 @@ msgid "New mapping"
 msgstr ""
 
 msgid "Edit mapping"
+msgstr ""
+
+msgid "404, The page you are looking for isn’t here"
+msgstr ""
+
+msgid "You either tried some shady route or you came here by mistake."
+msgstr ""
+
+msgid "Back to Home"
 msgstr ""
 
 msgid "Field {{field}} cannot be blank"

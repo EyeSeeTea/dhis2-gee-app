@@ -31,17 +31,15 @@ const HistoryPage: React.FC = () => {
     const [state, setState] = useState<HistoryState>(historyInitialState);
 
     useEffect(() => {
-        importSummaries.getAll
-            .execute({ importRule: state.importRuleFilter, status: state.statusFilter })
-            .then(importSummaries => {
-                setState(state => {
-                    return {
-                        ...state,
-                        historyRows: importSummaries,
-                    };
-                });
+        importSummaries.getAll.execute(state.filters).then(importSummaries => {
+            setState(state => {
+                return {
+                    ...state,
+                    history: importSummaries,
+                };
             });
-    }, [importSummaries.getAll, state.importRuleFilter, state.statusFilter, state.objectsTableKey]);
+        });
+    }, [importSummaries.getAll, state.filters, state.objectsTableKey]);
 
     useEffect(() => {
         importRules.getAll.execute().then(importRules => {
@@ -66,11 +64,17 @@ const HistoryPage: React.FC = () => {
             name: "importRule",
             text: i18n.t("Import Rule"),
             getValue: ({ importRule: id, importRuleLabel }) => {
-                return (
-                    importRuleLabel ??
-                    _.find(state.importRules, { id })?.name ??
-                    i18n.t("(on-demand import)")
-                );
+                const importRuleName = () => {
+                    if (!id) {
+                        return i18n.t("(on-demand global mapping import)");
+                    } else {
+                        return (
+                            _.find(state.importRules, { id })?.name ?? i18n.t("(on-demand import)")
+                        );
+                    }
+                };
+
+                return importRuleLabel ?? importRuleName();
             },
         },
         { name: "date", text: i18n.t("Date") },
@@ -119,19 +123,22 @@ const HistoryPage: React.FC = () => {
         const id = _.first(ids);
         if (!id) return;
 
-        const importSummary = _.find(state.historyRows, ["id", id]);
+        const importSummary = _.find(state.history.items, ["id", id]);
 
         if (!importSummary) return;
 
         if (importSummary.result.success) {
             snackbar.success(
-                i18n.t("Import successful \n") + importSummary.result.messages.join("\n"),
+                i18n.t("Import successful") + "\n" + importSummary.result.messages.join("\n"),
                 { autoHideDuration: null }
             );
         } else {
-            snackbar.error(i18n.t("Import failed: \n") + importSummary.result.failures.join("\n"), {
-                autoHideDuration: null,
-            });
+            snackbar.error(
+                i18n.t("Import failed") + "\n" + importSummary.result.failures.join("\n"),
+                {
+                    autoHideDuration: null,
+                }
+            );
         }
     };
 
@@ -168,7 +175,7 @@ const HistoryPage: React.FC = () => {
             switch (failure.kind) {
                 case "UnexpectedError":
                     return (
-                        i18n.t("An unexpected error has ocurred deleting import history: ") +
+                        i18n.t("An unexpected error has ocurred deleting import history. ") +
                         failure.error.message
                     );
             }
@@ -193,6 +200,14 @@ const HistoryPage: React.FC = () => {
     const handleTableChange = (tableState: TableState<Ref>) => {
         setState({
             ...state,
+            filters: {
+                ...state.filters,
+                sorting: tableState.sorting,
+                pagination: {
+                    page: tableState.pagination.page,
+                    pageSize: tableState.pagination.pageSize,
+                },
+            },
             selection: tableState.selection.map(sel => {
                 return {
                     id: sel.id,
@@ -209,10 +224,13 @@ const HistoryPage: React.FC = () => {
                 onValueChange={value =>
                     setState({
                         ...state,
-                        statusFilter: value,
+                        filters: {
+                            ...state.filters,
+                            status: value,
+                        },
                     })
                 }
-                value={state.statusFilter}
+                value={state.filters.status ?? ""}
                 label={i18n.t("Import status")}
             />
             <Dropdown
@@ -221,10 +239,13 @@ const HistoryPage: React.FC = () => {
                 onValueChange={value =>
                     setState({
                         ...state,
-                        importRuleFilter: value,
+                        filters: {
+                            ...state.filters,
+                            importRule: value,
+                        },
                     })
                 }
-                value={state.importRuleFilter}
+                value={state.filters.importRule ?? ""}
                 label={i18n.t("Import Rule")}
             />
         </React.Fragment>
@@ -234,19 +255,20 @@ const HistoryPage: React.FC = () => {
         <React.Fragment>
             <PageHeader title={i18n.t("Imports History")} onBackClick={() => history.goBack()} />
             <ObjectsTable<ImportSummaryState>
-                rows={state.historyRows}
+                rows={state.history.items}
                 columns={columns}
                 details={details}
-                initialState={{ sorting: { field: "date", order: "desc" } }}
+                initialState={{ sorting: state.filters.sorting }}
+                pagination={{
+                    page: state.history.pager.page,
+                    pageSize: state.history.pager.pageSize,
+                    total: state.history.pager.totalItems,
+                }}
                 selection={state.selection}
                 actions={actions}
                 filterComponents={customFilters}
                 onChange={handleTableChange}
             />
-
-            {/* {state.current && (
-                <SyncSummary response={} onClose={() => setSyncReport(null)} />
-            )} */}
 
             {state.toDelete.length > 0 && (
                 <ConfirmationDialog
@@ -255,8 +277,8 @@ const HistoryPage: React.FC = () => {
                     onCancel={() => setState({ ...state, toDelete: [] })}
                     title={i18n.t("Delete import histories?")}
                     description={i18n.t(
-                        "Are you sure you want to delete {{count}} import histories?",
-                        { count: state.toDelete.length }
+                        "Are you sure you want to delete {{deleteCount}} import histories?",
+                        { deleteCount: state.toDelete.length }
                     )}
                     saveText={i18n.t("Ok")}
                 >
