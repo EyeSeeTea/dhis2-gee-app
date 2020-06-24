@@ -28,6 +28,9 @@ import { DeleteGlobalOUMappingUseCase } from "./domain/usecases/DeleteGlobalOUMa
 import { GlobalOUMappingRepository } from "./domain/repositories/GlobalOUMappingRepository";
 import { GeeDataSetRepository } from "./domain/repositories/GeeDataSetRepository";
 import { GetGeeDataSetsUseCase } from "./domain/usecases/GetGeeDataSetsUseCase";
+import { GetGlobalOUMappingsUseCase } from "./domain/usecases/GetGlobalOUMappingsUseCase";
+import { GetDefaultMappingUseCase } from "./domain/usecases/GetDefaultMappingUseCase";
+import { SetAsDefaultMappingUseCase } from "./domain/usecases/SetAsDefaultMappingUseCase";
 
 interface Type<T> {
     new (...args: any[]): T;
@@ -115,6 +118,7 @@ class CompositionRoot {
 
     public globalOUMapping() {
         return {
+            get: this.get(GetGlobalOUMappingsUseCase),
             getByMappingId: this.get(GetGlobalOUMappingByMappingIdUseCase),
             create: this.get(CreateGlobalOUMappingUseCase),
             delete: this.get(DeleteGlobalOUMappingUseCase),
@@ -123,6 +127,8 @@ class CompositionRoot {
 
     public mapping() {
         return {
+            getDefault: this.get(GetDefaultMappingUseCase),
+            setAsDefault: this.get(SetAsDefaultMappingUseCase),
             delete: this.get(DeleteMappingsUseCase),
         };
     }
@@ -189,6 +195,10 @@ class CompositionRoot {
 
         this.dependencies.set("globalOUMappingRepository", globalOUMappingRepository);
 
+        const getGlobalOUMappingsUseCase = new GetGlobalOUMappingsUseCase(
+            globalOUMappingRepository
+        );
+
         const createGlobalOrgUnitMappingUseCase = new CreateGlobalOUMappingUseCase(
             globalOUMappingRepository
         );
@@ -199,6 +209,7 @@ class CompositionRoot {
             globalOUMappingRepository
         );
 
+        this.dependencies.set(GetGlobalOUMappingsUseCase, getGlobalOUMappingsUseCase);
         this.dependencies.set(CreateGlobalOUMappingUseCase, createGlobalOrgUnitMappingUseCase);
         this.dependencies.set(
             GetGlobalOUMappingByMappingIdUseCase,
@@ -284,12 +295,17 @@ class CompositionRoot {
             "globalOUMappingRepository"
         ) as GlobalOUMappingRepository;
 
+        const getDefaultMappingUseCase = new GetDefaultMappingUseCase(mappingRepository);
+        const setAsDefaultMappingUseCase = new SetAsDefaultMappingUseCase(mappingRepository);
+
         const deleteMappingsUseCase = new DeleteMappingsUseCase(
             mappingRepository,
             importRuleRepository,
             globalOrgUnitMappingRepository
         );
 
+        this.dependencies.set(GetDefaultMappingUseCase, getDefaultMappingUseCase);
+        this.dependencies.set(SetAsDefaultMappingUseCase, setAsDefaultMappingUseCase);
         this.dependencies.set(DeleteMappingsUseCase, deleteMappingsUseCase);
     }
 }

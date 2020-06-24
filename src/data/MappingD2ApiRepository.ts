@@ -7,6 +7,7 @@ import MappingRepository, {
 import { Either } from "../domain/common/Either";
 import _ from "lodash";
 import { TransformExpression } from "../domain/entities/TransformExpression";
+import { UnexpectedError } from "../domain/errors/Generic";
 
 export default class MappingD2ApiRepository implements MappingRepository {
     constructor(private dataStore: DataStore, private dataStoreKey: string) {}
@@ -38,6 +39,41 @@ export default class MappingD2ApiRepository implements MappingRepository {
         }
     }
 
+    async saveAll(mappings: Mapping[]): Promise<Either<UnexpectedError, true>> {
+        try {
+            const mappingToSave = mappings.map(importRule => this.mapToDataStore(importRule));
+
+            const existedMappingData = await this.getMappingData();
+            const existedMappingDataIds = existedMappingData.map(data => data.id);
+
+            const existedImportRulesDataToSave = mappingToSave.filter(mappingDataToSave =>
+                existedMappingDataIds.includes(mappingDataToSave.id)
+            );
+
+            const newImportRulesDataToSave = mappingToSave.filter(
+                mappingDataToSave => !existedMappingDataIds.includes(mappingDataToSave.id)
+            );
+
+            const allDataToSave = [
+                ...existedMappingData.map(
+                    existed =>
+                        existedImportRulesDataToSave.find(updated => updated.id === existed.id) ||
+                        existed
+                ),
+                ...newImportRulesDataToSave,
+            ];
+
+            await this.saveMappingData(allDataToSave);
+
+            return Either.Success(true);
+        } catch (e) {
+            return Either.failure({
+                kind: "UnexpectedError",
+                error: e,
+            });
+        }
+    }
+
     private async getMappingData(): Promise<MappingDS[]> {
         const data = await this.dataStore
             .get<Record<string, MappingDS>>(this.dataStoreKey)
@@ -57,6 +93,7 @@ export default class MappingD2ApiRepository implements MappingRepository {
         return {
             ...mappingData,
             created: new Date(mappingData.created),
+            isDefault: mappingData.isDefault ?? false,
             attributeMappingDictionary: _(mappingData.attributeMappingDictionary)
                 .mapValues(attributeMapping => {
                     const transformExpresion = attributeMapping.transformExpression
@@ -78,6 +115,21 @@ export default class MappingD2ApiRepository implements MappingRepository {
                 .value(),
         };
     }
+
+    private mapToDataStore(mapping: Mapping): MappingDS {
+        return {
+            ...mapping,
+            created: mapping.created.toISOString(),
+            attributeMappingDictionary: _(mapping.attributeMappingDictionary)
+                .mapValues(attributeMapping => {
+                    return {
+                        ...attributeMapping,
+                        transformExpression: attributeMapping.transformExpression?.value,
+                    };
+                })
+                .value(),
+        };
+    }
 }
 
 export interface MappingDS {
@@ -89,6 +141,7 @@ export interface MappingDS {
     geeImage: string;
     created: string;
     attributeMappingDictionary: AttributeMappingDictionaryDS;
+    isDefault: boolean;
 }
 
 export interface AttributeMappingDictionaryDS {

@@ -23,8 +23,10 @@ import {
     SaveGlobalOUMappingError,
     DeleteGlobalOUMappingError,
 } from "../../../domain/repositories/GlobalOUMappingRepository";
+import { Id } from "../../../domain/entities/Ref";
+import { Checkbox } from "material-ui";
 
-type ContextualAction = "details" | "edit" | "delete" | "assignOU";
+type ContextualAction = "details" | "edit" | "delete" | "assignOU" | "setAsDefault";
 
 interface MappingsListProps {
     header?: string;
@@ -41,7 +43,8 @@ const mouseActionsMapping: MouseActionsMapping = {
 function getComponentConfig(
     goTo: GoTo,
     setMappingIdsToDelete: (state: React.SetStateAction<string[] | undefined>) => void,
-    setMappingIdToAssignOUs: (state: React.SetStateAction<string | undefined>) => void
+    setMappingIdToAssignOUs: (state: React.SetStateAction<string | undefined>) => void,
+    setMappingAsDefault: (mappingId: Id) => void
 ) {
     const initialPagination = {
         page: 1,
@@ -55,6 +58,15 @@ function getComponentConfig(
         { name: "dataSetName" as const, text: i18n.t("Dataset"), sortable: true },
         { name: "dataSetId" as const, text: i18n.t("Dataset id"), sortable: true, hidden: true },
         { name: "geeImage" as const, text: i18n.t("G.E.E Dataset"), sortable: true },
+        {
+            name: "isDefault" as const,
+            text: i18n.t("Default"),
+            sortable: true,
+            /*eslint-disable*/
+            getValue: mapping => {
+                return <Checkbox disabled={true} checked={mapping.isDefault} />;
+            },
+        },
     ];
 
     const details = [
@@ -95,8 +107,22 @@ function getComponentConfig(
             primary: false,
             onClick: (ids: string[]) => setMappingIdToAssignOUs(ids[0]),
         },
+        setAsDefault: {
+            name: "setAsDefault",
+            text: i18n.t("Set as default"),
+            icon: <Icon>check_circle</Icon>,
+            multiple: false,
+            primary: false,
+            onClick: (ids: string[]) => setMappingAsDefault(ids[0]),
+        },
     };
-    const actions = [allActions.details, allActions.edit, allActions.delete, allActions.assignOU];
+    const actions = [
+        allActions.details,
+        allActions.edit,
+        allActions.delete,
+        allActions.assignOU,
+        allActions.setAsDefault,
+    ];
 
     return { columns, initialSorting, details, actions, initialPagination };
 }
@@ -114,9 +140,37 @@ const MappingsList: React.FC<MappingsListProps> = props => {
         string[] | undefined
     >([]);
 
-    const componentConfig = React.useMemo(() => {
-        return getComponentConfig(goTo, setMappingIdsToDelete, setMappingIdToAssignOUs);
-    }, [goTo, setMappingIdsToDelete]);
+    const mapping = useCompositionRoot().mapping();
+
+    const setMappingAsDefault = async (mappingId: Id) => {
+        const results = await mapping.setAsDefault.execute(mappingId);
+        const handleFailure = (failure: DeleteMappingByIdsError): string => {
+            switch (failure.kind) {
+                case "UnexpectedError":
+                    return (
+                        i18n.t("An unexpected error has ocurred setting mappings as default: ") +
+                        failure.error.message
+                    );
+            }
+        };
+
+        results.fold(
+            error => snackbar.error(handleFailure(error)),
+            () => {
+                onDeleteMappings(mappingIdsToDelete ?? []);
+                snackbar.success(i18n.t("Successfully mapping set as default"));
+            }
+        );
+
+        getMappings(sorting, { page: 1 });
+    };
+
+    const componentConfig = getComponentConfig(
+        goTo,
+        setMappingIdsToDelete,
+        setMappingIdToAssignOUs,
+        setMappingAsDefault
+    );
 
     const classes = useStyles();
     const [rows, setRows] = useState<Mapping[]>([]);
@@ -126,7 +180,6 @@ const MappingsList: React.FC<MappingsListProps> = props => {
     const [isDeleting, setDeleting] = useState(false);
     const [objectsTableKey] = useState(() => new Date().getTime());
 
-    const mapping = useCompositionRoot().mapping();
     const globalOUMapping = useCompositionRoot().globalOUMapping();
 
     const selection = useMemo(() => {

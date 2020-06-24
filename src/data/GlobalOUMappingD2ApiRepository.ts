@@ -11,16 +11,10 @@ import { GlobalOUMapping } from "../domain/entities/GlobalOUMapping";
 export default class GlobalOUMappingD2ApiRepository implements GlobalOUMappingRepository {
     constructor(private dataStore: DataStore, private dataStoreKey: string) {}
 
-    async get(orgUnitId: Id): Promise<GlobalOUMapping> {
+    async get(): Promise<GlobalOUMapping> {
         const globalOrgUnitMappings = await this.getGlobalOrgUnitMappingsData();
 
-        const globalOrgUnitMappingsFiltered: GlobalOUMapping = Object.entries(globalOrgUnitMappings)
-            .filter(([k]) => k === orgUnitId)
-            .reduce((acc, [k, v]) => {
-                return { ...acc, [k]: v };
-            }, {});
-
-        return globalOrgUnitMappingsFiltered;
+        return globalOrgUnitMappings;
     }
 
     async getByMappingId(mappingId: Id): Promise<GlobalOUMapping> {

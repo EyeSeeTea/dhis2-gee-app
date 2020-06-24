@@ -5,8 +5,8 @@ msgstr ""
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1)\n"
-"POT-Creation-Date: 2020-06-11T15:30:20.488Z\n"
-"PO-Revision-Date: 2020-06-11T15:30:20.488Z\n"
+"POT-Creation-Date: 2020-06-24T15:08:59.504Z\n"
+"PO-Revision-Date: 2020-06-24T15:08:59.504Z\n"
 
 msgid "No effective import into DHIS2, file download"
 msgstr ""
@@ -53,22 +53,25 @@ msgstr ""
 msgid "{{name}} (deleted)"
 msgstr ""
 
-msgid "{{n}} data values from {{name}} google data set."
+msgid "An error has ocurred updating lastUpdate field of import rule"
 msgstr ""
 
-msgid "An error has ocurred updating lastUpdate field of import rule"
+msgid "Does not exists any selected organisation unit to execute global import rule"
+msgstr ""
+
+msgid "{{n}} data values from {{name}} google data set."
 msgstr ""
 
 msgid "Import config failed"
 msgstr ""
 
-msgid "No organisation unit selection in the import rule"
+msgid "Does not exists any selected organisation unit in the import rule"
 msgstr ""
 
-msgid "No period selection in the import rule"
+msgid "Does not exists any selected period in the import rule"
 msgstr ""
 
-msgid "No mapping selection in the import rule"
+msgid "Does not exists any selected mapping in the import rule"
 msgstr ""
 
 msgid "Unexpected error has ocurred apply transform expression"
@@ -134,15 +137,6 @@ msgstr ""
 msgid "Select period interval"
 msgstr ""
 
-msgid "Period"
-msgstr ""
-
-msgid "Start date"
-msgstr ""
-
-msgid "End date"
-msgstr ""
-
 msgid "<No value>"
 msgstr ""
 
@@ -197,6 +191,15 @@ msgstr ""
 msgid "Back"
 msgstr ""
 
+msgid "Period"
+msgstr ""
+
+msgid "Start date"
+msgstr ""
+
+msgid "End date"
+msgstr ""
+
 msgid "The expression is not valid"
 msgstr ""
 
@@ -247,6 +250,14 @@ msgstr ""
 msgid "Click to show feedback"
 msgstr ""
 
+msgid "On-demand Global Import"
+msgstr ""
+
+msgid ""
+"Manually import gee data values by selecting organisation unit, period, the "
+"assigned mapping to organisation unit or default mapping will be used."
+msgstr ""
+
 msgid "On-demand Import"
 msgstr ""
 
@@ -272,25 +283,10 @@ msgid ""
 "rules executions."
 msgstr ""
 
-msgid "Import Rule {{id}} not found"
-msgstr ""
-
-msgid "Success"
-msgstr ""
-
 msgid "Import successful \n"
 msgstr ""
 
-msgid "On-demand import"
-msgstr ""
-
-msgid "Import Rule"
-msgstr ""
-
-msgid "Select Organisation Units"
-msgstr ""
-
-msgid "Select Period"
+msgid "Import"
 msgstr ""
 
 msgid "Import to DHIS2 "
@@ -310,7 +306,22 @@ msgstr ""
 msgid "Importing..."
 msgstr ""
 
-msgid "Import"
+msgid "Import Rule {{id}} not found"
+msgstr ""
+
+msgid "Success"
+msgstr ""
+
+msgid "On-demand import"
+msgstr ""
+
+msgid "Import Rule"
+msgstr ""
+
+msgid "Select Organisation Units"
+msgstr ""
+
+msgid "Select Period"
 msgstr ""
 
 msgid "Last executed"
@@ -346,6 +357,9 @@ msgid "Are you sure you want to delete {{count}} rules?"
 msgid_plural "Are you sure you want to delete {{count}} rules?"
 msgstr[0] ""
 msgstr[1] ""
+
+msgid "(on-demand global mapping import)"
+msgstr ""
 
 msgid "(on-demand import)"
 msgstr ""
@@ -388,10 +402,19 @@ msgstr ""
 msgid "Dataset id"
 msgstr ""
 
+msgid "Default"
+msgstr ""
+
 msgid "Created"
 msgstr ""
 
 msgid "Assign organisation unit"
+msgstr ""
+
+msgid "Set as default"
+msgstr ""
+
+msgid "Successfully mapping set as default"
 msgstr ""
 
 msgid "Successfully delete {{count}} mappings"
@@ -424,6 +447,12 @@ msgid "New mapping"
 msgstr ""
 
 msgid "Edit mapping"
+msgstr ""
+
+msgid "You either tried some shady route or you came here by mistake."
+msgstr ""
+
+msgid "Back to Home"
 msgstr ""
 
 msgid "Field {{field}} cannot be blank"

@@ -22,7 +22,6 @@ import { Id } from "../entities/Ref";
 import i18n from "../../webapp/utils/i18n";
 import { AttributeMappingDictionary } from "../entities/Mapping";
 import MappingRepository from "../repositories/MappingRepository";
-import { ImportRule } from "../entities/ImportRule";
 import { ImportSummary, ImportResult } from "../entities/ImportSummary";
 import {
     ImportSummaryRepository,
@@ -30,6 +29,7 @@ import {
 } from "../repositories/ImportSummaryRepository";
 import { Either } from "../common/Either";
 import { evalTransformExpression } from "../entities/TransformExpression";
+import { PeriodOption } from "../entities/PeriodOption";
 
 export default class ImportUseCase {
     constructor(
@@ -44,34 +44,106 @@ export default class ImportUseCase {
 
     //TODO: pass userid? and retrieve name?
     // Validate user is not empty?
-    public async execute(
-        importRuleId: Id,
+    public async executeImportRule(importRuleId: Id, username: string): Promise<ImportResult> {
+        const importRuleResult = await this.importRuleRepository.getById(importRuleId);
+        const importRule = importRuleResult.getOrThrow(
+            `importRule with id ${importRuleId} does not exist`
+        );
+
+        const importResult = await this.execute(
+            importRule.selectedOUs,
+            importRule.periodInformation,
+            importRule.selectedMappings
+        );
+
+        const updatedImportRule = importRule.updateLastExecuted();
+        const syncRuleResponse = await this.importRuleRepository.save(updatedImportRule);
+
+        const finalImportResult = {
+            ...importResult,
+            failures: syncRuleResponse.fold(
+                () => [
+                    ...importResult.failures,
+                    i18n.t("An error has ocurred updating lastUpdate field of import rule"),
+                ],
+                () => importResult.failures
+            ),
+        };
+
+        await this.saveImportResult(username, finalImportResult, importRuleId);
+
+        return finalImportResult;
+    }
+
+    public async executeByPairs(
+        orgUnitMappingPairs: { orgUnitPath: string; mappingId: string }[],
+        period: PeriodOption,
         username: string
-    ): Promise<{ success: boolean; failures: string[]; messages: string[] }> {
+    ): Promise<ImportResult> {
+        const results =
+            orgUnitMappingPairs.length > 0
+                ? await promiseMap(orgUnitMappingPairs, async orgUnitMappingPair => {
+                      return this.execute([orgUnitMappingPair.orgUnitPath], period, [
+                          orgUnitMappingPair.mappingId,
+                      ]);
+                  })
+                : [
+                      {
+                          success: false,
+                          failures: [
+                              i18n.t(
+                                  "Does not exists any selected organisation unit to execute global import rule"
+                              ),
+                          ],
+                          messages: [],
+                      },
+                  ];
+
+        const importResult = results.reduce(
+            (acc, result) => {
+                return {
+                    ...acc,
+                    success: !acc.success ? acc.success : result.success,
+                    failures: [...acc.failures, ...result.failures],
+                    messages: [...acc.messages, ...result.messages],
+                };
+            },
+            {
+                success: true,
+                failures: [],
+                messages: [],
+            }
+        );
+
+        await this.saveImportResult(username, importResult);
+
+        return importResult;
+    }
+
+    public async execute(
+        orgUnitPaths: string[],
+        period: PeriodOption,
+        mappingIds: string[]
+    ): Promise<ImportResult> {
         let failures: string[] = [];
         let messages: string[] = [];
         try {
-            const importRuleResult = await this.importRuleRepository.getById(importRuleId);
-            const importRule = importRuleResult.getOrThrow(
-                `importRule with id ${importRuleId} does not exist`
-            );
-
-            failures = this.validateImportRule(importRule);
+            failures = this.validateInputs(orgUnitPaths, period, mappingIds);
 
             if (failures.length === 0) {
-                const orgUnitIds = _.compact(importRule.selectedOUs.map(o => o.split("/").pop()));
+                const orgUnitIds = _.compact(orgUnitPaths.map(o => o.split("/").pop()));
                 const orgUnits = await this.orgUnitRepository.getByIds(orgUnitIds);
 
                 const baseImportConfig: { orgUnits: OrgUnit[]; interval: GeeInterval } = {
                     orgUnits: orgUnits,
                     interval: {
                         type: "daily",
-                        ...buildPeriod(importRule.periodInformation),
+                        ...buildPeriod(period),
                     },
                 };
                 let importDataValueSet: DataValueSet = { dataValues: [] };
 
-                const mappings = await this.mappingRepository.getAll(importRule.selectedMappings);
+                const mappings = await this.mappingRepository.getAll(mappingIds);
 
                 await Promise.all(
                     mappings.map(async selectedMapping => {
@@ -112,24 +184,11 @@ export default class ImportUseCase {
                 messages = [...messages, this.getImportCountString(dataValueSetResponse)];
             }
 
-            const updatedImportRule = importRule.updateLastExecuted();
-            const syncRuleResponse = await this.importRuleRepository.save(updatedImportRule);
-
-            failures = syncRuleResponse.fold(
-                () => [
-                    ...failures,
-                    i18n.t("An error has ocurred updating lastUpdate field of import rule"),
-                ],
-                () => failures
-            );
-
             const importResult = {
                 success: _.isEmpty(failures) && !_.isEmpty(messages),
                 messages: messages,
                 failures: failures,
             };
-
-            await this.saveImportResult(username, importRuleId, importResult);
 
             return importResult;
         } catch (err) {
@@ -139,25 +198,25 @@ export default class ImportUseCase {
                 failures: [...failures, i18n.t("Import config failed"), err],
             };
 
-            await this.saveImportResult(username, importRuleId, importResult);
-
             return importResult;
         }
     }
 
-    private validateImportRule(importRule: ImportRule): string[] {
+    private validateInputs(orgUnits: string[], period: PeriodOption, mappings: string[]): string[] {
         const failures: string[] = [];
 
-        if (importRule.selectedOUs.length === 0) {
-            failures.push(i18n.t("No organisation unit selection in the import rule"));
+        if (orgUnits.length === 0) {
+            failures.push(
+                i18n.t("Does not exists any selected organisation unit in the import rule")
+            );
         }
 
-        if (!importRule.periodInformation) {
-            failures.push(i18n.t("No period selection in the import rule"));
+        if (!period) {
+            failures.push(i18n.t("Does not exists any selected period in the import rule"));
         }
 
-        if (importRule.selectedMappings.length === 0) {
-            failures.push(i18n.t("No mapping selection in the import rule"));
+        if (mappings.length === 0) {
+            failures.push(i18n.t("Does not exists any selected mapping in the import rule"));
         }
 
         return failures;
@@ -269,8 +328,8 @@ export default class ImportUseCase {
 
     private saveImportResult(
         username: string,
-        importRuleId: string,
-        importResult: ImportResult
+        importResult: ImportResult,
+        importRuleId?: string
     ): Promise<Either<SaveImportSummaryError, true>> {
         const importSummary = ImportSummary.createNew({
             username: username,
