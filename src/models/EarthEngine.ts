@@ -1,8 +1,16 @@
 import _ from "lodash";
 import moment, { Moment } from "moment";
-import ee from "@google/earthengine";
+// import ee from "@google/earthengine";
 import { GeometryPoint, GeometryPolygon, ImageCollection } from "@google/earthengine";
 import { InfoDataRowBase, InfoData } from "@google/earthengine";
+
+declare global {
+    interface Window {
+        ee: any;
+    }
+}
+
+const ee = window.ee || {};
 
 export type DataSetId = string;
 export type Coordinates = [number, number];
