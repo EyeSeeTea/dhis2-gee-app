@@ -1,0 +1,541 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: i18next-conv\n"
+"POT-Creation-Date: 2020-06-24T17:30:02.417Z\n"
+"PO-Revision-Date: 2020-06-16T05:53:00.829Z\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1)\n"
+
+msgid "No effective import into DHIS2, file download"
+msgstr "Nenhuma importação efetiva para o DHIS2, download de arquivo"
+
+msgid "This year"
+msgstr "Este ano"
+
+msgid "Fixed period"
+msgstr "Período fixo"
+
+msgid "Today"
+msgstr "Hoje"
+
+msgid "Yesterday"
+msgstr "Ontem"
+
+msgid "Last 7 days"
+msgstr "Últimos 7 dias"
+
+msgid "Last 14 days"
+msgstr "Últimos 14 dias"
+
+msgid "This week"
+msgstr "Esta semana"
+
+msgid "Last week"
+msgstr "Semana passada"
+
+msgid "This month"
+msgstr "Este mês"
+
+msgid "Last month"
+msgstr "Último mês"
+
+msgid "This quarter"
+msgstr "Este trimestre"
+
+msgid "Last quarter"
+msgstr "Último trimestre"
+
+msgid "Last year"
+msgstr "Ano passado"
+
+msgid "{{name}} (deleted)"
+msgstr "{{name}} (excluído)"
+
+msgid "An error has ocurred updating lastUpdate field of import rule"
+msgstr "Ocorreu um erro ao atualizar o campo lastUpdate da regra de importação"
+
+#, fuzzy
+msgid "No organisation unit selected as global for the import rule"
+msgstr ""
+"Não existe nenhuma unidade organizacional selecionada para executar a regra "
+"de importação globa"
+
+msgid "{{n}} data values from {{name}} google data set."
+msgstr "{{n}} valores de dados do {{name}} conjunto de dados do google."
+
+msgid "Import config failed"
+msgstr "Falha na importação da configuração"
+
+#, fuzzy
+msgid "No organisation unit selected in the import rule"
+msgstr "Não existe nenhum período selecionado na regra de importação"
+
+#, fuzzy
+msgid "No period selected in the import rule"
+msgstr "Não existe nenhum período selecionado na regra de importação"
+
+#, fuzzy
+msgid "No mapping selected in the import rule"
+msgstr "Não existe nenhum período selecionado na regra de importação"
+
+msgid "Unexpected error has ocurred apply transform expression"
+msgstr "Ocorreu um erro inesperado aplicar expressão de transformação"
+
+msgid "Imported {{imported}} - updated {{updated}} - ignored {{ignored}}"
+msgstr ""
+
+msgid "Mapping for attribute {{attr}}"
+msgstr "Mapeando para o atributo {{attr}"
+
+msgid "Cancel"
+msgstr "Cancelar"
+
+msgid "Disable mapping"
+msgstr "Desativar mapeamento"
+
+msgid "Are you sure you want to disable mapping for {{total}} attributes?"
+msgstr ""
+"Tem certeza de que deseja desativar o mapeamento para atributos {{total}}?"
+
+msgid "Please select at least one item to disable mapping"
+msgstr "Por favor selecione pelo menos um item para desativar o mapeamento"
+
+msgid "Google Attribute"
+msgstr "Atributo do Google"
+
+msgid "Mapped Id"
+msgstr "ID mapeado"
+
+msgid "Set mapping"
+msgstr "Definir mapeamento"
+
+msgid "Mapped Name"
+msgstr "Nome mapeado"
+
+msgid "Mapped Code"
+msgstr "Código mapeado"
+
+msgid "Transform expression"
+msgstr "Transformar expressão"
+
+msgid "Set transform expression"
+msgstr "Definir expressão de transformação"
+
+msgid "Ok"
+msgstr "Ok"
+
+msgid "Search by name / code"
+msgstr "Pesquise por nome / código"
+
+msgid "Name"
+msgstr "Nome"
+
+msgid "Code"
+msgstr "Código"
+
+msgid "Select"
+msgstr "Selecionar"
+
+msgid "Select organisation unit"
+msgstr "Selecionar unidade organizacional"
+
+msgid "Save"
+msgstr "Salvar"
+
+msgid "Select period interval"
+msgstr "Selecionar intervalo de período"
+
+msgid "<No value>"
+msgstr "<Sem valor>"
+
+msgid "Year"
+msgstr "Ano"
+
+msgid "Day"
+msgstr "Dia"
+
+msgid "Month"
+msgstr "Mês"
+
+msgid "Id"
+msgstr "Id"
+
+msgid "Image Collection Id"
+msgstr "ID da coleção de imagens"
+
+msgid "Description"
+msgstr "Descrição"
+
+msgid "Cadence"
+msgstr "Cadência"
+
+msgid "Type"
+msgstr "Tipo"
+
+msgid "Link"
+msgstr "Link"
+
+msgid "Bands"
+msgstr "Bandas"
+
+msgid "Keywords"
+msgstr "Palavras-chave"
+
+msgid "Details"
+msgstr "Detalhes"
+
+msgid "Select G.E.E dataset"
+msgstr "Selecione o conjunto de dados G.E.E"
+
+msgid "Search"
+msgstr "Pesquisar"
+
+msgid "Field cannot be blank"
+msgstr "O campo não pode ficar em branco"
+
+msgid "Add"
+msgstr "Adicionar"
+
+msgid "List"
+msgstr "Lista"
+
+msgid "Cancel mapping?"
+msgstr "Cancelar mapeamento?"
+
+msgid "All your changes will be lost. Are you sure you want to proceed?"
+msgstr ""
+"Todas as suas alterações serão perdidas. Tem certeza de que deseja continuar?"
+
+msgid "Yes"
+msgstr "Sim"
+
+msgid "No"
+msgstr "Não"
+
+msgid "General info"
+msgstr "Informações gerais"
+
+msgid "Google Earth Engine variables mapping"
+msgstr "Mapeamento de variáveis ​​do Google Earth Engine"
+
+msgid "Summary and save"
+msgstr "Resumo e salve"
+
+msgid "Dataset"
+msgstr "Conjunto de dados"
+
+msgid "Help"
+msgstr "Ajuda"
+
+msgid "Back"
+msgstr "Voltar"
+
+msgid "Period"
+msgstr "Período"
+
+msgid "Start date"
+msgstr "Data de início"
+
+msgid "End date"
+msgstr "Data final"
+
+msgid "The expression is not valid"
+msgstr "A expressão não é válida"
+
+msgid "Transform expression for attribute {{attr}}"
+msgstr "Transformar expressão para o atributo {{attr}}"
+
+msgid "Variable"
+msgstr ""
+
+msgid "Cancel?"
+msgstr "Cancelar?"
+
+msgid ""
+"You are about to exit. All your changes will be lost. Are you sure you want "
+"to proceed?"
+msgstr ""
+"Você está prestes a sair. Todas as suas alterações serão perdidas. Tem "
+"certeza de que desejacontinuar?"
+
+msgid "Comment"
+msgstr "Comentar"
+
+msgid "Data element id"
+msgstr "ID do elemento de dados"
+
+msgid "Data element code"
+msgstr "Código do elemento de dados"
+
+msgid "Data element name"
+msgstr "Nome do elemento de dados"
+
+msgid "Instance Dataset"
+msgstr "Conjunto de dados da instância"
+
+msgid "Instance DataSet"
+msgstr "Conjunto de dados da instância"
+
+msgid "G.E.E Dataset"
+msgstr "Conjunto de dados G.E.E"
+
+msgid "Created at"
+msgstr "Criado em"
+
+msgid "Attribute mappings"
+msgstr "Mapeamentos de atributos"
+
+msgid "Google Band mapping with Data Element.q"
+msgstr "Mapeamento do Google Band com Data Element.q"
+
+msgid "Click to show feedback"
+msgstr "Clique para mostrar comentários"
+
+msgid "On-demand Import"
+msgstr "Importação sob demanda"
+
+msgid ""
+"Manually import gee data values by selecting organisation unit, period and "
+"creating o select the mapping/s for gee data sets."
+msgstr ""
+"Importe manualmente os valores de dados Gee selecionando unidade "
+"organizacional, período ecriando o selecione o (s) mapeamento (s) para "
+"conjuntos de dados gee."
+
+msgid "Import rules"
+msgstr "Regras de importação"
+
+msgid ""
+"Create, modify, delete, execute import rules for gee data values selecting "
+"organisation unit, period and creating o select the mapping/s for gee data "
+"sets. "
+msgstr ""
+"Criar, modificar, excluir, executar regras de importação para valores de "
+"dados gee selecionandounidade organizacional, período e criação o selecione "
+"o (s) mapeamento (s) para dados Geeconjuntos"
+
+msgid "History"
+msgstr "Histórico"
+
+msgid ""
+"View and analyse the status and results of the manual import and import "
+"rules executions."
+msgstr ""
+"Exibir e analisar o status e os resultados da importação e importação "
+"manualexecuta execuções."
+
+#, fuzzy
+msgid "Import successful"
+msgstr "Importar com sucesso \n"
+
+#, fuzzy
+msgid "Import failed"
+msgstr "Falha na importação da configuração"
+
+msgid "Import"
+msgstr "Importar"
+
+msgid "Import to DHIS2 "
+msgstr "Importar para DHIS2"
+
+msgid "Download JSON "
+msgstr "Baixar JSON"
+
+msgid "New import request"
+msgstr "Nova solicitação de importação"
+
+msgid ""
+"This operation will collect and import data from Google Earth Engine to the "
+"instance. Are you sure you want to proceed?"
+msgstr ""
+"Esta operação coletará e importará dados do Google Earth Engine para "
+"oinstância. Tem certeza de que deseja continuar?"
+
+msgid "Importing..."
+msgstr "Importando ..."
+
+msgid "Import Rule {{id}} not found"
+msgstr "Regra de importação {{id}} não encontrada"
+
+msgid "Success"
+msgstr "Sucesso"
+
+msgid "On-demand import"
+msgstr "Importação sob demanda"
+
+msgid "Import Rule"
+msgstr "Regra de importação"
+
+msgid "Select Organisation Units"
+msgstr "Selecionar unidades da organização"
+
+msgid "Select Period"
+msgstr "Selecionar período"
+
+msgid "Last executed"
+msgstr "Última execução"
+
+#, fuzzy
+msgid "An unexpected error has ocurred deleting import rules. "
+msgstr "Ocorreu um erro inesperado aplicar expressão de transformação"
+
+msgid "Successfully delete {{deleteCount}} import rules"
+msgstr ""
+
+msgid "Edit"
+msgstr "Editar"
+
+msgid "Delete"
+msgstr "Excluir"
+
+msgid "Execute"
+msgstr "Executar"
+
+msgid "Download JSON"
+msgstr "Baixar JSON"
+
+msgid "Import Rules"
+msgstr "Regras de importação"
+
+msgid "Search by name"
+msgstr "Procurar por nome"
+
+msgid "Delete Rules?"
+msgstr "Excluir regras?"
+
+#, fuzzy
+msgid "Are you sure you want to delete {{deleteCount}} rules?"
+msgstr ""
+"Tem certeza de que deseja desativar o mapeamento para atributos {{total}}?"
+
+msgid "(on-demand global mapping import)"
+msgstr "(importação de mapeamento global sob demanda)"
+
+msgid "(on-demand import)"
+msgstr "(importação sob demanda)"
+
+msgid "Date"
+msgstr "Data"
+
+msgid "Status"
+msgstr "Status"
+
+msgid "User"
+msgstr "Usuário"
+
+msgid "Edit {{name}}"
+msgstr "Editar {{name}}"
+
+msgid "View result"
+msgstr "Ver resultado"
+
+#, fuzzy
+msgid "An unexpected error has ocurred deleting import history. "
+msgstr "Ocorreu um erro inesperado aplicar expressão de transformação"
+
+msgid "Successfully import histories"
+msgstr "Importar históricos com sucesso"
+
+msgid "Import status"
+msgstr "Status da importação"
+
+msgid "Imports History"
+msgstr "Histórico de importações"
+
+msgid "Delete import histories?"
+msgstr "Excluir histórico de importação?"
+
+#, fuzzy
+msgid "Are you sure you want to delete {{deleteCount}} import histories?"
+msgstr ""
+"Tem certeza de que deseja desativar o mapeamento para atributos {{total}}?"
+
+msgid "Failure"
+msgstr "Falha"
+
+msgid "Dataset id"
+msgstr "ID do conjunto de dados"
+
+msgid "Default"
+msgstr "Padrão"
+
+msgid "Created"
+msgstr "Criado"
+
+msgid "Assign organisation unit"
+msgstr "Atribuir unidade organizacional"
+
+msgid "Set as default"
+msgstr "Definir como padrão"
+
+#, fuzzy
+msgid "An unexpected error has ocurred setting mappings as default "
+msgstr "Ocorreu um erro inesperado aplicar expressão de transformação"
+
+msgid "Successfully mapping set as default"
+msgstr "Mapeamento definido com êxito como padrão"
+
+#, fuzzy
+msgid "An unexpected error has ocurred deleting mappings. "
+msgstr "Ocorreu um erro inesperado aplicar expressão de transformação"
+
+msgid "Successfully delete {{deleteCount}} mappings"
+msgstr ""
+
+#, fuzzy
+msgid "An unexpected error has ocurred updating organisation unit assigment. "
+msgstr "Ocorreu um erro inesperado aplicar expressão de transformação"
+
+msgid "Organisation unit assignment success"
+msgstr "Sucesso da atribuição da unidade organizacional"
+
+msgid "Delete mapping"
+msgstr "Excluir mapeamento"
+
+msgid ""
+"This operation will delete ({{n}}) mappings and remove related global "
+"organisation unit mapping and remove it as selected in related import rules. "
+"This operation cannot be undone. Are you sure you want to proceed?"
+msgstr ""
+"Esta operação excluirá ({{n}}) mapeamentos e removerá os dados globais "
+"relacionadosmapeamento da unidade organizacional e remova-o conforme "
+"selecionado na importação relacionadarules. Esta operação não pode ser "
+"desfeita. Tem certeza de que deseja continuar?"
+
+msgid "Deleting..."
+msgstr "Excluindo ..."
+
+msgid "Proceed"
+msgstr "Continuar"
+
+msgid "Search by name or code"
+msgstr "Pesquise por nome ou código"
+
+msgid "New mapping"
+msgstr "Novo mapeamento"
+
+msgid "Edit mapping"
+msgstr "Editar mapeamento"
+
+msgid "404, The page you are looking for isn’t here"
+msgstr ""
+
+msgid "You either tried some shady route or you came here by mistake."
+msgstr "Você tentou alguma rota sombria ou veio aqui por engano."
+
+msgid "Back to Home"
+msgstr "Voltar ao Início"
+
+msgid "Field {{field}} cannot be blank"
+msgstr "O campo {{field}} não pode ficar em branco"
+
+msgid "This URL and username combination already exists"
+msgstr "Esta combinação de URL e nome de usuário já existe"
+
+msgid "You need to select at least one {{element}}"
+msgstr "Você precisa selecionar pelo menos um {{element}}"
+
+msgid "Start and end dates are not a valid period"
+msgstr "As datas de início e término não são um período válido"
