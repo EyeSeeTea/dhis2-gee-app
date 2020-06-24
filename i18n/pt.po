@@ -1,12 +1,12 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: i18next-conv\n"
+"POT-Creation-Date: 2020-06-18T14:19:25.035Z\n"
+"PO-Revision-Date: 2020-06-16T05:53:00.829Z\n"
 "MIME-Version: 1.0\n"
-"Content-Type: text/plain; charset=utf-8\n"
+"Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1)\n"
-"POT-Creation-Date: 2020-06-16T05:53:00.829Z\n"
-"PO-Revision-Date: 2020-06-16T05:53:00.829Z\n"
 
 msgid "No effective import into DHIS2, file download"
 msgstr "Nenhuma importação efetiva para o DHIS2, download de arquivo"
@@ -56,8 +56,11 @@ msgstr "{{name}} (excluído)"
 msgid "An error has ocurred updating lastUpdate field of import rule"
 msgstr "Ocorreu um erro ao atualizar o campo lastUpdate da regra de importação"
 
-msgid "Does not exists any selected organisation unit to execute global import rule"
-msgstr "Não existe nenhuma unidade organizacional selecionada para executar a regra de importação globa"
+msgid ""
+"Does not exists any selected organisation unit to execute global import rule"
+msgstr ""
+"Não existe nenhuma unidade organizacional selecionada para executar a regra "
+"de importação globa"
 
 msgid "{{n}} data values from {{name}} google data set."
 msgstr "{{n}} valores de dados do {{name}} conjunto de dados do google."
@@ -66,7 +69,8 @@ msgid "Import config failed"
 msgstr "Falha na importação da configuração"
 
 msgid "Does not exists any selected organisation unit in the import rule"
-msgstr "Não existe nenhuma unidade organizacional selecionada na regra de importação"
+msgstr ""
+"Não existe nenhuma unidade organizacional selecionada na regra de importação"
 
 msgid "Does not exists any selected period in the import rule"
 msgstr "Não existe nenhum período selecionado na regra de importação"
@@ -76,6 +80,9 @@ msgstr "Não existe nenhum mapeamento selecionado na regra de importação"
 
 msgid "Unexpected error has ocurred apply transform expression"
 msgstr "Ocorreu um erro inesperado aplicar expressão de transformação"
+
+msgid "Imported {{imported}} - updated {{updated}} - ignored {{ignored}}"
+msgstr ""
 
 msgid "Mapping for attribute {{attr}}"
 msgstr "Mapeando para o atributo {{attr}"
@@ -87,7 +94,8 @@ msgid "Disable mapping"
 msgstr "Desativar mapeamento"
 
 msgid "Are you sure you want to disable mapping for {{total}} attributes?"
-msgstr "Tem certeza de que deseja desativar o mapeamento para atributos {{total}}?"
+msgstr ""
+"Tem certeza de que deseja desativar o mapeamento para atributos {{total}}?"
 
 msgid "Please select at least one item to disable mapping"
 msgstr "Por favor selecione pelo menos um item para desativar o mapeamento"
@@ -195,7 +203,8 @@ msgid "Cancel mapping?"
 msgstr "Cancelar mapeamento?"
 
 msgid "All your changes will be lost. Are you sure you want to proceed?"
-msgstr "Todas as suas alterações serão perdidas. Tem certeza de que deseja continuar?"
+msgstr ""
+"Todas as suas alterações serão perdidas. Tem certeza de que deseja continuar?"
 
 msgid "Yes"
 msgstr "Sim"
@@ -236,14 +245,18 @@ msgstr "A expressão não é válida"
 msgid "Transform expression for attribute {{attr}}"
 msgstr "Transformar expressão para o atributo {{attr}}"
 
+msgid "Variable"
+msgstr ""
+
 msgid "Cancel?"
 msgstr "Cancelar?"
 
 msgid ""
 "You are about to exit. All your changes will be lost. Are you sure you want "
 "to proceed?"
-msgstr "Você está prestes a sair. Todas as suas alterações serão perdidas. Tem certeza de que deseja"
-"continuar?"
+msgstr ""
+"Você está prestes a sair. Todas as suas alterações serão perdidas. Tem "
+"certeza de que desejacontinuar?"
 
 msgid "Comment"
 msgstr "Comentar"
@@ -285,8 +298,9 @@ msgid ""
 "Manually import gee data values by selecting organisation unit, period, the "
 "assigned mapping to organisation unit or default mapping will be used."
 msgstr ""
-"Importe manualmente os valores de dados Gee selecionando unidade organizacional, período, o"
-"o mapeamento atribuído à unidade da organização ou mapeamento padrão será usado."
+"Importe manualmente os valores de dados Gee selecionando unidade "
+"organizacional, período, oo mapeamento atribuído à unidade da organização ou "
+"mapeamento padrão será usado."
 
 msgid "On-demand Import"
 msgstr "Importação sob demanda"
@@ -295,8 +309,9 @@ msgid ""
 "Manually import gee data values by selecting organisation unit, period and "
 "creating o select the mapping/s for gee data sets."
 msgstr ""
-"Importe manualmente os valores de dados Gee selecionando unidade organizacional, período e"
-"criando o selecione o (s) mapeamento (s) para conjuntos de dados gee."
+"Importe manualmente os valores de dados Gee selecionando unidade "
+"organizacional, período ecriando o selecione o (s) mapeamento (s) para "
+"conjuntos de dados gee."
 
 msgid "Import rules"
 msgstr "Regras de importação"
@@ -306,9 +321,9 @@ msgid ""
 "organisation unit, period and creating o select the mapping/s for gee data "
 "sets. "
 msgstr ""
-"Criar, modificar, excluir, executar regras de importação para valores de dados gee selecionando"
-"unidade organizacional, período e criação o selecione o (s) mapeamento (s) para dados Gee"
-"conjuntos"
+"Criar, modificar, excluir, executar regras de importação para valores de "
+"dados gee selecionandounidade organizacional, período e criação o selecione "
+"o (s) mapeamento (s) para dados Geeconjuntos"
 
 msgid "History"
 msgstr "Histórico"
@@ -317,11 +332,16 @@ msgid ""
 "View and analyse the status and results of the manual import and import "
 "rules executions."
 msgstr ""
-"Exibir e analisar o status e os resultados da importação e importação manual"
-"executa execuções."
+"Exibir e analisar o status e os resultados da importação e importação "
+"manualexecuta execuções."
 
-msgid "Import successful \n"
+#, fuzzy
+msgid "Import successful"
 msgstr "Importar com sucesso \n"
+
+#, fuzzy
+msgid "Import failed"
+msgstr "Falha na importação da configuração"
 
 msgid "Import"
 msgstr "Importar"
@@ -339,8 +359,8 @@ msgid ""
 "This operation will collect and import data from Google Earth Engine to the "
 "instance. Are you sure you want to proceed?"
 msgstr ""
-"Esta operação coletará e importará dados do Google Earth Engine para o"
-"instância. Tem certeza de que deseja continuar?"
+"Esta operação coletará e importará dados do Google Earth Engine para "
+"oinstância. Tem certeza de que deseja continuar?"
 
 msgid "Importing..."
 msgstr "Importando ..."
@@ -366,10 +386,12 @@ msgstr "Selecionar período"
 msgid "Last executed"
 msgstr "Última execução"
 
-msgid "Successfully delete {{count}} import rules"
-msgid_plural "Successfully delete {{count}} import rules"
-msgstr[0] ""
-msgstr[1] ""
+#, fuzzy
+msgid "An unexpected error has ocurred deleting import rules. "
+msgstr "Ocorreu um erro inesperado aplicar expressão de transformação"
+
+msgid "Successfully delete {{deleteCount}} import rules"
+msgstr ""
 
 msgid "Edit"
 msgstr "Editar"
@@ -392,10 +414,10 @@ msgstr "Procurar por nome"
 msgid "Delete Rules?"
 msgstr "Excluir regras?"
 
-msgid "Are you sure you want to delete {{count}} rules?"
-msgid_plural "Are you sure you want to delete {{count}} rules?"
-msgstr[0] ""
-msgstr[1] ""
+#, fuzzy
+msgid "Are you sure you want to delete {{deleteCount}} rules?"
+msgstr ""
+"Tem certeza de que deseja desativar o mapeamento para atributos {{total}}?"
 
 msgid "(on-demand global mapping import)"
 msgstr "(importação de mapeamento global sob demanda)"
@@ -418,6 +440,10 @@ msgstr "Editar {{name}}"
 msgid "View result"
 msgstr "Ver resultado"
 
+#, fuzzy
+msgid "An unexpected error has ocurred deleting import history. "
+msgstr "Ocorreu um erro inesperado aplicar expressão de transformação"
+
 msgid "Successfully import histories"
 msgstr "Importar históricos com sucesso"
 
@@ -430,10 +456,10 @@ msgstr "Histórico de importações"
 msgid "Delete import histories?"
 msgstr "Excluir histórico de importação?"
 
-msgid "Are you sure you want to delete {{count}} import histories?"
-msgid_plural "Are you sure you want to delete {{count}} import histories?"
-msgstr[0] ""
-msgstr[1] ""
+#, fuzzy
+msgid "Are you sure you want to delete {{deleteCount}} import histories?"
+msgstr ""
+"Tem certeza de que deseja desativar o mapeamento para atributos {{total}}?"
 
 msgid "Failure"
 msgstr "Falha"
@@ -453,13 +479,23 @@ msgstr "Atribuir unidade organizacional"
 msgid "Set as default"
 msgstr "Definir como padrão"
 
+#, fuzzy
+msgid "An unexpected error has ocurred setting mappings as default "
+msgstr "Ocorreu um erro inesperado aplicar expressão de transformação"
+
 msgid "Successfully mapping set as default"
 msgstr "Mapeamento definido com êxito como padrão"
 
-msgid "Successfully delete {{count}} mappings"
-msgid_plural "Successfully delete {{count}} mappings"
-msgstr[0] ""
-msgstr[1] ""
+#, fuzzy
+msgid "An unexpected error has ocurred deleting mappings. "
+msgstr "Ocorreu um erro inesperado aplicar expressão de transformação"
+
+msgid "Successfully delete {{deleteCount}} mappings"
+msgstr ""
+
+#, fuzzy
+msgid "An unexpected error has ocurred updating organisation unit assigment. "
+msgstr "Ocorreu um erro inesperado aplicar expressão de transformação"
 
 msgid "Organisation unit assignment success"
 msgstr "Sucesso da atribuição da unidade organizacional"
@@ -469,12 +505,13 @@ msgstr "Excluir mapeamento"
 
 msgid ""
 "This operation will delete ({{n}}) mappings and remove related global "
-"organisation unit mapping and remove it as selected in related import "
-"rules. This operation cannot be undone. Are you sure you want to proceed?"
+"organisation unit mapping and remove it as selected in related import rules. "
+"This operation cannot be undone. Are you sure you want to proceed?"
 msgstr ""
-"Esta operação excluirá ({{n}}) mapeamentos e removerá os dados globais relacionados"
-"mapeamento da unidade organizacional e remova-o conforme selecionado na importação relacionada"
-"rules. Esta operação não pode ser desfeita. Tem certeza de que deseja continuar?"
+"Esta operação excluirá ({{n}}) mapeamentos e removerá os dados globais "
+"relacionadosmapeamento da unidade organizacional e remova-o conforme "
+"selecionado na importação relacionadarules. Esta operação não pode ser "
+"desfeita. Tem certeza de que deseja continuar?"
 
 msgid "Deleting..."
 msgstr "Excluindo ..."
@@ -490,6 +527,9 @@ msgstr "Novo mapeamento"
 
 msgid "Edit mapping"
 msgstr "Editar mapeamento"
+
+msgid "404, The page you are looking for isn’t here"
+msgstr ""
 
 msgid "You either tried some shady route or you came here by mistake."
 msgstr "Você tentou alguma rota sombria ou veio aqui por engano."
