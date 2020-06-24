@@ -52,8 +52,18 @@ Cypress Dashboard: https://dashboard.cypress.io/projects/49be3z
 
 ## Build app ZIP
 
+This project can generate two app zips.
+
+To generate the admin app:
+
 ```
 $ yarn build-webapp
+```
+
+To generate the importer app:
+
+```
+$ yarn build-importer
 ```
 
 ## Some development tips
@@ -72,9 +82,19 @@ $ yarn build-webapp
 
 ### i18n
 
+#### Update an existing language
+
 ```
 $ yarn update-po
-# ... add/edit translations in i18n/*.po files ...
+# ... add/edit translations in po files ...
+$ yarn localize
+```
+
+#### Create a new language
+
+```
+$ cp i18n/en.pot i18n/es.po
+# ... add translations to i18n/es.po ...
 $ yarn localize
 ```
 
