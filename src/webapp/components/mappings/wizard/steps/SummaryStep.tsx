@@ -61,8 +61,16 @@ const SummaryStep: React.FC<StepProps> = props => {
                                         label={attributeMapping.geeBand}
                                         value={
                                             <span key={attributeMapping.geeBand + "Div"}>
-                                                {attributeMapping.dataElementName} - (
-                                                {attributeMapping.dataElementId})
+                                                {`${attributeMapping.dataElementName} - (${
+                                                    attributeMapping.dataElementId
+                                                }) ${
+                                                    attributeMapping.transformExpression
+                                                        ? i18n.t(
+                                                              "Transform expression: {{transformExpression}}",
+                                                              attributeMapping
+                                                          )
+                                                        : ""
+                                                }`}
                                             </span>
                                         }
                                         separator=" ->"
