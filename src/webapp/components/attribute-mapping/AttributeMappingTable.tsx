@@ -8,7 +8,7 @@ import {
     ConfirmationDialog,
 } from "d2-ui-components";
 import _ from "lodash";
-import React, { useCallback, useMemo, useState } from "react";
+import React, { useCallback, useMemo, useState, useEffect } from "react";
 import Mapping from "../../models/Mapping";
 import AttributeMapping from "../../models/AttributeMapping";
 import AttributeMappingDialog, { AttributeMappingDialogConfig } from "./AttributeMappingDialog";
@@ -63,10 +63,7 @@ export default function AttributeMappingTable({
         setAttMappingToAddTransform,
     ] = useState<AttributeMapping | null>(null);
 
-    const [rows, setRows] = useState<AttributeMapping[]>(
-        AttributeMapping.getList(availableBands, mapping.attributeMappingDictionary)
-            .attributeMappings
-    );
+    const [rows, setRows] = useState<AttributeMapping[]>([]);
 
     const openMappingDialog = useCallback(
         (geeBands: string[]) => {
@@ -81,6 +78,13 @@ export default function AttributeMappingTable({
     const openTransformExpressionDialog = (geeBands: string[]) => {
         setAttMappingToAddTransform(_.find(rows, ["id", geeBands[0]]) || null);
     };
+
+    useEffect(() => {
+        setRows(
+            AttributeMapping.getList(availableBands, mapping.attributeMappingDictionary)
+                .attributeMappings
+        );
+    }, [availableBands, mapping.attributeMappingDictionary]);
 
     const deleteMapping = useCallback(
         (geeBands: string[], dryRun = true) => {

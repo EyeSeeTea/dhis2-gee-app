@@ -6,10 +6,11 @@ import {
     MuiThemeProvider,
     createMuiTheme,
     Typography,
+    makeStyles,
 } from "@material-ui/core";
 
 import React, { useState, useEffect, useRef } from "react";
-import { GeeDataSet } from "../../../domain/entities/GeeDataSet";
+import { GeeDataSet, Cadence } from "../../../domain/entities/GeeDataSet";
 import { useCompositionRoot } from "../../contexts/app-context";
 import {
     TableColumn,
@@ -18,6 +19,7 @@ import {
     ConfirmationDialog,
     ObjectsTable,
 } from "d2-ui-components";
+import Dropdown from "../dropdown/Dropdown";
 
 export interface DropdownOption {
     id: string;
@@ -35,18 +37,47 @@ const GeeDataSetSelector: React.FC<GeeDataSetSelectorProps> = ({
     floatingLabelText,
     value,
 }) => {
+    const classes = useStyles();
     const [rows, setRows] = useState<GeeDataSet[]>([]);
     const [open, setOpen] = useState<boolean>(false);
+    const [searchFilter, setSearchFilter] = useState<string>("");
+    const [cadenceFilter, setCadenceFilter] = useState<string>("");
+
+    const [cadenceFilterOptions] = useState<{ id: Cadence; name: string }[]>([
+        {
+            id: "year",
+            name: i18n.t("Year"),
+        },
+        {
+            id: "day",
+            name: i18n.t("Day"),
+        },
+        {
+            id: "month",
+            name: i18n.t("Month"),
+        },
+    ]);
+
     const inputRef = useRef<HTMLInputElement>(null);
     const geeDataSets = useCompositionRoot().geeDataSets();
 
     const materialTheme = getMaterialTheme();
 
     useEffect(() => {
-        geeDataSets.getAll.execute().then(setRows);
-    }, [geeDataSets.getAll]);
+        geeDataSets.getAll.execute({ search: searchFilter, cadence: cadenceFilter }).then(setRows);
+    }, [geeDataSets.getAll, searchFilter, cadenceFilter]);
 
     const columns: TableColumn<GeeDataSet>[] = [
+        {
+            name: "id",
+            hidden: true,
+            text: i18n.t("Id"),
+        },
+        {
+            name: "imageCollectionId",
+            hidden: true,
+            text: i18n.t("Image Collection Id"),
+        },
         {
             name: "displayName",
             text: i18n.t("Name"),
@@ -54,19 +85,35 @@ const GeeDataSetSelector: React.FC<GeeDataSetSelectorProps> = ({
         {
             name: "description",
             text: i18n.t("Description"),
+            getValue: (dataSet: GeeDataSet) =>
+                dataSet.description.length > 300
+                    ? dataSet.description.substring(0, 300) + " ..."
+                    : dataSet.description,
         },
         {
-            name: "bands",
-            text: i18n.t("Bands"),
-            getValue: (dataSet: GeeDataSet) => dataSet.bands.map(band => band.name).join(", "),
+            name: "cadence",
+            text: i18n.t("Cadence"),
+        },
+        {
+            name: "type",
+            text: i18n.t("Type"),
+            hidden: true,
         },
     ];
 
     const details: ObjectsTableDetailField<GeeDataSet>[] = [
         { name: "displayName", text: i18n.t("Name") },
         {
+            name: "type",
+            text: i18n.t("Type"),
+        },
+        {
             name: "description",
             text: i18n.t("Description"),
+        },
+        {
+            name: "doc",
+            text: i18n.t("Link"),
         },
         {
             name: "bands",
@@ -75,20 +122,30 @@ const GeeDataSetSelector: React.FC<GeeDataSetSelectorProps> = ({
             getValue: (dataSet: GeeDataSet) => {
                 return (
                     <ul style={{ paddingLeft: 18 }}>
-                        {dataSet.bands.map(band => {
-                            return (
-                                <li key={band.name}>
-                                    <Typography variant="subtitle1">{band.name}</Typography>
-                                    <Typography variant="subtitle1">
-                                        {`units: ${band.units}`}
-                                    </Typography>
-                                    <Typography variant="subtitle1">{band.description}</Typography>
-                                </li>
-                            );
-                        })}
+                        {dataSet.bands &&
+                            dataSet.bands.map(band => {
+                                return (
+                                    <li key={band.name}>
+                                        <Typography variant="subtitle1">{band.name}</Typography>
+                                        {band.units && (
+                                            <Typography variant="subtitle1">
+                                                {`units: ${band.units}`}
+                                            </Typography>
+                                        )}
+                                        <Typography variant="subtitle1">
+                                            {band.description}
+                                        </Typography>
+                                    </li>
+                                );
+                            })}
                     </ul>
                 );
             },
+        },
+        {
+            name: "keywords",
+            text: i18n.t("Keywords"),
+            getValue: (dataSet: GeeDataSet) => dataSet.keywords.join(", "),
         },
     ];
 
@@ -116,6 +173,18 @@ const GeeDataSetSelector: React.FC<GeeDataSetSelectorProps> = ({
         },
     ];
 
+    const customFilters = (
+        <React.Fragment>
+            <Dropdown
+                key={"cedence-filter"}
+                items={cadenceFilterOptions}
+                onValueChange={setCadenceFilter}
+                value={cadenceFilter}
+                label={i18n.t("Cadence")}
+            />
+        </React.Fragment>
+    );
+
     const setNativeValue = (element: HTMLInputElement, value: string) => {
         /* eslint-disable @typescript-eslint/no-non-null-assertion */
         const valueSetter = Object.getOwnPropertyDescriptor(element, "value")!!.set;
@@ -133,6 +202,7 @@ const GeeDataSetSelector: React.FC<GeeDataSetSelectorProps> = ({
         <MuiThemeProvider theme={materialTheme}>
             <FormControl>
                 <TextField
+                    className={classes.geeInput}
                     inputProps={{
                         readOnly: Boolean(true),
                         disabled: Boolean(true),
@@ -159,7 +229,9 @@ const GeeDataSetSelector: React.FC<GeeDataSetSelectorProps> = ({
                             actions={actions}
                             details={details}
                             columns={columns}
-                            searchBoxLabel={i18n.t("Search by name / code")}
+                            onChangeSearch={setSearchFilter}
+                            searchBoxLabel={i18n.t("Search")}
+                            filterComponents={customFilters}
                         />
                     </DialogContent>
                 </ConfirmationDialog>
@@ -183,9 +255,14 @@ const getMaterialTheme = () =>
             },
             MuiTextField: {
                 root: {
-                    marginTop: 20,
                     minWidth: 250,
                 },
             },
         },
     });
+
+const useStyles = makeStyles({
+    geeInput: {
+        marginTop: 20,
+    },
+});

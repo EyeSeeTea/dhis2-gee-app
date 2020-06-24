@@ -47,7 +47,7 @@ describe("ImportUseCase", () => {
             expect(result).toEqual({
                 failures: [],
                 messages: [
-                    "6 data values from ERA5 - DAILY google data set.",
+                    "6 data values from ECMWF-ERA5-DAILY google data set.",
                     "Imported: 6 - updated: 0 - ignored: 0",
                 ],
                 success: true,
@@ -82,7 +82,7 @@ describe("ImportUseCase", () => {
             expect(result).toEqual({
                 failures: [],
                 messages: [
-                    "6 data values from ERA5 - DAILY google data set.",
+                    "6 data values from ECMWF-ERA5-DAILY google data set.",
                     "Imported: 6 - updated: 0 - ignored: 0",
                 ],
                 success: true,
@@ -96,25 +96,78 @@ export {};
 function givenAGeeDataSetRepository(): GeeDataSetRepository {
     return {
         getAll: jest.fn(),
-        getByCode: jest.fn().mockImplementation(() => {
-            return {
-                code: "era5Daily",
-                displayName: "ERA5 - DAILY",
+        getById: jest.fn().mockImplementation(() => {
+            return Maybe.fromValue({
+                id: "ECMWF-ERA5-DAILY",
                 imageCollectionId: "ECMWF/ERA5/DAILY",
+                displayName:
+                    "ERA5 Daily aggregates - Latest climate reanalysis produced by ECMWF / Copernicus Climate Change Service",
+                type: "image_collection",
+                description:
+                    "ERA5 is the fifth generation ECMWF atmospheric reanalysis of the global climate.\nReanalysis combines model data with observations from across the world into\na globally complete and consistent dataset. ERA5 replaces its predecessor,\nthe ERA-Interim reanalysis.\n\n\nERA5 DAILY provides aggregated values for each day for seven ERA5 climate\nreanalysis parameters: 2m air temperature, 2m dewpoint temperature, total\nprecipitation, mean sea level pressure, surface pressure, 10m u-component\nof wind and 10m v-component of wind. Additionally, daily minimum and maximum\nair temperature at 2m has been calculated based on the hourly 2m air\ntemperature data. Daily total precipitation values are given as daily sums.\nAll other parameters are provided as daily averages.\n\nERA5 data is available from 1979 to three months from real-time. More information\nand more ERA5 atmospheric parameters can be found at the\n[Copernicus Climate Data Store](https://cds.climate.copernicus.eu).\n",
+                doc: "https://developers.google.com/earth-engine/datasets/catalog/ECMWF/ERA5/DAILY",
+                period: "day",
                 bands: [
-                    "mean_2m_air_temperature",
-                    "minimum_2m_air_temperature",
-                    "maximum_2m_air_temperature",
-                    "dewpoint_2m_temperature",
-                    "total_precipitation",
-                    "surface_pressure",
-                    "mean_sea_level_pressure",
-                    "u_component_of_wind_10m",
-                    "v_component_of_wind_10m",
+                    {
+                        name: "mean_2m_air_temperature",
+                        units: "K",
+                        description: "Average air temperature at 2m height (daily average)",
+                    },
+                    {
+                        name: "minimum_2m_air_temperature",
+                        units: "K",
+                        description: "Minimum air temperature at 2m height (daily minimum)",
+                    },
+                    {
+                        name: "maximum_2m_air_temperature",
+                        units: "K",
+                        description: "Maximum air temperature at 2m height (daily maximum)",
+                    },
+                    {
+                        name: "dewpoint_2m_temperature",
+                        units: "K",
+                        description: "Dewpoint temperature at 2m height (daily average)",
+                    },
+                    {
+                        name: "total_precipitation",
+                        units: "m",
+                        description: "Total precipitation (daily sums)",
+                    },
+                    {
+                        name: "surface_pressure",
+                        units: "Pa",
+                        description: "Surface pressure (daily average)",
+                    },
+                    {
+                        name: "mean_sea_level_pressure",
+                        units: "Pa",
+                        description: "Mean sea level pressure (daily average)",
+                    },
+                    {
+                        name: "u_component_of_wind_10m",
+                        units: "m s-1",
+                        description: "10m u-component of wind (daily average)",
+                    },
+                    {
+                        name: "v_component_of_wind_10m",
+                        units: "m s-1",
+                        description: "10m v-component of wind (daily average)",
+                    },
                 ],
-                doc:
-                    "https://developers.google.com/earth-engine/datasets/catalog/UCSB-CHG_CHIRPS_DAILY",
-            };
+                keywords: [
+                    "climate",
+                    "copernicus",
+                    "dewpoint",
+                    "ecmwf",
+                    "era5",
+                    "precipitation",
+                    "pressure",
+                    "reanalysis",
+                    "surface",
+                    "temperature",
+                    "wind",
+                ],
+            });
         }),
     };
 }
@@ -155,7 +208,7 @@ function givenAMappingRepository(
                     dataSetId: "rayEGGqQwIC",
                     dataSetName: "Climate factors",
                     description: "",
-                    geeImage: "era5Daily",
+                    geeImage: "ECMWF-ERA5-DAILY",
                     attributeMappingDictionary: {
                         minimum_2m_air_temperature: {
                             id: "minimum_2m_air_temperature",

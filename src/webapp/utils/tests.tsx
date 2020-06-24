@@ -7,7 +7,6 @@ import { Config } from "./../models/Config";
 import { User } from "./../models/User";
 import { AppContext } from "../contexts/app-context";
 import { ReactNode } from "react";
-import { geeDataSets } from "../../data/GeeDataSets";
 
 export function getTestUser() {
     return new User({
@@ -42,9 +41,9 @@ export function getTestConfig() {
                         suffix: "@import",
                     },
                     globalOUMapping: "globalOUMapping",
+                    geeDataSets: "geeDataSets",
                 },
             },
-            googleDatasets: geeDataSets,
         },
     });
 }
