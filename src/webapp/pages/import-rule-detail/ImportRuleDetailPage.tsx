@@ -162,7 +162,7 @@ const ImportRuleDetailPage: React.FC = () => {
         setState(newState);
     };
 
-    const onPeriodSelectionSave = (newPeriod: PeriodOption) => {
+    const onPeriodSelectionSave = (newPeriod?: PeriodOption) => {
         const newState = {
             ...state,
             importRule: {
@@ -182,7 +182,7 @@ const ImportRuleDetailPage: React.FC = () => {
             isImporting: true,
         });
 
-        const result = await useCase.execute(state.importRule.id, currentUser.username);
+        const result = await useCase.executeImportRule(state.importRule.id, currentUser.username);
 
         console.log({ result });
 

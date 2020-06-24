@@ -141,7 +141,7 @@ const ImportRuleListPage: React.FC = () => {
             isImporting: true,
         });
 
-        const result = await useCase.execute(id, currentUser.username);
+        const result = await useCase.executeImportRule(id, currentUser.username);
 
         console.log({ result });
 

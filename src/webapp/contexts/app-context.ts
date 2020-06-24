@@ -10,6 +10,7 @@ export interface AppContext {
     config: Config;
     currentUser: User;
     compositionRoot: CompositionRoot;
+    isAdmin: boolean;
 }
 
 export const AppContext = React.createContext<AppContext | null>(null);

@@ -21,6 +21,7 @@ export interface MappingData {
     geeImage: string;
     created: Date;
     attributeMappingDictionary: AttributeMappingDictionary;
+    isDefault: boolean;
 }
 
 export type MappingField = keyof MappingData;
@@ -47,6 +48,7 @@ class Mapping {
         geeImage: i18n.t("G.E.E Dataset"),
         created: i18n.t("Created at"),
         attributeMappingDictionary: i18n.t("Attribute mappings"),
+        isDefault: i18n.t("Attribute mappings"),
     };
 
     static getFieldName(field: MappingField): string {
@@ -83,6 +85,7 @@ class Mapping {
             geeImage: "",
             attributeMappingDictionary: {},
             created: new Date(),
+            isDefault: false,
         });
     }
     static async getList(

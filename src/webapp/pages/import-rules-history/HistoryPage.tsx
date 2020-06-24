@@ -66,11 +66,17 @@ const HistoryPage: React.FC = () => {
             name: "importRule",
             text: i18n.t("Import Rule"),
             getValue: ({ importRule: id, importRuleLabel }) => {
-                return (
-                    importRuleLabel ??
-                    _.find(state.importRules, { id })?.name ??
-                    i18n.t("(on-demand import)")
-                );
+                const importRuleName = () => {
+                    if (!id) {
+                        return i18n.t("(on-demand global mapping import)");
+                    } else {
+                        return (
+                            _.find(state.importRules, { id })?.name ?? i18n.t("(on-demand import)")
+                        );
+                    }
+                };
+
+                return importRuleLabel ?? importRuleName();
             },
         },
         { name: "date", text: i18n.t("Date") },

@@ -5,13 +5,14 @@ import { Card, CardContent } from "@material-ui/core";
 import { StepProps } from "../MappingWizard";
 import i18n from "@dhis2/d2-i18n";
 import Mapping, { MappingData } from "../../../../models/Mapping";
+import GeeDataSetSelector from "../../../gee-data-sets/GeeDataSetSelector";
 
 /* eslint-disable @typescript-eslint/no-var-requires */
 const { TextField, DropDown } = require("@dhis2/d2-ui-core");
 const { FormBuilder, Validators } = require("@dhis2/d2-ui-forms");
 
 type StringField = "name" | "description";
-type DropdownField = "geeImage" | "dataSetId";
+type DropdownField = "dataSetId";
 
 class GeneralInfoStep extends React.Component<StepProps> {
     onUpdateField = <K extends keyof MappingData>(fieldName: K, newValue: MappingData[K]) => {
@@ -41,7 +42,7 @@ class GeneralInfoStep extends React.Component<StepProps> {
             getTextField("description", mapping.description, {
                 props: { multiLine: true, floatingLabelText: Mapping.getFieldName("description") },
             }),
-            getDropdownField("geeImage", mapping.geeImage, {
+            getGeeDataSetSelectorField("geeImage", mapping.geeImage, {
                 validators: [validators.presence],
                 props: {
                     floatingLabelText: Mapping.getFieldName("geeImage") + " (*)",
@@ -111,6 +112,22 @@ function getDropdownField(
         name,
         value,
         component: DropDown,
+        props: {
+            ...(props || {}),
+        },
+        validators: validators || [],
+    };
+}
+
+function getGeeDataSetSelectorField(
+    name: string,
+    value: string,
+    { validators, props }: { validators?: Validator<string>[]; props?: _.Dictionary<any> } = {}
+) {
+    return {
+        name,
+        value,
+        component: GeeDataSetSelector,
         props: {
             ...(props || {}),
         },
