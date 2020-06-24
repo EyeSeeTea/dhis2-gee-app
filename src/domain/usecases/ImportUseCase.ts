@@ -151,16 +151,16 @@ export default class ImportUseCase {
 
         if (importRule.selectedOUs.length === 0) {
             failures.push(
-                i18n.t("Does not exists any selected organisation unit in the import rule")
+                i18n.t("No organisation unit selection in the import rule")
             );
         }
 
         if (!importRule.periodInformation) {
-            failures.push(i18n.t("Does not exists any selected period in the import rule"));
+            failures.push(i18n.t("No period selection in the import rule"));
         }
 
         if (importRule.selectedMappings.length === 0) {
-            failures.push(i18n.t("Does not exists any selected mapping in the import rule"));
+            failures.push(i18n.t("No mapping selection in the import rule"));
         }
 
         return failures;
