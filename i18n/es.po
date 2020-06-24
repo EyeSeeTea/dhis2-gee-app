@@ -65,7 +65,7 @@ msgstr ""
 msgid "No period selected for import"
 msgstr ""
 
-msgid "Does not exists any selected mapping in the import rule"
+msgid "No mapping selected in the import rule"
 msgstr ""
 
 msgid "Mapping for attribute {{attr}}"
