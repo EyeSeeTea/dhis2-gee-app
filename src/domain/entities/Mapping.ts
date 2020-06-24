@@ -1,4 +1,5 @@
 import { Id } from "./Ref";
+import { TransformExpression } from "./TransformExpression";
 
 export interface Mapping {
     id: Id;
@@ -22,4 +23,5 @@ export interface AttributeMapping {
     dataElementId?: string;
     dataElementCode?: string;
     dataElementName?: string;
+    transformExpression?: TransformExpression;
 }

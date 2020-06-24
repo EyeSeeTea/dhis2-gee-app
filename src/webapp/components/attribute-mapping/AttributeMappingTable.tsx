@@ -12,6 +12,7 @@ import React, { useCallback, useMemo, useState } from "react";
 import Mapping from "../../models/Mapping";
 import AttributeMapping from "../../models/AttributeMapping";
 import AttributeMappingDialog, { AttributeMappingDialogConfig } from "./AttributeMappingDialog";
+import TransformExpressionDialog from "../transform-expression/TransformExpressionDialog";
 
 const useStyles = makeStyles({
     iconButton: {
@@ -57,6 +58,10 @@ export default function AttributeMappingTable({
     const [newMappingConfig, setNewMappingConfig] = useState<AttributeMappingDialogConfig | null>(
         null
     );
+    const [
+        attMappingToAddTransform,
+        setAttMappingToAddTransform,
+    ] = useState<AttributeMapping | null>(null);
 
     const [rows, setRows] = useState<AttributeMapping[]>(
         AttributeMapping.getList(availableBands, mapping.attributeMappingDictionary)
@@ -72,6 +77,10 @@ export default function AttributeMappingTable({
         },
         [rows, mapping]
     );
+
+    const openTransformExpressionDialog = (geeBands: string[]) => {
+        setAttMappingToAddTransform(_.find(rows, ["id", geeBands[0]]) || null);
+    };
 
     const deleteMapping = useCallback(
         (geeBands: string[], dryRun = true) => {
@@ -116,7 +125,8 @@ export default function AttributeMappingTable({
                     .attributeMappings
             );
             onChange(newMapping);
-            setNewMappingConfig(null);
+            closeAttributeMappingDialog();
+            closeAttributeExpressionDialog();
         },
         [mapping, availableBands, onChange]
     );
@@ -184,6 +194,10 @@ export default function AttributeMappingTable({
                     );
                 },
             },
+            {
+                name: "transformExpression",
+                text: i18n.t("Transform expression"),
+            },
         ],
         [classes, openMappingDialog]
     );
@@ -210,12 +224,22 @@ export default function AttributeMappingTable({
                 onClick: deleteMapping,
                 icon: <Icon>sync_disabled</Icon>,
             },
+            {
+                name: "transform-expression",
+                text: i18n.t("Set transform expression"),
+                multiple: false,
+                isActive: (attMappings: AttributeMapping[]) =>
+                    attMappings[0].dataElementId !== undefined,
+                onClick: openTransformExpressionDialog,
+                icon: <Icon>open_in_new</Icon>,
+            },
         ],
         [deleteMapping, openMappingDialog]
     );
 
     const closeWarningDialog = () => setWarningDialog(null);
     const closeAttributeMappingDialog = () => setNewMappingConfig(null);
+    const closeAttributeExpressionDialog = () => setAttMappingToAddTransform(null);
 
     return (
         <React.Fragment>
@@ -238,6 +262,14 @@ export default function AttributeMappingTable({
                     params={newMappingConfig}
                     onMappingChange={onMappingChange}
                     onClose={closeAttributeMappingDialog}
+                />
+            )}
+
+            {!!attMappingToAddTransform && (
+                <TransformExpressionDialog
+                    attributeMapping={attMappingToAddTransform}
+                    onTransformExpressionChange={onMappingChange}
+                    onClose={closeAttributeExpressionDialog}
                 />
             )}
 
