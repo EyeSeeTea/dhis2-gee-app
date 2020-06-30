@@ -5,253 +5,13 @@ msgstr ""
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1)\n"
-"POT-Creation-Date: 2020-04-02T14:50:37.733Z\n"
-"PO-Revision-Date: 2020-04-02T14:50:37.733Z\n"
-
-msgid "Mapping for attribute {{attr}}"
-msgstr ""
-
-msgid "Cancel"
-msgstr ""
-
-msgid "Disable mapping"
-msgstr ""
-
-msgid "Are you sure you want to disable mapping for {{total}} attributes?"
-msgstr ""
-
-msgid "Please select at least one item to disable mapping"
-msgstr ""
-
-msgid "Google Attribute"
-msgstr ""
-
-msgid "Mapped Id"
-msgstr ""
-
-msgid "Set mapping"
-msgstr ""
-
-msgid "Mapped Name"
-msgstr ""
-
-msgid "Mapped Code"
-msgstr ""
-
-msgid "Ok"
-msgstr ""
-
-msgid "Search by name / code"
-msgstr ""
-
-msgid "Name"
-msgstr ""
-
-msgid "Code"
-msgstr ""
-
-msgid "Select"
-msgstr ""
-
-msgid "Select organisation unit"
-msgstr ""
-
-msgid "Save"
-msgstr ""
-
-msgid "Select period interval"
-msgstr ""
-
-msgid "Period"
-msgstr ""
-
-msgid "Start date"
-msgstr ""
-
-msgid "End date"
-msgstr ""
-
-msgid "<No value>"
-msgstr ""
-
-msgid "Cancel mapping?"
-msgstr ""
-
-msgid "All your changes will be lost. Are you sure you want to proceed?"
-msgstr ""
-
-msgid "Yes"
-msgstr ""
-
-msgid "No"
-msgstr ""
-
-msgid "General info"
-msgstr ""
-
-msgid "Google Earth Engine variables mapping"
-msgstr ""
-
-msgid "Summary and save"
-msgstr ""
-
-msgid "Field cannot be blank"
-msgstr ""
-
-msgid "Dataset"
-msgstr ""
-
-msgid "Help"
-msgstr ""
-
-msgid "Back"
-msgstr ""
-
-msgid "Cancel?"
-msgstr ""
-
-msgid ""
-"You are about to exit. All your changes will be lost. Are you sure you want "
-"to proceed?"
-msgstr ""
-
-msgid "Id"
-msgstr ""
-
-msgid "Comment"
-msgstr ""
-
-msgid "Data element id"
-msgstr ""
-
-msgid "Data element code"
-msgstr ""
-
-msgid "Data element name"
-msgstr ""
-
-msgid "Description"
-msgstr ""
-
-msgid "Selected mappings"
-msgstr ""
-
-msgid "Selected organisation units"
-msgstr ""
-
-msgid "Selected query period"
-msgstr ""
-
-msgid "{{n}} data values from {{name}} google data set."
-msgstr ""
+"POT-Creation-Date: 2020-06-24T17:30:02.417Z\n"
+"PO-Revision-Date: 2020-06-24T17:30:02.417Z\n"
 
 msgid "No effective import into DHIS2, file download"
 msgstr ""
 
-msgid "Import config failed"
-msgstr ""
-
-msgid "Instance Dataset"
-msgstr ""
-
-msgid "Instance DataSet"
-msgstr ""
-
-msgid "G.E.E Dataset"
-msgstr ""
-
-msgid "Created at"
-msgstr ""
-
-msgid "Attribute mappings"
-msgstr ""
-
-msgid "Google Band mapping with Data Element.q"
-msgstr ""
-
-msgid "Click to show feedback"
-msgstr ""
-
-msgid "Import successful \n"
-msgstr ""
-
-msgid "New import request"
-msgstr ""
-
-msgid ""
-"This operation will collect and import data from Google Earth Engine to the "
-"instance. Are you sure you want to proceed?"
-msgstr ""
-
-msgid "Importing..."
-msgstr ""
-
-msgid "Import"
-msgstr ""
-
-msgid "Select Organisation Units"
-msgstr ""
-
-msgid "Select Period"
-msgstr ""
-
-msgid "Import to DHIS2 "
-msgstr ""
-
-msgid "Download JSON "
-msgstr ""
-
-msgid "List and manage a new import."
-msgstr ""
-
-msgid "Configuration"
-msgstr ""
-
-msgid "Add"
-msgstr ""
-
-msgid "List"
-msgstr ""
-
-msgid "Dataset id"
-msgstr ""
-
-msgid "Created"
-msgstr ""
-
-msgid "Details"
-msgstr ""
-
-msgid "Edit"
-msgstr ""
-
-msgid "Delete"
-msgstr ""
-
-msgid "{{n}} mappings deleted"
-msgstr ""
-
-msgid "Delete mapping"
-msgstr ""
-
-msgid ""
-"This operation will delete ({{n}}) mappings. This operation cannot be "
-"undone. Are you sure you want to proceed?"
-msgstr ""
-
-msgid "Deleting..."
-msgstr ""
-
-msgid "Proceed"
-msgstr ""
-
-msgid "Search by name or code"
-msgstr ""
-
-msgid "New mapping"
-msgstr ""
-
-msgid "Edit mapping"
+msgid "This year"
 msgstr ""
 
 msgid "Fixed period"
@@ -287,10 +47,450 @@ msgstr ""
 msgid "Last quarter"
 msgstr ""
 
-msgid "This year"
+msgid "Last year"
 msgstr ""
 
-msgid "Last year"
+msgid "{{name}} (deleted)"
+msgstr ""
+
+msgid "An error has ocurred updating lastUpdate field of import rule"
+msgstr ""
+
+msgid "No organisation unit selected as global for the import rule"
+msgstr ""
+
+msgid "{{n}} data values from {{name}} google data set."
+msgstr ""
+
+msgid "Import config failed"
+msgstr ""
+
+msgid "No organisation unit selected in the import rule"
+msgstr ""
+
+msgid "No period selected in the import rule"
+msgstr ""
+
+msgid "No mapping selected in the import rule"
+msgstr ""
+
+msgid "Unexpected error has ocurred apply transform expression"
+msgstr ""
+
+msgid "Imported {{imported}} - updated {{updated}} - ignored {{ignored}}"
+msgstr ""
+
+msgid "Mapping for attribute {{attr}}"
+msgstr ""
+
+msgid "Cancel"
+msgstr ""
+
+msgid "Disable mapping"
+msgstr ""
+
+msgid "Are you sure you want to disable mapping for {{total}} attributes?"
+msgstr ""
+
+msgid "Please select at least one item to disable mapping"
+msgstr ""
+
+msgid "Google Attribute"
+msgstr ""
+
+msgid "Mapped Id"
+msgstr ""
+
+msgid "Set mapping"
+msgstr ""
+
+msgid "Mapped Name"
+msgstr ""
+
+msgid "Mapped Code"
+msgstr ""
+
+msgid "Transform expression"
+msgstr ""
+
+msgid "Set transform expression"
+msgstr ""
+
+msgid "Ok"
+msgstr ""
+
+msgid "Search by name / code"
+msgstr ""
+
+msgid "Name"
+msgstr ""
+
+msgid "Code"
+msgstr ""
+
+msgid "Select"
+msgstr ""
+
+msgid "Select organisation unit"
+msgstr ""
+
+msgid "Save"
+msgstr ""
+
+msgid "Select period interval"
+msgstr ""
+
+msgid "<No value>"
+msgstr ""
+
+msgid "Year"
+msgstr ""
+
+msgid "Day"
+msgstr ""
+
+msgid "Month"
+msgstr ""
+
+msgid "Id"
+msgstr ""
+
+msgid "Image Collection Id"
+msgstr ""
+
+msgid "Description"
+msgstr ""
+
+msgid "Cadence"
+msgstr ""
+
+msgid "Type"
+msgstr ""
+
+msgid "Link"
+msgstr ""
+
+msgid "Bands"
+msgstr ""
+
+msgid "Keywords"
+msgstr ""
+
+msgid "Details"
+msgstr ""
+
+msgid "Select G.E.E dataset"
+msgstr ""
+
+msgid "Search"
+msgstr ""
+
+msgid "Field cannot be blank"
+msgstr ""
+
+msgid "Add"
+msgstr ""
+
+msgid "List"
+msgstr ""
+
+msgid "Cancel mapping?"
+msgstr ""
+
+msgid "All your changes will be lost. Are you sure you want to proceed?"
+msgstr ""
+
+msgid "Yes"
+msgstr ""
+
+msgid "No"
+msgstr ""
+
+msgid "General info"
+msgstr ""
+
+msgid "Google Earth Engine variables mapping"
+msgstr ""
+
+msgid "Summary and save"
+msgstr ""
+
+msgid "Dataset"
+msgstr ""
+
+msgid "Help"
+msgstr ""
+
+msgid "Back"
+msgstr ""
+
+msgid "Period"
+msgstr ""
+
+msgid "Start date"
+msgstr ""
+
+msgid "End date"
+msgstr ""
+
+msgid "The expression is not valid"
+msgstr ""
+
+msgid "Transform expression for attribute {{attr}}"
+msgstr ""
+
+msgid "Variable"
+msgstr ""
+
+msgid "Cancel?"
+msgstr ""
+
+msgid ""
+"You are about to exit. All your changes will be lost. Are you sure you want "
+"to proceed?"
+msgstr ""
+
+msgid "Comment"
+msgstr ""
+
+msgid "Data element id"
+msgstr ""
+
+msgid "Data element code"
+msgstr ""
+
+msgid "Data element name"
+msgstr ""
+
+msgid "Instance Dataset"
+msgstr ""
+
+msgid "Instance DataSet"
+msgstr ""
+
+msgid "G.E.E Dataset"
+msgstr ""
+
+msgid "Created at"
+msgstr ""
+
+msgid "Attribute mappings"
+msgstr ""
+
+msgid "Google Band mapping with Data Element.q"
+msgstr ""
+
+msgid "Click to show feedback"
+msgstr ""
+
+msgid "On-demand Import"
+msgstr ""
+
+msgid ""
+"Manually import gee data values by selecting organisation unit, period and "
+"creating o select the mapping/s for gee data sets."
+msgstr ""
+
+msgid "Import rules"
+msgstr ""
+
+msgid ""
+"Create, modify, delete, execute import rules for gee data values selecting "
+"organisation unit, period and creating o select the mapping/s for gee data "
+"sets. "
+msgstr ""
+
+msgid "History"
+msgstr ""
+
+msgid ""
+"View and analyse the status and results of the manual import and import "
+"rules executions."
+msgstr ""
+
+msgid "Import successful"
+msgstr ""
+
+msgid "Import failed"
+msgstr ""
+
+msgid "Import"
+msgstr ""
+
+msgid "Import to DHIS2 "
+msgstr ""
+
+msgid "Download JSON "
+msgstr ""
+
+msgid "New import request"
+msgstr ""
+
+msgid ""
+"This operation will collect and import data from Google Earth Engine to the "
+"instance. Are you sure you want to proceed?"
+msgstr ""
+
+msgid "Importing..."
+msgstr ""
+
+msgid "Import Rule {{id}} not found"
+msgstr ""
+
+msgid "Success"
+msgstr ""
+
+msgid "On-demand import"
+msgstr ""
+
+msgid "Import Rule"
+msgstr ""
+
+msgid "Select Organisation Units"
+msgstr ""
+
+msgid "Select Period"
+msgstr ""
+
+msgid "Last executed"
+msgstr ""
+
+msgid "An unexpected error has ocurred deleting import rules. "
+msgstr ""
+
+msgid "Successfully delete {{deleteCount}} import rules"
+msgstr ""
+
+msgid "Edit"
+msgstr ""
+
+msgid "Delete"
+msgstr ""
+
+msgid "Execute"
+msgstr ""
+
+msgid "Download JSON"
+msgstr ""
+
+msgid "Import Rules"
+msgstr ""
+
+msgid "Search by name"
+msgstr ""
+
+msgid "Delete Rules?"
+msgstr ""
+
+msgid "Are you sure you want to delete {{deleteCount}} rules?"
+msgstr ""
+
+msgid "(on-demand global mapping import)"
+msgstr ""
+
+msgid "(on-demand import)"
+msgstr ""
+
+msgid "Date"
+msgstr ""
+
+msgid "Status"
+msgstr ""
+
+msgid "User"
+msgstr ""
+
+msgid "Edit {{name}}"
+msgstr ""
+
+msgid "View result"
+msgstr ""
+
+msgid "An unexpected error has ocurred deleting import history. "
+msgstr ""
+
+msgid "Successfully import histories"
+msgstr ""
+
+msgid "Import status"
+msgstr ""
+
+msgid "Imports History"
+msgstr ""
+
+msgid "Delete import histories?"
+msgstr ""
+
+msgid "Are you sure you want to delete {{deleteCount}} import histories?"
+msgstr ""
+
+msgid "Failure"
+msgstr ""
+
+msgid "Dataset id"
+msgstr ""
+
+msgid "Default"
+msgstr ""
+
+msgid "Created"
+msgstr ""
+
+msgid "Assign organisation unit"
+msgstr ""
+
+msgid "Set as default"
+msgstr ""
+
+msgid "An unexpected error has ocurred setting mappings as default "
+msgstr ""
+
+msgid "Successfully mapping set as default"
+msgstr ""
+
+msgid "An unexpected error has ocurred deleting mappings. "
+msgstr ""
+
+msgid "Successfully delete {{deleteCount}} mappings"
+msgstr ""
+
+msgid "An unexpected error has ocurred updating organisation unit assigment. "
+msgstr ""
+
+msgid "Organisation unit assignment success"
+msgstr ""
+
+msgid "Delete mapping"
+msgstr ""
+
+msgid ""
+"This operation will delete ({{n}}) mappings and remove related global "
+"organisation unit mapping and remove it as selected in related import "
+"rules. This operation cannot be undone. Are you sure you want to proceed?"
+msgstr ""
+
+msgid "Deleting..."
+msgstr ""
+
+msgid "Proceed"
+msgstr ""
+
+msgid "Search by name or code"
+msgstr ""
+
+msgid "New mapping"
+msgstr ""
+
+msgid "Edit mapping"
+msgstr ""
+
+msgid "404, The page you are looking for isn’t here"
+msgstr ""
+
+msgid "You either tried some shady route or you came here by mistake."
+msgstr ""
+
+msgid "Back to Home"
 msgstr ""
 
 msgid "Field {{field}} cannot be blank"

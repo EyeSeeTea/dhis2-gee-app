@@ -8,13 +8,54 @@ declare module "@google/earthengine" {
         opt_xsrfToken?: Maybe<string>
     );
 
+    export class Region {
+        getInfo(onFinish: (data?: InfoData, error?: string) => void): void;
+    }
+
     export class ImageCollection {
         constructor(dataSetId: string);
         select(bands: string[]): this;
         filterDate(startDate: string, endDater: string): this;
-        getRegion(geometry: GeometryInstance, scale: number): this;
-        getInfo(onFinish: (data?: InfoData, error?: string) => void): void;
+        getInfo(onFinish: (data?: DataSetInfoData, error?: string) => void): void;
+        map(image: any): this;
+        getRegion(geometry: GeometryInstance, scale: number): Region;
     }
+
+    declare type PropertiesDicctionary = {
+        [name: string]: any;
+    };
+
+    declare type DataSetInfoData = {
+        type: string;
+        properties: PropertiesDicctionary;
+        features: DataSetInfoData[];
+    };
+
+    declare function Image(Image);
+
+    export class Image {
+        setMulti(properties: PropertiesDicctionary);
+        reduceRegion(params: ReduceRegionParams);
+    }
+
+    export type ReduceRegionParams = {
+        reducer: Reducer;
+        geometry?: GeometryInstance = null;
+        scale?: number = null;
+        bestEffort?: boolean = false;
+        maxPixels?: number = 10000000;
+        tileScale?: number = 1;
+    };
+
+    export class List {
+        getInfo(): any[];
+    }
+
+    declare type Reducer<Input, Output> = (input: Input) => Output;
+
+    export var Reducer: { [name: string]: Reducer } = {
+        median = () => {},
+    };
 
     // [periodId, lon, lat, time, ...number]
     declare type InfoData = Array<any[]>;
@@ -23,7 +64,7 @@ declare module "@google/earthengine" {
 
     declare interface Geometry {
         Point(coordinates: Coordinates): GeometryPoint;
-        MultiPolygon(Coordinates: Coordinates[][][]): GeometryPolygon;
+        MultiPolygon(Coordinates: any): GeometryPolygon;
     }
 
     declare interface Data {
