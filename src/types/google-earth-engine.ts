@@ -1,12 +1,6 @@
 export interface EarthEngine {
     data: Data;
-    initialize(
-        opt_baseurl?: Maybe<string>,
-        opt_tileurl?: Maybe<string>,
-        opt_successCallback?: Maybe<Callback>,
-        opt_errorCallback?: Maybe<Callback>,
-        opt_xsrfToken?: Maybe<string>
-    ): void;
+    initialize(): void;
 
     Geometry: Geometry;
     Image(s: any): Image;
