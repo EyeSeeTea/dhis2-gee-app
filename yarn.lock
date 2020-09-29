@@ -1146,10 +1146,10 @@
   resolved "https://registry.npmjs.org/@emotion/hash/-/hash-0.7.4.tgz#f14932887422c9056b15a8d222a9074a7dfa2831"
   integrity sha512-fxfMSBMX3tlIbKUdtGKxqB1fyrH6gVrX39Gsv3y8lRYKUqlgDt3UMqQyGnR1bQMa2B8aGnhLZokZgg8vT0Le+A==
 
-"@google/earthengine@0.1.227":
-  version "0.1.227"
-  resolved "https://registry.npmjs.org/@google/earthengine/-/earthengine-0.1.227.tgz#df4279103ff5a5a96747eb237ba79c07d71e8323"
-  integrity sha512-9vzlJoFHw/gTqjgSgd4TvXrQMr0MlhRAGD6LPFdTbI6QXC4nNsbNGj9Qzfzh8r7ymyl23SNHXA+MIRIP+9Z/XQ==
+"@google/earthengine@0.1.232":
+  version "0.1.232"
+  resolved "https://registry.yarnpkg.com/@google/earthengine/-/earthengine-0.1.232.tgz#98a5ef9e3e8f74c83921840aa9a3eed51a87df22"
+  integrity sha512-0WfQi7uQbL+0f2wvX6D88aK53eSmyxbbiQRy62Z+FVG9gojQg54YMeZ2MWkv3E0S60edC5Zyq6meFMG6lG3Ndg==
   dependencies:
     googleapis "^42.0.0"
     xmlhttprequest "^1.8.0"
