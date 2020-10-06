@@ -1,7 +1,7 @@
 {
     "name": "dhis2-gee-app",
     "description": "DHIS2 GEE App",
-    "version": "1.0.0",
+    "version": "1.0.1",
     "license": "GPL-3.0",
     "author": "EyeSeeTea team",
     "homepage": ".",
@@ -18,7 +18,6 @@
         "@dhis2/d2-ui-forms": "^6.5.3",
         "@dhis2/ui-core": "^4.8.0",
         "@dhis2/ui-widgets": "^2.0.8",
-        "@google/earthengine": "^0.1.217",
         "@material-ui/core": "^4.9.2",
         "@material-ui/icons": "^4.9.1",
         "@material-ui/styles": "^4.9.0",
@@ -68,6 +67,7 @@
     "devDependencies": {
         "@babel/core": "^7.8.4",
         "@babel/preset-typescript": "^7.8.3",
+        "@google/earthengine": "0.1.232",
         "@testing-library/jest-dom": "^5.1.1",
         "@testing-library/react": "^9.5.0",
         "@types/axios-mock-adapter": "^1.10.0",

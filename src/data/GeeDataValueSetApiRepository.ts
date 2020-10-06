@@ -1,3 +1,4 @@
+import { EarthEngine } from "./../types/google-earth-engine";
 import _ from "lodash";
 import moment, { Moment } from "moment";
 import {
@@ -9,7 +10,7 @@ import {
     Region,
     ImageCollection,
     DataSetInfoData,
-} from "@google/earthengine";
+} from "../types/google-earth-engine";
 import {
     GeeDataValueSetRepository,
     GeeDataFilters,
@@ -17,15 +18,6 @@ import {
 } from "../domain/repositories/GeeDataValueSetRepository";
 import { GeeDataValueSet, GeeDataValue } from "../domain/entities/GeeDataValueSet";
 import { D2Api } from "d2-api";
-
-// -- TODO: gee static ------
-declare global {
-    interface Window {
-        ee: any;
-    }
-}
-const ee = window.ee || {};
-//---------------------
 
 type Geometry = GeometryPoint | GeometryPolygon;
 
@@ -36,7 +28,7 @@ export interface GeeCredentials {
 }
 
 export class GeeDataEarthEngineRepository implements GeeDataValueSetRepository {
-    constructor(private d2Api: D2Api) {}
+    constructor(private d2Api: D2Api, private ee: EarthEngine) {}
 
     async getData<Band extends string>(
         options: GeeDataFilters<Band>
@@ -79,6 +71,7 @@ export class GeeDataEarthEngineRepository implements GeeDataValueSetRepository {
         engineGeometry: object,
         scale: number
     ): Promise<GeeDataValueSet<Band>> {
+        const { ee } = this;
         const imageCollection = new ee.ImageCollection(id)
             .select(bands)
             .filterDate(startDate, endDate);
@@ -113,6 +106,7 @@ export class GeeDataEarthEngineRepository implements GeeDataValueSetRepository {
         geometry: GeeGeometry,
         engineGeometry: object
     ): Promise<GeeDataValueSet<Band>> {
+        const { ee } = this;
         const imageCollection = new ee.ImageCollection(id)
             .select(bands)
             .filterDate(startDate, endDate);
@@ -148,6 +142,7 @@ export class GeeDataEarthEngineRepository implements GeeDataValueSetRepository {
     }
 
     private async initializeEngine() {
+        const { ee } = this;
         const credentials = await this.d2Api.get<GeeCredentials>("/tokens/google").getData();
 
         ee.data.setAuthToken(
@@ -168,6 +163,7 @@ export class GeeDataEarthEngineRepository implements GeeDataValueSetRepository {
     }
 
     private getGeometry(geometry: GeeGeometry): Geometry {
+        const { ee } = this;
         switch (geometry.type) {
             case "point":
                 return ee.Geometry.Point(geometry.coordinates);

@@ -80,6 +80,12 @@ $ yarn build-importer
 -   `src/locales`: Auto-generated, don't change nor add to version control.
 -   `cypress/integration/`: Contains the integration Cypress tests.
 
+### Google Earth Engine
+
+The package [@google/earthengine](https://www.npmjs.com/package/@google/earthengine) does not work when minified in the production create-react-app build. For this reason, instead of importing it directly within the app, we use object `window.ee`, loaded at `public/index.html` (`ee_api_js.js`).
+
+To update `@google/earthengine` to a new version, simply run `yarn add -D @google/earthengine@VERSION`.
+
 ### i18n
 
 #### Update an existing language
