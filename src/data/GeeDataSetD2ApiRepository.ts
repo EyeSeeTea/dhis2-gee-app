@@ -94,7 +94,7 @@ export class GeeDataSetFileRepository implements GeeDataSetRepository {
             id: id,
             imageCollectionId: data.id,
             displayName: data.title,
-            type: data.properties["gee:type"],
+            type: data.properties["gee:type"] ? data.properties["gee:type"] : data["gee:type"],
             description: data.description,
             doc: `https://developers.google.com/earth-engine/datasets/catalog/${data.id}`,
             cadence: data.properties["gee:cadence"],
