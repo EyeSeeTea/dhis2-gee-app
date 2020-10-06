@@ -34,6 +34,7 @@ import { SetAsDefaultMappingUseCase } from "./domain/usecases/SetAsDefaultMappin
 import { GetGeeDataSetByIdUseCase } from "./domain/usecases/GetGeeDataSetByIdUseCase";
 import OrgUnitD2ApiRepository from "./data/OrgUnitD2ApiRepository";
 import OrgUnitRepository from "./domain/repositories/OrgUnitRepository";
+import { EarthEngine } from "./types/google-earth-engine";
 
 interface Type<T> {
     new (...args: any[]): T;
@@ -55,7 +56,12 @@ class CompositionRoot {
     private dependencies = new Map<Token<any>, any>();
     private apiVersion: number;
 
-    constructor(private d2Api: D2Api, d2Version: string, private config: Config) {
+    constructor(
+        private d2Api: D2Api,
+        private ee: EarthEngine,
+        d2Version: string,
+        private config: Config
+    ) {
         this.apiVersion = +d2Version.split(".")[1];
 
         this.initializeDataStore();
@@ -265,7 +271,7 @@ class CompositionRoot {
 
         const orgUnitsRepository = this.dependencies.get("orgUnitRepository") as OrgUnitRepository;
 
-        const geeDataRepository = new GeeDataEarthEngineRepository(this.d2Api);
+        const geeDataRepository = new GeeDataEarthEngineRepository(this.d2Api, this.ee);
         const dataValueSetD2ApiRepository = new DataValueSetD2ApiRepository(this.d2Api);
         const dataValueSetFileRepository = new DataValueSetFileRepository();
         const importSummaryRepository = new ImportSummaryD2ApiRepository(

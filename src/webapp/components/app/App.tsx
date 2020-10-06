@@ -22,18 +22,13 @@ import { Config } from "../../models/Config";
 import { User } from "../../models/User";
 import { LinearProgress } from "@material-ui/core";
 import CompositionRoot from "../../../CompositionRoot";
-
-// -- TODO: gee static ------
-// import ee from "@google/earthengine";
+import { EarthEngine } from "../../../types/google-earth-engine";
 
 declare global {
     interface Window {
-        ee: any;
+        ee: EarthEngine;
     }
 }
-const ee = window.ee || {};
-//---------------------
-
 type D2 = object;
 
 type AppWindow = Window & {
@@ -92,8 +87,9 @@ const App = () => {
             ]);
 
             const version = (await api.system.info.getData()).version;
+            if (!window.ee) throw new Error("Google Earth Engine not found (window.ee)");
 
-            const compositionRoot = new CompositionRoot(api, version, config);
+            const compositionRoot = new CompositionRoot(api, window.ee, version, config);
 
             const dataImporter: boolean = process.env.REACT_APP_DATA_IMPORTER
                 ? process.env.REACT_APP_DATA_IMPORTER === "true"
@@ -110,7 +106,7 @@ const App = () => {
             };
             setAppContext(appContext);
             // Google Earth Engine must be defined globally in window (as var 'ee') to work
-            Object.assign(window, { app: appContext, ee });
+            Object.assign(window, { app: appContext });
 
             setShowShareButton(_(appConfig).get("appearance.showShareButton") || false);
             if (currentUser.canReportFeedback()) {
