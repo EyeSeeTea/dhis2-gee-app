@@ -22,7 +22,7 @@
         "@material-ui/icons": "^4.9.1",
         "@material-ui/styles": "^4.9.0",
         "async-promise-pool": "^1.0.2",
-        "axios": "^0.19.2",
+        "axios": "^0.21.1",
         "classnames": "^2.2.6",
         "d2": "^31.8.1",
         "d2-api": "0.2.3",
