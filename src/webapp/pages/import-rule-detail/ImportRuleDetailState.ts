@@ -1,7 +1,4 @@
-import {
-    ImportRuleWritableData,
-    ImportRuleProtectedData,
-} from "../../../domain/entities/ImportRule";
+import { ImportRuleWritableData, ImportRuleProtectedData } from "../../../domain/entities/ImportRule";
 
 export interface ImportRuleDetailState {
     importRule: ImportRuleState;

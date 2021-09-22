@@ -1,8 +1,4 @@
-import {
-    TransformExpression,
-    evalTransformExpression,
-    trasnformExpressionToken,
-} from "../TransformExpression";
+import { TransformExpression, evalTransformExpression, trasnformExpressionToken } from "../TransformExpression";
 
 const fahrenheitToCelsius = `(${trasnformExpressionToken} - 32 ) * 5/9`;
 const celsiusToFahrenheit = `(${trasnformExpressionToken} * 9/5) + 32`;

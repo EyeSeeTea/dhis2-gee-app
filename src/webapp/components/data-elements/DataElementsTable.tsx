@@ -1,5 +1,5 @@
 import React from "react";
-import { ObjectsTable, TableColumn, MouseActionsMapping, TableAction } from "d2-ui-components";
+import { ObjectsTable, TableColumn, MouseActionsMapping, TableAction } from "@eyeseetea/d2-ui-components";
 import _ from "lodash";
 import i18n from "@dhis2/d2-i18n";
 import DataElement from "../../../domain/entities/DataElement";
@@ -9,10 +9,7 @@ export interface DataElementsTableProps {
     onSelectedMapping: (dataElement: DataElement) => void;
 }
 
-const DataElementsTable: React.FC<DataElementsTableProps> = ({
-    dataElements,
-    onSelectedMapping,
-}) => {
+const DataElementsTable: React.FC<DataElementsTableProps> = ({ dataElements, onSelectedMapping }) => {
     const columns: TableColumn<DataElement>[] = [
         {
             name: "name" as const,
@@ -46,7 +43,7 @@ const DataElementsTable: React.FC<DataElementsTableProps> = ({
                 const selectedDataElement = _.find(dataElements, ["id", ids[0]]);
                 selectedDataElement
                     ? onSelectedMapping(selectedDataElement)
-                    : console.log("Could not select data element");
+                    : console.error("Could not select data element");
             },
         },
     ];

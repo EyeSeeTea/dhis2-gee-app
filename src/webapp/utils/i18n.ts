@@ -5,4 +5,5 @@ function t(message: string, namespace: object = {}) {
     return i18n.t(message, fullNamespace);
 }
 
-export default { t };
+const translate = { t };
+export default translate;

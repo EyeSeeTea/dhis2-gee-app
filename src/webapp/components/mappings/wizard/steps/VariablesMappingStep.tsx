@@ -20,11 +20,7 @@ const VariablesMappingStep: React.FC<StepProps> = ({ mapping, onChange }) => {
     return (
         <Card>
             <CardContent>
-                <AttributeMappingTable
-                    mapping={mapping}
-                    onChange={onChange}
-                    availableBands={bands}
-                />
+                <AttributeMappingTable mapping={mapping} onChange={onChange} availableBands={bands} />
             </CardContent>
         </Card>
     );

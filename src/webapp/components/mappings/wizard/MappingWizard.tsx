@@ -1,15 +1,14 @@
-import React from "react";
-import { WizardStep, Wizard } from "d2-ui-components";
-import { D2Api } from "d2-api";
-import Mapping from "../../../models/Mapping";
-import { useLocation } from "react-router";
+import { Wizard, WizardStep } from "@eyeseetea/d2-ui-components";
 import _ from "lodash";
-import { History, Location } from "history";
-import { Config } from "../../../models/Config";
+import React from "react";
+import { useLocation } from "react-router";
+import { D2Api } from "../../../../types/d2-api";
 import { useAppContext } from "../../../contexts/app-context";
-import { stepList } from "./Steps";
-import { getValidationMessages } from "../../../utils/validations";
+import { Config } from "../../../models/Config";
 import DataSet from "../../../models/DataSet";
+import Mapping from "../../../models/Mapping";
+import { getValidationMessages } from "../../../utils/validations";
+import { stepList } from "./Steps";
 
 interface MappingWizardProps {
     mapping?: Mapping;
@@ -25,14 +24,6 @@ export interface StepProps {
     dataSets: DataSet[];
     onChange(newMapping: Mapping): void;
     onCancel(): void;
-}
-
-interface Props {
-    api: D2Api;
-    config: Config;
-    history: History;
-    location: Location;
-    snackbar: any;
 }
 
 const MappingWizard: React.FC<MappingWizardProps> = props => {
@@ -53,11 +44,11 @@ const MappingWizard: React.FC<MappingWizardProps> = props => {
     }));
 
     const onStepChangeRequest = async (_currentStep: WizardStep, newStep: WizardStep) => {
+        if (!mapping) return;
+
         const index = _(steps).findIndex(step => step.key === newStep.key);
         const validationMessages = await Promise.all(
-            _.take(steps, index).map(({ validationKeys }) =>
-                getValidationMessages(api, mapping, validationKeys)
-            )
+            _.take(steps, index).map(({ validationKeys }) => getValidationMessages(api, mapping, validationKeys))
         );
 
         return _.flatten(validationMessages);

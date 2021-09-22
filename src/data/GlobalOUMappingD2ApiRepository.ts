@@ -1,12 +1,12 @@
-import DataStore from "d2-api/api/dataStore";
-import { Id } from "d2-api";
+import { Id } from "@eyeseetea/d2-api";
+import { DataStore } from "@eyeseetea/d2-api/api/dataStore";
 import { Either } from "../domain/common/Either";
+import { GlobalOUMapping } from "../domain/entities/GlobalOUMapping";
 import {
+    DeleteGlobalOUMappingError,
     GlobalOUMappingRepository,
     SaveGlobalOUMappingError,
-    DeleteGlobalOUMappingError,
 } from "../domain/repositories/GlobalOUMappingRepository";
-import { GlobalOUMapping } from "../domain/entities/GlobalOUMapping";
 
 export default class GlobalOUMappingD2ApiRepository implements GlobalOUMappingRepository {
     constructor(private dataStore: DataStore, private dataStoreKey: string) {}
@@ -29,19 +29,15 @@ export default class GlobalOUMappingD2ApiRepository implements GlobalOUMappingRe
         return globalOrgUnitMappingsFiltered;
     }
 
-    async save(
-        globalOrgUnitMappingsToSave: GlobalOUMapping
-    ): Promise<Either<SaveGlobalOUMappingError, true>> {
+    async save(globalOrgUnitMappingsToSave: GlobalOUMapping): Promise<Either<SaveGlobalOUMappingError, true>> {
         try {
             const globalOrgUnitMappings = await this.getGlobalOrgUnitMappingsData();
 
-            Object.entries(globalOrgUnitMappingsToSave).forEach(
-                ([k, v]) => (globalOrgUnitMappings[k] = v)
-            );
+            Object.entries(globalOrgUnitMappingsToSave).forEach(([k, v]) => (globalOrgUnitMappings[k] = v));
 
             this.saveGlobalOrgUnitMappingsData(globalOrgUnitMappings);
             return Either.Success(true);
-        } catch (e) {
+        } catch (e: any) {
             return Either.failure({
                 kind: "UnexpectedError",
                 error: e,
@@ -62,7 +58,7 @@ export default class GlobalOUMappingD2ApiRepository implements GlobalOUMappingRe
             this.saveGlobalOrgUnitMappingsData(globalOrgUnitMappingsFiltered);
 
             return Either.Success(true);
-        } catch (e) {
+        } catch (e: any) {
             return Either.failure({
                 kind: "UnexpectedError",
                 error: e,
@@ -82,7 +78,7 @@ export default class GlobalOUMappingD2ApiRepository implements GlobalOUMappingRe
             this.saveGlobalOrgUnitMappingsData(globalOrgUnitMappingsFiltered);
 
             return Either.Success(true);
-        } catch (e) {
+        } catch (e: any) {
             return Either.failure({
                 kind: "UnexpectedError",
                 error: e,

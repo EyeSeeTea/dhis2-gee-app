@@ -12,7 +12,14 @@
         "resolveJsonModule": true,
         "isolatedModules": true,
         "noEmit": true,
-        "jsx": "preserve",
+        "noImplicitAny": true,
+        "jsx": "react-jsx",
+        "noUnusedParameters": false,
+        "noUnusedLocals": false,
+        "strictNullChecks": true,
+        "noUncheckedIndexedAccess": true,
+        "experimentalDecorators": true,
+        "noFallthroughCasesInSwitch": true,
         "lib": ["dom", "dom.iterable", "esnext"]
     },
     "include": ["src"]

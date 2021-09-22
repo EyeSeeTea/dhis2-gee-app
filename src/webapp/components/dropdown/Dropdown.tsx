@@ -76,9 +76,7 @@ const Dropdown: React.FC<DropdownProps> = ({
                         },
                     }}
                 >
-                    {!hideEmpty && (
-                        <MenuItem value={""}>{emptyLabel ?? i18n.t("<No value>")}</MenuItem>
-                    )}
+                    {!hideEmpty && <MenuItem value={""}>{emptyLabel ?? i18n.t("<No value>")}</MenuItem>}
                     {items.map(element => (
                         <MenuItem key={`element-${element.id}`} value={element.id}>
                             {element.name}

@@ -1,23 +1,23 @@
-import { EarthEngine } from "./../types/google-earth-engine";
 import _ from "lodash";
 import moment, { Moment } from "moment";
+import { GeeDataValue, GeeDataValueSet } from "../domain/entities/GeeDataValueSet";
 import {
-    GeometryPoint,
-    GeometryPolygon,
-    InfoDataRowBase,
-    InfoData,
-    Image,
-    Region,
-    ImageCollection,
-    DataSetInfoData,
-} from "../types/google-earth-engine";
-import {
-    GeeDataValueSetRepository,
     GeeDataFilters,
+    GeeDataValueSetRepository,
     GeeGeometry,
 } from "../domain/repositories/GeeDataValueSetRepository";
-import { GeeDataValueSet, GeeDataValue } from "../domain/entities/GeeDataValueSet";
-import { D2Api } from "d2-api";
+import { D2Api } from "../types/d2-api";
+import {
+    DataSetInfoData,
+    GeometryPoint,
+    GeometryPolygon,
+    Image,
+    ImageCollection,
+    InfoData,
+    InfoDataRowBase,
+    Region,
+} from "../types/google-earth-engine";
+import { EarthEngine } from "./../types/google-earth-engine";
 
 type Geometry = GeometryPoint | GeometryPolygon;
 
@@ -30,9 +30,7 @@ export interface GeeCredentials {
 export class GeeDataEarthEngineRepository implements GeeDataValueSetRepository {
     constructor(private d2Api: D2Api, private ee: EarthEngine) {}
 
-    async getData<Band extends string>(
-        options: GeeDataFilters<Band>
-    ): Promise<GeeDataValueSet<Band>> {
+    async getData<Band extends string>(options: GeeDataFilters<Band>): Promise<GeeDataValueSet<Band>> {
         await this.initializeEngine();
 
         const { id, bands, geometry, interval, scale = 30 } = options;
@@ -41,24 +39,9 @@ export class GeeDataEarthEngineRepository implements GeeDataValueSetRepository {
         const engineGeometry = this.getGeometry(geometry);
 
         if (geometry.type === "point") {
-            return await this.retrieveByPoint<Band>(
-                id,
-                bands,
-                startDate,
-                endDate,
-                geometry,
-                engineGeometry,
-                scale
-            );
+            return await this.retrieveByPoint<Band>(id, bands, startDate, endDate, geometry, engineGeometry, scale);
         } else {
-            return await this.retrieveByPolygon<Band>(
-                id,
-                bands,
-                startDate,
-                endDate,
-                geometry,
-                engineGeometry
-            );
+            return await this.retrieveByPolygon<Band>(id, bands, startDate, endDate, geometry, engineGeometry);
         }
     }
 
@@ -72,13 +55,11 @@ export class GeeDataEarthEngineRepository implements GeeDataValueSetRepository {
         scale: number
     ): Promise<GeeDataValueSet<Band>> {
         const { ee } = this;
-        const imageCollection = new ee.ImageCollection(id)
-            .select(bands)
-            .filterDate(startDate, endDate);
+        const imageCollection = new ee.ImageCollection(id).select(bands).filterDate(startDate, endDate);
 
         const region = imageCollection.getRegion(engineGeometry, scale);
 
-        console.log("ee.Region", { id, bands, startDate, endDate, engineGeometry, scale });
+        console.debug("ee.Region", { id, bands, startDate, endDate, engineGeometry, scale });
 
         const rows = await this.getInfo(region);
 
@@ -86,15 +67,14 @@ export class GeeDataEarthEngineRepository implements GeeDataValueSetRepository {
         if (!header) throw new Error("Header not found in response");
 
         const expectedHeader = ["id", "longitude", "latitude", "time", ...bands];
-        if (!_.isEqual(header, expectedHeader))
-            throw new Error(`Unexpected header: ${JSON.stringify(header)}`);
+        if (!_.isEqual(header, expectedHeader)) throw new Error(`Unexpected header: ${JSON.stringify(header)}`);
 
         const items = _(rows)
             .drop(1)
             .flatMap(row => this.getGeeItemsFromApiRow(bands, row, geometry))
             .value();
 
-        console.log({ rows, items });
+        console.debug({ rows, items });
         return items;
     }
 
@@ -107,9 +87,7 @@ export class GeeDataEarthEngineRepository implements GeeDataValueSetRepository {
         engineGeometry: object
     ): Promise<GeeDataValueSet<Band>> {
         const { ee } = this;
-        const imageCollection = new ee.ImageCollection(id)
-            .select(bands)
-            .filterDate(startDate, endDate);
+        const imageCollection = new ee.ImageCollection(id).select(bands).filterDate(startDate, endDate);
 
         const reducedCollection = imageCollection.map((image: Image) => {
             const dictionary = image.reduceRegion({
@@ -172,11 +150,7 @@ export class GeeDataEarthEngineRepository implements GeeDataValueSetRepository {
         }
     }
 
-    private getGeeItemsFromApiRow<Band>(
-        bands: Band[],
-        row: any[],
-        geometry: GeeGeometry
-    ): GeeDataValue<Band>[] {
+    private getGeeItemsFromApiRow<Band>(bands: Band[], row: any[], geometry: GeeGeometry): GeeDataValue<Band>[] {
         const [periodId, , , time] = _.take(row, 4) as InfoDataRowBase;
         const values = _.drop(row, 4) as number[];
         const date = moment(time);

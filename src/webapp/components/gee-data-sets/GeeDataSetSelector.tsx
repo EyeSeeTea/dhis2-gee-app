@@ -18,7 +18,7 @@ import {
     TableAction,
     ConfirmationDialog,
     ObjectsTable,
-} from "d2-ui-components";
+} from "@eyeseetea/d2-ui-components";
 import Dropdown from "../dropdown/Dropdown";
 
 export interface DropdownOption {
@@ -32,11 +32,7 @@ interface GeeDataSetSelectorProps {
     onChange?: (event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => void;
 }
 
-const GeeDataSetSelector: React.FC<GeeDataSetSelectorProps> = ({
-    onChange,
-    floatingLabelText,
-    value,
-}) => {
+const GeeDataSetSelector: React.FC<GeeDataSetSelectorProps> = ({ onChange, floatingLabelText, value }) => {
     const classes = useStyles();
     const [rows, setRows] = useState<GeeDataSet[]>([]);
     const [open, setOpen] = useState<boolean>(false);
@@ -87,9 +83,7 @@ const GeeDataSetSelector: React.FC<GeeDataSetSelectorProps> = ({
             name: "description",
             text: i18n.t("Description"),
             getValue: (dataSet: GeeDataSet) =>
-                dataSet.description.length > 300
-                    ? dataSet.description.substring(0, 300) + " ..."
-                    : dataSet.description,
+                dataSet.description.length > 300 ? dataSet.description.substring(0, 300) + " ..." : dataSet.description,
         },
         {
             name: "cadence",
@@ -129,13 +123,9 @@ const GeeDataSetSelector: React.FC<GeeDataSetSelectorProps> = ({
                                     <li key={band.name}>
                                         <Typography variant="subtitle1">{band.name}</Typography>
                                         {band.units && (
-                                            <Typography variant="subtitle1">
-                                                {`units: ${band.units}`}
-                                            </Typography>
+                                            <Typography variant="subtitle1">{`units: ${band.units}`}</Typography>
                                         )}
-                                        <Typography variant="subtitle1">
-                                            {band.description}
-                                        </Typography>
+                                        <Typography variant="subtitle1">{band.description}</Typography>
                                     </li>
                                 );
                             })}

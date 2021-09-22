@@ -1,4 +1,4 @@
-import { SnackbarState } from "d2-ui-components/snackbar/types";
+import { SnackbarState } from "@eyeseetea/d2-ui-components/snackbar/types";
 import _ from "lodash";
 
 interface Options {
@@ -10,7 +10,7 @@ export async function withSnackbarOnError(snackbar: SnackbarState, fn: Function,
     const { onCatch, onFinally } = options;
     try {
         await fn();
-    } catch (err) {
+    } catch (err: any) {
         const bodyMessage = err.response?.data?.message;
         console.error(err);
         if (onCatch) onCatch();
