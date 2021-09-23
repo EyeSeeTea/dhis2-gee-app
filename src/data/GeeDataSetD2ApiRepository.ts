@@ -4,7 +4,6 @@ import moment from "moment";
 import { Maybe } from "../domain/common/Maybe";
 import { GeeDataSet } from "../domain/entities/GeeDataSet";
 import { GeeDataSetRepository, GeeDataSetsFilter } from "../domain/repositories/GeeDataSetRepository";
-import { promiseMap } from "../domain/utils";
 
 const geeDataSetCatalog = "https://earthengine-stac.storage.googleapis.com/catalog/catalog.json";
 
@@ -63,9 +62,9 @@ export class GeeDataSetFileRepository implements GeeDataSetRepository {
 
         const links = datasets.data.links.filter((link: any) => link.rel === "child").map((link: any) => link.href);
 
-        const fullDatasets: GeeDataSet[] = await promiseMap(links, (link: string) =>
-            this.getDatasetFromGeeCatalog(link)
-        );
+        const fullDatasets = (await Promise.all(
+            links.map((link: string) => this.getDatasetFromGeeCatalog(link))
+        )) as GeeDataSet[];
 
         return {
             lastUpdated: new Date().toISOString(),

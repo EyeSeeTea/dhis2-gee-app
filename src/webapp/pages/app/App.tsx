@@ -1,6 +1,6 @@
 import { useConfig } from "@dhis2/app-runtime";
 import { HeaderBar } from "@dhis2/ui";
-import { SnackbarProvider } from "@eyeseetea/d2-ui-components";
+import { LoadingProvider, SnackbarProvider } from "@eyeseetea/d2-ui-components";
 import { MuiThemeProvider } from "@material-ui/core/styles";
 import _ from "lodash";
 //@ts-ignore
@@ -47,17 +47,18 @@ export const App: React.FC<AppProps> = React.memo(function App({ api, d2 }) {
                 ? process.env.REACT_APP_DATA_IMPORTER === "true"
                 : false;
 
-            setAppContext({
+            const appContext: AppContextState = {
                 d2,
                 api,
                 config,
                 currentUser,
                 compositionRoot,
                 isAdmin: !dataImporter,
-            });
+            };
 
             // Google Earth Engine must be defined globally in window (as var 'ee') to work
             Object.assign(window, { app: appContext });
+            setAppContext(appContext);
 
             setShowShareButton(_(appConfig).get("appearance.showShareButton") || false);
             if (currentUser.canReportFeedback()) initFeedbackTool(d2, appConfig);
@@ -65,7 +66,7 @@ export const App: React.FC<AppProps> = React.memo(function App({ api, d2 }) {
         }
 
         setup();
-    }, [baseUrl, api, appContext, d2]);
+    }, [baseUrl, api, d2]);
 
     if (loading || !appContext) return null;
 
@@ -73,15 +74,17 @@ export const App: React.FC<AppProps> = React.memo(function App({ api, d2 }) {
         <MuiThemeProvider theme={muiTheme}>
             <OldMuiThemeProvider muiTheme={muiThemeLegacy}>
                 <SnackbarProvider>
-                    <HeaderBar appName={appContext.isAdmin ? "GEE App" : "GEE Data Importer App"} />
+                    <LoadingProvider>
+                        <HeaderBar appName={appContext.isAdmin ? "GEE App" : "GEE Data Importer App"} />
 
-                    <div id="app" className="content">
-                        <AppContext.Provider value={appContext}>
-                            <Router />
-                        </AppContext.Provider>
-                    </div>
+                        <div id="app" className="content">
+                            <AppContext.Provider value={appContext}>
+                                <Router />
+                            </AppContext.Provider>
+                        </div>
 
-                    <Share visible={showShareButton} />
+                        <Share visible={showShareButton} />
+                    </LoadingProvider>
                 </SnackbarProvider>
             </OldMuiThemeProvider>
         </MuiThemeProvider>
