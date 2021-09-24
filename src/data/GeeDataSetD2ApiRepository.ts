@@ -127,19 +127,24 @@ export interface GeeApiDataSet {
     title: string;
     description: string;
     keywords: string[];
-    "gee:type"?: string;
+    "gee:type": string;
     summaries: {
         [key: string]: any;
-        "eo:bands": GeeApiEoBand[];
+        "eo:bands"?: GeeApiEoBand[];
     };
-    properties: {
+    properties?: {
         [key: string]: any;
     };
+    links?: {
+        rel: string;
+        href: string;
+        type?: string;
+    }[];
     [key: string]: any;
 }
 
 export interface GeeApiEoBand {
     name: string;
     description: string;
-    "gee:units": string;
+    "gee:units"?: string;
 }

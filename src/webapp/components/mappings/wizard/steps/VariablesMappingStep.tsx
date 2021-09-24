@@ -12,7 +12,7 @@ const VariablesMappingStep: React.FC<StepProps> = ({ mapping, onChange }) => {
     React.useEffect(() => {
         geeDataSets.getById.execute(mapping.geeImage).then(result => {
             if (result.isDefined()) {
-                setBands(result.get().bands.map(band => band.name));
+                setBands(result.get().bands?.map(band => band.name) ?? []);
             }
         });
     }, [geeDataSets.getById, mapping]);
