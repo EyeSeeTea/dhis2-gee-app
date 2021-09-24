@@ -19,7 +19,7 @@ export class DeleteMappingsUseCase {
         if (relatedImportRulesResult.flatMap(() => relatedGlobalOUMappingResult).isSuccess()) {
             return await this.mappingRepository.deleteByIds(ids);
         } else {
-            return Either.failure({
+            return Either.error({
                 kind: "UnexpectedError",
                 error: new Error("An error has ocurred removing mapping from related import rules"),
             });

@@ -36,9 +36,9 @@ export default class GlobalOUMappingD2ApiRepository implements GlobalOUMappingRe
             Object.entries(globalOrgUnitMappingsToSave).forEach(([k, v]) => (globalOrgUnitMappings[k] = v));
 
             this.saveGlobalOrgUnitMappingsData(globalOrgUnitMappings);
-            return Either.Success(true);
+            return Either.success(true);
         } catch (e: any) {
-            return Either.failure({
+            return Either.error({
                 kind: "UnexpectedError",
                 error: e,
             });
@@ -57,9 +57,9 @@ export default class GlobalOUMappingD2ApiRepository implements GlobalOUMappingRe
 
             this.saveGlobalOrgUnitMappingsData(globalOrgUnitMappingsFiltered);
 
-            return Either.Success(true);
+            return Either.success(true);
         } catch (e: any) {
-            return Either.failure({
+            return Either.error({
                 kind: "UnexpectedError",
                 error: e,
             });
@@ -77,9 +77,9 @@ export default class GlobalOUMappingD2ApiRepository implements GlobalOUMappingRe
 
             this.saveGlobalOrgUnitMappingsData(globalOrgUnitMappingsFiltered);
 
-            return Either.Success(true);
+            return Either.success(true);
         } catch (e: any) {
-            return Either.failure({
+            return Either.error({
                 kind: "UnexpectedError",
                 error: e,
             });
