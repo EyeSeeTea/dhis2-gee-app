@@ -61,7 +61,7 @@
         "cy:e2e:run": "NODE_ENV=test CYPRESS_E2E=true cypress run --browser chrome",
         "prepare": "husky install",
         "validate-gee-api": "npx ts-node src/scripts/validate-gee-api-cli.ts",
-        "validate-gee-api-action": "npx ts-node src/scripts/validate-gee-api-action.ts"
+        "build-validate-gee-api-action": "ncc build src/scripts/validate-gee-api-action.ts -m"
     },
     "husky": {
         "hooks": {

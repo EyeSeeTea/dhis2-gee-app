@@ -18,5 +18,5 @@
         "experimentalDecorators": true,
         "lib": ["dom", "dom.iterable", "esnext"]
     },
-    "include": ["src"]
+    "include": ["."]
 }
