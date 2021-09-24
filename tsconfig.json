@@ -22,5 +22,5 @@
         "noFallthroughCasesInSwitch": true,
         "lib": ["dom", "dom.iterable", "esnext"]
     },
-    "include": ["src", ".github/actions/validate-gee-api/validate-gee-api-action.ts"]
+    "include": ["src"]
 }
