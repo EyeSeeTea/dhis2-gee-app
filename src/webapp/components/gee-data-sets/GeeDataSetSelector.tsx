@@ -1,24 +1,23 @@
 import i18n from "@dhis2/d2-i18n";
 import {
-    DialogContent,
-    TextField,
-    FormControl,
-    MuiThemeProvider,
-    createMuiTheme,
-    Typography,
-    makeStyles,
-} from "@material-ui/core";
-
-import React, { useState, useEffect, useRef } from "react";
-import { GeeDataSet, Cadence } from "../../../domain/entities/GeeDataSet";
-import { useCompositionRoot } from "../../contexts/app-context";
-import {
-    TableColumn,
-    ObjectsTableDetailField,
-    TableAction,
     ConfirmationDialog,
     ObjectsTable,
+    ObjectsTableDetailField,
+    TableAction,
+    TableColumn,
 } from "@eyeseetea/d2-ui-components";
+import {
+    createTheme,
+    DialogContent,
+    FormControl,
+    makeStyles,
+    MuiThemeProvider,
+    TextField,
+    Typography,
+} from "@material-ui/core";
+import React, { useEffect, useRef, useState } from "react";
+import { Cadence, GeeDataSet } from "../../../domain/entities/GeeDataSet";
+import { useCompositionRoot } from "../../contexts/app-context";
 import Dropdown from "../dropdown/Dropdown";
 
 export interface DropdownOption {
@@ -239,7 +238,7 @@ const GeeDataSetSelector: React.FC<GeeDataSetSelectorProps> = ({ onChange, float
 export default GeeDataSetSelector;
 
 const getMaterialTheme = () =>
-    createMuiTheme({
+    createTheme({
         overrides: {
             MuiFormLabel: {
                 root: {
