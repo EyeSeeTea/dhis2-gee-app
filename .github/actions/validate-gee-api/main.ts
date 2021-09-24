@@ -1,5 +1,5 @@
 import * as core from "@actions/core";
-import { validateApi } from "./validate-gee-api-cli";
+import { validateApi } from "../../../src/scripts/validate-gee-api";
 
 async function run(): Promise<void> {
     try {
