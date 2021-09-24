@@ -25,10 +25,6 @@ export function getTestUser() {
 export function getTestConfig() {
     return new Config({
         base: {
-            gee: {
-                serviceAccount: "test-63@foo-dhis2-gee-app.iam.gserviceaccount.com",
-                privateKeyFile: "foo-dhis2-gee-app-09be93975aeb.json",
-            },
             dataStore: {
                 namespace: "dhis2-gee-app",
                 keys: {
