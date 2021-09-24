@@ -5,8 +5,6 @@ import { Maybe } from "../domain/common/Maybe";
 import { GeeDataSet } from "../domain/entities/GeeDataSet";
 import { GeeDataSetRepository, GeeDataSetsFilter } from "../domain/repositories/GeeDataSetRepository";
 
-const geeDataSetCatalog = "https://earthengine-stac.storage.googleapis.com/catalog/catalog.json";
-
 export class GeeDataSetD2ApiRepository implements GeeDataSetRepository {
     private cachedGeeDataSets: GeeDataSetsCache | undefined;
 
@@ -25,6 +23,7 @@ export class GeeDataSetD2ApiRepository implements GeeDataSetRepository {
                     : true;
             })
             .filter(dataSet => (filter && filter.cadence ? dataSet.cadence?.includes(filter.cadence) : true));
+
         return filteredDataSets;
     }
 
@@ -35,79 +34,48 @@ export class GeeDataSetD2ApiRepository implements GeeDataSetRepository {
         return dataSetResult;
     }
 
+    async getGeeApi(): Promise<GeeApiDataSet[]> {
+        const geeDataSetCatalog = "https://earthengine-stac.storage.googleapis.com/catalog/catalog.json";
+        const { data: catalog } = await axios.get<GeeApiCatalog>(geeDataSetCatalog);
+        const links = catalog.links.filter(link => link.rel === "child").map(link => link.href);
+
+        return Promise.all(
+            links.map(async link => {
+                const { data } = await axios.get<GeeApiDataSet>(link);
+                return data;
+            })
+        );
+    }
+
     private async getDataSets(): Promise<GeeDataSet[]> {
         if (this.cachedGeeDataSets) {
             return this.cachedGeeDataSets.dataSets;
+        }
+
+        const dataSets = await this.getDatasetsFromDataStore();
+
+        if (dataSets && moment(new Date()).diff(moment(dataSets.lastUpdated), "days") < 7) {
+            this.cachedGeeDataSets = dataSets;
+
+            return this.cachedGeeDataSets.dataSets;
         } else {
-            const dataSets = await this.getDatasetsFromDataStore();
+            const dataSets = await this.getDatasetsFromGeeCatalog();
+            await this.saveDatasetsInDataStore(dataSets);
+            this.cachedGeeDataSets = dataSets;
 
-            if (dataSets && moment(new Date()).diff(moment(dataSets.lastUpdated), "days") < 7) {
-                this.cachedGeeDataSets = dataSets;
-
-                return this.cachedGeeDataSets.dataSets;
-            } else {
-                const dataSets = await this.getDatasetsFromGeeCatalog();
-
-                await this.saveDatasetsInDataStore(dataSets);
-
-                this.cachedGeeDataSets = dataSets;
-
-                return this.cachedGeeDataSets.dataSets;
-            }
+            return this.cachedGeeDataSets.dataSets;
         }
     }
 
     private async getDatasetsFromGeeCatalog(): Promise<GeeDataSetsCache> {
-        const datasets = await axios.get(geeDataSetCatalog);
+        const apiDataSets = await this.getGeeApi();
+        const dataSets = apiDataSets.map(dataset => mapGeeDataSet(dataset));
 
-        const links = datasets.data.links.filter((link: any) => link.rel === "child").map((link: any) => link.href);
-
-        const fullDatasets = (await Promise.all(
-            links.map((link: string) => this.getDatasetFromGeeCatalog(link))
-        )) as GeeDataSet[];
-
-        return {
-            lastUpdated: new Date().toISOString(),
-            dataSets: fullDatasets,
-        };
-    }
-
-    private async getDatasetFromGeeCatalog(url: string): Promise<GeeDataSet> {
-        const response = await axios.get(url);
-
-        const data = response.data;
-
-        const id = data.id.replace(new RegExp("/", "g"), "-");
-
-        // TODO: This was a quick fix to get the data from the catalog.
-        const getProperty = (property: string): any => {
-            return data.properties?.[property] ?? data.summaries?.[property] ?? data[property];
-        };
-
-        const geeDataset = {
-            id: id,
-            imageCollectionId: data.id,
-            displayName: data.title,
-            type: getProperty("gee:type"),
-            description: data.description,
-            doc: `https://developers.google.com/earth-engine/datasets/catalog/${data.id}`,
-            cadence: getProperty("gee:interval")?.unit,
-            bands: getProperty("eo:bands")?.map((band: any) => {
-                return {
-                    name: band.name,
-                    units: band["gee:unit"],
-                    description: band.description,
-                };
-            }),
-            keywords: data.keywords,
-        };
-
-        return geeDataset;
+        return { lastUpdated: new Date().toISOString(), dataSets };
     }
 
     private async getDatasetsFromDataStore(): Promise<GeeDataSetsCache | undefined> {
         const data = await this.dataStore.get<GeeDataSetsCache>(this.dataStoreKey).getData();
-
         return data;
     }
 
@@ -116,7 +84,62 @@ export class GeeDataSetD2ApiRepository implements GeeDataSetRepository {
     }
 }
 
+function mapGeeDataSet(data: GeeApiDataSet): GeeDataSet {
+    const id = data.id.replace(new RegExp("/", "g"), "-");
+
+    const getProperty = (property: string): any => {
+        return data.properties?.[property] ?? data.summaries?.[property] ?? data[property];
+    };
+
+    return {
+        id: id,
+        imageCollectionId: data.id,
+        displayName: data.title,
+        type: getProperty("gee:type"),
+        description: data.description,
+        doc: `https://developers.google.com/earth-engine/datasets/catalog/${data.id}`,
+        cadence: getProperty("gee:interval")?.unit,
+        bands: getProperty("eo:bands")?.map((band: any) => {
+            return {
+                name: band.name,
+                units: band["gee:units"],
+                description: band.description,
+            };
+        }),
+        keywords: data.keywords,
+    };
+}
+
 export type GeeDataSetsCache = {
     lastUpdated: string;
     dataSets: GeeDataSet[];
 };
+
+export interface GeeApiCatalog {
+    links: {
+        rel: string;
+        href: string;
+    }[];
+}
+
+export interface GeeApiDataSet {
+    id: string;
+    title: string;
+    description: string;
+    keywords: string[];
+    "gee:type"?: string;
+    summaries: {
+        [key: string]: any;
+        "eo:bands": GeeApiEoBand[];
+    };
+    properties: {
+        [key: string]: any;
+    };
+    [key: string]: any;
+}
+
+export interface GeeApiEoBand {
+    name: string;
+    description: string;
+    "gee:units": string;
+}
