@@ -5,7 +5,7 @@ import { Config } from "./webapp/models/Config";
 import { GeeDataEarthEngineRepository } from "./data/GeeDataValueSetApiRepository";
 import OrgUnitOldD2ApiRepository from "./data/OrgUnitOldD2ApiRepository";
 import DataValueSetD2ApiRepository from "./data/DataValueSetD2ApiRepository";
-import { GeeDataSetFileRepository } from "./data/GeeDataSetD2ApiRepository";
+import { GeeDataSetD2ApiRepository } from "./data/GeeDataSetD2ApiRepository";
 import DataValueSetFileRepository from "./data/DataValueSetFileRepository";
 import ImportRuleD2ApiRepository from "./data/ImportRuleD2ApiRepository";
 import { GetImportRulesUseCase } from "./domain/usecases/GetImportRulesUseCase";
@@ -140,7 +140,7 @@ class CompositionRoot {
     }
 
     private initializeGeeDataSet() {
-        const geeDataSetRepository = new GeeDataSetFileRepository(
+        const geeDataSetRepository = new GeeDataSetD2ApiRepository(
             this.dependencies.get("dataStore"),
             this.config.data.base.dataStore.keys.geeDataSets
         );

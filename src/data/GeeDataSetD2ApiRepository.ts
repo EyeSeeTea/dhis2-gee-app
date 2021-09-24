@@ -7,7 +7,7 @@ import { GeeDataSetRepository, GeeDataSetsFilter } from "../domain/repositories/
 
 const geeDataSetCatalog = "https://earthengine-stac.storage.googleapis.com/catalog/catalog.json";
 
-export class GeeDataSetFileRepository implements GeeDataSetRepository {
+export class GeeDataSetD2ApiRepository implements GeeDataSetRepository {
     private cachedGeeDataSets: GeeDataSetsCache | undefined;
 
     constructor(private dataStore: DataStore, private dataStoreKey: string) {}
@@ -91,7 +91,7 @@ export class GeeDataSetFileRepository implements GeeDataSetRepository {
             type: getProperty("gee:type"),
             description: data.description,
             doc: `https://developers.google.com/earth-engine/datasets/catalog/${data.id}`,
-            cadence: getProperty("gee:cadence"),
+            cadence: getProperty("gee:interval")?.unit,
             bands: getProperty("eo:bands")?.map((band: any) => {
                 return {
                     name: band.name,
