@@ -59,7 +59,9 @@
         "cy:verify": "cypress verify",
         "cy:e2e:open": "NODE_ENV=test CYPRESS_E2E=true cypress open",
         "cy:e2e:run": "NODE_ENV=test CYPRESS_E2E=true cypress run --browser chrome",
-        "prepare": "husky install"
+        "prepare": "husky install",
+        "validate-gee-api": "npx ts-node src/scripts/validate-gee-api-cli.ts",
+        "validate-gee-api-action": "npx ts-node src/scripts/validate-gee-api-action.ts"
     },
     "husky": {
         "hooks": {
@@ -89,6 +91,7 @@
         "@types/react-router-dom": "5.3.0",
         "@typescript-eslint/eslint-plugin": "4.31.2",
         "@typescript-eslint/parser": "4.31.2",
+        "@vercel/ncc": "0.31.1",
         "@welldone-software/why-did-you-render": "6.2.1",
         "axios-mock-adapter": "1.20.0",
         "babel-core": "6.26.3",

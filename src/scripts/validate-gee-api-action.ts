@@ -1,5 +1,5 @@
 import * as core from "@actions/core";
-import { validateApi } from "../../src/scripts/validate-gee-api";
+import { validateApi } from "./validate-gee-api-cli";
 
 async function run(): Promise<void> {
     try {
@@ -16,7 +16,7 @@ async function run(): Promise<void> {
         } else {
             core.setOutput("time", new Date().toTimeString());
         }
-    } catch (error) {
+    } catch (error: any) {
         core.setFailed(error.message);
     }
 }
