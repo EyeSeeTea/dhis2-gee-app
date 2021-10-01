@@ -227,6 +227,7 @@ const GeeDataSetSelector: React.FC<GeeDataSetSelectorProps> = ({ onChange, float
                             onChangeSearch={setSearchFilter}
                             searchBoxLabel={i18n.t("Search")}
                             filterComponents={customFilters}
+                            initialSearch={searchFilter}
                         />
                     </DialogContent>
                 </ConfirmationDialog>
