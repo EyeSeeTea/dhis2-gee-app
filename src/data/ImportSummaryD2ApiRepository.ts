@@ -21,9 +21,9 @@ export default class ImportSummaryD2ApiRepository implements ImportSummaryReposi
 
             await this.saveImportSummariesData(newImportSummariesData);
 
-            return Either.Success(true);
+            return Either.success(true);
         } catch (e: any) {
-            return Either.failure({
+            return Either.error({
                 kind: "UnexpectedError",
                 error: e,
             });
@@ -68,9 +68,9 @@ export default class ImportSummaryD2ApiRepository implements ImportSummaryReposi
                 : [...importSummariesData, importSummaryData];
 
             await this.saveImportSummariesData(newImportSummariesData);
-            return Either.Success(true);
+            return Either.success(true);
         } catch (e: any) {
-            return Either.failure({
+            return Either.error({
                 kind: "UnexpectedError",
                 error: e,
             });
@@ -102,9 +102,9 @@ export default class ImportSummaryD2ApiRepository implements ImportSummaryReposi
 
             await this.saveImportSummariesData(allDataToSave);
 
-            return Either.Success(true);
+            return Either.success(true);
         } catch (e: any) {
-            return Either.failure({
+            return Either.error({
                 kind: "UnexpectedError",
                 error: e,
             });

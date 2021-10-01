@@ -58,7 +58,7 @@ export default class ImportRuleD2ApiRepository implements ImportRuleRepository {
         try {
             if (importRule.id === importRuleOndemandId) {
                 this.saveDefaultData(this.mapToDataStore(importRule));
-                return Either.Success(true);
+                return Either.success(true);
             } else {
                 const importRulesData = await this.getImportRulesData();
                 const importRuleData = this.mapToDataStore(importRule);
@@ -70,10 +70,10 @@ export default class ImportRuleD2ApiRepository implements ImportRuleRepository {
                     : [...importRulesData, importRuleData];
 
                 await this.saveImportRulesData(newimportRulesData);
-                return Either.Success(true);
+                return Either.success(true);
             }
         } catch (e: any) {
-            return Either.failure({
+            return Either.error({
                 kind: "UnexpectedError",
                 error: e,
             });
@@ -104,9 +104,9 @@ export default class ImportRuleD2ApiRepository implements ImportRuleRepository {
 
             await this.saveImportRulesData(allDataToSave);
 
-            return Either.Success(true);
+            return Either.success(true);
         } catch (e: any) {
-            return Either.failure({
+            return Either.error({
                 kind: "UnexpectedError",
                 error: e,
             });
@@ -121,9 +121,9 @@ export default class ImportRuleD2ApiRepository implements ImportRuleRepository {
 
             await this.saveImportRulesData(newImportRulesData);
 
-            return Either.Success(true);
+            return Either.success(true);
         } catch (e: any) {
-            return Either.failure({
+            return Either.error({
                 kind: "UnexpectedError",
                 error: e,
             });

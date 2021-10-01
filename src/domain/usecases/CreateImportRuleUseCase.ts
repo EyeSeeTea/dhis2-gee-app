@@ -1,7 +1,7 @@
-import { ImportRuleRepository, SaveError } from "../repositories/ImportRuleRepository";
-import { ImportRuleWritableData, ImportRule } from "../entities/ImportRule";
 import { Either } from "../common/Either";
+import { ImportRule, ImportRuleWritableData } from "../entities/ImportRule";
 import { ValidationErrors } from "../errors/Generic";
+import { ImportRuleRepository, SaveError } from "../repositories/ImportRuleRepository";
 
 export type CreateImportRuleRequest = ImportRuleWritableData;
 
@@ -14,9 +14,11 @@ export class CreateImportRuleUseCase {
         const newResult = ImportRule.createNew(createImportRuleRequest);
 
         if (newResult.isSuccess()) {
-            return await this.importRuleRepository.save(newResult.value as ImportRule);
+            return await this.importRuleRepository.save(newResult.value.data);
+        } else if (newResult.isError()) {
+            return Either.error(newResult.value.error);
         } else {
-            return Either.failure(newResult.value as ValidationErrors);
+            return Either.error({ kind: "UnexpectedError", error: new Error("Unknown error") });
         }
     }
 }

@@ -48,8 +48,8 @@ function getComponentConfig(
 ) {
     const initialPagination = {
         page: 1,
-        pageSize: 15,
-        pageSizeOptions: [10, 15, 30],
+        pageSize: 10,
+        pageSizeOptions: [10, 25, 50],
     };
 
     const initialSorting = { field: "name" as const, order: "asc" as const };

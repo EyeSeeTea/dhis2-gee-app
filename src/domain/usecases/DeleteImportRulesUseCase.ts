@@ -17,7 +17,7 @@ export class DeleteImportRulesUseCase {
         if (relatedImportSummariesResult.isSuccess()) {
             return this.importRuleRepository.deleteByIds(ids);
         } else {
-            return Either.failure({
+            return Either.error({
                 kind: "UnexpectedError",
                 error: new Error("An error has ocurred updating related import histories"),
             });

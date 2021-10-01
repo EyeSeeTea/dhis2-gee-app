@@ -26,9 +26,9 @@ export default class MappingD2ApiRepository implements MappingRepository {
 
             await this.saveMappingData(newMappingData);
 
-            return Either.Success(true);
+            return Either.success(true);
         } catch (e: any) {
-            return Either.failure({
+            return Either.error({
                 kind: "UnexpectedError",
                 error: e,
             });
@@ -59,9 +59,9 @@ export default class MappingD2ApiRepository implements MappingRepository {
 
             await this.saveMappingData(allDataToSave);
 
-            return Either.Success(true);
+            return Either.success(true);
         } catch (e: any) {
-            return Either.failure({
+            return Either.error({
                 kind: "UnexpectedError",
                 error: e,
             });

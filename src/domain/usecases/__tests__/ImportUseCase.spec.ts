@@ -256,7 +256,7 @@ function givenAImportRuleRepository(): ImportRuleRepository {
         getAll: jest.fn(),
         deleteByIds: jest.fn(),
         save: jest.fn().mockImplementation(() => {
-            return Either.Success(true);
+            return Either.success(true);
         }),
         saveAll: jest.fn(),
     };
