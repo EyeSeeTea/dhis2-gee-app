@@ -90,23 +90,26 @@ export class GeeDataSetFileRepository implements GeeDataSetRepository {
 
         const id = data.id.replace(new RegExp("/", "g"), "-");
 
+        // TODO: This was a quick fix to get the data from the catalog.
+        const getProperty = (property: string): any => {
+            return data.properties?.[property] ?? data.summaries?.[property] ?? data[property];
+        };
+
         const geeDataset = {
             id: id,
             imageCollectionId: data.id,
             displayName: data.title,
-            type: data.properties["gee:type"] ? data.properties["gee:type"] : data["gee:type"],
+            type: getProperty("gee:type"),
             description: data.description,
             doc: `https://developers.google.com/earth-engine/datasets/catalog/${data.id}`,
-            cadence: data.properties["gee:cadence"],
-            bands: data.properties["eo:bands"]
-                ? data.properties["eo:bands"].map((band: any) => {
-                      return {
-                          name: band.name,
-                          units: band["gee:unit"],
-                          description: band.description,
-                      };
-                  })
-                : undefined,
+            cadence: getProperty("gee:cadence"),
+            bands: getProperty("eo:bands")?.map((band: any) => {
+                return {
+                    name: band.name,
+                    units: band["gee:unit"],
+                    description: band.description,
+                };
+            }),
             keywords: data.keywords,
         };
 
