@@ -10,11 +10,18 @@ $ yarn install
 
 ## Development
 
-Start development server:
+Start development server with the admin interface:
 
 ```
 $ PORT=8082 REACT_APP_DHIS2_BASE_URL="https://play.dhis2.org/dev" yarn start
 ```
+
+Start development server with the importer interface:
+
+```
+$ PORT=8082 REACT_APP_DATA_IMPORTER=true REACT_APP_DHIS2_BASE_URL="https://play.dhis2.org/dev" yarn start
+```
+
 
 Linting:
 
