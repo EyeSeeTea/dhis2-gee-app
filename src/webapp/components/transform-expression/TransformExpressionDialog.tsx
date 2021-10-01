@@ -1,12 +1,9 @@
 import DialogContent from "@material-ui/core/DialogContent";
-import { ConfirmationDialog, useSnackbar } from "d2-ui-components";
+import { ConfirmationDialog, useSnackbar } from "@eyeseetea/d2-ui-components";
 import React, { useState } from "react";
 import AttributeMapping from "../../models/AttributeMapping";
 import { TextField, Box, Button, makeStyles } from "@material-ui/core";
-import {
-    TransformExpression,
-    trasnformExpressionToken,
-} from "../../../domain/entities/TransformExpression";
+import { TransformExpression, trasnformExpressionToken } from "../../../domain/entities/TransformExpression";
 import i18n from "../../utils/i18n";
 
 export interface AttributeMappingDialogProps {
@@ -21,9 +18,7 @@ const TransformExpressionDialog: React.FC<AttributeMappingDialogProps> = ({
     onClose,
 }) => {
     const classes = useStyles();
-    const [expression, setExpression] = useState<string>(
-        attributeMapping?.transformExpression || ""
-    );
+    const [expression, setExpression] = useState<string>(attributeMapping?.transformExpression || "");
     const snackbar = useSnackbar();
 
     const onSave = () => {
@@ -36,10 +31,7 @@ const TransformExpressionDialog: React.FC<AttributeMappingDialogProps> = ({
 
             creationResult.fold(
                 () => snackbar.error(i18n.t("The expression is not valid")),
-                expression =>
-                    onTransformExpressionChange(
-                        attributeMapping.set("transformExpression", expression.value)
-                    )
+                expression => onTransformExpressionChange(attributeMapping.set("transformExpression", expression.value))
             );
         }
     };
@@ -92,11 +84,7 @@ const TransformExpressionDialog: React.FC<AttributeMappingDialogProps> = ({
                             justifyContent="center"
                         >
                             <span>{i18n.t("Variable") + ": "} </span>
-                            <Button
-                                color="primary"
-                                onClick={onTokenClick}
-                                className={classes.label}
-                            >
+                            <Button color="primary" onClick={onTokenClick} className={classes.label}>
                                 {trasnformExpressionToken}
                             </Button>
                         </Box>

@@ -9,6 +9,7 @@
 # production
 manifest.webapp
 /build
+/dist
 
 # misc
 .DS_Store
@@ -19,6 +20,7 @@ manifest.webapp
 *.sublime-project
 *.sublime-workspace
 *.code-workspace
+*.zip
 
 npm-debug.log*
 yarn-debug.log*
@@ -27,15 +29,13 @@ yarn-error.log*
 src/locales/
 src/react-app.d.ts
 src/react-app-env.d.ts
+bak
+.eslintcache
 
 # cypress
 cypress/screenshots/
 cypress/videos/
+cypress/fixtures/
 
 # IntelliJ
 .idea/*
-
-# Custom
-bak
-
-.vscode

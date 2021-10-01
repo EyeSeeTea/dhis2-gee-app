@@ -1,16 +1,16 @@
+import { Id } from "@eyeseetea/d2-api";
+import { DataStore } from "@eyeseetea/d2-api/api/dataStore";
 import moment from "moment";
-import {
-    ImportRuleRepository,
-    ImportRuleFilters,
-    SaveError,
-    DeleteImportRulesByIdError,
-} from "../domain/repositories/ImportRuleRepository";
-import { ImportRule, importRuleOndemandId } from "../domain/entities/ImportRule";
-import DataStore from "d2-api/api/dataStore";
-import { PeriodId } from "../domain/entities/PeriodOption";
-import { Maybe } from "../domain/common/Maybe";
-import { Id } from "d2-api";
 import { Either } from "../domain/common/Either";
+import { Maybe } from "../domain/common/Maybe";
+import { ImportRule, importRuleOndemandId } from "../domain/entities/ImportRule";
+import { PeriodId } from "../domain/entities/PeriodOption";
+import {
+    DeleteImportRulesByIdError,
+    ImportRuleFilters,
+    ImportRuleRepository,
+    SaveError,
+} from "../domain/repositories/ImportRuleRepository";
 import i18n from "../webapp/utils/i18n";
 
 const defaultImportRuleData: ImportRuleDS = {
@@ -30,11 +30,7 @@ const defaultImportRuleData: ImportRuleDS = {
 
 export default class ImportRuleD2ApiRepository implements ImportRuleRepository {
     private defaultKey: string;
-    constructor(
-        private dataStore: DataStore,
-        private dataStoreKey: string,
-        private defaultSuffixKey: string
-    ) {
+    constructor(private dataStore: DataStore, private dataStoreKey: string, private defaultSuffixKey: string) {
         this.defaultKey = `${importRuleOndemandId}${this.defaultSuffixKey}`;
     }
 
@@ -51,9 +47,7 @@ export default class ImportRuleD2ApiRepository implements ImportRuleRepository {
     async getAll(filters?: ImportRuleFilters): Promise<ImportRule[]> {
         const importRulesData = await this.getImportRulesData();
 
-        const importRules = importRulesData?.map(importRuleData =>
-            this.mapToDomain(importRuleData)
-        );
+        const importRules = importRulesData?.map(importRuleData => this.mapToDomain(importRuleData));
 
         const filteredImportRules = filters ? this.applyFilters(importRules, filters) : importRules;
 
@@ -64,7 +58,7 @@ export default class ImportRuleD2ApiRepository implements ImportRuleRepository {
         try {
             if (importRule.id === importRuleOndemandId) {
                 this.saveDefaultData(this.mapToDataStore(importRule));
-                return Either.Success(true);
+                return Either.success(true);
             } else {
                 const importRulesData = await this.getImportRulesData();
                 const importRuleData = this.mapToDataStore(importRule);
@@ -72,16 +66,14 @@ export default class ImportRuleD2ApiRepository implements ImportRuleRepository {
                 const exist = importRulesData.find(data => data.id === importRule.id);
 
                 const newimportRulesData = exist
-                    ? importRulesData.map(data =>
-                          data.id === importRule.id ? importRuleData : data
-                      )
+                    ? importRulesData.map(data => (data.id === importRule.id ? importRuleData : data))
                     : [...importRulesData, importRuleData];
 
                 await this.saveImportRulesData(newimportRulesData);
-                return Either.Success(true);
+                return Either.success(true);
             }
-        } catch (e) {
-            return Either.failure({
+        } catch (e: any) {
+            return Either.error({
                 kind: "UnexpectedError",
                 error: e,
             });
@@ -90,15 +82,13 @@ export default class ImportRuleD2ApiRepository implements ImportRuleRepository {
 
     async saveAll(importRules: ImportRule[]): Promise<Either<SaveError, true>> {
         try {
-            const importRulesDataToSave = importRules.map(importRule =>
-                this.mapToDataStore(importRule)
-            );
+            const importRulesDataToSave = importRules.map(importRule => this.mapToDataStore(importRule));
 
             const existedImportRulesData = await this.getImportRulesData();
             const existedImportRulesDataIds = existedImportRulesData.map(data => data.id);
 
-            const existedImportRulesDataToSave = importRulesDataToSave.filter(
-                importRuleDataToSave => existedImportRulesDataIds.includes(importRuleDataToSave.id)
+            const existedImportRulesDataToSave = importRulesDataToSave.filter(importRuleDataToSave =>
+                existedImportRulesDataIds.includes(importRuleDataToSave.id)
             );
 
             const newImportRulesDataToSave = importRulesDataToSave.filter(
@@ -107,18 +97,16 @@ export default class ImportRuleD2ApiRepository implements ImportRuleRepository {
 
             const allDataToSave = [
                 ...existedImportRulesData.map(
-                    existed =>
-                        existedImportRulesDataToSave.find(updated => updated.id === existed.id) ||
-                        existed
+                    existed => existedImportRulesDataToSave.find(updated => updated.id === existed.id) || existed
                 ),
                 ...newImportRulesDataToSave,
             ];
 
             await this.saveImportRulesData(allDataToSave);
 
-            return Either.Success(true);
-        } catch (e) {
-            return Either.failure({
+            return Either.success(true);
+        } catch (e: any) {
+            return Either.error({
                 kind: "UnexpectedError",
                 error: e,
             });
@@ -129,15 +117,13 @@ export default class ImportRuleD2ApiRepository implements ImportRuleRepository {
         try {
             const importRulesData = await this.getImportRulesData();
 
-            const newImportRulesData = importRulesData.filter(
-                importSummary => !ids.includes(importSummary.id)
-            );
+            const newImportRulesData = importRulesData.filter(importSummary => !ids.includes(importSummary.id));
 
             await this.saveImportRulesData(newImportRulesData);
 
-            return Either.Success(true);
-        } catch (e) {
-            return Either.failure({
+            return Either.success(true);
+        } catch (e: any) {
+            return Either.error({
                 kind: "UnexpectedError",
                 error: e,
             });
@@ -145,9 +131,7 @@ export default class ImportRuleD2ApiRepository implements ImportRuleRepository {
     }
 
     private async getDefault(): Promise<ImportRule> {
-        const importRuleDataResult = Maybe.fromValue(
-            await this.dataStore.get<ImportRuleDS>(this.defaultKey).getData()
-        );
+        const importRuleDataResult = Maybe.fromValue(await this.dataStore.get<ImportRuleDS>(this.defaultKey).getData());
 
         const importRuleData = importRuleDataResult.getOrElse(defaultImportRuleData);
 
@@ -206,9 +190,7 @@ export default class ImportRuleD2ApiRepository implements ImportRuleRepository {
             ...importRuleData,
             created: new Date(importRuleData.created),
             lastUpdated: new Date(importRuleData.lastUpdated),
-            lastExecuted: importRuleData.lastExecuted
-                ? new Date(importRuleData.lastExecuted)
-                : undefined,
+            lastExecuted: importRuleData.lastExecuted ? new Date(importRuleData.lastExecuted) : undefined,
             periodInformation: importRuleData.periodInformation
                 ? {
                       ...importRuleData.periodInformation,
@@ -245,9 +227,7 @@ export default class ImportRuleD2ApiRepository implements ImportRuleRepository {
             selectedMappings: importRule.selectedMappings,
             created: importRule.created.toISOString(),
             lastUpdated: importRule.lastUpdated.toISOString(),
-            lastExecuted: importRule.lastExecuted
-                ? importRule.lastExecuted.toISOString()
-                : undefined,
+            lastExecuted: importRule.lastExecuted ? importRule.lastExecuted.toISOString() : undefined,
         };
     }
 }

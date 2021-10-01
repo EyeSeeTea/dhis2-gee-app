@@ -1,7 +1,4 @@
-import {
-    ImportSummaryRepository,
-    ImportSummaryFilters,
-} from "../repositories/ImportSummaryRepository";
+import { ImportSummaryRepository, ImportSummaryFilters } from "../repositories/ImportSummaryRepository";
 import { ImportSummaryData } from "../entities/ImportSummary";
 import { Page } from "../common/Pagination";
 

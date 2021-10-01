@@ -14,23 +14,19 @@ export class DeleteMappingsUseCase {
 
     async execute(ids: Id[]): Promise<Either<DeleteMappingByIdsError, true>> {
         const relatedImportRulesResult = await this.updateRelatedImportRules(ids);
-        const relatedGlobalOUMappingResult = await this.globalOUMappingRepository.deleteByMappingIds(
-            ids
-        );
+        const relatedGlobalOUMappingResult = await this.globalOUMappingRepository.deleteByMappingIds(ids);
 
         if (relatedImportRulesResult.flatMap(() => relatedGlobalOUMappingResult).isSuccess()) {
             return await this.mappingRepository.deleteByIds(ids);
         } else {
-            return Either.failure({
+            return Either.error({
                 kind: "UnexpectedError",
                 error: new Error("An error has ocurred removing mapping from related import rules"),
             });
         }
     }
 
-    private async updateRelatedImportRules(
-        mappingIdsToDelete: Id[]
-    ): Promise<Either<UnexpectedError, true>> {
+    private async updateRelatedImportRules(mappingIdsToDelete: Id[]): Promise<Either<UnexpectedError, true>> {
         const importRules = await this.importRuleRepository.getAll();
 
         const importRulesWithMappingIdTodelete = importRules.filter(importRule =>

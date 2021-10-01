@@ -10,11 +10,18 @@ $ yarn install
 
 ## Development
 
-Start development server:
+Start development server with the admin interface:
 
 ```
 $ PORT=8082 REACT_APP_DHIS2_BASE_URL="https://play.dhis2.org/dev" yarn start
 ```
+
+Start development server with the importer interface:
+
+```
+$ PORT=8082 REACT_APP_DATA_IMPORTER=true REACT_APP_DHIS2_BASE_URL="https://play.dhis2.org/dev" yarn start
+```
+
 
 Linting:
 
@@ -119,4 +126,4 @@ const SomeComponent: React.FunctionComponent = () => {
 
 ### Google Earth Engine API unilateral changes warning
 
-**Attention:** GEE API has been reported to change its answer without respecting backwards compatibility with previous versions of its answers. Current app version is not compatible with GEE catalog json description. We will generate a new version as soon as possible. EyeSeetea does not garantee how quick the app will follow GEE API backwards incompatible unilateral changes.
+**Attention:** GEE API has been reported to change its answer without respecting backwards compatibility with previous versions of its answers. EyeSeetea does not garantee how quick the app will follow GEE API backwards incompatible unilateral changes.

@@ -186,9 +186,7 @@ function givenAOrgUnitRepository(): OrgUnitRepository {
     };
 }
 
-function givenAMappingRepository(
-    trasformExpresion: string | undefined = undefined
-): MappingRepository {
+function givenAMappingRepository(trasformExpresion: string | undefined = undefined): MappingRepository {
     const getTrasformExpresion = (trasformExpresion: string | undefined) => {
         if (!trasformExpresion) {
             return trasformExpresion;
@@ -258,7 +256,7 @@ function givenAImportRuleRepository(): ImportRuleRepository {
         getAll: jest.fn(),
         deleteByIds: jest.fn(),
         save: jest.fn().mockImplementation(() => {
-            return Either.Success(true);
+            return Either.success(true);
         }),
         saveAll: jest.fn(),
     };
@@ -347,9 +345,7 @@ function givenAGeeDataValueSetRepository(): GeeDataValueSetRepository {
     };
 }
 
-function givenAnExpectedDataValueSet(
-    trasnformExpression: string | undefined = undefined
-): DataValueSet {
+function givenAnExpectedDataValueSet(trasnformExpression: string | undefined = undefined): DataValueSet {
     /* eslint no-eval: 0 */
     const getValue = (value: string) => {
         return trasnformExpression

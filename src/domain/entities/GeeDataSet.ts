@@ -4,7 +4,7 @@ export type GeeDataSet = {
     type: string;
     description: string;
     imageCollectionId: string;
-    bands: GeeBand[];
+    bands?: GeeBand[];
     doc: string;
     keywords: string[];
     cadence: string;
@@ -12,7 +12,7 @@ export type GeeDataSet = {
 
 export type GeeBand = {
     name: string;
-    units: string;
+    units?: string;
     description: string;
 };
 

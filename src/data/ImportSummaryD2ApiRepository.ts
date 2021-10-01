@@ -1,14 +1,14 @@
-import DataStore from "d2-api/api/dataStore";
-import { Either } from "../domain/common/Either";
-import { ImportSummaryStatus, ImportResult, ImportSummary } from "../domain/entities/ImportSummary";
-import {
-    SaveImportSummaryError,
-    ImportSummaryRepository,
-    ImportSummaryFilters,
-} from "../domain/repositories/ImportSummaryRepository";
-import { UnexpectedError } from "../domain/errors/Generic";
+import { DataStore } from "@eyeseetea/d2-api/api/dataStore";
 import _ from "lodash";
+import { Either } from "../domain/common/Either";
 import { Page } from "../domain/common/Pagination";
+import { ImportResult, ImportSummary, ImportSummaryStatus } from "../domain/entities/ImportSummary";
+import { UnexpectedError } from "../domain/errors/Generic";
+import {
+    ImportSummaryFilters,
+    ImportSummaryRepository,
+    SaveImportSummaryError,
+} from "../domain/repositories/ImportSummaryRepository";
 
 export default class ImportSummaryD2ApiRepository implements ImportSummaryRepository {
     constructor(private dataStore: DataStore, private dataStoreKey: string) {}
@@ -17,15 +17,13 @@ export default class ImportSummaryD2ApiRepository implements ImportSummaryReposi
         try {
             const importSummariesData = await this.getImportSummariesData();
 
-            const newImportSummariesData = importSummariesData.filter(
-                importSummary => !ids.includes(importSummary.id)
-            );
+            const newImportSummariesData = importSummariesData.filter(importSummary => !ids.includes(importSummary.id));
 
             await this.saveImportSummariesData(newImportSummariesData);
 
-            return Either.Success(true);
-        } catch (e) {
-            return Either.failure({
+            return Either.success(true);
+        } catch (e: any) {
+            return Either.error({
                 kind: "UnexpectedError",
                 error: e,
             });
@@ -33,25 +31,18 @@ export default class ImportSummaryD2ApiRepository implements ImportSummaryReposi
     }
 
     async getAll(filters?: ImportSummaryFilters): Promise<Page<ImportSummary>> {
-        console.log({ filters });
         const importSummariesData = await this.getImportSummariesData();
 
-        const importSummaries = importSummariesData?.map(importRuleData =>
-            this.mapToDomain(importRuleData)
-        );
+        const importSummaries = importSummariesData?.map(importRuleData => this.mapToDomain(importRuleData));
 
-        const filteredImportSummaries = filters
-            ? this.applyFilters(importSummaries, filters)
-            : importSummaries;
+        const filteredImportSummaries = filters ? this.applyFilters(importSummaries, filters) : importSummaries;
 
         const sortedData = filters?.sorting
             ? _.orderBy(filteredImportSummaries, [filters?.sorting.field], [filters?.sorting.order])
             : _.orderBy(filteredImportSummaries, ["date"], ["desc"]);
 
         const totalItems = sortedData.length;
-        const firstItem = filters?.pagination
-            ? (filters.pagination.page - 1) * filters.pagination.pageSize
-            : 0;
+        const firstItem = filters?.pagination ? (filters.pagination.page - 1) * filters.pagination.pageSize : 0;
         const lastItem = filters?.pagination ? firstItem + filters.pagination.pageSize : totalItems;
         const items = _.slice(sortedData, firstItem, lastItem);
 
@@ -73,15 +64,13 @@ export default class ImportSummaryD2ApiRepository implements ImportSummaryReposi
             const exist = importSummariesData.find(data => data.id === importSummary.id);
 
             const newImportSummariesData = exist
-                ? importSummariesData.map(data =>
-                      data.id === importSummary.id ? importSummaryData : data
-                  )
+                ? importSummariesData.map(data => (data.id === importSummary.id ? importSummaryData : data))
                 : [...importSummariesData, importSummaryData];
 
             await this.saveImportSummariesData(newImportSummariesData);
-            return Either.Success(true);
-        } catch (e) {
-            return Either.failure({
+            return Either.success(true);
+        } catch (e: any) {
+            return Either.error({
                 kind: "UnexpectedError",
                 error: e,
             });
@@ -92,46 +81,37 @@ export default class ImportSummaryD2ApiRepository implements ImportSummaryReposi
         try {
             const existedImportSummariesData = await this.getImportSummariesData();
 
-            const importSummariesDataToSave = importSummaries.map(importSummary =>
-                this.mapToDataStore(importSummary)
-            );
+            const importSummariesDataToSave = importSummaries.map(importSummary => this.mapToDataStore(importSummary));
 
             const existedImportSummariesDataIds = existedImportSummariesData.map(data => data.id);
 
-            const editedImportRulesDataToSave = importSummariesDataToSave.filter(
-                importSummaryDataToSave =>
-                    existedImportSummariesDataIds.includes(importSummaryDataToSave.id)
+            const editedImportRulesDataToSave = importSummariesDataToSave.filter(importSummaryDataToSave =>
+                existedImportSummariesDataIds.includes(importSummaryDataToSave.id)
             );
 
             const newImportSummariesDataToSave = importSummariesDataToSave.filter(
-                importSummaryDataToSave =>
-                    !existedImportSummariesDataIds.includes(importSummaryDataToSave.id)
+                importSummaryDataToSave => !existedImportSummariesDataIds.includes(importSummaryDataToSave.id)
             );
 
             const allDataToSave = [
                 ...existedImportSummariesData.map(
-                    existed =>
-                        editedImportRulesDataToSave.find(edited => edited.id === existed.id) ||
-                        existed
+                    existed => editedImportRulesDataToSave.find(edited => edited.id === existed.id) || existed
                 ),
                 ...newImportSummariesDataToSave,
             ];
 
             await this.saveImportSummariesData(allDataToSave);
 
-            return Either.Success(true);
-        } catch (e) {
-            return Either.failure({
+            return Either.success(true);
+        } catch (e: any) {
+            return Either.error({
                 kind: "UnexpectedError",
                 error: e,
             });
         }
     }
 
-    private applyFilters(
-        importSummaries: ImportSummary[],
-        filters: ImportSummaryFilters
-    ): ImportSummary[] {
+    private applyFilters(importSummaries: ImportSummary[], filters: ImportSummaryFilters): ImportSummary[] {
         const { importRule, status } = filters;
 
         const filteredByImportRules =

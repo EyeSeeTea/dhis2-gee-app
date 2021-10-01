@@ -1,30 +1,30 @@
-import React, { useState, useEffect, useMemo, useCallback } from "react";
-import _ from "lodash";
 import {
-    MouseActionsMapping,
-    TableColumn,
-    TableAction,
-    TableSorting,
-    TablePagination,
-    ObjectsTable,
     ConfirmationDialog,
+    MouseActionsMapping,
+    ObjectsTable,
+    TableAction,
+    TableColumn,
+    TablePagination,
+    TableSorting,
     useSnackbar,
-} from "d2-ui-components";
+} from "@eyeseetea/d2-ui-components";
+import { Box, createStyles, Fab, Icon, LinearProgress, Theme } from "@material-ui/core";
 import AddIcon from "@material-ui/icons/Add";
-import Mapping from "../../models/Mapping";
-import { useAppContext, useCompositionRoot } from "../../contexts/app-context";
 import { makeStyles } from "@material-ui/styles";
-import { Theme, createStyles, LinearProgress, Icon, Box, Fab } from "@material-ui/core";
-import { useGoTo, GoTo, pageRoutes } from "../root/Root";
+import _ from "lodash";
+import { Checkbox } from "material-ui";
+import React, { useCallback, useEffect, useMemo, useState } from "react";
+import { Id } from "../../../domain/entities/Ref";
+import {
+    DeleteGlobalOUMappingError,
+    SaveGlobalOUMappingError,
+} from "../../../domain/repositories/GlobalOUMappingRepository";
 import { DeleteMappingByIdsError } from "../../../domain/repositories/MappingRepository";
 import OUDialog from "../../components/dialogs/OrganisationUnitDialog";
-import {
-    SaveGlobalOUMappingError,
-    DeleteGlobalOUMappingError,
-} from "../../../domain/repositories/GlobalOUMappingRepository";
-import { Id } from "../../../domain/entities/Ref";
-import { Checkbox } from "material-ui";
+import { useAppContext, useCompositionRoot } from "../../contexts/app-context";
+import Mapping from "../../models/Mapping";
 import i18n from "../../utils/i18n";
+import { GoTo, pageRoutes, useGoTo } from "../Router";
 
 type ContextualAction = "details" | "edit" | "delete" | "assignOU" | "setAsDefault";
 
@@ -44,12 +44,12 @@ function getComponentConfig(
     goTo: GoTo,
     setMappingIdsToDelete: (state: React.SetStateAction<string[] | undefined>) => void,
     setMappingIdToAssignOUs: (state: React.SetStateAction<string | undefined>) => void,
-    setMappingAsDefault: (mappingId: Id) => void
+    setMappingAsDefault: (mappingId?: Id) => void
 ) {
     const initialPagination = {
         page: 1,
-        pageSize: 15,
-        pageSizeOptions: [10, 15, 30],
+        pageSize: 10,
+        pageSizeOptions: [10, 25, 50],
     };
 
     const initialSorting = { field: "name" as const, order: "asc" as const };
@@ -136,20 +136,19 @@ const MappingsList: React.FC<MappingsListProps> = props => {
     const { header, selectedMappings, onSelectionChange, onDeleteMappings } = props;
     const [mappingIdsToDelete, setMappingIdsToDelete] = useState<string[] | undefined>(undefined);
     const [mappingIdToAssignOUs, setMappingIdToAssignOUs] = useState<string | undefined>(undefined);
-    const [selectedOrgUnitsByMapping, setSelectedOrgUnitsByMapping] = useState<
-        string[] | undefined
-    >([]);
+    const [selectedOrgUnitsByMapping, setSelectedOrgUnitsByMapping] = useState<string[] | undefined>([]);
 
     const mapping = useCompositionRoot().mapping();
 
-    const setMappingAsDefault = async (mappingId: Id) => {
+    const setMappingAsDefault = async (mappingId?: Id) => {
+        if (!mappingId) return;
+
         const results = await mapping.setAsDefault.execute(mappingId);
         const handleFailure = (failure: DeleteMappingByIdsError): string => {
             switch (failure.kind) {
                 case "UnexpectedError":
                     return (
-                        i18n.t("An unexpected error has ocurred setting mappings as default ") +
-                        failure.error.message
+                        i18n.t("An unexpected error has ocurred setting mappings as default ") + failure.error.message
                     );
             }
         };
@@ -183,9 +182,7 @@ const MappingsList: React.FC<MappingsListProps> = props => {
     const globalOUMapping = useCompositionRoot().globalOUMapping();
 
     const selection = useMemo(() => {
-        return rows
-            .filter(mapping => selectedMappings?.includes(mapping.id))
-            .map(mapping => ({ id: mapping.id }));
+        return rows.filter(mapping => selectedMappings?.includes(mapping.id)).map(mapping => ({ id: mapping.id }));
     }, [rows, selectedMappings]);
 
     useEffect(() => {
@@ -196,19 +193,14 @@ const MappingsList: React.FC<MappingsListProps> = props => {
     useEffect(() => {
         if (mappingIdToAssignOUs) {
             globalOUMapping.getByMappingId.execute(mappingIdToAssignOUs).then(globalOUMappings => {
-                setSelectedOrgUnitsByMapping(
-                    Object.values(globalOUMappings).map(v => v.orgUnitPath)
-                );
+                setSelectedOrgUnitsByMapping(Object.values(globalOUMappings).map(v => v.orgUnitPath));
             });
         } else {
             setSelectedOrgUnitsByMapping(undefined);
         }
     }, [mappingIdToAssignOUs, globalOUMapping.getByMappingId]);
 
-    async function getMappings(
-        sorting: TableSorting<Mapping>,
-        paginationOptions: Partial<TablePagination>
-    ) {
+    async function getMappings(sorting: TableSorting<Mapping>, paginationOptions: Partial<TablePagination>) {
         //Filters to retrieve mappings from the data store.
         const listPagination = { ...pagination, ...paginationOptions };
 
@@ -228,10 +220,7 @@ const MappingsList: React.FC<MappingsListProps> = props => {
         const handleFailure = (failure: DeleteMappingByIdsError): string => {
             switch (failure.kind) {
                 case "UnexpectedError":
-                    return (
-                        i18n.t("An unexpected error has ocurred deleting mappings. ") +
-                        failure.error.message
-                    );
+                    return i18n.t("An unexpected error has ocurred deleting mappings. ") + failure.error.message;
             }
         };
 
@@ -279,12 +268,8 @@ const MappingsList: React.FC<MappingsListProps> = props => {
     };
 
     const deleteGlobalOUMappings = async (newOrgUnitsId: string[]) => {
-        const selectedOrgUnitIdsByMapping = _.compact(
-            (selectedOrgUnitsByMapping || []).map(o => o.split("/").pop())
-        );
-        const orgUnitToDeleteFromGlobalMapping = selectedOrgUnitIdsByMapping.filter(
-            ou => !newOrgUnitsId.includes(ou)
-        );
+        const selectedOrgUnitIdsByMapping = _.compact((selectedOrgUnitsByMapping || []).map(o => o.split("/").pop()));
+        const orgUnitToDeleteFromGlobalMapping = selectedOrgUnitIdsByMapping.filter(ou => !newOrgUnitsId.includes(ou));
 
         return globalOUMapping.delete.execute(orgUnitToDeleteFromGlobalMapping);
     };
@@ -297,15 +282,12 @@ const MappingsList: React.FC<MappingsListProps> = props => {
 
         const finalResult = createResult.flatMap(() => deleteResult);
 
-        const handleFailure = (
-            failure: SaveGlobalOUMappingError | DeleteGlobalOUMappingError
-        ): string => {
+        const handleFailure = (failure: SaveGlobalOUMappingError | DeleteGlobalOUMappingError): string => {
             switch (failure.kind) {
                 case "UnexpectedError":
                     return (
-                        i18n.t(
-                            "An unexpected error has ocurred updating organisation unit assigment. "
-                        ) + failure.error.message
+                        i18n.t("An unexpected error has ocurred updating organisation unit assigment. ") +
+                        failure.error.message
                     );
             }
         };
@@ -370,11 +352,7 @@ const MappingsList: React.FC<MappingsListProps> = props => {
             )}
 
             {mappingIdToAssignOUs && selectedOrgUnitsByMapping && (
-                <OUDialog
-                    selectedOUs={selectedOrgUnitsByMapping}
-                    onCancel={closeOUDialog}
-                    onSave={onSelectedOUsSave}
-                />
+                <OUDialog selectedOUs={selectedOrgUnitsByMapping} onCancel={closeOUDialog} onSave={onSelectedOUsSave} />
             )}
         </div>
     );

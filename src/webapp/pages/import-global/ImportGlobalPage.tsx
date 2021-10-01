@@ -5,7 +5,7 @@ import GetAppIcon from "@material-ui/icons/GetApp";
 import ImportExportIcon from "@material-ui/icons/ImportExport";
 import PageHeader from "../../components/page-header/PageHeader";
 import { LinearProgress, Box, Theme, Card, CardContent, Button } from "@material-ui/core";
-import { ConfirmationDialog, useSnackbar } from "d2-ui-components";
+import { ConfirmationDialog, useSnackbar } from "@eyeseetea/d2-ui-components";
 import { useHistory } from "react-router-dom";
 import ImportUseCase from "../../../domain/usecases/ImportUseCase";
 import WithCoordinatesOrgUnitsSelector from "../../components/org-unit/WithCoordinatesOrgUnitsSelector";
@@ -62,8 +62,7 @@ const ImportGlobalPage: React.FC = () => {
     const onChangeSelectedOU = (selectedOU: string[]) => {
         const selectedOUMappings = selectedOU.map(path => {
             const globalMappingId =
-                state.globalOUMappings[path.split("/").pop() || ""]?.mappingId ??
-                state.defaultMapping?.id;
+                state.globalOUMappings[path.split("/").pop() || ""]?.mappingId ?? state.defaultMapping?.id ?? "";
             return { orgUnitPath: path, mappingId: globalMappingId };
         });
 
@@ -124,10 +123,7 @@ const ImportGlobalPage: React.FC = () => {
 
     return (
         <React.Fragment>
-            <PageHeader
-                onBackClick={isAdmin ? () => history.goBack() : undefined}
-                title={i18n.t("Import")}
-            />
+            <PageHeader onBackClick={isAdmin ? () => history.goBack() : undefined} title={i18n.t("Import")} />
 
             <Card className={classes.card}>
                 <CardContent>
@@ -135,9 +131,7 @@ const ImportGlobalPage: React.FC = () => {
                         <Box width="70%">
                             <WithCoordinatesOrgUnitsSelector
                                 selectableIds={selectableIds()}
-                                selected={state.selectedOUMappings.map(
-                                    oumapping => oumapping.orgUnitPath
-                                )}
+                                selected={state.selectedOUMappings.map(oumapping => oumapping.orgUnitPath)}
                                 onChange={onChangeSelectedOU}
                             />
                         </Box>

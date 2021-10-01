@@ -8,7 +8,7 @@ import {
     TableColumn,
     TableState,
     useSnackbar,
-} from "d2-ui-components";
+} from "@eyeseetea/d2-ui-components";
 import _ from "lodash";
 import React, { useEffect, useState } from "react";
 import { Link, useHistory } from "react-router-dom";
@@ -17,7 +17,7 @@ import PageHeader from "../../components/page-header/PageHeader";
 import { Typography, LinearProgress } from "@material-ui/core";
 import { HistoryState, historyInitialState, ImportSummaryState } from "./HistoryState";
 import { useCompositionRoot } from "../../contexts/app-context";
-import { pageRoutes } from "../root/Root";
+import { pageRoutes } from "../Router";
 import { DeleteImportSummaryByIdsError } from "../../../domain/repositories/ImportSummaryRepository";
 import { Ref } from "../../../domain/entities/Ref";
 import i18n from "../../utils/i18n";
@@ -68,9 +68,7 @@ const HistoryPage: React.FC = () => {
                     if (!id) {
                         return i18n.t("(on-demand global mapping import)");
                     } else {
-                        return (
-                            _.find(state.importRules, { id })?.name ?? i18n.t("(on-demand import)")
-                        );
+                        return _.find(state.importRules, { id })?.name ?? i18n.t("(on-demand import)");
                     }
                 };
 
@@ -128,17 +126,13 @@ const HistoryPage: React.FC = () => {
         if (!importSummary) return;
 
         if (importSummary.result.success) {
-            snackbar.success(
-                i18n.t("Import successful") + "\n" + importSummary.result.messages.join("\n"),
-                { autoHideDuration: null }
-            );
+            snackbar.success(i18n.t("Import successful") + "\n" + importSummary.result.messages.join("\n"), {
+                autoHideDuration: null,
+            });
         } else {
-            snackbar.error(
-                i18n.t("Import failed") + "\n" + importSummary.result.failures.join("\n"),
-                {
-                    autoHideDuration: null,
-                }
-            );
+            snackbar.error(i18n.t("Import failed") + "\n" + importSummary.result.failures.join("\n"), {
+                autoHideDuration: null,
+            });
         }
     };
 
@@ -174,10 +168,7 @@ const HistoryPage: React.FC = () => {
         const handleFailure = (failure: DeleteImportSummaryByIdsError): string => {
             switch (failure.kind) {
                 case "UnexpectedError":
-                    return (
-                        i18n.t("An unexpected error has ocurred deleting import history. ") +
-                        failure.error.message
-                    );
+                    return i18n.t("An unexpected error has ocurred deleting import history. ") + failure.error.message;
             }
         };
 
@@ -276,10 +267,9 @@ const HistoryPage: React.FC = () => {
                     onSave={confirmDelete}
                     onCancel={() => setState({ ...state, toDelete: [] })}
                     title={i18n.t("Delete import histories?")}
-                    description={i18n.t(
-                        "Are you sure you want to delete {{deleteCount}} import histories?",
-                        { deleteCount: state.toDelete.length }
-                    )}
+                    description={i18n.t("Are you sure you want to delete {{deleteCount}} import histories?", {
+                        deleteCount: state.toDelete.length,
+                    })}
                     saveText={i18n.t("Ok")}
                 >
                     {state.isDeleting && <LinearProgress />}

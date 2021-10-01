@@ -1,5 +1,6 @@
+import { Id } from "@eyeseetea/d2-api";
 import _ from "lodash";
-import { Id, D2Api } from "d2-api";
+import { D2Api } from "../../types/d2-api";
 
 export interface UserData {
     id: Id;

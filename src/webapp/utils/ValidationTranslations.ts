@@ -11,17 +11,16 @@ const translations: ErrorTranslations = {
 
 export function getValidationTranslations(errors: ErrorsDictionary): string[] {
     return Object.keys(errors)
-        .map(field => {
-            const fieldErrors = errors[field];
-
-            return fieldErrors.map(errorKey => {
-                const fieldErrorTranslation = translations[errorKey];
-                if (fieldErrorTranslation) {
-                    return i18n.t(fieldErrorTranslation(field));
-                } else {
-                    return `Missing translations: ${errors[field]}`;
-                }
-            });
-        })
+        .map(
+            field =>
+                errors[field]?.map(errorKey => {
+                    const fieldErrorTranslation = translations[errorKey];
+                    if (fieldErrorTranslation) {
+                        return i18n.t(fieldErrorTranslation(field));
+                    } else {
+                        return `Missing translations: ${errors[field]}`;
+                    }
+                }) ?? []
+        )
         .flat();
 }

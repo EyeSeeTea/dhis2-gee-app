@@ -1,6 +1,6 @@
 import i18n from "@dhis2/d2-i18n";
 import { FormControl, InputLabel, MenuItem, MuiThemeProvider, Select } from "@material-ui/core";
-import { createMuiTheme } from "@material-ui/core/styles";
+import { createTheme } from "@material-ui/core/styles";
 import _ from "lodash";
 import React from "react";
 
@@ -20,7 +20,7 @@ interface DropdownProps {
 }
 
 const getMaterialTheme = () =>
-    createMuiTheme({
+    createTheme({
         overrides: {
             MuiFormLabel: {
                 root: {
@@ -76,9 +76,7 @@ const Dropdown: React.FC<DropdownProps> = ({
                         },
                     }}
                 >
-                    {!hideEmpty && (
-                        <MenuItem value={""}>{emptyLabel ?? i18n.t("<No value>")}</MenuItem>
-                    )}
+                    {!hideEmpty && <MenuItem value={""}>{emptyLabel ?? i18n.t("<No value>")}</MenuItem>}
                     {items.map(element => (
                         <MenuItem key={`element-${element.id}`} value={element.id}>
                             {element.name}

@@ -1,8 +1,4 @@
-import {
-    TransformExpression,
-    evalTransformExpression,
-    trasnformExpressionToken,
-} from "../TransformExpression";
+import { TransformExpression, evalTransformExpression, trasnformExpressionToken } from "../TransformExpression";
 
 const fahrenheitToCelsius = `(${trasnformExpressionToken} - 32 ) * 5/9`;
 const celsiusToFahrenheit = `(${trasnformExpressionToken} * 9/5) + 32`;
@@ -12,17 +8,17 @@ describe("TransformExpression", () => {
         it("should return empty error", async () => {
             const creationResult = TransformExpression.create("");
 
-            expect(creationResult.isFailure()).toBeTruthy();
+            expect(creationResult.isError()).toBeTruthy();
         });
         it("should return invalid math expression error if input variable in wrong", async () => {
             const creationResult = TransformExpression.create("(#{wronginput}×9/5)+32");
 
-            expect(creationResult.isFailure()).toBeTruthy();
+            expect(creationResult.isError()).toBeTruthy();
         });
         it("should return invalid  math expression error exists unexpected tokens", async () => {
             const creationResult = TransformExpression.create("(ffffff×9/5)+32");
 
-            expect(creationResult.isFailure()).toBeTruthy();
+            expect(creationResult.isError()).toBeTruthy();
         });
         it("should return math expression", async () => {
             const creationResult = TransformExpression.create(fahrenheitToCelsius);

@@ -1,5 +1,5 @@
 import React, { useEffect } from "react";
-import { OrgUnitsSelector } from "d2-ui-components";
+import { OrgUnitsSelector } from "@eyeseetea/d2-ui-components";
 import { useAppContext, useCompositionRoot } from "../../contexts/app-context";
 
 interface OUDialogProps {

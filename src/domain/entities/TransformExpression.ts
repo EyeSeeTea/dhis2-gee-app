@@ -10,10 +10,7 @@ export interface InvalidEmptyTransformExpression {
     kind: "InvalidEmptyTransformExpression";
 }
 
-export type TransformExpressionError =
-    | InvalidTransformExpression
-    | InvalidEmptyTransformExpression
-    | UnexpectedError;
+export type TransformExpressionError = InvalidTransformExpression | InvalidEmptyTransformExpression | UnexpectedError;
 
 export type EvalTransformExpressionError = UnexpectedError;
 
@@ -25,14 +22,14 @@ export class TransformExpression {
     public static create(formula: string): Either<TransformExpressionError, TransformExpression> {
         try {
             if (!formula && formula.trim().length === 0) {
-                return Either.failure({ kind: "InvalidEmptyTransformExpression" });
+                return Either.error({ kind: "InvalidEmptyTransformExpression" });
             } else if (!this.isValid(formula)) {
-                return Either.failure({ kind: "InvalidTransformExpression" });
+                return Either.error({ kind: "InvalidTransformExpression" });
             } else {
-                return Either.Success(new TransformExpression(formula.trim()));
+                return Either.success(new TransformExpression(formula.trim()));
             }
-        } catch (e) {
-            return Either.failure({
+        } catch (e: any) {
+            return Either.error({
                 kind: "UnexpectedError",
                 error: e,
             });
@@ -43,7 +40,7 @@ export class TransformExpression {
         try {
             evalRawMathExpression(formula, 5);
             return true;
-        } catch (e) {
+        } catch (e: any) {
             return false;
         }
     }
@@ -57,15 +54,15 @@ export const evalTransformExpression = (
         const result = evalRawMathExpression(formula.value, inputValue);
 
         return isNaN(result)
-            ? Either.failure({
+            ? Either.error({
                   kind: "UnexpectedError",
                   error: new Error(
                       `Unexpected invalid NaN result applying expression ${formula.value} to value ${inputValue}`
                   ),
               })
-            : Either.Success(result);
-    } catch (e) {
-        return Either.failure({
+            : Either.success(result);
+    } catch (e: any) {
+        return Either.error({
             kind: "UnexpectedError",
             error: e,
         });

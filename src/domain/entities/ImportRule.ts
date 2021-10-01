@@ -53,9 +53,9 @@ export class ImportRule {
         const errors = validate(newData);
 
         if (Object.keys(errors).length > 0) {
-            return Either.failure({ kind: "ValidationErrors", errors });
+            return Either.error({ kind: "ValidationErrors", errors });
         } else {
-            return Either.Success(
+            return Either.success(
                 new ImportRule({
                     ...newData,
                     id: generateId(),
@@ -78,9 +78,9 @@ export class ImportRule {
         const errors = validate(newData);
 
         if (Object.keys(errors).length > 0) {
-            return Either.failure({ kind: "ValidationErrors", errors });
+            return Either.error({ kind: "ValidationErrors", errors });
         } else {
-            return Either.Success(
+            return Either.success(
                 new ImportRule({
                     ...this.data,
                     name: newData.name,
@@ -112,7 +112,7 @@ function validate(values: ImportRuleWritableData): ErrorsDictionary {
         name: validateRequired("name", values.name),
     };
 
-    Object.keys(errors).forEach((key: string) => errors[key].length === 0 && delete errors[key]);
+    Object.keys(errors).forEach((key: string) => errors[key]?.length === 0 && delete errors[key]);
 
     return errors;
 }

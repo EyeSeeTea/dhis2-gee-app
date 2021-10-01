@@ -1,12 +1,6 @@
 import i18n from "@dhis2/d2-i18n";
 import { Icon, IconButton, makeStyles, Tooltip, Typography } from "@material-ui/core";
-import {
-    TableAction,
-    TableColumn,
-    useSnackbar,
-    ObjectsTable,
-    ConfirmationDialog,
-} from "d2-ui-components";
+import { TableAction, TableColumn, useSnackbar, ObjectsTable, ConfirmationDialog } from "@eyeseetea/d2-ui-components";
 import _ from "lodash";
 import React, { useCallback, useMemo, useState, useEffect } from "react";
 import Mapping from "../../models/Mapping";
@@ -35,33 +29,19 @@ interface WarningDialog {
     action?: () => void;
 }
 
-interface AttributeMappingConfig {
-    selection: string[];
-    mappedId: string | undefined;
-}
-
 export interface AttributeMappingTableProps {
     mapping: Mapping;
     onChange(newMapping: Mapping): void;
     availableBands: string[];
 }
 
-export default function AttributeMappingTable({
-    mapping,
-    onChange,
-    availableBands,
-}: AttributeMappingTableProps) {
+export default function AttributeMappingTable({ mapping, onChange, availableBands }: AttributeMappingTableProps) {
     const classes = useStyles();
     const snackbar = useSnackbar();
 
     const [warningDialog, setWarningDialog] = useState<WarningDialog | null>(null);
-    const [newMappingConfig, setNewMappingConfig] = useState<AttributeMappingDialogConfig | null>(
-        null
-    );
-    const [
-        attMappingToAddTransform,
-        setAttMappingToAddTransform,
-    ] = useState<AttributeMapping | null>(null);
+    const [newMappingConfig, setNewMappingConfig] = useState<AttributeMappingDialogConfig | null>(null);
+    const [attMappingToAddTransform, setAttMappingToAddTransform] = useState<AttributeMapping | null>(null);
 
     const [rows, setRows] = useState<AttributeMapping[]>([]);
 
@@ -80,10 +60,7 @@ export default function AttributeMappingTable({
     };
 
     useEffect(() => {
-        setRows(
-            AttributeMapping.getList(availableBands, mapping.attributeMappingDictionary)
-                .attributeMappings
-        );
+        setRows(AttributeMapping.getList(availableBands, mapping.attributeMappingDictionary).attributeMappings);
     }, [availableBands, mapping.attributeMappingDictionary]);
 
     const deleteMapping = useCallback(
@@ -92,12 +69,9 @@ export default function AttributeMappingTable({
                 if (geeBands.length > 0) {
                     setWarningDialog({
                         title: i18n.t("Disable mapping"),
-                        description: i18n.t(
-                            "Are you sure you want to disable mapping for {{total}} attributes?",
-                            {
-                                total: geeBands.length,
-                            }
-                        ),
+                        description: i18n.t("Are you sure you want to disable mapping for {{total}} attributes?", {
+                            total: geeBands.length,
+                        }),
                         action: () => deleteMapping(geeBands, false),
                     });
                 } else {
@@ -109,8 +83,7 @@ export default function AttributeMappingTable({
                     _.omit(mapping.attributeMappingDictionary, geeBands)
                 );
                 setRows(
-                    AttributeMapping.getList(availableBands, newMapping.attributeMappingDictionary)
-                        .attributeMappings
+                    AttributeMapping.getList(availableBands, newMapping.attributeMappingDictionary).attributeMappings
                 );
                 onChange(newMapping);
             }
@@ -124,10 +97,7 @@ export default function AttributeMappingTable({
                 ...mapping.attributeMappingDictionary,
                 [newAttributeMapping.id]: newAttributeMapping,
             });
-            setRows(
-                AttributeMapping.getList(availableBands, newMapping.attributeMappingDictionary)
-                    .attributeMappings
-            );
+            setRows(AttributeMapping.getList(availableBands, newMapping.attributeMappingDictionary).attributeMappings);
             onChange(newMapping);
             closeAttributeMappingDialog();
             closeAttributeExpressionDialog();
@@ -232,8 +202,7 @@ export default function AttributeMappingTable({
                 name: "transform-expression",
                 text: i18n.t("Set transform expression"),
                 multiple: false,
-                isActive: (attMappings: AttributeMapping[]) =>
-                    attMappings[0].dataElementId !== undefined,
+                isActive: (attMappings: AttributeMapping[]) => attMappings[0]?.dataElementId !== undefined,
                 onClick: openTransformExpressionDialog,
                 icon: <Icon>open_in_new</Icon>,
             },

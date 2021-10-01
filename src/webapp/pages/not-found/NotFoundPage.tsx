@@ -1,5 +1,5 @@
 import React from "react";
-import { pageRoutes } from "../root/Root";
+import { pageRoutes } from "../Router";
 import { makeStyles, Typography, Theme, Box } from "@material-ui/core";
 import i18n from "../../../locales";
 import { Link } from "react-router-dom";
@@ -27,9 +27,7 @@ const NotFoundPage: React.FC = () => {
                     justifyContent="center"
                     alignItems="center"
                 >
-                    <Typography variant="h5">
-                        {i18n.t("404, The page you are looking for isn’t here")}
-                    </Typography>
+                    <Typography variant="h5">{i18n.t("404, The page you are looking for isn’t here")}</Typography>
                     <Typography variant="h6">
                         {i18n.t("You either tried some shady route or you came here by mistake.")}
                     </Typography>

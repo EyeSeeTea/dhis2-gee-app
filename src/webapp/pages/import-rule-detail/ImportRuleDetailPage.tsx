@@ -3,29 +3,17 @@ import { useCompositionRoot, useCurrentUser } from "../../contexts/app-context";
 import { makeStyles } from "@material-ui/styles";
 import PageHeader from "../../components/page-header/PageHeader";
 import MappingsList from "../mappings/MappingsList";
-import {
-    Button,
-    LinearProgress,
-    Box,
-    Theme,
-    Card,
-    CardContent,
-    CardActions,
-} from "@material-ui/core";
+import { Button, LinearProgress, Box, Theme, Card, CardContent, CardActions } from "@material-ui/core";
 import GetAppIcon from "@material-ui/icons/GetApp";
 import ImportExportIcon from "@material-ui/icons/ImportExport";
 import OUDialog from "../../components/dialogs/OrganisationUnitDialog";
 import PeriodSelectorDialog from "../../components/dialogs/PeriodSelectorDialog";
-import { ConfirmationDialog, useSnackbar } from "d2-ui-components";
+import { ConfirmationDialog, useSnackbar } from "@eyeseetea/d2-ui-components";
 import { useHistory, useParams } from "react-router-dom";
 import ImportUseCase from "../../../domain/usecases/ImportUseCase";
 import { UpdateImportRuleError } from "../../../domain/usecases/UpdateImportRuleUseCase";
 import { PeriodOption } from "../../../domain/entities/PeriodOption";
-import {
-    ImportRuleDetailState,
-    importRuleDetailInitialState,
-    ImportRuleState,
-} from "./ImportRuleDetailState";
+import { ImportRuleDetailState, importRuleDetailInitialState, ImportRuleState } from "./ImportRuleDetailState";
 import { importRuleOndemandId } from "../../../domain/entities/ImportRule";
 import GeneralInfo from "../../components/import-rule/GeneralInfo";
 import { CreateImportRuleError } from "../../../domain/usecases/CreateImportRuleUseCase";
@@ -184,8 +172,6 @@ const ImportRuleDetailPage: React.FC = () => {
 
         const result = await useCase.executeImportRule(state.importRule.id, currentUser.username);
 
-        console.log({ result });
-
         setState({
             ...state,
             isImporting: false,
@@ -223,9 +209,7 @@ const ImportRuleDetailPage: React.FC = () => {
                         <Box className={classes.generalInfo}>
                             <GeneralInfo
                                 importRule={state.importRule}
-                                onChange={newImportRule =>
-                                    setState({ ...state, importRule: newImportRule })
-                                }
+                                onChange={newImportRule => setState({ ...state, importRule: newImportRule })}
                             />
                         </Box>
                     )}
@@ -295,11 +279,7 @@ const ImportRuleDetailPage: React.FC = () => {
                 </CardContent>
                 {state.isOndemand === false && (
                     <CardActions>
-                        <Button
-                            color="primary"
-                            variant="contained"
-                            onClick={() => save(state.importRule)}
-                        >
+                        <Button color="primary" variant="contained" onClick={() => save(state.importRule)}>
                             {i18n.t("Save")}
                         </Button>
                         <Button variant="contained" onClick={() => history.goBack()}>
