@@ -1,8 +1,5 @@
 import { Either } from "../common/Either";
-import {
-    GlobalOUMappingRepository,
-    DeleteGlobalOUMappingError,
-} from "../repositories/GlobalOUMappingRepository";
+import { GlobalOUMappingRepository, DeleteGlobalOUMappingError } from "../repositories/GlobalOUMappingRepository";
 import { Id } from "../entities/Ref";
 
 export class DeleteGlobalOUMappingUseCase {

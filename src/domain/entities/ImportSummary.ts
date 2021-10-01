@@ -1,5 +1,5 @@
 import { generateId } from "./Ref";
-import { Id } from "d2-api";
+import { Id } from "@eyeseetea/d2-api";
 
 export type ImportSummaryStatus = "FAILURE" | "SUCCESS";
 

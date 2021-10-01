@@ -1,24 +1,23 @@
 import i18n from "@dhis2/d2-i18n";
 import {
-    DialogContent,
-    TextField,
-    FormControl,
-    MuiThemeProvider,
-    createMuiTheme,
-    Typography,
-    makeStyles,
-} from "@material-ui/core";
-
-import React, { useState, useEffect, useRef } from "react";
-import { GeeDataSet, Cadence } from "../../../domain/entities/GeeDataSet";
-import { useCompositionRoot } from "../../contexts/app-context";
-import {
-    TableColumn,
-    ObjectsTableDetailField,
-    TableAction,
     ConfirmationDialog,
     ObjectsTable,
-} from "d2-ui-components";
+    ObjectsTableDetailField,
+    TableAction,
+    TableColumn,
+} from "@eyeseetea/d2-ui-components";
+import {
+    createTheme,
+    DialogContent,
+    FormControl,
+    makeStyles,
+    MuiThemeProvider,
+    TextField,
+    Typography,
+} from "@material-ui/core";
+import React, { useEffect, useRef, useState } from "react";
+import { Cadence, GeeDataSet } from "../../../domain/entities/GeeDataSet";
+import { useCompositionRoot } from "../../contexts/app-context";
 import Dropdown from "../dropdown/Dropdown";
 
 export interface DropdownOption {
@@ -32,11 +31,7 @@ interface GeeDataSetSelectorProps {
     onChange?: (event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => void;
 }
 
-const GeeDataSetSelector: React.FC<GeeDataSetSelectorProps> = ({
-    onChange,
-    floatingLabelText,
-    value,
-}) => {
+const GeeDataSetSelector: React.FC<GeeDataSetSelectorProps> = ({ onChange, floatingLabelText, value }) => {
     const classes = useStyles();
     const [rows, setRows] = useState<GeeDataSet[]>([]);
     const [open, setOpen] = useState<boolean>(false);
@@ -87,9 +82,7 @@ const GeeDataSetSelector: React.FC<GeeDataSetSelectorProps> = ({
             name: "description",
             text: i18n.t("Description"),
             getValue: (dataSet: GeeDataSet) =>
-                dataSet.description.length > 300
-                    ? dataSet.description.substring(0, 300) + " ..."
-                    : dataSet.description,
+                dataSet.description.length > 300 ? dataSet.description.substring(0, 300) + " ..." : dataSet.description,
         },
         {
             name: "cadence",
@@ -129,13 +122,9 @@ const GeeDataSetSelector: React.FC<GeeDataSetSelectorProps> = ({
                                     <li key={band.name}>
                                         <Typography variant="subtitle1">{band.name}</Typography>
                                         {band.units && (
-                                            <Typography variant="subtitle1">
-                                                {`units: ${band.units}`}
-                                            </Typography>
+                                            <Typography variant="subtitle1">{`units: ${band.units}`}</Typography>
                                         )}
-                                        <Typography variant="subtitle1">
-                                            {band.description}
-                                        </Typography>
+                                        <Typography variant="subtitle1">{band.description}</Typography>
                                     </li>
                                 );
                             })}
@@ -249,7 +238,7 @@ const GeeDataSetSelector: React.FC<GeeDataSetSelectorProps> = ({
 export default GeeDataSetSelector;
 
 const getMaterialTheme = () =>
-    createMuiTheme({
+    createTheme({
         overrides: {
             MuiFormLabel: {
                 root: {

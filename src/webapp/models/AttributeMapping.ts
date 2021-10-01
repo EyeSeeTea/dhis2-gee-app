@@ -1,11 +1,11 @@
-import { D2Api } from "d2-api";
 import _ from "lodash";
-import { Config } from "./Config";
-import { getDataStore } from "../utils/dhis2";
-import { Validation } from "../../types/validations";
-import { AttributeMappingDictionary } from "./Mapping";
 import DataElement from "../../domain/entities/DataElement";
+import { D2Api } from "../../types/d2-api";
+import { Validation } from "../../types/validations";
+import { getDataStore } from "../utils/dhis2";
 import i18n from "../utils/i18n";
+import { Config } from "./Config";
+import { AttributeMappingDictionary } from "./Mapping";
 
 export interface AttributeMappingData {
     id: string;
@@ -90,10 +90,7 @@ class AttributeMapping {
         return { attributeMappings: attributeMappings };
     }
 
-    public set<K extends keyof AttributeMappingData>(
-        field: K,
-        value: AttributeMappingData[K]
-    ): AttributeMapping {
+    public set<K extends keyof AttributeMappingData>(field: K, value: AttributeMappingData[K]): AttributeMapping {
         return new AttributeMapping({ ...this.data, [field]: value });
     }
 

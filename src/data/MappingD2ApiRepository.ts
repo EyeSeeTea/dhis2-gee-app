@@ -1,13 +1,11 @@
-import DataStore from "d2-api/api/dataStore";
-import { Id } from "d2-api";
-import { Mapping } from "../domain/entities/Mapping";
-import MappingRepository, {
-    DeleteMappingByIdsError,
-} from "../domain/repositories/MappingRepository";
-import { Either } from "../domain/common/Either";
+import { Id } from "@eyeseetea/d2-api";
+import { DataStore } from "@eyeseetea/d2-api/api/dataStore";
 import _ from "lodash";
+import { Either } from "../domain/common/Either";
+import { Mapping } from "../domain/entities/Mapping";
 import { TransformExpression } from "../domain/entities/TransformExpression";
 import { UnexpectedError } from "../domain/errors/Generic";
+import MappingRepository, { DeleteMappingByIdsError } from "../domain/repositories/MappingRepository";
 
 export default class MappingD2ApiRepository implements MappingRepository {
     constructor(private dataStore: DataStore, private dataStoreKey: string) {}
@@ -15,9 +13,7 @@ export default class MappingD2ApiRepository implements MappingRepository {
     async getAll(ids?: Id[]): Promise<Mapping[]> {
         const mappingData = await this.getMappingData();
 
-        const filteredImportRules = ids
-            ? mappingData.filter(mapping => ids?.includes(mapping.id))
-            : mappingData;
+        const filteredImportRules = ids ? mappingData.filter(mapping => ids?.includes(mapping.id)) : mappingData;
 
         return filteredImportRules.map(this.mapToDomain);
     }
@@ -31,7 +27,7 @@ export default class MappingD2ApiRepository implements MappingRepository {
             await this.saveMappingData(newMappingData);
 
             return Either.Success(true);
-        } catch (e) {
+        } catch (e: any) {
             return Either.failure({
                 kind: "UnexpectedError",
                 error: e,
@@ -56,9 +52,7 @@ export default class MappingD2ApiRepository implements MappingRepository {
 
             const allDataToSave = [
                 ...existedMappingData.map(
-                    existed =>
-                        existedImportRulesDataToSave.find(updated => updated.id === existed.id) ||
-                        existed
+                    existed => existedImportRulesDataToSave.find(updated => updated.id === existed.id) || existed
                 ),
                 ...newImportRulesDataToSave,
             ];
@@ -66,7 +60,7 @@ export default class MappingD2ApiRepository implements MappingRepository {
             await this.saveMappingData(allDataToSave);
 
             return Either.Success(true);
-        } catch (e) {
+        } catch (e: any) {
             return Either.failure({
                 kind: "UnexpectedError",
                 error: e,
@@ -75,9 +69,7 @@ export default class MappingD2ApiRepository implements MappingRepository {
     }
 
     private async getMappingData(): Promise<MappingDS[]> {
-        const data = await this.dataStore
-            .get<Record<string, MappingDS>>(this.dataStoreKey)
-            .getData();
+        const data = await this.dataStore.get<Record<string, MappingDS>>(this.dataStoreKey).getData();
         return data ? Object.values(data) : [];
     }
 
@@ -99,9 +91,7 @@ export default class MappingD2ApiRepository implements MappingRepository {
                     const transformExpresion = attributeMapping.transformExpression
                         ? TransformExpression.create(attributeMapping.transformExpression).fold(
                               () => {
-                                  throw new Error(
-                                      "Unexpected invalid transform espression in the data store"
-                                  );
+                                  throw new Error("Unexpected invalid transform espression in the data store");
                               },
                               espression => espression
                           )

@@ -1,4 +1,4 @@
-import { D2Api, MetadataPick } from "d2-api";
+import { D2Api, MetadataPick } from "../../types/d2-api";
 
 const baseConfig = {
     // Add here static configuration
@@ -47,13 +47,7 @@ export class Config {
         return this.data[key];
     }
 
-    static async build(api: D2Api): Promise<Config> {
-        console.log(api.baseUrl);
-
-        const data: ConfigData = {
-            base: baseConfig,
-        };
-
-        return new Config(data);
+    static async build(_api: D2Api): Promise<Config> {
+        return new Config({ base: baseConfig });
     }
 }

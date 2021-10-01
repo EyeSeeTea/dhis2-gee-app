@@ -1,4 +1,3 @@
-import { D2Api } from "d2-api";
 import DataElementD2ApiRepository from "./data/DataElementD2ApiRepository";
 import { GetDataElementsUseCase } from "./domain/usecases/GetDataElementsUseCase";
 import ImportUseCase from "./domain/usecases/ImportUseCase";
@@ -6,7 +5,7 @@ import { Config } from "./webapp/models/Config";
 import { GeeDataEarthEngineRepository } from "./data/GeeDataValueSetApiRepository";
 import OrgUnitOldD2ApiRepository from "./data/OrgUnitOldD2ApiRepository";
 import DataValueSetD2ApiRepository from "./data/DataValueSetD2ApiRepository";
-import { GeeDataSetFileRepository } from "./data/GeeDataSetD2ApiRepository";
+import { GeeDataSetD2ApiRepository } from "./data/GeeDataSetD2ApiRepository";
 import DataValueSetFileRepository from "./data/DataValueSetFileRepository";
 import ImportRuleD2ApiRepository from "./data/ImportRuleD2ApiRepository";
 import { GetImportRulesUseCase } from "./domain/usecases/GetImportRulesUseCase";
@@ -35,6 +34,8 @@ import { GetGeeDataSetByIdUseCase } from "./domain/usecases/GetGeeDataSetByIdUse
 import OrgUnitD2ApiRepository from "./data/OrgUnitD2ApiRepository";
 import OrgUnitRepository from "./domain/repositories/OrgUnitRepository";
 import { EarthEngine } from "./types/google-earth-engine";
+import { D2Api } from "./types/d2-api";
+import { getMajorVersion } from "./utils/d2-api";
 
 interface Type<T> {
     new (...args: any[]): T;
@@ -56,13 +57,8 @@ class CompositionRoot {
     private dependencies = new Map<Token<any>, any>();
     private apiVersion: number;
 
-    constructor(
-        private d2Api: D2Api,
-        private ee: EarthEngine,
-        d2Version: string,
-        private config: Config
-    ) {
-        this.apiVersion = +d2Version.split(".")[1];
+    constructor(private d2Api: D2Api, private ee: EarthEngine, d2Version: string, private config: Config) {
+        this.apiVersion = getMajorVersion(d2Version);
 
         this.initializeDataStore();
         this.initializeGeeDataSet();
@@ -144,7 +140,7 @@ class CompositionRoot {
     }
 
     private initializeGeeDataSet() {
-        const geeDataSetRepository = new GeeDataSetFileRepository(
+        const geeDataSetRepository = new GeeDataSetD2ApiRepository(
             this.dependencies.get("dataStore"),
             this.config.data.base.dataStore.keys.geeDataSets
         );
@@ -170,14 +166,10 @@ class CompositionRoot {
 
     private initializeOrgUnits() {
         const orgUnitRepository =
-            this.apiVersion < 32
-                ? new OrgUnitOldD2ApiRepository(this.d2Api)
-                : new OrgUnitD2ApiRepository(this.d2Api);
+            this.apiVersion < 32 ? new OrgUnitOldD2ApiRepository(this.d2Api) : new OrgUnitD2ApiRepository(this.d2Api);
 
         this.dependencies.set("orgUnitRepository", orgUnitRepository);
-        const getOrgUnitsWithCoordinatesUseCase = new GetOrgUnitsWithCoordinatesUseCase(
-            orgUnitRepository
-        );
+        const getOrgUnitsWithCoordinatesUseCase = new GetOrgUnitsWithCoordinatesUseCase(orgUnitRepository);
         this.dependencies.set(GetOrgUnitsWithCoordinatesUseCase, getOrgUnitsWithCoordinatesUseCase);
     }
 
@@ -196,10 +188,7 @@ class CompositionRoot {
 
         const importSummaryRepository = this.dependencies.get("importSummaryRepository");
 
-        const deleteImportRulesUseCase = new DeleteImportRulesUseCase(
-            importRuleRepository,
-            importSummaryRepository
-        );
+        const deleteImportRulesUseCase = new DeleteImportRulesUseCase(importRuleRepository, importSummaryRepository);
 
         this.dependencies.set(GetImportRuleByIdUseCase, getImportRuleById);
         this.dependencies.set(GetImportRulesUseCase, getImportRulesUseCase);
@@ -216,26 +205,17 @@ class CompositionRoot {
 
         this.dependencies.set("globalOUMappingRepository", globalOUMappingRepository);
 
-        const getGlobalOUMappingsUseCase = new GetGlobalOUMappingsUseCase(
-            globalOUMappingRepository
-        );
+        const getGlobalOUMappingsUseCase = new GetGlobalOUMappingsUseCase(globalOUMappingRepository);
 
-        const createGlobalOrgUnitMappingUseCase = new CreateGlobalOUMappingUseCase(
-            globalOUMappingRepository
-        );
+        const createGlobalOrgUnitMappingUseCase = new CreateGlobalOUMappingUseCase(globalOUMappingRepository);
         const getGlobalOUMappingByMappingIdUseCase = new GetGlobalOUMappingByMappingIdUseCase(
             globalOUMappingRepository
         );
-        const deleteGlobalOUMappingUseCase = new DeleteGlobalOUMappingUseCase(
-            globalOUMappingRepository
-        );
+        const deleteGlobalOUMappingUseCase = new DeleteGlobalOUMappingUseCase(globalOUMappingRepository);
 
         this.dependencies.set(GetGlobalOUMappingsUseCase, getGlobalOUMappingsUseCase);
         this.dependencies.set(CreateGlobalOUMappingUseCase, createGlobalOrgUnitMappingUseCase);
-        this.dependencies.set(
-            GetGlobalOUMappingByMappingIdUseCase,
-            getGlobalOUMappingByMappingIdUseCase
-        );
+        this.dependencies.set(GetGlobalOUMappingByMappingIdUseCase, getGlobalOUMappingByMappingIdUseCase);
         this.dependencies.set(DeleteGlobalOUMappingUseCase, deleteGlobalOUMappingUseCase);
     }
 
@@ -247,27 +227,21 @@ class CompositionRoot {
         this.dependencies.set("importSummaryRepository", importSummaryRepository);
 
         const getImportSummariesUseCase = new GetImportSummariesUseCase(importSummaryRepository);
-        const deleteImportSummariesUseCase = new DeleteImportSummariesUseCase(
-            importSummaryRepository
-        );
+        const deleteImportSummariesUseCase = new DeleteImportSummariesUseCase(importSummaryRepository);
 
         this.dependencies.set(GetImportSummariesUseCase, getImportSummariesUseCase);
         this.dependencies.set(DeleteImportSummariesUseCase, deleteImportSummariesUseCase);
     }
 
     private initializeImportAndDownload() {
-        const importRuleRepository = this.dependencies.get(
-            "importRuleRepository"
-        ) as ImportRuleRepository;
+        const importRuleRepository = this.dependencies.get("importRuleRepository") as ImportRuleRepository;
 
         const mappingRepository = new MappingD2ApiRepository(
             this.dependencies.get("dataStore"),
             this.config.data.base.dataStore.keys.mappings
         );
 
-        const geeDataSetRepository = this.dependencies.get(
-            "geeDataSetRepository"
-        ) as GeeDataSetRepository;
+        const geeDataSetRepository = this.dependencies.get("geeDataSetRepository") as GeeDataSetRepository;
 
         const orgUnitsRepository = this.dependencies.get("orgUnitRepository") as OrgUnitRepository;
 
@@ -309,9 +283,7 @@ class CompositionRoot {
             this.config.data.base.dataStore.keys.mappings
         );
 
-        const importRuleRepository = this.dependencies.get(
-            "importRuleRepository"
-        ) as ImportRuleRepository;
+        const importRuleRepository = this.dependencies.get("importRuleRepository") as ImportRuleRepository;
 
         const globalOrgUnitMappingRepository = this.dependencies.get(
             "globalOUMappingRepository"

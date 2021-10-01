@@ -1,7 +1,7 @@
 import React from "react";
 import i18n from "@dhis2/d2-i18n";
-import { useSnackbar, MultiSelector, OrgUnitsSelector } from "d2-ui-components";
-import { Id } from "d2-api";
+import { useSnackbar, MultiSelector, OrgUnitsSelector } from "@eyeseetea/d2-ui-components";
+import { Id } from "@eyeseetea/d2-api";
 import { useAppContext } from "../../contexts/app-context";
 import { makeStyles } from "@material-ui/styles";
 import { ExampleModel } from "../../models/Example";
@@ -37,8 +37,8 @@ const Example: React.FunctionComponent<ExampleProps> = props => {
 
             <div>
                 <p>
-                    This is an example component written in Typescript, you can find it in{" "}
-                    <b>src/pages/example/</b>, and its test in <b>src/pages/example/__tests__</b>
+                    This is an example component written in Typescript, you can find it in <b>src/pages/example/</b>,
+                    and its test in <b>src/pages/example/__tests__</b>
                 </p>
                 <p>Datasets loaded: {dataSets.map(ds => ds.id).join(", ")}</p>
                 <p>Usage example of useState, a counter:</p>
@@ -49,11 +49,9 @@ const Example: React.FunctionComponent<ExampleProps> = props => {
             </div>
 
             <div>
-                <p>Example of d2-ui-components snackbar usage:</p>
+                <p>Example of "@eyeseetea/d2-ui-components snackbar usage:</p>
 
-                <button onClick={() => snackbar.error("Some info")}>
-                    {i18n.t("Click to show feedback")}
-                </button>
+                <button onClick={() => snackbar.error("Some info")}>{i18n.t("Click to show feedback")}</button>
             </div>
 
             {showExtraComponents && (

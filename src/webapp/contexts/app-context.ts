@@ -1,10 +1,10 @@
 import React, { useContext } from "react";
-import { D2Api } from "d2-api";
+import CompositionRoot from "../../CompositionRoot";
+import { D2Api } from "../../types/d2-api";
 import { Config } from "../models/Config";
 import { User } from "../models/User";
-import CompositionRoot from "../../CompositionRoot";
 
-export interface AppContext {
+export interface AppContextState {
     api: D2Api;
     d2: object;
     config: Config;
@@ -13,7 +13,7 @@ export interface AppContext {
     isAdmin: boolean;
 }
 
-export const AppContext = React.createContext<AppContext | null>(null);
+export const AppContext = React.createContext<AppContextState | null>(null);
 
 export function useAppContext() {
     const context = useContext(AppContext);

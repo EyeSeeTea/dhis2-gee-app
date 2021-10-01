@@ -1,3 +1,3 @@
-module.exports = process.env.CYPRESS_ENV ? {} : {
-    "presets": ["babel-preset-react-app"]
-}
+module.exports = {
+    presets: ["@babel/typescript", ["babel-preset-react-app", { runtime: "automatic" }]],
+};

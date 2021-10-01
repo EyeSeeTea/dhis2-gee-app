@@ -1,16 +1,13 @@
-import {
-    GeeDataSetRepository,
-    GeeDataSetsFilter,
-} from "../domain/repositories/GeeDataSetRepository";
-import { GeeDataSet } from "../domain/entities/GeeDataSet";
+import { DataStore } from "@eyeseetea/d2-api/api/dataStore";
 import axios from "axios";
-import DataStore from "d2-api/api/dataStore";
 import moment from "moment";
 import { Maybe } from "../domain/common/Maybe";
+import { GeeDataSet } from "../domain/entities/GeeDataSet";
+import { GeeDataSetRepository, GeeDataSetsFilter } from "../domain/repositories/GeeDataSetRepository";
 
 const geeDataSetCatalog = "https://earthengine-stac.storage.googleapis.com/catalog/catalog.json";
 
-export class GeeDataSetFileRepository implements GeeDataSetRepository {
+export class GeeDataSetD2ApiRepository implements GeeDataSetRepository {
     private cachedGeeDataSets: GeeDataSetsCache | undefined;
 
     constructor(private dataStore: DataStore, private dataStoreKey: string) {}
@@ -22,16 +19,12 @@ export class GeeDataSetFileRepository implements GeeDataSetRepository {
             .filter(dataSet => dataSet.type === "image_collection")
             .filter(dataSet => {
                 return filter && filter.search
-                    ? dataSet.imageCollectionId
-                          .toLowerCase()
-                          .includes(filter.search.toLowerCase()) ||
+                    ? dataSet.imageCollectionId.toLowerCase().includes(filter.search.toLowerCase()) ||
                           dataSet.displayName.toLowerCase().includes(filter.search.toLowerCase()) ||
                           dataSet.keywords.includes(filter.search.toLowerCase())
                     : true;
             })
-            .filter(dataSet =>
-                filter && filter.cadence ? dataSet.cadence?.includes(filter.cadence) : true
-            );
+            .filter(dataSet => (filter && filter.cadence ? dataSet.cadence?.includes(filter.cadence) : true));
         return filteredDataSets;
     }
 
@@ -67,15 +60,11 @@ export class GeeDataSetFileRepository implements GeeDataSetRepository {
     private async getDatasetsFromGeeCatalog(): Promise<GeeDataSetsCache> {
         const datasets = await axios.get(geeDataSetCatalog);
 
-        const links = datasets.data.links
-            .filter((link: any) => link.rel === "child")
-            .map((link: any) => link.href);
+        const links = datasets.data.links.filter((link: any) => link.rel === "child").map((link: any) => link.href);
 
-        const fullDatasets: GeeDataSet[] = await Promise.all(
-            links.map(async (link: any) => {
-                return await this.getDatasetFromGeeCatalog(link);
-            })
-        );
+        const fullDatasets = (await Promise.all(
+            links.map((link: string) => this.getDatasetFromGeeCatalog(link))
+        )) as GeeDataSet[];
 
         return {
             lastUpdated: new Date().toISOString(),
@@ -102,7 +91,7 @@ export class GeeDataSetFileRepository implements GeeDataSetRepository {
             type: getProperty("gee:type"),
             description: data.description,
             doc: `https://developers.google.com/earth-engine/datasets/catalog/${data.id}`,
-            cadence: getProperty("gee:cadence"),
+            cadence: getProperty("gee:interval")?.unit,
             bands: getProperty("eo:bands")?.map((band: any) => {
                 return {
                     name: band.name,

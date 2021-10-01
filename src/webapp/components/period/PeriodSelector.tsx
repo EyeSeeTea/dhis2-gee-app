@@ -1,9 +1,9 @@
-import React from "react";
-import { DatePicker } from "d2-ui-components";
 import i18n from "@dhis2/d2-i18n";
-import Dropdown from "../dropdown/Dropdown";
-import { availablePeriods, PeriodOption } from "../../../domain/entities/PeriodOption";
+import { DatePicker } from "@eyeseetea/d2-ui-components";
 import { Box } from "@material-ui/core";
+import React from "react";
+import { availablePeriods, PeriodId, PeriodOption } from "../../../domain/entities/PeriodOption";
+import Dropdown from "../dropdown/Dropdown";
 
 interface PeriodSelectorProps {
     className?: string | undefined;
@@ -20,7 +20,7 @@ const PeriodSelector: React.FC<PeriodSelectorProps> = ({ selectedPeriod, onChang
                 label={i18n.t("Period")}
                 items={periodItems}
                 value={selectedPeriod?.id || ""}
-                onValueChange={(value: string) => onChange(availablePeriods[value])}
+                onValueChange={(value: PeriodId) => onChange(availablePeriods[value])}
             />
 
             {selectedPeriod && selectedPeriod.id === "FIXED" && (

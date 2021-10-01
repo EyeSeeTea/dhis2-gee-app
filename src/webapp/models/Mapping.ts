@@ -1,12 +1,13 @@
-import { Id, D2Api } from "d2-api";
-import _ from "lodash";
 import i18n from "@dhis2/d2-i18n";
-import { TablePagination } from "d2-ui-components";
-import { Config } from "./Config";
-import { getDataStore } from "../utils/dhis2";
+import { Id } from "@eyeseetea/d2-api";
+import { TablePagination } from "@eyeseetea/d2-ui-components";
+import _ from "lodash";
+import { D2Api } from "../../types/d2-api";
 import { Validation } from "../../types/validations";
+import { generateUid } from "../../utils/uid";
+import { getDataStore } from "../utils/dhis2";
 import AttributeMapping from "./AttributeMapping";
-import { generateUid } from "d2/uid";
+import { Config } from "./Config";
 
 export interface AttributeMappingDictionary {
     [geeBand: string]: AttributeMapping;
@@ -69,9 +70,7 @@ class Mapping {
     public static async get(api: D2Api, config: Config, id = " ") {
         const dataStore = getDataStore(api, config);
         const mappingsKey = config.data.base.dataStore.keys.mappings;
-        const mappingsById = await dataStore
-            .get<{ [id: string]: Mapping } | undefined>(mappingsKey)
-            .getData();
+        const mappingsById = await dataStore.get<{ [id: string]: Mapping } | undefined>(mappingsKey).getData();
         return this.build(mappingsById ? mappingsById[id] : undefined);
     }
 
@@ -94,9 +93,7 @@ class Mapping {
     ): Promise<{ mappings: Mapping[] | undefined; pager: Partial<TablePagination> }> {
         const dataStore = getDataStore(api, config);
         const mappingsKey = config.data.base.dataStore.keys.mappings;
-        const mappings = await dataStore
-            .get<{ [id: string]: Mapping } | undefined>(mappingsKey)
-            .getData();
+        const mappings = await dataStore.get<{ [id: string]: Mapping } | undefined>(mappingsKey).getData();
 
         const mappingModels = _.values(mappings).map(mapping => Mapping.build(mapping));
 
@@ -108,11 +105,7 @@ class Mapping {
     }
     static async delete(api: D2Api, config: Config, mappingsToDelete: string[]) {
         const mappings = await (await Mapping.getList(api, config)).mappings;
-        Mapping.saveList(
-            api,
-            config,
-            mappings?.filter(mapping => !mappingsToDelete.includes(mapping.id)) ?? []
-        );
+        Mapping.saveList(api, config, mappings?.filter(mapping => !mappingsToDelete.includes(mapping.id)) ?? []);
     }
 
     static async saveList(api: D2Api, config: Config, newMappings: Mapping[]) {

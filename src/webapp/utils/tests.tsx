@@ -1,12 +1,10 @@
-import React from "react";
-import { SnackbarProvider } from "d2-ui-components";
-import { getMockApi } from "d2-api";
+import { SnackbarProvider } from "@eyeseetea/d2-ui-components";
 import { render, RenderResult } from "@testing-library/react";
-
+import { ReactNode } from "react";
+import { getMockApi } from "../../types/d2-api";
+import { AppContext, AppContextState } from "../contexts/app-context";
 import { Config } from "./../models/Config";
 import { User } from "./../models/User";
-import { AppContext } from "../contexts/app-context";
-import { ReactNode } from "react";
 
 export function getTestUser() {
     return new User({
@@ -67,7 +65,7 @@ export function getTestContext() {
     };
 }
 
-export function getReactComponent(children: ReactNode, context: AppContext): RenderResult {
+export function getReactComponent(children: ReactNode, context: AppContextState): RenderResult {
     return render(
         <AppContext.Provider value={context}>
             <SnackbarProvider>{children}</SnackbarProvider>

@@ -60,9 +60,7 @@ export const LAST_YEAR: PeriodOption = {
     start: [1, "year"],
 };
 
-export const availablePeriods: {
-    [id: string]: PeriodOption;
-} = {
+export const availablePeriods = {
     FIXED,
     TODAY,
     YESTERDAY,
@@ -76,7 +74,7 @@ export const availablePeriods: {
     LAST_QUARTER,
     THIS_YEAR,
     LAST_YEAR,
-};
+} as const;
 
 export type PeriodId =
     | "FIXED"

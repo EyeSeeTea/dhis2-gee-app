@@ -10,10 +10,7 @@ export interface InvalidEmptyTransformExpression {
     kind: "InvalidEmptyTransformExpression";
 }
 
-export type TransformExpressionError =
-    | InvalidTransformExpression
-    | InvalidEmptyTransformExpression
-    | UnexpectedError;
+export type TransformExpressionError = InvalidTransformExpression | InvalidEmptyTransformExpression | UnexpectedError;
 
 export type EvalTransformExpressionError = UnexpectedError;
 
@@ -31,7 +28,7 @@ export class TransformExpression {
             } else {
                 return Either.Success(new TransformExpression(formula.trim()));
             }
-        } catch (e) {
+        } catch (e: any) {
             return Either.failure({
                 kind: "UnexpectedError",
                 error: e,
@@ -43,7 +40,7 @@ export class TransformExpression {
         try {
             evalRawMathExpression(formula, 5);
             return true;
-        } catch (e) {
+        } catch (e: any) {
             return false;
         }
     }
@@ -64,7 +61,7 @@ export const evalTransformExpression = (
                   ),
               })
             : Either.Success(result);
-    } catch (e) {
+    } catch (e: any) {
         return Either.failure({
             kind: "UnexpectedError",
             error: e,

@@ -1,37 +1,30 @@
 import _ from "lodash";
-
+import { Moment } from "moment";
+import i18n from "../../webapp/utils/i18n";
+import { Either } from "../common/Either";
+import { DataValue, DataValueSet } from "../entities/DataValueSet";
+import { GeeDataSet } from "../entities/GeeDataSet";
+import { GeeDataValue } from "../entities/GeeDataValueSet";
+import { ImportResult, ImportSummary } from "../entities/ImportSummary";
+import { AttributeMappingDictionary } from "../entities/Mapping";
+import { OrgUnit } from "../entities/OrgUnit";
+import { PeriodOption } from "../entities/PeriodOption";
+import { Id } from "../entities/Ref";
+import { evalTransformExpression } from "../entities/TransformExpression";
+import DataValueSetRepository, { SaveDataValueSetReponse } from "../repositories/DataValueSetRepository";
+import { GeeDataSetRepository } from "../repositories/GeeDataSetRepository";
 import {
-    GeeInterval,
+    GeeDataFilters,
+    GeeDataSetId,
     GeeDataValueSetRepository,
     GeeGeometry,
-    GeeDataSetId,
-    GeeDataFilters,
+    GeeInterval,
 } from "../repositories/GeeDataValueSetRepository";
-import { OrgUnit } from "../entities/OrgUnit";
-import { DataValueSet, DataValue } from "../entities/DataValueSet";
-import OrgUnitRepository from "../repositories/OrgUnitRepository";
-import { GeeDataValue } from "../entities/GeeDataValueSet";
-import { promiseMap, buildPeriod } from "../utils";
-import DataValueSetRepository, {
-    SaveDataValueSetReponse,
-} from "../repositories/DataValueSetRepository";
-import { GeeDataSetRepository } from "../repositories/GeeDataSetRepository";
 import { ImportRuleRepository } from "../repositories/ImportRuleRepository";
-import { Id } from "../entities/Ref";
-
-import i18n from "../../webapp/utils/i18n";
-import { AttributeMappingDictionary } from "../entities/Mapping";
+import { ImportSummaryRepository, SaveImportSummaryError } from "../repositories/ImportSummaryRepository";
 import MappingRepository from "../repositories/MappingRepository";
-import { ImportSummary, ImportResult } from "../entities/ImportSummary";
-import {
-    ImportSummaryRepository,
-    SaveImportSummaryError,
-} from "../repositories/ImportSummaryRepository";
-import { Either } from "../common/Either";
-import { evalTransformExpression } from "../entities/TransformExpression";
-import { PeriodOption } from "../entities/PeriodOption";
-import { Moment } from "moment";
-import { GeeDataSet } from "../entities/GeeDataSet";
+import OrgUnitRepository from "../repositories/OrgUnitRepository";
+import { buildPeriod, promiseMap } from "../utils";
 
 export default class ImportUseCase {
     constructor(
@@ -48,9 +41,7 @@ export default class ImportUseCase {
     // Validate user is not empty?
     public async executeImportRule(importRuleId: Id, username: string): Promise<ImportResult> {
         const importRuleResult = await this.importRuleRepository.getById(importRuleId);
-        const importRule = importRuleResult.getOrThrow(
-            `importRule with id ${importRuleId} does not exist`
-        );
+        const importRule = importRuleResult.getOrThrow(`importRule with id ${importRuleId} does not exist`);
 
         const importResult = await this.execute(
             importRule.selectedOUs,
@@ -85,18 +76,12 @@ export default class ImportUseCase {
         const results =
             orgUnitMappingPairs.length > 0
                 ? await promiseMap(orgUnitMappingPairs, async orgUnitMappingPair => {
-                      return this.execute(
-                          [orgUnitMappingPair.orgUnitPath],
-                          [orgUnitMappingPair.mappingId],
-                          period
-                      );
+                      return this.execute([orgUnitMappingPair.orgUnitPath], [orgUnitMappingPair.mappingId], period);
                   })
                 : [
                       {
                           success: false,
-                          failures: [
-                              i18n.t("No organisation unit selected as global for the import rule"),
-                          ],
+                          failures: [i18n.t("No organisation unit selected as global for the import rule")],
                           messages: [],
                       },
                   ];
@@ -122,11 +107,7 @@ export default class ImportUseCase {
         return importResult;
     }
 
-    public async execute(
-        orgUnitPaths: string[],
-        mappingIds: string[],
-        period?: PeriodOption
-    ): Promise<ImportResult> {
+    public async execute(orgUnitPaths: string[], mappingIds: string[], period?: PeriodOption): Promise<ImportResult> {
         let failures: string[] = [];
         let messages: string[] = [];
         try {
@@ -153,20 +134,14 @@ export default class ImportUseCase {
                                 await this.geeDataSetRepository.getById(selectedMapping.geeImage)
                             ).getOrThrow();
 
-                            const dataValueSet: DataValueSet = await this.getDataValueSet(
-                                geeDataSet,
-                                {
-                                    ...baseImportConfig,
-                                    geeDataSetId: geeDataSet.imageCollectionId,
-                                    attributeIdsMapping: selectedMapping.attributeMappingDictionary,
-                                }
-                            );
+                            const dataValueSet: DataValueSet = await this.getDataValueSet(geeDataSet, {
+                                ...baseImportConfig,
+                                geeDataSetId: geeDataSet.imageCollectionId,
+                                attributeIdsMapping: selectedMapping.attributeMappingDictionary,
+                            });
 
                             importDataValueSet = {
-                                dataValues: _.concat(
-                                    importDataValueSet.dataValues,
-                                    dataValueSet.dataValues
-                                ),
+                                dataValues: _.concat(importDataValueSet.dataValues, dataValueSet.dataValues),
                             };
                             messages = [
                                 ...messages,
@@ -175,24 +150,18 @@ export default class ImportUseCase {
                                     n: dataValueSet.dataValues.length,
                                 }),
                             ];
-                        } catch (err) {
+                        } catch (err: any) {
                             failures = [...failures, err];
                         }
                     })
                 );
 
-                const dataValueSetResponse = await this.dataValueSetRepository.save(
-                    importDataValueSet
-                );
+                const dataValueSetResponse = await this.dataValueSetRepository.save(importDataValueSet);
 
-                const dataValueSetMessages = this.getMessagesFromDataValueSetReponse(
-                    dataValueSetResponse
-                );
+                const dataValueSetMessages = this.getMessagesFromDataValueSetReponse(dataValueSetResponse);
                 messages = dataValueSetMessages ? [...messages, dataValueSetMessages] : messages;
 
-                const dataValueSetFailures = this.getFailuresFromDataValueSetReponse(
-                    dataValueSetResponse
-                );
+                const dataValueSetFailures = this.getFailuresFromDataValueSetReponse(dataValueSetResponse);
                 failures = dataValueSetFailures ? [...failures, dataValueSetFailures] : failures;
             }
 
@@ -203,7 +172,7 @@ export default class ImportUseCase {
             };
 
             return importResult;
-        } catch (err) {
+        } catch (err: any) {
             const importResult = {
                 success: false,
                 messages: messages,
@@ -214,11 +183,7 @@ export default class ImportUseCase {
         }
     }
 
-    private validateInputs(
-        orgUnits: string[],
-        mappings: string[],
-        period?: PeriodOption
-    ): string[] {
+    private validateInputs(orgUnits: string[], mappings: string[], period?: PeriodOption): string[] {
         const failures: string[] = [];
 
         if (orgUnits.length === 0) {
@@ -238,7 +203,7 @@ export default class ImportUseCase {
 
     private async getDataValueSet<Band extends string>(
         geeDataSet: GeeDataSet,
-        options: GetDataValueSetOptions<Band>
+        options: GetDataValueSetOptions
     ): Promise<DataValueSet> {
         const { geeDataRepository } = this;
         const { geeDataSetId, orgUnits, attributeIdsMapping, interval, scale } = options;
@@ -259,14 +224,7 @@ export default class ImportUseCase {
             const geeData = await geeDataRepository.getData(options);
 
             return _(geeData)
-                .map(item =>
-                    this.mapGeeDataValueToDataValue(
-                        item,
-                        orgUnit.id,
-                        attributeIdsMapping,
-                        geeDataSet
-                    )
-                )
+                .map(item => this.mapGeeDataValueToDataValue(item, orgUnit.id, attributeIdsMapping, geeDataSet))
                 .compact()
                 .value();
         });
@@ -296,7 +254,7 @@ export default class ImportUseCase {
         const { date, band, value } = item;
         const mapping = mappingDicc[band];
 
-        if (!mapping.dataElementId) {
+        if (!mapping?.dataElementId) {
             console.error(`Band not found in mapping: ${band}`);
             return;
         } else {
@@ -304,16 +262,11 @@ export default class ImportUseCase {
             const dataElementId: string = mapping.dataElementId;
 
             if (mapping.transformExpression) {
-                const mappedValueResult = evalTransformExpression(
-                    mapping.transformExpression,
-                    +formattedValue
-                );
+                const mappedValueResult = evalTransformExpression(mapping.transformExpression, +formattedValue);
 
                 return mappedValueResult.fold(
                     () => {
-                        throw new Error(
-                            i18n.t("Unexpected error has ocurred apply transform expression")
-                        );
+                        throw new Error(i18n.t("Unexpected error has ocurred apply transform expression"));
                     },
                     numberResult => {
                         return {
@@ -345,9 +298,7 @@ export default class ImportUseCase {
         }
     }
 
-    private getMessagesFromDataValueSetReponse(
-        dataValueSetReponse: SaveDataValueSetReponse
-    ): string {
+    private getMessagesFromDataValueSetReponse(dataValueSetReponse: SaveDataValueSetReponse): string {
         if (typeof dataValueSetReponse === "string") {
             return dataValueSetReponse;
         } else {
@@ -361,9 +312,7 @@ export default class ImportUseCase {
         }
     }
 
-    private getFailuresFromDataValueSetReponse(
-        dataValueSetReponse: SaveDataValueSetReponse
-    ): string {
+    private getFailuresFromDataValueSetReponse(dataValueSetReponse: SaveDataValueSetReponse): string {
         return typeof dataValueSetReponse !== "string" && dataValueSetReponse.status === "ERROR"
             ? dataValueSetReponse.description
             : "";
@@ -384,9 +333,7 @@ export default class ImportUseCase {
     }
 }
 
-type DataElementId = string;
-
-interface GetDataValueSetOptions<Band extends string> {
+interface GetDataValueSetOptions {
     geeDataSetId: GeeDataSetId;
     attributeIdsMapping: AttributeMappingDictionary;
     orgUnits: OrgUnit[];

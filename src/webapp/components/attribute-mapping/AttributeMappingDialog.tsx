@@ -1,6 +1,6 @@
 import i18n from "@dhis2/d2-i18n";
 import DialogContent from "@material-ui/core/DialogContent";
-import { ConfirmationDialog } from "d2-ui-components";
+import { ConfirmationDialog } from "@eyeseetea/d2-ui-components";
 import React, { useEffect, useState, useCallback } from "react";
 import DataElementsTable from "../data-elements/DataElementsTable";
 import AttributeMapping from "../../models/AttributeMapping";
@@ -18,11 +18,7 @@ export interface AttributeMappingDialogProps {
     onClose: () => void;
 }
 
-const AttributeMappingDialog: React.FC<AttributeMappingDialogProps> = ({
-    params,
-    onMappingChange,
-    onClose,
-}) => {
+const AttributeMappingDialog: React.FC<AttributeMappingDialogProps> = ({ params, onMappingChange, onClose }) => {
     const { dataset, attributeMapping } = params;
     const [rows, setRows] = useState<DataElement[]>([]);
 

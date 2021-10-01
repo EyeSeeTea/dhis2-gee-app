@@ -112,7 +112,7 @@ function validate(values: ImportRuleWritableData): ErrorsDictionary {
         name: validateRequired("name", values.name),
     };
 
-    Object.keys(errors).forEach((key: string) => errors[key].length === 0 && delete errors[key]);
+    Object.keys(errors).forEach((key: string) => errors[key]?.length === 0 && delete errors[key]);
 
     return errors;
 }

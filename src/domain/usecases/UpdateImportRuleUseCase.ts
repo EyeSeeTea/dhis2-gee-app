@@ -16,9 +16,7 @@ export type UpdateImportRuleError = ItemIdNotFoundError | ValidationErrors | Sav
 export class UpdateImportRuleUseCase {
     constructor(private importRuleRepository: ImportRuleRepository) {}
 
-    async execute(
-        importRuleRequest: UpdateImportRuleRequest
-    ): Promise<Either<UpdateImportRuleError, true>> {
+    async execute(importRuleRequest: UpdateImportRuleRequest): Promise<Either<UpdateImportRuleError, true>> {
         this.validateId(importRuleRequest);
 
         const importRuleToEdit = await this.importRuleRepository.getById(importRuleRequest.id);

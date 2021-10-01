@@ -9,7 +9,7 @@ import {
     TableState,
     ReferenceObject,
     DatePicker,
-} from "d2-ui-components";
+} from "@eyeseetea/d2-ui-components";
 import React, { useEffect, useState } from "react";
 import { useHistory } from "react-router-dom";
 import PageHeader from "../../components/page-header/PageHeader";
@@ -17,8 +17,8 @@ import { ImportRule, ImportRuleData } from "../../../domain/entities/ImportRule"
 import { FIXED } from "../../../domain/entities/PeriodOption";
 import moment from "moment";
 import { useCompositionRoot, useCurrentUser } from "../../contexts/app-context";
-import { Id } from "d2-api";
-import { useGoTo, pageRoutes } from "../root/Root";
+import { Id } from "@eyeseetea/d2-api";
+import { useGoTo, pageRoutes } from "../Router";
 import { ImportRuleListState, importRuleListInitialState } from "./ImportRulesListState";
 import ImportUseCase from "../../../domain/usecases/ImportUseCase";
 import { DeleteImportRulesByIdError } from "../../../domain/repositories/ImportRuleRepository";
@@ -39,9 +39,7 @@ const ImportRuleListPage: React.FC = () => {
         importRules.getAll
             .execute({
                 search: state.search,
-                lastExecuted: state.lastExecutedFilter
-                    ? state.lastExecutedFilter.toDate()
-                    : undefined,
+                lastExecuted: state.lastExecutedFilter ? state.lastExecutedFilter.toDate() : undefined,
             })
             .then(importRules => {
                 setState(state => {
@@ -60,9 +58,9 @@ const ImportRuleListPage: React.FC = () => {
             ? `${importRule.periodInformation.name}
         ${
             importRule.periodInformation.id === FIXED.id
-                ? `- start: ${formatDate(
-                      importRule.periodInformation.startDate
-                  )} - end: ${formatDate(importRule.periodInformation.endDate)}`
+                ? `- start: ${formatDate(importRule.periodInformation.startDate)} - end: ${formatDate(
+                      importRule.periodInformation.endDate
+                  )}`
                 : ""
         }`
             : "";
@@ -96,10 +94,7 @@ const ImportRuleListPage: React.FC = () => {
         const handleFailure = (failure: DeleteImportRulesByIdError): string => {
             switch (failure.kind) {
                 case "UnexpectedError":
-                    return (
-                        i18n.t("An unexpected error has ocurred deleting import rules. ") +
-                        failure.error.message
-                    );
+                    return i18n.t("An unexpected error has ocurred deleting import rules. ") + failure.error.message;
             }
         };
 
@@ -143,8 +138,6 @@ const ImportRuleListPage: React.FC = () => {
 
         const result = await useCase.executeImportRule(id, currentUser.username);
 
-        console.log({ result });
-
         setState({
             ...state,
             isImporting: false,
@@ -171,7 +164,7 @@ const ImportRuleListPage: React.FC = () => {
 
     const downloadJSON = async (ids: string[]) => {
         const id = ids[0];
-        await executeOrDownload(id, geeImport.download);
+        if (id) await executeOrDownload(id, geeImport.download);
     };
 
     const actions: TableAction<ImportRule>[] = [

@@ -14,9 +14,7 @@ export class DeleteMappingsUseCase {
 
     async execute(ids: Id[]): Promise<Either<DeleteMappingByIdsError, true>> {
         const relatedImportRulesResult = await this.updateRelatedImportRules(ids);
-        const relatedGlobalOUMappingResult = await this.globalOUMappingRepository.deleteByMappingIds(
-            ids
-        );
+        const relatedGlobalOUMappingResult = await this.globalOUMappingRepository.deleteByMappingIds(ids);
 
         if (relatedImportRulesResult.flatMap(() => relatedGlobalOUMappingResult).isSuccess()) {
             return await this.mappingRepository.deleteByIds(ids);
@@ -28,9 +26,7 @@ export class DeleteMappingsUseCase {
         }
     }
 
-    private async updateRelatedImportRules(
-        mappingIdsToDelete: Id[]
-    ): Promise<Either<UnexpectedError, true>> {
+    private async updateRelatedImportRules(mappingIdsToDelete: Id[]): Promise<Either<UnexpectedError, true>> {
         const importRules = await this.importRuleRepository.getAll();
 
         const importRulesWithMappingIdTodelete = importRules.filter(importRule =>

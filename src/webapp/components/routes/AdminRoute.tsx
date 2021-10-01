@@ -1,7 +1,7 @@
 import React from "react";
 import { Route, Redirect, RouteComponentProps } from "react-router-dom";
 import { useAppContext } from "../../contexts/app-context";
-import { pageRoutes } from "../../pages/root/Root";
+import { pageRoutes } from "../../pages/Router";
 
 interface AdminRouteProps {
     path: string;

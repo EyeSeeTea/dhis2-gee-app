@@ -22,10 +22,7 @@ class GeneralInfoStep extends React.Component<StepProps> {
         if (fieldName === "geeImage") {
             newMapping = newMapping.set("attributeMappingDictionary", {});
         } else if (fieldName === "dataSetId") {
-            newMapping = newMapping.set(
-                "dataSetName",
-                _.find(dataSets, ["id", newValue])?.name ?? "-"
-            );
+            newMapping = newMapping.set("dataSetName", _.find(dataSets, ["id", newValue])?.name ?? "-");
         }
         onChange(newMapping);
     };

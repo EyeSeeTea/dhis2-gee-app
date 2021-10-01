@@ -10,9 +10,7 @@ export type CreateImportRuleError = ValidationErrors | SaveError;
 export class CreateImportRuleUseCase {
     constructor(private importRuleRepository: ImportRuleRepository) {}
 
-    async execute(
-        createImportRuleRequest: CreateImportRuleRequest
-    ): Promise<Either<CreateImportRuleError, true>> {
+    async execute(createImportRuleRequest: CreateImportRuleRequest): Promise<Either<CreateImportRuleError, true>> {
         const newResult = ImportRule.createNew(createImportRuleRequest);
 
         if (newResult.isSuccess()) {

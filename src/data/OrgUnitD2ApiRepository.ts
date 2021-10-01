@@ -1,6 +1,7 @@
-import OrgUnitRepository from "../domain/repositories/OrgUnitRepository";
-import { D2Api, Id } from "d2-api";
+import { Id } from "@eyeseetea/d2-api";
 import { OrgUnit } from "../domain/entities/OrgUnit";
+import OrgUnitRepository from "../domain/repositories/OrgUnitRepository";
+import { D2Api } from "../types/d2-api";
 
 class OrgUnitD2ApiRepository implements OrgUnitRepository {
     constructor(private d2Api: D2Api) {}

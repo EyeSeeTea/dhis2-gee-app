@@ -5,8 +5,8 @@ msgstr ""
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1)\n"
-"POT-Creation-Date: 2020-06-24T17:30:02.417Z\n"
-"PO-Revision-Date: 2020-06-24T17:30:02.417Z\n"
+"POT-Creation-Date: 2021-09-22T09:56:12.389Z\n"
+"PO-Revision-Date: 2021-09-22T09:56:12.389Z\n"
 
 msgid "No effective import into DHIS2, file download"
 msgstr ""
@@ -216,6 +216,9 @@ msgid "Summary and save"
 msgstr ""
 
 msgid "Dataset"
+msgstr ""
+
+msgid "Transform expression: {{transformExpression}}"
 msgstr ""
 
 msgid "Help"

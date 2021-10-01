@@ -1,6 +1,4 @@
-import DataValueSetRepository, {
-    SaveDataValueSetReponse,
-} from "../domain/repositories/DataValueSetRepository";
+import DataValueSetRepository, { SaveDataValueSetReponse } from "../domain/repositories/DataValueSetRepository";
 import { DataValueSet } from "../domain/entities/DataValueSet";
 import i18n from "@dhis2/d2-i18n";
 

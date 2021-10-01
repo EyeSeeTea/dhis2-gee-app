@@ -1,6 +1,6 @@
 import React from "react";
 import PropTypes from "prop-types";
-import { DialogButton } from "d2-ui-components";
+import { DialogButton } from "@eyeseetea/d2-ui-components";
 
 import Typography from "@material-ui/core/Typography";
 import IconButton from "@material-ui/core/IconButton";
@@ -38,12 +38,7 @@ function PageHeader({ variant, title, onBackClick, helpText }) {
                 </IconButton>
             )}
 
-            <Typography
-                variant={variant}
-                gutterBottom
-                style={styles.text}
-                data-test={"page-header-title"}
-            >
+            <Typography variant={variant} gutterBottom style={styles.text} data-test={"page-header-title"}>
                 {title}
             </Typography>
             {helpText && renderHelpButton(helpText)}

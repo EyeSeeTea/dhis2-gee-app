@@ -1,9 +1,6 @@
 import { Id } from "../entities/Ref";
 import { Either } from "../common/Either";
-import {
-    DeleteImportSummaryByIdsError,
-    ImportSummaryRepository,
-} from "../repositories/ImportSummaryRepository";
+import { DeleteImportSummaryByIdsError, ImportSummaryRepository } from "../repositories/ImportSummaryRepository";
 
 export class DeleteImportSummariesUseCase {
     constructor(private importRuleRepository: ImportSummaryRepository) {}

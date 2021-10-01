@@ -4,7 +4,7 @@ import { StepProps } from "../MappingWizard";
 import { makeStyles, Button, LinearProgress } from "@material-ui/core";
 import i18n from "@dhis2/d2-i18n";
 import Mapping from "../../../../models/Mapping";
-import { useSnackbar } from "d2-ui-components";
+import { useSnackbar } from "@eyeseetea/d2-ui-components";
 import { useHistory } from "react-router-dom";
 import { useCompositionRoot } from "../../../../contexts/app-context";
 import { GeeDataSet } from "../../../../../domain/entities/GeeDataSet";
@@ -32,7 +32,7 @@ const SummaryStep: React.FC<StepProps> = props => {
 
             history.goBack();
             snackbar.success(`${i18n.t("Mapping saved:")} ${mapping.name}`);
-        } catch (err) {
+        } catch (err: any) {
             setSaving(false);
             snackbar.error(err.message || err.toString());
         }
@@ -43,10 +43,7 @@ const SummaryStep: React.FC<StepProps> = props => {
             <div className={classes.wrapper}>
                 <ul>
                     <LiEntry label={Mapping.getFieldName("name")} value={mapping.name} />
-                    <LiEntry
-                        label={Mapping.getFieldName("description")}
-                        value={mapping.description}
-                    />
+                    <LiEntry label={Mapping.getFieldName("description")} value={mapping.description} />
                     <LiEntry
                         label={i18n.t("Dataset")}
                         value={
@@ -76,10 +73,10 @@ const SummaryStep: React.FC<StepProps> = props => {
                                                     attributeMapping.dataElementId
                                                 }) ${
                                                     attributeMapping.transformExpression
-                                                        ? i18n.t(
-                                                              "Transform expression: {{transformExpression}}",
-                                                              attributeMapping
-                                                          )
+                                                        ? i18n.t("Transform expression: {{transformExpression}}", {
+                                                              transformExpression: attributeMapping.transformExpression,
+                                                              nsSeparator: false,
+                                                          })
                                                         : ""
                                                 }`}
                                             </span>
@@ -105,15 +102,7 @@ const SummaryStep: React.FC<StepProps> = props => {
     );
 };
 
-const LiEntry = ({
-    label,
-    value,
-    separator = ":",
-}: {
-    label: string;
-    value?: React.ReactNode;
-    separator?: string;
-}) => {
+const LiEntry = ({ label, value, separator = ":" }: { label: string; value?: React.ReactNode; separator?: string }) => {
     return (
         <li key={label}>
             {label}

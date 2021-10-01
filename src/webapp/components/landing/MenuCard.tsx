@@ -45,13 +45,7 @@ const useStyles = makeStyles({
     },
 });
 
-const MenuCard: React.FC<MenuCardProps> = ({
-    name,
-    description,
-    isVisible,
-    addAction,
-    listAction,
-}) => {
+const MenuCard: React.FC<MenuCardProps> = ({ name, description, isVisible, addAction, listAction }) => {
     const classes = useStyles();
 
     if (isVisible === false) return null;

@@ -1,6 +1,7 @@
-import { Id, D2Api } from "d2-api";
 import i18n from "@dhis2/d2-i18n";
-import { TablePagination } from "d2-ui-components";
+import { Id } from "@eyeseetea/d2-api";
+import { TablePagination } from "@eyeseetea/d2-ui-components";
+import { D2Api } from "../../types/d2-api";
 
 export interface DataSetData {
     id: Id;
@@ -35,9 +36,7 @@ class DataSet {
         return this.fieldNames[field];
     }
 
-    static async getList(
-        api: D2Api
-    ): Promise<{ dataSets: DataSet[] | undefined; pager: Partial<TablePagination> }> {
+    static async getList(api: D2Api): Promise<{ dataSets: DataSet[] | undefined; pager: Partial<TablePagination> }> {
         const { objects, pager } = await api.models.dataSets
             .get({
                 fields: {
