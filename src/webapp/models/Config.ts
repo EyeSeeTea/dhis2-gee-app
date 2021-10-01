@@ -1,11 +1,6 @@
 import { D2Api, MetadataPick } from "../../types/d2-api";
 
 const baseConfig = {
-    // Add here static configuration
-    gee: {
-        serviceAccount: "test-63@foo-dhis2-gee-app.iam.gserviceaccount.com",
-        privateKeyFile: "foo-dhis2-gee-app-09be93975aeb.json",
-    },
     dataStore: {
         namespace: "dhis2-gee-app",
         keys: {
