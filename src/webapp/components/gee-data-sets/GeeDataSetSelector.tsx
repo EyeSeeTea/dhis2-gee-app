@@ -38,6 +38,7 @@ const GeeDataSetSelector: React.FC<GeeDataSetSelectorProps> = ({ onChange, float
     const [searchFilter, setSearchFilter] = useState<string>("");
     const [cadenceFilter, setCadenceFilter] = useState<string>("");
     const [objectsTableKey, setObjectsTableKey] = useState<number>(new Date().getTime());
+    const [loading, setLoading] = useState<boolean>(true);
 
     const [cadenceFilterOptions] = useState<{ id: Cadence; name: string }[]>([
         {
@@ -60,7 +61,10 @@ const GeeDataSetSelector: React.FC<GeeDataSetSelectorProps> = ({ onChange, float
     const materialTheme = getMaterialTheme();
 
     useEffect(() => {
-        geeDataSets.getAll.execute({ search: searchFilter, cadence: cadenceFilter }).then(setRows);
+        geeDataSets.getAll.execute({ search: searchFilter, cadence: cadenceFilter }).then(rows => {
+            setRows(rows);
+            setLoading(false);
+        });
     }, [geeDataSets.getAll, searchFilter, cadenceFilter, objectsTableKey]);
 
     const columns: TableColumn<GeeDataSet>[] = [
@@ -228,6 +232,7 @@ const GeeDataSetSelector: React.FC<GeeDataSetSelectorProps> = ({ onChange, float
                             searchBoxLabel={i18n.t("Search")}
                             filterComponents={customFilters}
                             initialSearch={searchFilter}
+                            loading={loading}
                         />
                     </DialogContent>
                 </ConfirmationDialog>
