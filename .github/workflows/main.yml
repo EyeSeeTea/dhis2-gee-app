@@ -17,6 +17,9 @@ jobs:
         uses: actions/setup-node@v1
         with:
           node-version: "12.x"
+          
+      - name: Install yarn
+        run: npm install -g yarn
 
       - name: Get yarn cache directory path
         id: yarn-cache-dir-path
