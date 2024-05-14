@@ -41,9 +41,9 @@ export class GeeDataSetD2ApiRepository implements GeeDataSetRepository {
         const links = catalog.links.filter(link => link.rel === "child").map(link => link.href);
 
         // Fetch parent links to fetch data for child links and flatten the result
-        const dataSetPromises = await Promise.all(
+        const childrensCatalog = await Promise.all(
             links.map(async link => {
-                const { data } = await axios.get<GeeApiDataSet>(link);
+                const { data } = await axios.get<GeeApiCatalog>(link);
                 const childLinks = data.links?.filter(link => link.rel === "child").map(link => link.href) || [];
 
                 return Promise.all(
@@ -54,7 +54,7 @@ export class GeeDataSetD2ApiRepository implements GeeDataSetRepository {
                 );
             })
         );
-        return _.flatten(dataSetPromises);
+        return _.flatten(childrensCatalog);
     }
 
     private async getDataSets(): Promise<GeeDataSet[]> {
