@@ -199,7 +199,6 @@ const GeeDataSetSelector: React.FC<GeeDataSetSelectorProps> = ({ onChange, float
                     className={classes.geeInput}
                     inputProps={{
                         readOnly: Boolean(true),
-                        disabled: Boolean(true),
                     }}
                     onClick={() => setOpen(true)}
                     label={floatingLabelText}

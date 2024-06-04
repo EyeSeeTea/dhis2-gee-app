@@ -4,6 +4,7 @@ import moment from "moment";
 import { Maybe } from "../domain/common/Maybe";
 import { GeeDataSet } from "../domain/entities/GeeDataSet";
 import { GeeDataSetRepository, GeeDataSetsFilter } from "../domain/repositories/GeeDataSetRepository";
+import _ from "lodash";
 
 export class GeeDataSetD2ApiRepository implements GeeDataSetRepository {
     private cachedGeeDataSets: GeeDataSetsCache | undefined;
@@ -35,16 +36,25 @@ export class GeeDataSetD2ApiRepository implements GeeDataSetRepository {
     }
 
     async getGeeApi(): Promise<GeeApiDataSet[]> {
-        const geeDataSetCatalog = "https://earthengine-stac.storage.googleapis.com/catalog/catalog.json";
+        const geeDataSetCatalog = "https://storage.googleapis.com/earthengine-stac/catalog/catalog.json";
         const { data: catalog } = await axios.get<GeeApiCatalog>(geeDataSetCatalog);
         const links = catalog.links.filter(link => link.rel === "child").map(link => link.href);
 
-        return Promise.all(
+        // Fetch parent links to fetch data for child links and flatten the result
+        const childrensCatalog = await Promise.all(
             links.map(async link => {
-                const { data } = await axios.get<GeeApiDataSet>(link);
-                return data;
+                const { data } = await axios.get<GeeApiCatalog>(link);
+                const childLinks = data.links?.filter(link => link.rel === "child").map(link => link.href) || [];
+
+                return Promise.all(
+                    childLinks.map(async childLink => {
+                        const { data: childData } = await axios.get<GeeApiDataSet>(childLink);
+                        return childData;
+                    })
+                );
             })
         );
+        return _.flatten(childrensCatalog);
     }
 
     private async getDataSets(): Promise<GeeDataSet[]> {
