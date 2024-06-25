@@ -14,7 +14,7 @@ const LandingPage: React.FC = () => {
         children: MenuCardProps[];
     }[] = [
         {
-            title: "Imports",
+            title: i18n.t("Imports"),
             key: "Main",
             children: [
                 {
