@@ -297,9 +297,8 @@ msgstr "Mapeamento do Google Band com Data Element.q"
 msgid "Click to show feedback"
 msgstr "Clique para mostrar comentários"
 
-#, fuzzy
 msgid "Imports"
-msgstr "Importar"
+msgstr ""
 
 msgid "On-demand Import"
 msgstr "Importação sob demanda"
