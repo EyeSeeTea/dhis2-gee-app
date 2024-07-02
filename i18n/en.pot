@@ -5,8 +5,8 @@ msgstr ""
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1)\n"
-"POT-Creation-Date: 2021-09-22T09:56:12.389Z\n"
-"PO-Revision-Date: 2021-09-22T09:56:12.389Z\n"
+"POT-Creation-Date: 2024-06-25T18:52:49.837Z\n"
+"PO-Revision-Date: 2024-06-25T18:52:49.837Z\n"
 
 msgid "No effective import into DHIS2, file download"
 msgstr ""
@@ -284,6 +284,9 @@ msgid "Google Band mapping with Data Element.q"
 msgstr ""
 
 msgid "Click to show feedback"
+msgstr ""
+
+msgid "Imports"
 msgstr ""
 
 msgid "On-demand Import"
