@@ -1,6 +1,7 @@
-import React, { useEffect } from "react";
+import React, { useCallback } from "react";
 import { OrgUnitsSelector } from "@eyeseetea/d2-ui-components";
-import { useAppContext, useCompositionRoot } from "../../contexts/app-context";
+import { useAppContext } from "../../contexts/app-context";
+import { OrgUnit } from "../../../domain/entities/OrgUnit";
 
 interface OUDialogProps {
     selected: string[];
@@ -17,19 +18,22 @@ const WithCoordinatesOrgUnitsSelector: React.FC<OUDialogProps> = ({
 }) => {
     const { api } = useAppContext();
     const [orgUnitsWithCoordinates, setOrgUnitsWithCoordinates] = React.useState<string[]>([]);
-    const orgUnits = useCompositionRoot().orgUnits();
-
-    useEffect(() => {
-        orgUnits.getWithCoordinates.execute().then(orgUnits => {
-            setOrgUnitsWithCoordinates(orgUnits.map(ou => ou.id));
-        });
-    }, [orgUnits.getWithCoordinates]);
 
     const controls = {
         filterByLevel: true,
         filterByGroup: true,
         selectAll: true,
     };
+
+    const onFilterWithCoordinates = useCallback(
+        (orgUnits: OrgUnit[]) => {
+            setOrgUnitsWithCoordinates([
+                ...orgUnitsWithCoordinates,
+                ...orgUnits.filter(child => !!child.geometry).map(child => child.id),
+            ]);
+        },
+        [orgUnitsWithCoordinates]
+    );
 
     return (
         <OrgUnitsSelector
@@ -40,6 +44,7 @@ const WithCoordinatesOrgUnitsSelector: React.FC<OUDialogProps> = ({
             onChange={onChange}
             selected={selected}
             selectableIds={selectableIds ?? orgUnitsWithCoordinates}
+            onChildrenLoaded={onFilterWithCoordinates}
         />
     );
 };
