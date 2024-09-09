@@ -25,15 +25,12 @@ const WithCoordinatesOrgUnitsSelector: React.FC<OUDialogProps> = ({
         selectAll: true,
     };
 
-    const onFilterWithCoordinates = useCallback(
-        (orgUnits: OrgUnit[]) => {
-            setOrgUnitsWithCoordinates([
-                ...orgUnitsWithCoordinates,
-                ...orgUnits.filter(child => !!child.geometry).map(child => child.id),
-            ]);
-        },
-        [orgUnitsWithCoordinates]
-    );
+    const onFilterWithCoordinates = useCallback((orgUnits: OrgUnit[]) => {
+        setOrgUnitsWithCoordinates(prevOrgUnitsWithCoordinates => [
+            ...prevOrgUnitsWithCoordinates,
+            ...orgUnits.filter(child => !!child.geometry).map(child => child.id),
+        ]);
+    }, []);
 
     return (
         <OrgUnitsSelector
