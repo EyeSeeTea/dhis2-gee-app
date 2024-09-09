@@ -41,7 +41,10 @@ const WithCoordinatesOrgUnitsSelector: React.FC<OUDialogProps> = ({
             onChange={onChange}
             selected={selected}
             selectableIds={selectableIds ?? orgUnitsWithCoordinates}
-            onChildrenLoaded={onFilterWithCoordinates}
+            onChildrenLoaded={{
+                fields: ["geometry"],
+                fn: onFilterWithCoordinates,
+            }}
         />
     );
 };
