@@ -18,7 +18,7 @@
         "@dhis2/d2-ui-forms": "7.3.3",
         "@dhis2/ui": "7.2.1",
         "@eyeseetea/d2-api": "1.9.2",
-        "@eyeseetea/d2-ui-components": "2.6.7",
+        "@eyeseetea/d2-ui-components": "2.9.0-beta.4",
         "@material-ui/core": "4.12.3",
         "@material-ui/icons": "4.11.2",
         "@material-ui/styles": "4.11.4",
