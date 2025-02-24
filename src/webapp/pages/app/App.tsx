@@ -30,7 +30,6 @@ export const App: React.FC<AppProps> = React.memo(function App({ api, d2 }) {
     const [appContext, setAppContext] = useState<AppContextState | null>(null);
     const [showShareButton, setShowShareButton] = useState(false);
     const [appConfig, setAppConfig] = useState<AppConfig | undefined>();
-    const [username, setUsername] = useState("");
     const [loading, setLoading] = useState(true);
 
     useEffect(() => {
@@ -62,7 +61,6 @@ export const App: React.FC<AppProps> = React.memo(function App({ api, d2 }) {
             // Google Earth Engine must be defined globally in window (as var 'ee') to work
             Object.assign(window, { app: appContext });
             setAppContext(appContext);
-            setUsername(currentUser.username);
             setAppConfig(appConfig);
             setShowShareButton(_(appConfig).get("appearance.showShareButton") || false);
             setLoading(false);
@@ -87,8 +85,8 @@ export const App: React.FC<AppProps> = React.memo(function App({ api, d2 }) {
                         </div>
 
                         <Share visible={showShareButton} />
-                        {appConfig && appConfig?.feedback && (
-                            <Feedback options={appConfig.feedback} username={username} />
+                        {appConfig && appConfig?.feedback && appContext && (
+                            <Feedback options={appConfig.feedback} username={appContext.currentUser.username} />
                         )}
                     </LoadingProvider>
                 </SnackbarProvider>
