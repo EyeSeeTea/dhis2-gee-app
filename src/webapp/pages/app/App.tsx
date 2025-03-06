@@ -29,7 +29,7 @@ export const App: React.FC<AppProps> = React.memo(function App({ api, d2 }) {
     const { baseUrl } = useConfig();
     const [appContext, setAppContext] = useState<AppContextState | null>(null);
     const [showShareButton, setShowShareButton] = useState(false);
-    const [appConfig, setAppConfig] = useState<AppConfig | undefined>();
+    const [appConfig, setAppConfig] = useState<AppConfig>();
     const [loading, setLoading] = useState(true);
 
     useEffect(() => {
@@ -85,7 +85,7 @@ export const App: React.FC<AppProps> = React.memo(function App({ api, d2 }) {
                         </div>
 
                         <Share visible={showShareButton} />
-                        {appConfig && appConfig?.feedback && appContext && (
+                        {appConfig && (
                             <Feedback options={appConfig.feedback} username={appContext.currentUser.username} />
                         )}
                     </LoadingProvider>
