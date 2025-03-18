@@ -2,6 +2,7 @@ import { useConfig } from "@dhis2/app-runtime";
 import { HeaderBar } from "@dhis2/ui";
 import { LoadingProvider, SnackbarProvider } from "@eyeseetea/d2-ui-components";
 import { MuiThemeProvider } from "@material-ui/core/styles";
+import { Feedback, FeedbackOptions } from "@eyeseetea/feedback-component";
 import _ from "lodash";
 //@ts-ignore
 import OldMuiThemeProvider from "material-ui/styles/MuiThemeProvider";
@@ -28,13 +29,14 @@ export const App: React.FC<AppProps> = React.memo(function App({ api, d2 }) {
     const { baseUrl } = useConfig();
     const [appContext, setAppContext] = useState<AppContextState | null>(null);
     const [showShareButton, setShowShareButton] = useState(false);
+    const [appConfig, setAppConfig] = useState<AppConfig>();
     const [loading, setLoading] = useState(true);
 
     useEffect(() => {
         async function setup() {
-            const appConfig = await fetch("app-config.json", {
+            const appConfig = (await fetch("app-config.json", {
                 credentials: "same-origin",
-            }).then(res => res.json());
+            }).then(res => res.json())) as AppConfig;
 
             const [config, currentUser] = await Promise.all([Config.build(api), User.getCurrent(api)]);
 
@@ -59,9 +61,8 @@ export const App: React.FC<AppProps> = React.memo(function App({ api, d2 }) {
             // Google Earth Engine must be defined globally in window (as var 'ee') to work
             Object.assign(window, { app: appContext });
             setAppContext(appContext);
-
+            setAppConfig(appConfig);
             setShowShareButton(_(appConfig).get("appearance.showShareButton") || false);
-            if (currentUser.canReportFeedback()) initFeedbackTool(d2, appConfig);
             setLoading(false);
         }
 
@@ -84,6 +85,9 @@ export const App: React.FC<AppProps> = React.memo(function App({ api, d2 }) {
                         </div>
 
                         <Share visible={showShareButton} />
+                        {appConfig && (
+                            <Feedback options={appConfig.feedback} username={appContext.currentUser.username} />
+                        )}
                     </LoadingProvider>
                 </SnackbarProvider>
             </OldMuiThemeProvider>
@@ -93,36 +97,10 @@ export const App: React.FC<AppProps> = React.memo(function App({ api, d2 }) {
 
 type D2 = object;
 
-function initFeedbackTool(d2: D2, appConfig: AppConfig): void {
-    const appKey = _(appConfig).get("appKey");
-
-    if (appConfig && appConfig.feedback) {
-        const feedbackOptions = {
-            ...appConfig.feedback,
-            i18nPath: "feedback-tool/i18n",
-        };
-        window.$.feedbackDhis2(d2, appKey, feedbackOptions);
-    }
-}
-
-interface AppConfig {
+type AppConfig = {
     appKey: string;
     appearance: {
         showShareButton: boolean;
     };
-    feedback: {
-        token: string[];
-        createIssue: boolean;
-        sendToDhis2UserGroups: string[];
-        issues: {
-            repository: string;
-            title: string;
-            body: string;
-        };
-        snapshots: {
-            repository: string;
-            branch: string;
-        };
-        feedbackOptions: {};
-    };
-}
+    feedback: FeedbackOptions;
+};
