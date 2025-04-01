@@ -5,6 +5,10 @@ on:
   # Every day at 8:00 AM
   schedule:
     - cron: '0 8 * * *'
+  push:
+    branches: [ "master", "development" ]
+  pull_request:
+    branches: [ "master", "development" ]
 
 jobs:
   validate:
