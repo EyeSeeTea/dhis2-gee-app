@@ -18,7 +18,7 @@ import { importRuleOndemandId } from "../../../domain/entities/ImportRule";
 import GeneralInfo from "../../components/import-rule/GeneralInfo";
 import { CreateImportRuleError } from "../../../domain/usecases/CreateImportRuleUseCase";
 import { getValidationTranslations } from "../../utils/ValidationTranslations";
-import i18n from "../../utils/i18n";
+import i18n from "../../../utils/i18n";
 
 interface ImportRuleDetailPageParams {
     id: string;

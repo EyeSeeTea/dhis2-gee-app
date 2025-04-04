@@ -1,4 +1,4 @@
-import i18n from "@dhis2/d2-i18n";
+import i18n from "../../utils/i18n";
 import { Id } from "@eyeseetea/d2-api";
 import { TablePagination } from "@eyeseetea/d2-ui-components";
 import { D2Api } from "../../types/d2-api";

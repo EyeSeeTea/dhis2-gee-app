@@ -3,7 +3,7 @@ import DataElement from "../../domain/entities/DataElement";
 import { D2Api } from "../../types/d2-api";
 import { Validation } from "../../types/validations";
 import { getDataStore } from "../utils/dhis2";
-import i18n from "../utils/i18n";
+import i18n from "../../utils/i18n";
 import { Config } from "./Config";
 import { AttributeMappingDictionary } from "./Mapping";
 

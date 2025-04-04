@@ -23,7 +23,7 @@ import { DeleteMappingByIdsError } from "../../../domain/repositories/MappingRep
 import OUDialog from "../../components/dialogs/OrganisationUnitDialog";
 import { useAppContext, useCompositionRoot } from "../../contexts/app-context";
 import Mapping from "../../models/Mapping";
-import i18n from "../../utils/i18n";
+import i18n from "../../../utils/i18n";
 import { GoTo, pageRoutes, useGoTo } from "../Router";
 
 type ContextualAction = "details" | "edit" | "delete" | "assignOU" | "setAsDefault";

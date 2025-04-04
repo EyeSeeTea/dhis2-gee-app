@@ -1,4 +1,4 @@
-import i18n from "../../webapp/utils/i18n";
+import i18n from "../../utils/i18n";
 
 export const FIXED: PeriodOption = { id: "FIXED", name: i18n.t("Fixed period") };
 export const TODAY: PeriodOption = { id: "TODAY", name: i18n.t("Today"), start: [0, "day"] };

@@ -1,4 +1,4 @@
-import i18n from "@dhis2/d2-i18n";
+import i18n from "../../../../utils/i18n";
 import GeneralInfoStep from "./steps/GeneralInfoStep";
 import VariablesMappingStep from "./steps/VariablesMappingStep";
 import SummaryStep from "./steps/SummaryStep";

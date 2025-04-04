@@ -4,7 +4,7 @@ import React, { useState } from "react";
 import AttributeMapping from "../../models/AttributeMapping";
 import { TextField, Box, Button, makeStyles } from "@material-ui/core";
 import { TransformExpression, trasnformExpressionToken } from "../../../domain/entities/TransformExpression";
-import i18n from "../../utils/i18n";
+import i18n from "../../../utils/i18n";
 
 export interface AttributeMappingDialogProps {
     attributeMapping: AttributeMapping;

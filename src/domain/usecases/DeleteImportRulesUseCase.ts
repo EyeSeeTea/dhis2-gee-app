@@ -3,7 +3,7 @@ import { Id } from "../entities/Ref";
 import { Either } from "../common/Either";
 import { UnexpectedError } from "../errors/Generic";
 import { ImportSummaryRepository } from "../repositories/ImportSummaryRepository";
-import i18n from "../../webapp/utils/i18n";
+import i18n from "../../utils/i18n";
 
 export class DeleteImportRulesUseCase {
     constructor(

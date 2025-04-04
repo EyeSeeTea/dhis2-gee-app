@@ -1,7 +1,7 @@
 import React from "react";
 import { pageRoutes } from "../Router";
 import { makeStyles, Typography, Theme, Box } from "@material-ui/core";
-import i18n from "../../../locales";
+import i18n from "../../../utils/i18n";
 import { Link } from "react-router-dom";
 
 const useStyles = makeStyles((theme: Theme) => ({

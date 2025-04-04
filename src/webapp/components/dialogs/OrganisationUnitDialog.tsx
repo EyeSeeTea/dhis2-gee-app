@@ -1,7 +1,7 @@
 import React from "react";
 import { ConfirmationDialog } from "@eyeseetea/d2-ui-components";
 import { DialogContent } from "@material-ui/core";
-import i18n from "@dhis2/d2-i18n";
+import i18n from "../../../utils/i18n";
 import WithCoordinatesOrgUnitsSelector from "../org-unit/WithCoordinatesOrgUnitsSelector";
 
 interface OUDialogProps {
