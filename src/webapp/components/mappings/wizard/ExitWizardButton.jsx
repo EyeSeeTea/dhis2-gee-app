@@ -1,7 +1,7 @@
 import React from "react";
 import PropTypes from "prop-types";
 import { ConfirmationDialog } from "@eyeseetea/d2-ui-components";
-import i18n from "@dhis2/d2-i18n";
+import i18n from "../../../../utils/i18n";
 
 class ExitWizardButton extends React.Component {
     static propTypes = {

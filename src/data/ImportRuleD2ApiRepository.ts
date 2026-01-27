@@ -11,7 +11,7 @@ import {
     ImportRuleRepository,
     SaveError,
 } from "../domain/repositories/ImportRuleRepository";
-import i18n from "../webapp/utils/i18n";
+import i18n from "../utils/i18n";
 
 const defaultImportRuleData: ImportRuleDS = {
     id: importRuleOndemandId,

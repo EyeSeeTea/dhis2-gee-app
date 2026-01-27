@@ -1,5 +1,5 @@
 import _ from "lodash";
-import i18n from "@dhis2/d2-i18n";
+import i18n from "../../utils/i18n";
 
 export interface Validation {
     [key: string]: {
@@ -8,10 +8,10 @@ export interface Validation {
     }[];
 }
 
-const translations: { [key: string]: (namespace: object) => string } = {
-    cannotBeBlank: namespace => i18n.t("Field {{field}} cannot be blank", namespace),
+const translations: { [key: string]: (namespace: Record<string, string>) => string } = {
+    cannotBeBlank: namespace => i18n.t("Field {{field}} cannot be blank", { field: namespace.field }),
     urlUsernameComboAlreadyExists: () => i18n.t("This URL and username combination already exists"),
-    cannotBeEmpty: namespace => i18n.t("You need to select at least one {{element}}", namespace),
+    cannotBeEmpty: namespace => i18n.t("You need to select at least one {{element}}", { element: namespace.element }),
 
     invalidPeriod: () => i18n.t("Start and end dates are not a valid period"),
 };
@@ -30,7 +30,7 @@ export async function getValidationMessages(
         .map(error => {
             const translation = translations[error.key];
             if (translation) {
-                return i18n.t(translation(error.namespace));
+                return i18n.t(translation({ ...error.namespace }));
             } else {
                 return `Missing translations: ${error.key}`;
             }

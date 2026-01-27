@@ -1,6 +1,6 @@
 import _ from "lodash";
 import { Moment } from "moment";
-import i18n from "../../webapp/utils/i18n";
+import i18n from "../../utils/i18n";
 import { Either } from "../common/Either";
 import { DataValue, DataValueSet } from "../entities/DataValueSet";
 import { GeeDataSet } from "../entities/GeeDataSet";

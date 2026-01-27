@@ -5,7 +5,7 @@ import { DialogButton } from "@eyeseetea/d2-ui-components";
 import Typography from "@material-ui/core/Typography";
 import IconButton from "@material-ui/core/IconButton";
 import Icon from "@material-ui/core/Icon";
-import i18n from "../../utils/i18n";
+import i18n from "../../../utils/i18n";
 
 const styles = {
     backArrow: { paddingTop: 10, marginBottom: 5 },

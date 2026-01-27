@@ -12,7 +12,7 @@ import WithCoordinatesOrgUnitsSelector from "../../components/org-unit/WithCoord
 import PeriodSelector from "../../components/period/PeriodSelector";
 import { PeriodOption } from "../../../domain/entities/PeriodOption";
 import { ImportGlobalState, ImportGlobalStateInitialState } from "./ImportGlobalState";
-import i18n from "../../utils/i18n";
+import i18n from "../../../utils/i18n";
 
 const useStyles = makeStyles((theme: Theme) => ({
     card: {

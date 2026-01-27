@@ -1,4 +1,4 @@
-import i18n from "@dhis2/d2-i18n";
+import i18n from "../../../utils/i18n";
 import { FormControl, InputLabel, MenuItem, MuiThemeProvider, Select } from "@material-ui/core";
 import { createTheme } from "@material-ui/core/styles";
 import _ from "lodash";
