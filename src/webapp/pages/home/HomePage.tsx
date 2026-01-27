@@ -1,7 +1,7 @@
 import React from "react";
 import { MenuCardProps } from "../../components/landing/MenuCard";
 import { Landing } from "../../components/landing/Landing";
-import i18n from "@dhis2/d2-i18n";
+import i18n from "../../../utils/i18n";
 import { useGoTo, pageRoutes } from "../Router";
 
 const LandingPage: React.FC = () => {
@@ -14,7 +14,7 @@ const LandingPage: React.FC = () => {
         children: MenuCardProps[];
     }[] = [
         {
-            title: "Imports",
+            title: i18n.t("Imports"),
             key: "Main",
             children: [
                 {

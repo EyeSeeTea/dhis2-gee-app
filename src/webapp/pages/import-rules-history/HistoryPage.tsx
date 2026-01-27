@@ -20,7 +20,7 @@ import { useCompositionRoot } from "../../contexts/app-context";
 import { pageRoutes } from "../Router";
 import { DeleteImportSummaryByIdsError } from "../../../domain/repositories/ImportSummaryRepository";
 import { Ref } from "../../../domain/entities/Ref";
-import i18n from "../../utils/i18n";
+import i18n from "../../../utils/i18n";
 
 const HistoryPage: React.FC = () => {
     const history = useHistory();
@@ -168,7 +168,7 @@ const HistoryPage: React.FC = () => {
         const handleFailure = (failure: DeleteImportSummaryByIdsError): string => {
             switch (failure.kind) {
                 case "UnexpectedError":
-                    return i18n.t("An unexpected error has ocurred deleting import history. ") + failure.error.message;
+                    return i18n.t("An unexpected error has occurred deleting import history. ") + failure.error.message;
             }
         };
 
@@ -176,7 +176,7 @@ const HistoryPage: React.FC = () => {
 
         results.fold(
             error => snackbar.error(handleFailure(error)),
-            () => snackbar.success(i18n.t("Successfully import histories", results))
+            () => snackbar.success(i18n.t("Successfully import histories"))
         );
 
         setState({

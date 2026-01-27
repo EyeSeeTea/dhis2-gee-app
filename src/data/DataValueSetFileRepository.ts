@@ -1,6 +1,6 @@
 import DataValueSetRepository, { SaveDataValueSetReponse } from "../domain/repositories/DataValueSetRepository";
 import { DataValueSet } from "../domain/entities/DataValueSet";
-import i18n from "@dhis2/d2-i18n";
+import i18n from "../utils/i18n";
 
 type Options = { filename: string; mimeType: string; contents: string | ArrayBuffer };
 

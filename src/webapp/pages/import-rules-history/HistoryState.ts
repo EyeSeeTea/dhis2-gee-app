@@ -1,6 +1,6 @@
 import { ImportRuleData } from "../../../domain/entities/ImportRule";
 import { ImportSummaryData } from "../../../domain/entities/ImportSummary";
-import i18n from "../../utils/i18n";
+import i18n from "../../../utils/i18n";
 import { Page } from "../../../domain/common/Pagination";
 import { ImportSummaryFilters } from "../../../domain/repositories/ImportSummaryRepository";
 

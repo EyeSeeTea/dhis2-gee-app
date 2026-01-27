@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import _ from "lodash";
 import { StepProps } from "../MappingWizard";
 import { makeStyles, Button, LinearProgress } from "@material-ui/core";
-import i18n from "@dhis2/d2-i18n";
+import i18n from "../../../../../utils/i18n";
 import Mapping from "../../../../models/Mapping";
 import { useSnackbar } from "@eyeseetea/d2-ui-components";
 import { useHistory } from "react-router-dom";

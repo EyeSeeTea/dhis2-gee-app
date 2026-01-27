@@ -22,7 +22,7 @@ import { useGoTo, pageRoutes } from "../Router";
 import { ImportRuleListState, importRuleListInitialState } from "./ImportRulesListState";
 import ImportUseCase from "../../../domain/usecases/ImportUseCase";
 import { DeleteImportRulesByIdError } from "../../../domain/repositories/ImportRuleRepository";
-import i18n from "../../utils/i18n";
+import i18n from "../../../utils/i18n";
 
 const ImportRuleListPage: React.FC = () => {
     const snackbar = useSnackbar();
