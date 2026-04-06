@@ -45,9 +45,7 @@ export const App: React.FC<AppProps> = React.memo(function App({ api, d2 }) {
 
             const compositionRoot = new CompositionRoot(api, window.ee, version, config);
 
-            const dataImporter: boolean = process.env.REACT_APP_DATA_IMPORTER
-                ? process.env.REACT_APP_DATA_IMPORTER === "true"
-                : false;
+            const dataImporter: boolean = import.meta.env.VITE_DATA_IMPORTER === "true";
 
             const appContext: AppContextState = {
                 d2,

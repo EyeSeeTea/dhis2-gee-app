@@ -1,10 +1,8 @@
 import React from "react";
 import i18n from "../../../utils/i18n";
+import { TextField } from "@dhis2/d2-ui-core";
+import { FormBuilder, Validators } from "@dhis2/d2-ui-forms";
 import { ImportRuleState } from "../../pages/import-rule-detail/ImportRuleDetailState";
-
-/* eslint-disable @typescript-eslint/no-var-requires */
-const { TextField } = require("@dhis2/d2-ui-core");
-const { FormBuilder, Validators } = require("@dhis2/d2-ui-forms");
 
 interface GeneralInfoStepProps {
     importRule: ImportRuleState;

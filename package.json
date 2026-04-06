@@ -9,6 +9,13 @@
         "type": "git",
         "url": "git+https://github.com/eyeseetea/dhis2-gee-app.git"
     },
+    "engines": {
+        "node": ">=16.14.0",
+        "yarn": "^1.22.0"
+    },
+    "resolutions": {
+        "vite": "4.5.3"
+    },
     "dependencies": {
         "@dhis2/app-runtime": "3.2.0",
         "@dhis2/d2-i18n": "1.1.3",
@@ -38,19 +45,17 @@
         "react": "17.0.2",
         "react-dom": "17.0.2",
         "react-router-dom": "5.3.0",
-        "react-scripts": "4.0.3",
         "styled-jsx": "4.0.1"
     },
     "scripts": {
-        "start": "yarn localize && react-scripts start",
-        "craco-start": "craco start",
+        "start": "yarn localize && vite --strictPort",
         "prebuild": "yarn localize && yarn test",
-        "build-folder": "rm -rf build/ && d2-manifest package.json manifest.webapp && react-scripts build && yarn run manifest && cp -r i18n icon.png build",
-        "build": "yarn localize && yarn build-folder && rm -f $npm_package_name.zip && cd build && zip --quiet -r ../$npm_package_name.zip *",
-        "build-importer": "REACT_APP_DATA_IMPORTER=true yarn build && yarn manifest-importer && rm -f $npm_package_name-importer.zip && cd build && zip -r ../$npm_package_name-importer.zip *",
-        "test": "jest --passWithNoTests",
+        "build-folder": "rm -rf build/ && d2-manifest package.json manifest.webapp && tsc --noEmit && vite build --outDir=build && yarn run manifest && cp -r i18n icon.png build",
+        "build": "yarn localize && VITE_DHIS2_BASE_URL='' VITE_DHIS2_AUTH='' yarn build-folder && rm -f $npm_package_name.zip && cd build && zip --quiet -r ../$npm_package_name.zip *",
+        "build-importer": "VITE_DATA_IMPORTER=true yarn build && yarn manifest-importer && rm -f $npm_package_name-importer.zip && cd build && zip -r ../$npm_package_name-importer.zip *",
+        "test": "vitest run --reporter=basic",
+        "test-watch": "vitest watch",
         "lint": "eslint src cypress --ext .js,.jsx,.ts,.tsx",
-        "eject": "react-scripts eject",
         "prettify": "prettier \"./**/*.{js,jsx,json,css,ts,tsx}\" --write",
         "extract-pot": "yarn d2-i18n-extract -p src/ -o i18n/",
         "localize": "yarn update-po && d2-i18n-generate -n dhis2-gee-app -p ./i18n/ -o ./src/locales/",
@@ -66,13 +71,11 @@
     },
     "husky": {
         "hooks": {
-            "pre-push": "yarn prettify && yarn lint && yarn update-po && yarn jest"
+            "pre-push": "yarn prettify && yarn lint && yarn update-po && yarn test"
         }
     },
     "devDependencies": {
         "@actions/core": "1.9.1",
-        "@babel/core": "7.15.5",
-        "@babel/preset-typescript": "7.15.0",
         "@google/earthengine": "0.1.283",
         "@testing-library/cypress": "8.0.1",
         "@testing-library/jest-dom": "5.14.1",
@@ -81,7 +84,6 @@
         "@types/classnames": "2.3.1",
         "@types/cryptr": "4.0.1",
         "@types/file-saver": "2.0.3",
-        "@types/jest": "27.0.2",
         "@types/lodash": "4.14.173",
         "@types/material-ui": "0.21.9",
         "@types/math-expression-evaluator": "1.2.1",
@@ -93,17 +95,13 @@
         "@typescript-eslint/eslint-plugin": "4.31.2",
         "@typescript-eslint/parser": "4.31.2",
         "@vercel/ncc": "0.31.1",
+        "@vitejs/plugin-react": "3.1.0",
         "@welldone-software/why-did-you-render": "6.2.1",
         "axios-mock-adapter": "1.20.0",
-        "babel-core": "6.26.3",
         "babel-eslint": "10.1.0",
         "cmd-ts": "0.7.0",
-        "craco": "0.0.3",
         "cypress": "8.4.1",
         "cypress-xpath": "1.6.2",
-        "enzyme": "3.11.0",
-        "enzyme-adapter-react-16": "1.15.6",
-        "enzyme-to-json": "3.6.2",
         "eslint": "7.32.0",
         "eslint-config-prettier": "8.3.0",
         "eslint-config-react-app": "6.0.0",
@@ -115,13 +113,16 @@
         "eslint-plugin-react": "7.26.0",
         "eslint-plugin-react-hooks": "4.2.0",
         "eslint-plugin-unused-imports": "1.1.4",
-        "http-proxy-middleware": "2.0.1",
         "husky": "7.0.2",
-        "jest": "27.2.1",
+        "jsdom": "21.1.2",
+        "node-stdlib-browser": "1.2.0",
         "prettier": "2.4.1",
         "react-test-renderer": "17.0.2",
-        "ts-jest": "27.0.5",
         "typescript": "4.4.3",
+        "vite": "4.5.3",
+        "vite-plugin-checker": "0.6.4",
+        "vite-plugin-node-stdlib-browser": "0.2.1",
+        "vitest": "0.34.6",
         "wait-on": "6.0.0"
     },
     "manifest.webapp": {
@@ -139,5 +140,6 @@
                 "href": "*"
             }
         }
-    }
+    },
+    "packageManager": "yarn@1.22.22+sha512.a6b2f7906b721bba3d67d4aff083df04dad64c399707841b7acf00f6b133b7ac24255f2652fa22ae3534329dc6180534e98d17432037ff6fd140556e2bb3137e"
 }

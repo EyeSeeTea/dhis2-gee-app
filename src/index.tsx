@@ -1,11 +1,10 @@
 import { Provider } from "@dhis2/app-runtime";
-import i18n from "./utils/i18n";
-import axios from "axios";
 import { init } from "d2";
 import _ from "lodash";
 import ReactDOM from "react-dom";
 import { D2Api } from "./types/d2-api";
 import { EarthEngine } from "./types/google-earth-engine";
+import i18n from "./utils/i18n";
 import { getD2APiFromInstance } from "./utils/d2-api";
 import { Instance } from "./webapp/models/Instance";
 import { App } from "./webapp/pages/app/App";
@@ -19,15 +18,31 @@ declare global {
     }
 }
 
-const isDev = process.env.NODE_ENV === "development";
+const isDev = import.meta.env.DEV;
 
-async function getBaseUrl() {
-    if (isDev) {
-        return "/dhis2"; // See src/setupProxy.js
-    } else {
-        const { data: manifest } = await axios.get("manifest.webapp");
-        return manifest.activities.dhis.href;
+function getInjectedBaseUrl(): string | null {
+    const baseUrl = document.querySelector('meta[name="dhis2-base-url"]')?.getAttribute("content");
+    if (baseUrl && baseUrl !== "__DHIS2_BASE_URL__") {
+        return baseUrl;
     }
+    return null;
+}
+
+async function getBaseUrlFromManifest(): Promise<string> {
+    const response = await fetch("manifest.webapp");
+    const manifest = await response.json();
+    const { href } = manifest.activities.dhis;
+    if (!href || href === "*") {
+        throw new Error("Base URL not found in manifest.webapp (see DHIS2-19708)");
+    }
+    return href;
+}
+
+async function getBaseUrl(): Promise<string> {
+    if (isDev) {
+        return "/dhis2";
+    }
+    return getInjectedBaseUrl() ?? (await getBaseUrlFromManifest());
 }
 
 const isLangRTL = (code: string) => {
@@ -74,4 +89,4 @@ async function main() {
     }
 }
 
-main();
+void main();

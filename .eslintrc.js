@@ -51,4 +51,19 @@ module.exports = {
             version: "16.6.0",
         },
     },
+    overrides: [
+        {
+            files: ["**/*.spec.ts", "**/*.spec.tsx"],
+            globals: {
+                describe: "readonly",
+                it: "readonly",
+                expect: "readonly",
+                vi: "readonly",
+                beforeAll: "readonly",
+                beforeEach: "readonly",
+                afterEach: "readonly",
+                afterAll: "readonly",
+            },
+        },
+    ],
 };

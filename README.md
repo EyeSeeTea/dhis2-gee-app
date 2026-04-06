@@ -13,15 +13,16 @@ $ yarn install
 Start development server with the admin interface:
 
 ```
-$ PORT=8082 REACT_APP_DHIS2_BASE_URL="https://play.dhis2.org/dev" yarn start
+$ VITE_PORT=8082 VITE_DHIS2_BASE_URL="https://play.dhis2.org/dev" VITE_DHIS2_AUTH="user:password" yarn start
 ```
 
 Start development server with the importer interface:
 
 ```
-$ PORT=8082 REACT_APP_DATA_IMPORTER=true REACT_APP_DHIS2_BASE_URL="https://play.dhis2.org/dev" yarn start
+$ VITE_PORT=8082 VITE_DATA_IMPORTER=true VITE_DHIS2_BASE_URL="https://play.dhis2.org/dev" VITE_DHIS2_AUTH="user:password" yarn start
 ```
 
+Vite proxies API requests under `/dhis2` to your DHIS2 instance (see `vite.config.ts`).
 
 Linting:
 
@@ -35,6 +36,12 @@ Run unit tests:
 
 ```
 $ yarn test
+```
+
+Watch mode:
+
+```
+$ yarn test-watch
 ```
 
 Run integration tests locally:
@@ -64,7 +71,7 @@ This project can generate two app zips.
 To generate the admin app:
 
 ```
-$ yarn build-webapp
+$ yarn build
 ```
 
 To generate the importer app:
@@ -78,10 +85,9 @@ $ yarn build-importer
 ### Structure
 
 -   `i18n/`: Contains literal translations (gettext format)
--   `public/`: Main app folder with a `index.html`, exposes the APP, contains the feedback-tool
--   `src/pages`: Main React components.
--   `src/components`: Reusable React components.
--   `src/models`: Models that hold all the logic of the app (pages/components only should contain view logic).
+-   `index.html`: Vite entry HTML at repo root (loads scripts and `/ee_api_js.js`)
+-   `public/`: Static assets copied to build root (`ee_api_js.js`, `includes/`, favicon, etc.)
+-   `src/webapp/`: Main React components and pages
 -   `src/types`: `.d.ts` file definitions for modules without Typescript definitions.
 -   `src/utils`: Misc utilities.
 -   `src/locales`: Auto-generated, don't change nor add to version control.
@@ -89,7 +95,7 @@ $ yarn build-importer
 
 ### Google Earth Engine
 
-The package [@google/earthengine](https://www.npmjs.com/package/@google/earthengine) does not work when minified in the production create-react-app build. For this reason, instead of importing it directly within the app, we use object `window.ee`, loaded at `public/index.html` (`ee_api_js.js`).
+The package [@google/earthengine](https://www.npmjs.com/package/@google/earthengine) does not work when minified in the production bundle. For this reason, instead of importing it directly within the app, we use object `window.ee`, loaded from `public/ee_api_js.js` via the root `index.html`.
 
 To update `@google/earthengine` to a new version, simply run `yarn add -D @google/earthengine@VERSION`.
 

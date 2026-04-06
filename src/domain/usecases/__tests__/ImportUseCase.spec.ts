@@ -1,6 +1,7 @@
 /* eslint-disable @typescript-eslint/camelcase */
 
 import moment from "moment";
+import { vi } from "vitest";
 import ImportUseCase from "../ImportUseCase";
 
 import { GeeDataSetRepository } from "../../repositories/GeeDataSetRepository";
@@ -43,7 +44,7 @@ describe("ImportUseCase", () => {
 
             const expectedDataValueSet = givenAnExpectedDataValueSet();
 
-            expect(dataValueSetRepository.save).toBeCalledWith(expectedDataValueSet);
+            expect(dataValueSetRepository.save).toHaveBeenCalledWith(expectedDataValueSet);
             expect(result).toEqual({
                 failures: [],
                 messages: [
@@ -78,7 +79,7 @@ describe("ImportUseCase", () => {
 
             const expectedDataValueSet = givenAnExpectedDataValueSet(transformExpression);
 
-            expect(dataValueSetRepository.save).toBeCalledWith(expectedDataValueSet);
+            expect(dataValueSetRepository.save).toHaveBeenCalledWith(expectedDataValueSet);
             expect(result).toEqual({
                 failures: [],
                 messages: [
@@ -95,8 +96,8 @@ export {};
 
 function givenAGeeDataSetRepository(): GeeDataSetRepository {
     return {
-        getAll: jest.fn(),
-        getById: jest.fn().mockImplementation(() => {
+        getAll: vi.fn(),
+        getById: vi.fn().mockImplementation(() => {
             return Maybe.fromValue({
                 id: "ECMWF-ERA5-DAILY",
                 imageCollectionId: "ECMWF/ERA5/DAILY",
@@ -174,7 +175,7 @@ function givenAGeeDataSetRepository(): GeeDataSetRepository {
 
 function givenAOrgUnitRepository(): OrgUnitRepository {
     return {
-        getByIds: jest.fn().mockImplementation(() => {
+        getByIds: vi.fn().mockImplementation(() => {
             return [
                 {
                     id: "WFAboRxdVjA",
@@ -182,7 +183,7 @@ function givenAOrgUnitRepository(): OrgUnitRepository {
                 },
             ];
         }),
-        getAllWithCoordinates: jest.fn(),
+        getAllWithCoordinates: vi.fn(),
     };
 }
 
@@ -201,7 +202,7 @@ function givenAMappingRepository(trasformExpresion: string | undefined = undefin
     };
 
     return {
-        getAll: jest.fn().mockImplementation(() => {
+        getAll: vi.fn().mockImplementation(() => {
             return [
                 {
                     id: "utQIFECT8tF",
@@ -243,28 +244,28 @@ function givenAMappingRepository(trasformExpresion: string | undefined = undefin
                 },
             ];
         }),
-        saveAll: jest.fn(),
-        deleteByIds: jest.fn(),
+        saveAll: vi.fn(),
+        deleteByIds: vi.fn(),
     };
 }
 
 function givenAImportRuleRepository(): ImportRuleRepository {
     return {
-        getById: jest.fn().mockImplementation(() => {
+        getById: vi.fn().mockImplementation(() => {
             return Maybe.fromValue(defaultImportRule);
         }),
-        getAll: jest.fn(),
-        deleteByIds: jest.fn(),
-        save: jest.fn().mockImplementation(() => {
+        getAll: vi.fn(),
+        deleteByIds: vi.fn(),
+        save: vi.fn().mockImplementation(() => {
             return Either.success(true);
         }),
-        saveAll: jest.fn(),
+        saveAll: vi.fn(),
     };
 }
 
 function givenADataValueSetRepository(): DataValueSetRepository {
     return {
-        save: jest.fn().mockImplementation(() => {
+        save: vi.fn().mockImplementation(() => {
             return {
                 status: "SUCCESS",
                 description: "Import Success",
@@ -281,16 +282,16 @@ function givenADataValueSetRepository(): DataValueSetRepository {
 
 function givenAImportSummaryRepository(): ImportSummaryRepository {
     return {
-        getAll: jest.fn(),
-        save: jest.fn(),
-        saveAll: jest.fn(),
-        deleteByIds: jest.fn(),
+        getAll: vi.fn(),
+        save: vi.fn(),
+        saveAll: vi.fn(),
+        deleteByIds: vi.fn(),
     };
 }
 
 function givenAGeeDataValueSetRepository(): GeeDataValueSetRepository {
     return {
-        getData: jest.fn().mockImplementation(() => {
+        getData: vi.fn().mockImplementation(() => {
             return [
                 {
                     band: "minimum_2m_air_temperature",

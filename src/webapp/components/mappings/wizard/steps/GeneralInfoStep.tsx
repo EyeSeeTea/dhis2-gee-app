@@ -5,11 +5,9 @@ import { Card, CardContent } from "@material-ui/core";
 import { StepProps } from "../MappingWizard";
 import i18n from "../../../../../utils/i18n";
 import Mapping, { MappingData } from "../../../../models/Mapping";
+import { TextField, DropDown } from "@dhis2/d2-ui-core";
+import { FormBuilder, Validators } from "@dhis2/d2-ui-forms";
 import GeeDataSetSelector from "../../../gee-data-sets/GeeDataSetSelector";
-
-/* eslint-disable @typescript-eslint/no-var-requires */
-const { TextField, DropDown } = require("@dhis2/d2-ui-core");
-const { FormBuilder, Validators } = require("@dhis2/d2-ui-forms");
 
 type StringField = "name" | "description";
 type DropdownField = "dataSetId";
