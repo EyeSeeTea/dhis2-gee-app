@@ -51,23 +51,33 @@ class FakeDataStore extends DataStore {
     }
 
     getKeys(): D2ApiResponse<string[]> {
-        return new D2ApiResponse(() => {}, Promise.resolve({ data: [], status: 200, headers: {} }));
+        return new D2ApiResponse(() => {}, () =>
+            Promise.resolve({ data: [], status: 200, headers: {} as Record<string, string> })
+        );
     }
 
     get<T>(_key: string): D2ApiResponse<T | undefined> {
-        return new D2ApiResponse(() => {}, Promise.resolve({ data: undefined, status: 200, headers: {} }));
+        return new D2ApiResponse(() => {}, () =>
+            Promise.resolve({ data: undefined, status: 200, headers: {} as Record<string, string> })
+        );
     }
 
     save(_key: string, _value: object): D2ApiResponse<void> {
-        return new D2ApiResponse(() => {}, Promise.resolve({ data: undefined, status: 200, headers: {} }));
+        return new D2ApiResponse(() => {}, () =>
+            Promise.resolve({ data: undefined, status: 200, headers: {} as Record<string, string> })
+        );
     }
 
     delete(_key: string): D2ApiResponse<boolean> {
-        return new D2ApiResponse(() => {}, Promise.resolve({ data: true, status: 200, headers: {} }));
+        return new D2ApiResponse(() => {}, () =>
+            Promise.resolve({ data: true, status: 200, headers: {} as Record<string, string> })
+        );
     }
 
     getMetadata(_key: string): D2ApiResponse<DataStoreKeyMetadata | undefined> {
-        return new D2ApiResponse(() => {}, Promise.resolve({ data: undefined, status: 200, headers: {} }));
+        return new D2ApiResponse(() => {}, () =>
+            Promise.resolve({ data: undefined, status: 200, headers: {} as Record<string, string> })
+        );
     }
 }
 
