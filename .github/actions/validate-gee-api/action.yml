@@ -2,5 +2,5 @@ name: 'Validate GEE API'
 description: 'Validate Google Earth Engine API response'
 author: 'EyeSeeTea'
 runs:
-  using: 'node12'
+  using: 'node20'
   main: 'index.js'

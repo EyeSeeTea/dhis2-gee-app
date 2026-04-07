@@ -3,6 +3,13 @@
 # dependencies
 /node_modules
 
+# Yarn 4 (Berry)
+.yarn/cache
+.yarn/install-state.gz
+.yarn/unplugged
+.yarn/build-state.yml
+.pnp.*
+
 # testing
 /coverage
 
@@ -31,11 +38,6 @@ src/react-app.d.ts
 src/react-app-env.d.ts
 bak
 .eslintcache
-
-# cypress
-cypress/screenshots/
-cypress/videos/
-cypress/fixtures/
 
 # IntelliJ
 .idea/*

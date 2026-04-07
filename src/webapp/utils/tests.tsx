@@ -1,7 +1,7 @@
 import { SnackbarProvider } from "@eyeseetea/d2-ui-components";
 import { render, RenderResult } from "@testing-library/react";
 import { ReactNode } from "react";
-import { getMockApi } from "../../types/d2-api";
+import { D2Api } from "../../types/d2-api";
 import { AppContext, AppContextState } from "../contexts/app-context";
 import { Config } from "./../models/Config";
 import { User } from "./../models/User";
@@ -47,7 +47,9 @@ export function getTestD2() {
 }
 
 export function getTestContext() {
-    const { api, mock } = getMockApi();
+    // backend distinto de "fetch": getMockAdapter() solo en cliente axios (xhr) de d2-api
+    const api = new D2Api({ baseUrl: "http://localhost:8080", backend: "xhr" });
+    const mock = api.getMockAdapter();
 
     return {
         mock,

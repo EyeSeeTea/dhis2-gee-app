@@ -1,8 +1,8 @@
 import React, { useContext } from "react";
 import CompositionRoot from "../../CompositionRoot";
 import { D2Api } from "../../types/d2-api";
-import { Config } from "../models/Config";
-import { User } from "../models/User";
+import type { Config } from "../models/Config";
+import type { User } from "../models/User";
 
 export interface AppContextState {
     api: D2Api;

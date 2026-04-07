@@ -15,29 +15,39 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v2
+        uses: actions/checkout@v4
 
       - name: Setup Node.js version from .nvmrc
         uses: actions/setup-node@v4
         with:
           node-version-file: ".nvmrc"
-          cache: "yarn"
+
+      - name: Enable Corepack
+        run: corepack enable
 
       - name: Get yarn cache directory path
         id: yarn-cache-dir-path
-        run: echo "YARN_CACHE_DIR=$(yarn cache dir)" >> $GITHUB_ENV
+        run: |
+          YARN_MAJOR=$(yarn --version | cut -d. -f1)
+          if [ "$YARN_MAJOR" = "1" ]; then
+            CACHE_DIR=$(yarn cache dir)
+          else
+            CACHE_DIR=$(yarn config get cacheFolder)
+          fi
+          if [ -z "$CACHE_DIR" ]; then CACHE_DIR="$RUNNER_TEMP/yarn-cache"; fi
+          echo "ACTIONS_YARN_CACHE_PATH=$CACHE_DIR" >> $GITHUB_ENV
 
       - name: Cache yarn dependencies
-        uses: actions/cache@v3
+        uses: actions/cache@v5
         id: yarn-cache
         with:
-          path: ${{ env.YARN_CACHE_DIR }}
+          path: ${{ env.ACTIONS_YARN_CACHE_PATH }}
           key: ${{ runner.os }}-yarn-${{ hashFiles('**/yarn.lock') }}
           restore-keys: |
             ${{ runner.os }}-yarn-
 
       - name: Installing Dependencies
-        run: yarn install --frozen-lockfile --silent
+        run: yarn install --immutable
 
       - name: Build action
         run: yarn build-validate-gee-api-action

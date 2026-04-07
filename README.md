@@ -8,20 +8,66 @@ DHIS2 webapp that extracts values from Google Earth Engine for a given subset of
 $ yarn install
 ```
 
+This project uses **Yarn 4** managed by **Corepack** and declares:
+
+```json
+"packageManager": "yarn@4.12.0"
+```
+
+### If you have Yarn 1 globally and see a packageManager error
+
+If running `yarn` shows an error like:
+
+> This project's package.json defines "packageManager": "yarn@4.12.0". However the current global version of Yarn is 1.22.x.
+
+do the following once on your machine:
+
+```bash
+# 1) Remove global Yarn (optional but recommended)
+npm uninstall -g yarn
+
+# 2) Enable Corepack (shipped with Node 16.9+ / 14.19+)
+corepack enable
+
+# 3) Set Yarn 1.x as the default for projects WITHOUT packageManager
+corepack prepare yarn@1.22.22 --activate
+```
+
+Then, in this project (normal case, once Corepack is enabled):
+
+```bash
+nvm use                 # use the version from .nvmrc
+yarn install
+```
+
+If for some reason `yarn --version` still shows `1.x` inside this repo (for example due to old Corepack state), you can force Yarn 4 explicitly:
+
+```bash
+corepack use yarn@4.12.0
+yarn --version          # should now print 4.12.0
+yarn install
+```
+
+After this:
+
+-   This repo will use **Yarn 4.12.0**.
+-   Other repos without `packageManager` will keep using **Yarn 1.22.22** (or whatever you activated with `corepack prepare`).
+
 ## Development
 
 Start development server with the admin interface:
 
 ```
-$ PORT=8082 REACT_APP_DHIS2_BASE_URL="https://play.dhis2.org/dev" yarn start
+$ VITE_PORT=8082 VITE_DHIS2_BASE_URL="https://play.dhis2.org/dev" VITE_DHIS2_AUTH="user:password" yarn start
 ```
 
 Start development server with the importer interface:
 
 ```
-$ PORT=8082 REACT_APP_DATA_IMPORTER=true REACT_APP_DHIS2_BASE_URL="https://play.dhis2.org/dev" yarn start
+$ VITE_PORT=8082 VITE_DATA_IMPORTER=true VITE_DHIS2_BASE_URL="https://play.dhis2.org/dev" VITE_DHIS2_AUTH="user:password" yarn start
 ```
 
+Vite proxies API requests under `/dhis2` to your DHIS2 instance (see `vite.config.ts`).
 
 Linting:
 
@@ -37,25 +83,11 @@ Run unit tests:
 $ yarn test
 ```
 
-Run integration tests locally:
+Watch mode:
 
 ```
-$ export CYPRESS_DHIS2_AUTH='admin:district'
-$ export CYPRESS_EXTERNAL_API="http://localhost:8080"
-$ export CYPRESS_ROOT_URL=http://localhost:8081
-
-# non-interactive
-$ yarn cy:e2e:run
-
-# interactive UI
-$ yarn cy:e2e:open
+$ yarn test-watch
 ```
-
-For this to work in Travis CI, you will have to create an environment variable CYPRESS_DHIS2_AUTH (Settings -> Environment Variables) with the password used in your testing DHIS2 instance.
-
-Travis project: https://travis-ci.org/EyeSeeTea/dhis2-gee-app/builds
-
-Cypress Dashboard: https://dashboard.cypress.io/projects/49be3z
 
 ## Build app ZIP
 
@@ -64,7 +96,7 @@ This project can generate two app zips.
 To generate the admin app:
 
 ```
-$ yarn build-webapp
+$ yarn build
 ```
 
 To generate the importer app:
@@ -78,18 +110,16 @@ $ yarn build-importer
 ### Structure
 
 -   `i18n/`: Contains literal translations (gettext format)
--   `public/`: Main app folder with a `index.html`, exposes the APP, contains the feedback-tool
--   `src/pages`: Main React components.
--   `src/components`: Reusable React components.
--   `src/models`: Models that hold all the logic of the app (pages/components only should contain view logic).
+-   `index.html`: Vite entry HTML at repo root (loads scripts and `/ee_api_js.js`)
+-   `public/`: Static assets copied to build root (`ee_api_js.js`, `includes/`, favicon, etc.)
+-   `src/webapp/`: Main React components and pages
 -   `src/types`: `.d.ts` file definitions for modules without Typescript definitions.
 -   `src/utils`: Misc utilities.
 -   `src/locales`: Auto-generated, don't change nor add to version control.
--   `cypress/integration/`: Contains the integration Cypress tests.
 
 ### Google Earth Engine
 
-The package [@google/earthengine](https://www.npmjs.com/package/@google/earthengine) does not work when minified in the production create-react-app build. For this reason, instead of importing it directly within the app, we use object `window.ee`, loaded at `public/index.html` (`ee_api_js.js`).
+The package [@google/earthengine](https://www.npmjs.com/package/@google/earthengine) does not work when minified in the production bundle. For this reason, instead of importing it directly within the app, we use object `window.ee`, loaded from `public/ee_api_js.js` via the root `index.html`.
 
 To update `@google/earthengine` to a new version, simply run `yarn add -D @google/earthengine@VERSION`.
 
