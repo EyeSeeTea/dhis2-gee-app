@@ -69,7 +69,12 @@ async function main() {
         configI18n(userSettings);
 
         ReactDOM.render(
-            <Provider config={{ baseUrl, apiVersion: 30 }}>
+            <Provider
+                config={{ baseUrl, apiVersion: 30 }}
+                plugin={false}
+                parentAlertsAdd={undefined}
+                showAlertsInPlugin={false}
+            >
                 <App api={api} d2={d2} instance={instance} />
             </Provider>,
             document.getElementById("root")

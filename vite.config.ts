@@ -6,9 +6,12 @@ import nodePolyfills from "vite-plugin-node-stdlib-browser";
 
 const redirectPaths = ["/dhis-web-pivot", "/dhis-web-data-visualizer"];
 
-export default ({ mode }): UserConfig => {
+export default ({ mode, command }): UserConfig => {
     const env = { ...process.env, ...loadEnv(mode, process.cwd()) };
-    const proxy = getProxy(env);
+    const isVitest = env.VITEST === "true";
+    const proxy = getProxy(env, command, isVitest);
+
+    const devPort = parseInt(env.VITE_PORT || "8082", 10);
 
     return defineConfig({
         base: "",
@@ -19,30 +22,48 @@ export default ({ mode }): UserConfig => {
             checker({
                 overlay: false,
                 typescript: true,
+                eslint: {
+                    lintCommand: 'eslint "src/**/*.{js,jsx,ts,tsx}"',
+                    dev: { logLevel: ["warning"] },
+                },
             }),
         ],
         test: {
             environment: "jsdom",
-            include: ["src/**/*.spec.{ts,tsx}"],
+            include: ["**/*.spec.{ts,tsx}"],
             setupFiles: "./src/tests/setup.js",
+            exclude: ["node_modules", "src/tests/playwright"],
             globals: true,
         },
-        server: {
-            port: parseInt(env.VITE_PORT || "8082", 10),
-            strictPort: true,
-            proxy,
-        },
+        server: isVitest
+            ? {
+                  // Vitest reutiliza esta config: no ocupar VITE_PORT del .env (p. ej. 8081) ni chocar con `yarn start`
+                  port: 0,
+                  strictPort: false,
+                  proxy: {},
+              }
+            : {
+                  port: devPort,
+                  strictPort: true,
+                  proxy,
+              },
     });
 };
 
-function getProxy(env: Record<string, string>) {
+function getProxy(env: Record<string, string>, command: string, isVitest: boolean) {
     const dhis2UrlVar = "VITE_DHIS2_BASE_URL";
     const dhis2AuthVar = "VITE_DHIS2_AUTH";
     const targetUrl = env[dhis2UrlVar];
     const auth = env[dhis2AuthVar];
-    const isBuild = env.NODE_ENV === "production";
 
-    if (isBuild) {
+    if (isVitest) {
+        return {};
+    }
+
+    // En `vite build` no hace falta proxy. `command` a veces no llega en subcargas de config (p. ej. checker).
+    const isViteBuild =
+        command === "build" || process.argv.includes("build") || process.env.npm_lifecycle_event === "build";
+    if (isViteBuild) {
         return {};
     }
     if (!targetUrl) {

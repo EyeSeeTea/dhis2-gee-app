@@ -89,26 +89,6 @@ Watch mode:
 $ yarn test-watch
 ```
 
-Run integration tests locally:
-
-```
-$ export CYPRESS_DHIS2_AUTH='admin:district'
-$ export CYPRESS_EXTERNAL_API="http://localhost:8080"
-$ export CYPRESS_ROOT_URL=http://localhost:8081
-
-# non-interactive
-$ yarn cy:e2e:run
-
-# interactive UI
-$ yarn cy:e2e:open
-```
-
-For this to work in Travis CI, you will have to create an environment variable CYPRESS_DHIS2_AUTH (Settings -> Environment Variables) with the password used in your testing DHIS2 instance.
-
-Travis project: https://travis-ci.org/EyeSeeTea/dhis2-gee-app/builds
-
-Cypress Dashboard: https://dashboard.cypress.io/projects/49be3z
-
 ## Build app ZIP
 
 This project can generate two app zips.
@@ -136,7 +116,6 @@ $ yarn build-importer
 -   `src/types`: `.d.ts` file definitions for modules without Typescript definitions.
 -   `src/utils`: Misc utilities.
 -   `src/locales`: Auto-generated, don't change nor add to version control.
--   `cypress/integration/`: Contains the integration Cypress tests.
 
 ### Google Earth Engine
 

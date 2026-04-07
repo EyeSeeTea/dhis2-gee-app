@@ -39,10 +39,5 @@ src/react-app-env.d.ts
 bak
 .eslintcache
 
-# cypress
-cypress/screenshots/
-cypress/videos/
-cypress/fixtures/
-
 # IntelliJ
 .idea/*

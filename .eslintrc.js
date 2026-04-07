@@ -1,20 +1,29 @@
 /** @format */
 
 module.exports = {
-    extends: [
-        "react-app",
-        "eslint:recommended",
-        "plugin:react/recommended",
-        "plugin:cypress/recommended",
-        "plugin:@typescript-eslint/recommended",
-    ],
+    extends: ["react-app", "eslint:recommended", "plugin:react/recommended", "plugin:@typescript-eslint/recommended"],
     parser: "@typescript-eslint/parser",
+    ignorePatterns: ["src/**/snapshots/*.ts"],
+    parserOptions: {
+        project: "./tsconfig.json",
+        warnOnUnsupportedTypeScriptVersion: false,
+    },
     rules: {
         "no-console": ["warn", { allow: ["debug", "warn", "error"] }],
-        "@typescript-eslint/camelcase": "off",
-        "@typescript-eslint/explicit-function-return-type": ["off"],
+        "prefer-const": "warn",
+        "@typescript-eslint/explicit-function-return-type": "off",
+        "@typescript-eslint/no-this-alias": "off",
+        "@typescript-eslint/no-unnecessary-type-constraint": "off",
+        "@typescript-eslint/no-unused-vars": [
+            "warn",
+            {
+                argsIgnorePattern: "^_",
+                varsIgnorePattern: "^_",
+                caughtErrorsIgnorePattern: "^_",
+            },
+        ],
+        "@typescript-eslint/no-unused-expressions": "warn",
         "unused-imports/no-unused-imports": "warn",
-        "@typescript-eslint/no-unused-vars": ["warn", { argsIgnorePattern: "^_", varsIgnorePattern: "^_" }],
         "react/prop-types": "off",
         "react/display-name": "off",
         "react/react-in-jsx-scope": "off",
@@ -23,6 +32,7 @@ module.exports = {
         "no-useless-constructor": "off",
         "no-unexpected-multiline": "off",
         "default-case": "off",
+        "array-callback-return": "off",
         "@typescript-eslint/no-use-before-define": "off",
         "@typescript-eslint/no-explicit-any": "off",
         "@typescript-eslint/no-empty-interface": "off",
@@ -35,16 +45,15 @@ module.exports = {
         "@typescript-eslint/indent": "off",
         "@typescript-eslint/member-delimiter-style": "off",
         "@typescript-eslint/type-annotation-spacing": "off",
-        "@typescript-eslint/explicit-function-return-type": "off",
         "no-use-before-define": "off",
         "no-debugger": "warn",
         "no-extra-semi": "off",
         "no-mixed-spaces-and-tabs": "off",
-        "react-hooks/rules-of-hooks": "error",
+        "no-useless-rename": "off",
+        "react-hooks/rules-of-hooks": "warn",
         "react-hooks/exhaustive-deps": "warn",
     },
-    plugins: ["cypress", "@typescript-eslint", "react-hooks", "unused-imports"],
-    env: { "cypress/globals": true },
+    plugins: ["@typescript-eslint", "react-hooks", "unused-imports"],
     settings: {
         react: {
             pragma: "React",
@@ -53,7 +62,8 @@ module.exports = {
     },
     overrides: [
         {
-            files: ["**/*.spec.ts", "**/*.spec.tsx"],
+            files: ["**/*.spec.ts", "**/*.spec.tsx", "**/*.test.ts", "**/*.test.tsx"],
+            extends: ["plugin:testing-library/react"],
             globals: {
                 describe: "readonly",
                 it: "readonly",
@@ -63,6 +73,15 @@ module.exports = {
                 beforeEach: "readonly",
                 afterEach: "readonly",
                 afterAll: "readonly",
+            },
+            rules: {
+                "testing-library/await-async-query": "error",
+                "testing-library/no-await-sync-query": "error",
+                "testing-library/prefer-screen-queries": "off",
+                "testing-library/no-debugging-utils": "off",
+                "testing-library/no-dom-import": "off",
+                // Literales de fixtures (p. ej. valores GEE) pueden superar precisión IEEE-754
+                "@typescript-eslint/no-loss-of-precision": "off",
             },
         },
     ],

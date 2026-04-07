@@ -1,5 +1,3 @@
-/* eslint-disable @typescript-eslint/camelcase */
-
 import moment from "moment";
 import { vi } from "vitest";
 import ImportUseCase from "../ImportUseCase";
