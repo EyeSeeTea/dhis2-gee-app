@@ -1,5 +1,4 @@
 import { useConfig } from "@dhis2/app-runtime";
-import { HeaderBar } from "@dhis2/ui";
 import { LoadingProvider, SnackbarProvider } from "@eyeseetea/d2-ui-components";
 import { MuiThemeProvider } from "@material-ui/core/styles";
 import { Feedback, FeedbackOptions } from "@eyeseetea/feedback-component";
@@ -9,6 +8,7 @@ import OldMuiThemeProvider from "material-ui/styles/MuiThemeProvider";
 import React, { useEffect, useState } from "react";
 import CompositionRoot from "../../../CompositionRoot";
 import { D2Api } from "../../../types/d2-api";
+import { HeaderBar } from "../../components/header-bar/HeaderBar";
 import Share from "../../components/share/Share";
 import { AppContext, AppContextState } from "../../contexts/app-context";
 import { Config } from "../../models/Config";
