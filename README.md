@@ -64,7 +64,7 @@ This project can generate two app zips.
 To generate the admin app:
 
 ```
-$ yarn build-webapp
+$ yarn build
 ```
 
 To generate the importer app:
